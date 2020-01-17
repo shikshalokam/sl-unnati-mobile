@@ -1,0 +1,22 @@
+
+.status{
+    float: right;
+   
+    padding: 0px 10px 0px 10px;
+    border-radius: 6px;
+ }
+ .inprogress
+ {
+     background: #fdab8c;
+     color: #ccc;
+ }
+ .completed
+ {
+     background: #ab2923;
+     color: #fff;
+ }
+ .notyetstarted
+ {
+     background: #c4c3c3;
+     color: #000;
+ }

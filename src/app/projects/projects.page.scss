@@ -1,0 +1,122 @@
+
+.ion-color.sc-ion-searchbar-md-h .searchbar-input.sc-ion-searchbar-md
+{
+    border-radius: 20px !important;
+}
+.searchbar-search-icon .sc-ion-searchbar-md {
+    right: 16px;
+    top: 11px;
+    width: 21px;
+    height: 21px;
+}
+* {
+    box-sizing: border-box;
+  }
+  .tab-selected
+{
+    background: #b23e33;
+    color: #fff;
+    border-radius: 4px;
+}
+ion-tab-button {
+    ion-label {
+        font-size:16px;
+    }
+}
+.project-card
+{
+  background: #e3e3e3;
+  font-size: 18px;
+  color: #000;
+  font-weight: 600;
+  ion-card-header{
+        background: #e3e3e3;
+        font-size: 18px;
+        color: #000;
+        font-weight: 600;
+          ion-icon{
+            float: right;
+        }
+  }
+ ion-card-content{
+    padding: 0px;
+ }
+  .inner-card
+  {
+    background: #fff;
+    padding:0px;
+    margin:0px;
+    ion-icon{
+      float: right;
+    }
+    ion-card-content{
+    background: #fff;
+    padding: 10px;
+    font-size: 18px;
+    color: #000;
+    font-weight: 600;
+    border-bottom: 1px solid #ccc;
+        ion-icon{
+          float: right;
+        }
+    }
+  }
+}
+.custom-arrow{
+        margin: auto;
+        color:#000;
+        font-size:22px;
+        text-align: end;
+        font-weight: 600;
+        text-align: right;
+}
+// .inner-card
+//   {
+//     margin: 5px 0px;
+//     color: #000;
+//     border-radius: 0px;
+//     .arrow-mark{
+//       margin: auto;
+//       font-size:22px;
+//       text-align: end;
+//     }
+//   }
+//   ion-card-header{
+//     background: #e3e3e3;
+//     padding: 10px;
+//     font-size: 18px;
+//     color: #000;
+//     font-weight: 600;
+//         ion-icon{
+//           float: right;
+//         }
+//     }
+.tabs-list{
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+.custom-card
+{
+  margin: 0px;
+  background:#fff;
+  ion-card-content{
+  padding: 0px;
+  font-size: 16px;
+  color: #000;
+  }
+}
+.custom-tab{
+  width:50%;
+  background:#fff;
+  color: #000;
+    float: left;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    border-bottom: 2px solid #b23e33;
+}
+.active-tab{
+  background: #b23e33;
+  color: #fff;
+}
