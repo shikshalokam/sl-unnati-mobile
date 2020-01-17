@@ -1,0 +1,123 @@
+<ion-header>
+  <app-header [title]="" [noBorder]="true">
+  </app-header>
+</ion-header>
+<ion-content>
+  <!-- loader -->
+  <div *ngIf="showSkeleton">
+    <ion-card>
+      <ion-card-content class="skeleton-card-content">
+        <ion-card *ngFor="let skeleton of skeletons">
+          <ion-card-content class="skeleton-card-content">
+            <p>
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <!-- loader ends here -->
+  <div *ngIf="!showSkeleton">
+    <ion-item class="search-bar-custom">
+      <ion-icon name="search" item-left color="dark"></ion-icon>
+      <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
+      <!-- (keyup)="searchSchool(searchInput)" -->
+    </ion-item>
+    <div *ngIf="!searchInput">
+      <ion-grid class="tiles-container">
+        <ion-row>
+          <ion-col *ngFor="let tile of tiles" class="tiles">
+            <ion-card (click)="navigate(tile.url)">
+              <img src="{{tile.icon}}">
+              <p>{{tile.title}}</p>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <div class="activeprojects-container" *ngIf="activeProjects">
+        <h4>{{'home.active_projects' | translate}} </h4>
+        <div *ngFor="let ap of activeProjects; let i = index">
+          <ion-card>
+            <ion-card-header style="padding: 0px;">
+              <div class="collection-label">{{ap.category}}</div>
+            </ion-card-header>
+            <ion-card-content style="padding:0px;">
+              <ion-row>
+                <ion-col class="date-col">
+                  <h3> {{ap.endDate}} </h3>
+                </ion-col>
+                <ion-col class="title-col">
+                  {{ap.title}}
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </div>
+        <ion-button class="activeproject-btn" expand="block" color="secondary" *ngIf="activeProjects?.length > 1" (click)="viewMore()"> 
+          {{'button.view_more' | translate}}
+        </ion-button>
+      </div>
+    </div>
+    <!-- Search Results -->
+    <div *ngIf="searchInput">
+      <div class="welcome-card custom-card" *ngFor="let projects of projectList;" style="margin:10px;">
+        <div *ngIf="(projects.projects | searchProjects: searchInput).length == 0" style="text-align:center;">
+        </div>
+        <ion-card class="inner-card search-results"
+          *ngFor="let project of projects.projects | searchProjects: searchInput" (click)="navigateToDetails(project)">
+          <ion-grid>
+            <ion-row>
+              <ion-col style="min-width: 85%; margin: auto;
+              font-weight: 500;">
+                {{ project.title }}
+              </ion-col>
+              <ion-col class="arrow-mark">
+                <ion-icon name="ios-arrow-forward"> </ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </div>
+      <!-- Search my projects -->
+      <div class="welcome-card custom-card" style="margin:10px;">
+      <ion-card class="inner-card search-results" *ngFor="let project of myProjects | searchProjects: searchInput"
+        (click)="navigateToDetails(project)">
+        <ion-grid>
+          <ion-row>
+            <ion-col style="min-width: 85%; margin: auto;
+                font-weight: 500;">
+              {{ project.title }}
+            </ion-col>
+            <ion-col class="arrow-mark">
+              <ion-icon name="ios-arrow-forward"> </ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+      </div>
+      <!-- Schools  -->
+      <ion-card class="welcome-card custom-card" *ngIf="( mySchools | searchSchool: searchInput).length == 0">
+        <div class="no-results">
+          No Data available.
+        </div>
+      </ion-card>
+      <ion-card class="inner-card search-results" *ngFor="let school of mySchools | searchSchool: searchInput"
+        style="margin:10px;" (click)="navigateToSchool(school)">
+        <ion-grid>
+          <ion-row>
+            <ion-col style="min-width: 85%; margin: auto;
+            font-weight: 500;">
+              {{school.name}}
+            </ion-col>
+            <ion-col class="arrow-mark">
+              <ion-icon name="ios-arrow-forward"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

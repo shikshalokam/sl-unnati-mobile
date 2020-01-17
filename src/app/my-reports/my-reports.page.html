@@ -1,0 +1,22 @@
+<ion-tabs>
+    <ion-header
+      style="position: initial; z-index: auto;"
+    >
+      <app-header
+        [title]="'myreports.title' | translate"
+        [showMenu]="false"
+        [showBack]="true"
+        [noBorder]="false"
+      [isGoBack]="back"
+      >
+      </app-header>
+      <ion-tab-bar slot="top">
+        <ion-tab-button tab="last-month-reports">
+          <ion-label>{{ "myreports.last_month" | translate }}</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="last-quarter-reports">
+          <ion-label>{{ "myreports.last_quarter" | translate }}</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-header>
+  </ion-tabs>
