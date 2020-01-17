@@ -1,0 +1,97 @@
+<ion-header>
+  <app-header [title]=project?.title [showMenu]="false" [showBack]="true" [noBorder]="false" [isGoBack]="back">
+  </app-header>
+</ion-header>
+<ion-content>
+  <!-- <h4 padding style="margin:0px;"> {{project?.title}} </h4> -->
+  <div class="project-detail" *ngIf="project">
+    <div padding>
+      <ion-row *ngIf="!editGoal">
+        <ion-col size="5" class="label-box">
+          {{'projectDetail.goal'|translate}}
+        </ion-col>
+        <ion-col size="7" (click)="allowEdit('goal')">
+          {{project?.goal}}
+        </ion-col>
+      </ion-row>
+      <ion-item class="custom-ion-item" *ngIf="editGoal" (mouseout)="blockEdit('goal')">
+        <ion-label class="custom-label" position="floating"
+          [ngClass]="{'required-field':markLabelsAsInvalid && !project.goal}">
+          {{'create_project.goal' | translate}}</ion-label>
+        <ion-textarea type="text" [(ngModel)]="project.goal" name="goal" (mouseout)="blockEdit('goal')"
+          placeholder="{{'create_project.placeholder_goal'| translate}}" maxlength="1000"></ion-textarea>
+      </ion-item>
+      <ion-row *ngIf="project?.duration">
+        <ion-col size="5" class="label-box">
+          {{'projectDetail.duration' | translate}}
+        </ion-col>
+        <ion-col size="7">
+          {{project?.duration}}
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="project?.startDate">
+        <ion-col size="5" class="label-box">
+          {{'projectDetail.start_date' | translate}}
+        </ion-col>
+        <ion-col size="7" (click)="setDate('sd')">
+          {{project?.startDate | date : "dd-MM-yyyy"}}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="5" class="label-box">
+          {{'projectDetail.end_date' | translate}}
+        </ion-col>
+        <ion-col size="7" (click)="setDate('ed')">
+          {{project?.endDate | date : "dd-MM-yyyy"}}
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="project?.status">
+        <ion-col size="5" class="label-box">
+          {{'projectDetail.status' | translate}}
+        </ion-col>
+        <ion-col size="7" *ngIf="project?.status">
+          <ion-select [(ngModel)]="project.status" class="custom-select" placeholder="Select Status" [disabled]="true">
+            <ion-select-option  *ngFor="let status of statuses"  value="{{status.title}}"
+              selected="status.title === project.status">{{status.title}}</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+      <ion-button class="round-corner-btn prjdetail-btn" expand="block" color="secondary"
+        (click)="navigateToResources()" *ngIf="category != 'my_projects'">
+        {{'button.learning_resources' | translate}}
+      </ion-button>
+    </div>
+  </div>
+  <div class="tasks-box">
+    <div *ngIf="tasksLength > 0">
+      <ion-row style="padding: 15px;">
+        <ion-col size="6"> {{'projectDetail.total_task' | translate}} : {{tasksLength}}</ion-col>
+        <ion-col style="text-align: right; text-transform: uppercase;" size="6">
+          {{project.category}}
+        </ion-col>
+      </ion-row>
+      <div *ngFor="let task of project.tasks">
+        <ion-row class="task-list" *ngIf="!task.isDelete">
+          <ion-col size="10" (click)="taskView(task)"> {{task?.title}} </ion-col>
+          <ion-col size="2" style="text-align: center; " *ngIf="project?.isStarted"><img
+              src="assets/images/delete.png" style="width: 30px;" (click)="delete(task)"> </ion-col>
+        </ion-row>
+      </div>
+    </div>
+    <div *ngIf="tasksLength == 0 && project?.isStarted" class="tasks-label">
+      <h5> ADD TASKS TO YOUR PROJECT <ion-icon name="add-circle" color="primary" (click)="addTask()"
+          style="font-size:30px;"></ion-icon>
+      </h5>
+    </div>
+  </div>
+  <ion-button class="round-corner-btn prjdetail-btn" expand="block" color="secondary" (click)="copyTemplate()"
+    *ngIf="!project?.isStarted" style="margin-bottom: 50px;">
+    {{'button.start_project' | translate}}
+  </ion-button>
+  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;"
+    *ngIf="category == 'my_projects' || category == 'projectsList' && project?.isStarted && tasksLength > 0">
+    <ion-fab-button (click)="addTask()" style=" margin-bottom: 15px;">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

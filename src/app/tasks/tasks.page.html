@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="$base-color">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Tasks
+      <ion-icon name="wifi" class="network-icon ion-float-right" [ngClass]="{'no-connection': !connected}"></ion-icon>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div *ngFor="let task of tasks; let i = index">
+    <ion-card class="animation welcome-card custom-card" *ngIf="!task.isDeleted" (click)="navigateToView(task._id)">
+      <ion-card-header class="project-card" style=" transition: 0.9s; cursor: pointer;">
+        <ion-card-title>
+          <ion-row>
+            <ion-col class="status-indicator">
+              <ion-icon name="ios-radio-button-on" *ngIf="task.status == 'completed'" style="color:green;"></ion-icon>
+              <ion-icon name="ios-radio-button-on" *ngIf="task.status == 'not yet started'" style="color:#000;">
+              </ion-icon>
+              <ion-icon name="contrast" *ngIf="task.status == 'in progress'" style="color:orange;"></ion-icon>
+            </ion-col>
+            <ion-col class="task-title"> {{task.title}} </ion-col>
+            <ion-col>
+              <ion-icon name="ios-arrow-forward" *ngIf="!task.open">
+              </ion-icon>
+              <ion-icon name="ios-arrow-down" *ngIf="task.open" style="color:#af4038"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-card-title>
+      </ion-card-header>
+    </ion-card>
+  </div>
+  <!-- fab placed to the bottom end -->
+  <div style="height:70px;"></div>
+  <ion-fab vertical="bottom" horizontal="end" edge slot="fixed" style="margin-bottom: 40px;">
+    <ion-fab-button color="success" (click)="createTask()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
