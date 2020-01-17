@@ -1,0 +1,28 @@
+
+  ion-col div 
+  {
+      color:#000;
+      ion-label{
+      font-weight: 600;
+  
+    }
+  }
+  ion-col
+  {
+    p{
+      text-align: justify;
+    }
+  }
+  .st-completed
+  {
+    color:green;
+  }
+  .st-notstarted
+  {
+    color:#000;
+  }
+  .st-inprogress
+  {
+    color:orange;
+  }
+ 

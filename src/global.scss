@@ -1,0 +1,219 @@
+// http://ionicframework.com/docs/theming/
+@import "~@ionic/angular/css/core.css";
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+$base-color: #af4038;
+
+body{
+  font-family: 'Source Sans Pro' !important;
+}
+h1, h2, h3, h4, h5 {
+  font-family: 'SourceSansPro-Bold' !important;
+  font-weight: 600;
+}
+// ion-title::first-letter{
+//   text-transform: uppercase;
+// }
+ion-title{
+    text-transform: capitalize;
+    font-weight: 600;
+  }
+.header-md:after
+{
+  height: 0px !important;
+}
+#tab-icon {
+  width: auto;
+  max-height: 40px;
+}
+.network-icon {
+  margin-top: 0px;
+  margin-right: 0px;
+  font-size: 26px;
+}
+.no-connection {
+  color: red;
+}
+.connected {
+  color: #000;
+}
+.no-results
+{
+  color: #000;
+  background: #f5f5f5;
+  text-align: center;
+  padding: 15px;
+}
+ion-label {
+  font-weight: bold;
+}
+.project-card {
+  background-color: #fff;
+  padding: 10px;
+  ion-card-title {
+    font-size: 16px;
+  }
+}
+.project-card-content {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  ion-label {
+    font-weight: bold;
+    color: #000;
+  }
+  p {
+    margin-top: 5px;
+    text-align: justify;
+  }
+}
+.validator-error {
+  color: red;
+  margin-top: 10px;
+}
+.required-field{
+  color: #f70606 !important;
+}
+ion-item {
+  .activated {
+    color: #af4038;
+  }
+}
+.custom-card {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+  border-radius: 0px !important;
+}
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animation {
+  /* This section calls the slideInFromLeft animation we defined above */
+  animation: 0.5s ease-out 0s 1 slideInFromLeft;
+}
+
+.skeleton-card-content {
+  margin-bottom: 15px;
+}
+.searchbar-input {
+  border-radius: 30px !important;
+}
+.searchbar-search-icon .sc-ion-searchbar-md {
+  right: 16px;
+  top: 11px;
+  width: 21px;
+  height: 21px;
+}
+
+.sc-ion-back-button-md-h {
+  display: block;
+}
+
+.md .title-md {
+  text-overflow: inherit;
+  white-space: normal;
+  text-align: left;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+.custom-btn {
+  font-size: 16px !important;
+}
+// Google icons
+/* fallback */
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2)
+    format("woff2");
+}
+
+.material-icons {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.search-bar-custom {
+  margin: 20px 15px 15px 15px;
+  border-radius: 20px;
+  border: 1px solid #b2aeae;
+  max-height: 40px;
+  padding: 0px;
+  box-shadow: 0px 3px 9px 1px #b2aeae;
+  ion-input{
+    --padding-bottom: 18px;
+    font-weight: 600;
+    color: #000;
+  }
+  ion-icon
+  {
+    margin-bottom: 10px;
+    margin-left: 20px;
+    padding-right : 10px;
+  }
+}
+.custom-ion-item
+{
+  --highlight-color-focused: transparent;
+  --highlight-color-valid: transparent;
+  --highlight-color-invalid: transparent;
+  --border-color: transparent;
+  ion-input, ion-textarea
+  {
+    border: 1px solid #000;
+    margin: 15px 0px;
+    padding: 5px 10px !important;
+    border-radius: 4px;
+  }
+  ion-label{
+    font-family: 'SourceSansPro-Bold';
+    text-transform: uppercase;
+    font-size: 22px;
+    font-weight: 600;
+  }
+}
+.round-corner-btn
+{
+  padding: 0px 40px;
+  --border-radius: 20px;
+  margin-top: -10px;
+  margin-bottom: 55px;
+  font-weight: 500;
+  font-size: 18px;
+  min-height: 40px;
+}
+.label-capitalize
+{
+  text-transform: capitalize !important;
+}
+.text-notransform
+{
+  text-transform: none !important;
+
+}

@@ -1,0 +1,88 @@
+<ion-content class="ion-padding" *ngIf="show">
+  <!-- On boarding screens -->
+  <ion-slides
+    pager="true"
+    [options]="slideOpts"
+    style="min-height: 100%;"
+    (ionSlidePrevEnd)="slideDidChangePrev($event)"
+    (ionSlideNextEnd)="slideDidChangeNext($event)"
+  >
+    <ion-slide *ngIf="veryFirstTime">
+      <ion-grid>
+        <ion-row>
+          <div class="img-container">
+            <img src="../../assets/images/onboarding1.png" />
+          </div>
+        </ion-row>
+        <div>
+          <div class="onboard-header">
+            Planning Improvement Projects
+          </div>
+          <p>
+            Create and track projects towards improving school and school
+            support system.
+          </p>
+        </div>
+      </ion-grid>
+    </ion-slide>
+    <ion-slide *ngIf="veryFirstTime">
+      <ion-grid>
+        <ion-row>
+          <div class="img-container">
+            <img src="../../assets/images/onboarding2.png" />
+          </div>
+        </ion-row>
+        <div>
+          <div class="onboard-header">
+            Assign Tasks and Subtasks
+          </div>
+          <p>
+            Divide your plans into tasks and sub-tasks and assign it to other
+            users.
+          </p>
+        </div>
+      </ion-grid>
+    </ion-slide>
+    <ion-slide *ngIf="!veryFirstTime">
+      <ion-grid style="margin-top: 50%;">
+        <ion-col>
+          <ion-icon
+            name="ios-key"
+            style="font-size: 140px;color: #777;"
+          ></ion-icon>
+        </ion-col>
+        <ion-col>
+          <br />
+          <br />
+          <a (click)="loginClick()">
+            <div>
+              <h1>
+                LOGIN
+                <span>
+                  <ion-icon name="ios-log-in" style="vertical-align: middle;">
+                  </ion-icon
+                ></span>
+              </h1>
+            </div>
+          </a>
+        </ion-col>
+      </ion-grid>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
+<ion-footer class="ion-footer-custom" *ngIf="show && veryFirstTime">
+  <ion-button
+    *ngIf="buttonTitle == 'Skip'"
+    expand="block"
+    (click)="loginClick()"
+  >
+    {{ buttonTitle }}
+  </ion-button>
+  <ion-button
+    *ngIf="buttonTitle == 'Get started'"
+    class="brdr-radius-30"
+    (click)="loginClick()"
+  >
+    {{ buttonTitle }}
+  </ion-button>
+</ion-footer>

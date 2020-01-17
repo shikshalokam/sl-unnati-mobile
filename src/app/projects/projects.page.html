@@ -1,0 +1,123 @@
+<ion-header>
+  <app-header [title]="'projects.title' | translate" [showMenu]="false" [showBack]="true" [isGoBack]="back"
+    [noBorder]="true"> </app-header>
+</ion-header>
+<ion-content>
+  <div *ngIf="showSkeleton">
+    <ion-card>
+      <ion-card-content class="skeleton-card-content">
+        <ion-card *ngFor="let skeleton of skeletons">
+          <ion-card-content class="skeleton-card-content">
+            <p>
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <div class="tabs-list" *ngIf="!showSkeleton">
+    <div class="custom-tab" (click)="selectTab('allProjects')" [ngClass]="{'active-tab': activeTab == 'allProjects'}">
+      {{ "projects.allProjects" | translate }}</div>
+    <div class="custom-tab" (click)="selectTab('activeProjects')"
+      [ngClass]="{'active-tab':  activeTab == 'activeProjects'}">
+      {{ "projects.activeProjects" | translate }}
+    </div>
+  </div>
+  <div padding style="margin-top: 30px;" *ngIf="!showSkeleton">
+    <ion-item class="search-bar-custom" style="margin: 20px 0px 15px 0px;">
+      <ion-icon name="search" item-left color="dark"></ion-icon>
+      <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
+    </ion-item>
+    <div style="padding: 0px 5px;">
+      <div *ngIf="activeTab == 'allProjects'">
+        <div *ngIf="myProjects">
+          <ion-card class="welcome-card custom-card">
+            <ion-card-header class="project-card" >{{'projects.myProjects' | translate}}
+            </ion-card-header>
+            <ion-card-content *ngFor="let project of myProjects | searchProjects: searchInput" class="inner-card"
+              (click)="projectView(project)"  style="border-bottom: 1px solid #f4f4f8;padding: 0px; color:#000;">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="10">
+                    {{ project.title }}
+                  </ion-col>
+                  <ion-col size="2" style="text-align: right;">
+                    <ion-icon name="ios-arrow-forward" class="custom-arrow"> </ion-icon>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </div>
+        <div *ngIf="projectList">
+          <ion-card class="welcome-card custom-card" *ngFor="let projects of projectList">
+            <div *ngIf="(projects.projects | searchProjects: searchInput).length == 0" style="text-align:center;">
+            </div>
+            <ion-card-header class="project-card" style="background-color: #e3e3e3;" *ngIf="((projects.projects | searchProjects: searchInput).length != 0 &&searchInput) ||!searchInput">
+              <ion-card-title>{{ projects?.programs.name}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content *ngFor="let project of projects.projects | searchProjects: searchInput"
+              (click)="projectView(project)"  style="border-bottom: 1px solid #f4f5f8;">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="10">
+                    {{ project.title }}
+                  </ion-col>
+                  <ion-col size="2" style="text-align: right;">
+                    <ion-icon name="ios-arrow-forward" class="custom-arrow"> </ion-icon>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+      <div *ngIf="activeTab == 'activeProjects'">
+        <div *ngIf="myProjects">
+          <ion-card class="welcome-card custom-card">
+            <ion-card-header class="project-card" >{{'projects.myProjects' | translate}}
+            </ion-card-header>
+            <ion-card-content *ngFor="let project of myProjects | searchProjects: searchInput" class="inner-card"
+              (click)="projectView(project)"  style="border-bottom:1px solid #f4f5f8;padding: 0px; color:#000;">
+              <ion-grid *ngIf="project.isStarted">
+                <ion-row>
+                  <ion-col size="10">
+                    {{ project.title }}
+                  </ion-col>
+                  <ion-col size="2" style="text-align: right;">
+                    <ion-icon name="ios-arrow-forward" class="custom-arrow"> </ion-icon>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </div>
+        <div *ngIf="projectList">
+          <ion-card class="welcome-card custom-card" *ngFor="let projects of projectList">
+            <div *ngIf="(projects.projects | searchProjects: searchInput).length == 0" style="text-align:center;">
+            </div>
+            <ion-card-header class="project-card" style="background-color: #e3e3e3;" *ngIf="((projects.projects | searchProjects: searchInput).length != 0 &&searchInput) ||!searchInput">
+              <ion-card-title>{{ projects?.programs.name}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content *ngFor="let project of projects.projects | searchProjects: searchInput"
+              (click)="projectView(project)"  style="border-bottom: 1px solid #f4f5f8;">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="10">
+                    {{ project.title }}
+                  </ion-col>
+                  <ion-col size="2" style="text-align: right;">
+                    <ion-icon name="ios-arrow-forward" class="custom-arrow"> </ion-icon>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

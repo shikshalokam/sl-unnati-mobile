@@ -1,0 +1,58 @@
+<ion-content>
+  <!-- My projects starts here -->
+  <div *ngIf="myProjects">
+    <ion-item class="search-bar-custom">
+      <ion-icon name="search" item-left color="dark"></ion-icon>
+      <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
+    </ion-item>
+    <ion-card class="custom-card">
+      <ion-card-header>
+        {{'projects.my_projects' | translate}}
+      </ion-card-header>
+      <ion-card-content>
+        <ion-card *ngFor="let project of myProjects | searchProjects: searchInput" class="inner-card">
+          <ion-card-content class="custom-card-header" (click)="projectView(project)">
+            {{project.title}} <ion-icon name="arrow-forward"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <!-- My projects ends here -->
+
+  <!-- Mapped projects starts here -->
+  <div *ngIf="projectList">
+    <ion-item class="search-bar-custom">
+      <ion-icon name="search" item-left color="dark"></ion-icon>
+      <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
+    </ion-item>
+    <ion-card class="welcome-card custom-card" *ngFor="let projects of projectList">
+      <div *ngIf="(projects.projects | searchProjects: searchInput).length == 0" style="text-align:center;">
+      </div>
+      <ion-card-header class="project-card" style="background-color: #e3e3e3;" *ngIf="
+            ((projects.projects | searchProjects: searchInput).length != 0 &&
+              searchInput) ||
+            !searchInput
+          ">
+        <ion-card-title>
+          {{ projects.programs.name }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content *ngFor="let project of projects.projects | searchProjects: searchInput"
+        (click)="projectView(project)" style="border-bottom: 1px solid #f4f5f8;">
+        <ion-grid>
+          <ion-row>
+            <ion-col style="min-width: 90%;">
+              <ion-icon name="document"></ion-icon>&nbsp;
+              {{ project.title }}
+            </ion-col>
+            <ion-col>
+              <ion-icon name="ios-arrow-forward"> </ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <!-- Mapped projects ends here -->
+</ion-content>

@@ -1,0 +1,25 @@
+<ion-content>
+  <div *ngIf="projects">
+    <ion-item class="search-bar-custom">
+      <ion-icon name="search" item-left color="dark"></ion-icon>
+      <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
+      <!-- (keyup)="searchSchool(searchInput)" -->
+    </ion-item>
+    <div *ngIf="(projects | searchProjects: searchInput).length == 0" style="text-align:center;">
+      <div class="no-results"> {{'message.no_data_found' | translate}}
+      </div>
+    </div>
+    <ion-card class="project-card">
+      <ion-card-header>
+        {{'projects.myProjects' | translate}}
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item *ngFor="let project of projects | searchProjects: searchInput" class="inner-card" (click)="projectView(project)">
+          <!-- <ion-card-content class="custom-card-header" >  -->
+            {{project.title}} <ion-icon name="arrow-forward"></ion-icon>
+          <!-- </ion-card-content> -->
+        </ion-item>>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

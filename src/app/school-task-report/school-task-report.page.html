@@ -1,0 +1,77 @@
+<ion-header>
+  <app-header [title]="'school_task_report.title' | translate" [showMenu]="false" [showBack]="true" [isGoBack]="back"
+    [noBorder]="false">
+  </app-header>
+</ion-header>
+<ion-content>
+  <div *ngIf="schoolTaskReport && !showSkeleton">
+    <ion-card class="custom-card">
+      <ion-card-header>
+        {{ school.name }}
+      </ion-card-header>
+      <ion-card-content>
+        <div *ngFor="let projects of schoolTaskReport">
+          <ion-card *ngFor="let project of projects.projects">
+            <ion-card-header>
+              {{ project.title }}
+            </ion-card-header>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-button size="small" color="primary" (click)="navigateToDetails(project._id)">
+                      {{ "school_task_report.view_details" | translate }}
+                    </ion-button>
+                  </ion-col>
+                  <ion-col>
+                    <ion-button size="small" color="primary" (click)="navigateToSeeStatus(project._id)"
+                      class="ion-float-right">
+                      {{ "school_task_report.project_status" | translate }}
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    <div style="text-align: center;">
+      <ion-button style="--border-radius: 20px;" size="small" (click)="openApp()">
+        {{ "school_task_report.start_observation" | translate }}
+      </ion-button>
+    </div>
+  </div>
+  <!-- Skeleton screen -->
+  <div *ngIf="showSkeleton">
+    <ion-card>
+      <ion-card-header>
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-card-header>
+      <ion-card-content class="skeleton-card-content">
+        <ion-card *ngFor="let skeleton of skeletons">
+          <ion-card-header>
+            <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          </ion-card-header>
+          <ion-card-content class="skeleton-card-content">
+            <p>
+              <ion-skeleton-text animated style="
+                        width: 48%;
+                        float: left;
+                        margin-right: 2%;"></ion-skeleton-text>
+              <ion-skeleton-text animated style="
+                        width: 48%;
+                        float: left;
+                        margin-left: 2%;"></ion-skeleton-text>
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <ion-card *ngIf="showfailedCard">
+    <ion-card-content>
+      <h2>No project data found</h2>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

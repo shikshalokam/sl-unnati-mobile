@@ -1,0 +1,71 @@
+ion-col div 
+{
+    color:#000;
+    ion-label{
+    font-weight: 600;
+}
+}
+.label-divider{
+    border-bottom:1px solid #eee;
+    p{
+        text-align: justify;
+    }
+}
+ion-progress-bar
+{
+    height:8px;
+}
+.can-go-back header-component ion-back-button {
+    display: block;
+  }
+  #title
+  {
+      padding-left: 10px;
+      padding-right:10px;
+  }
+  .progress-bar
+  {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+.md .toolbar-title {
+    text-overflow: inherit;
+    white-space: normal;
+    text-align: left;
+    font-size:1.3em;
+ }
+ .task-board{
+    background:#e4e4e4;
+    margin:10px;
+    padding-bottom: 5px;
+    ion-card{
+        background: #fff;
+        color: #000;
+        border-radius: 0px;
+    }
+    ion-button{
+        --border-radius: 20px;
+    }
+ }
+ .featured-btn{
+    text-align: center;
+    padding-bottom: 10px;
+ }
+ .status{
+    float: right;
+    color: #fff;
+    padding: 0px 10px 0px 10px;
+    border-radius: 20px;
+ }
+ .inprogress
+ {
+     background: #ef4e35;
+ }
+ .completed
+ {
+     background: #70ef35;
+ }
+ .notyetstarted
+ {
+     background: #e4e4e4
+ }

@@ -1,0 +1,21 @@
+
+.report-card
+{
+        font-size: 30px;
+    color: #000;
+    margin-top: 5%;
+    background:#e3e3e3;
+    ion-card-content
+    {
+        padding-inline-start: 10px !important;
+        color: #000;
+    }
+    ion-col,ion-row,ion-grid{
+        padding: 0px !important;
+    }
+    ion-icon
+    {
+        font-size: 30px;
+        margin-top: 35%;
+    } 
+}

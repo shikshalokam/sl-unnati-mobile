@@ -1,0 +1,27 @@
+.category-box{
+    h4{
+        text-transform: uppercase;
+    }
+    .cat-icon{
+        max-width: 60%;
+    }
+}
+.category-projects{
+    background: #fff;
+    ion-card-header{
+        border-bottom: 2px solid #b23e33; 
+        padding-bottom:0px; 
+        padding-top: 5px;
+    }
+    .val-box{
+        font-family: 'SourceSansPro';
+        font-weight: 600;
+        font-size: 12px;
+        color:#000;
+    }
+    .label-box{
+        font-family: 'SourceSansPro-Bold';
+        font-weight: 600;
+        color:#5a6779;
+    }
+}
