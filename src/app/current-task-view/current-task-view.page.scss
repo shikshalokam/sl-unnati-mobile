@@ -1,0 +1,43 @@
+.task-view-container{
+    ion-row
+    {
+        margin:5px 0px;
+    }
+    h3{
+        margin-bottom: 15px;
+    }
+    .col-9-custom
+    {
+        font-size: 18px;
+        font-family: 'SourceSansPro-Bold' !important;
+        font-weight: 500;
+        color: #4b4b4b;
+    }
+    ion-label{
+        font-family: 'SourceSansPro-Bold' !important;
+        font-weight: 600;
+        margin: auto;
+    }
+    .custom-select{
+    border: 1px solid #ccc;
+    padding: 5px;
+    min-width: 70%;
+    max-width: 70%;
+    height: 36px;
+    border-radius: 4px;
+    }
+    .subtask-box{
+        margin: 15px 0px;
+        ion-icon{
+            color:#af4038;
+        }
+        .subtask-title{
+        font-family: 'SourceSansPro-Bold' !important;
+        font-weight: 600;
+        }
+        ion-row, ion-col{
+            margin: 0px;
+            padding: 0px;
+        }
+    }
+}

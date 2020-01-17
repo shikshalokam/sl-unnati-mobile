@@ -1,0 +1,31 @@
+<ion-header>
+  <app-header
+    [title]="'about.title' | translate"
+    [showMenu]="false"
+    [showBack]="true"
+    [isGoBack]="back"
+    [noBorder]="false"
+  >
+  </app-header>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-list>
+    <h3>{{ "about.app_info" | translate }}</h3>
+  </ion-list>
+  <div style="text-align:center;">
+    <img src="../assets/icon/unnati-prod.png" style="width: 100px;" />
+  </div>
+  <ion-list>
+    {{ "about.app_name" | translate }} : {{ infoData.app_name }}
+  </ion-list>
+  <ion-list>
+    {{ "about.app_version" | translate }} : {{ infoData.app_version }}
+  </ion-list>
+  <ion-list *ngIf="userDetails">
+    {{ "about.user" | translate }} : {{ userDetails.preferred_username }}
+  </ion-list>
+  <ion-button expand="block" color="danger" (click)="logout()"
+    ><ion-icon name="trash"></ion-icon
+    >{{ "button.erase_data" | translate }}</ion-button
+  >
+</ion-content>

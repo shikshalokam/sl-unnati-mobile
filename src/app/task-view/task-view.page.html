@@ -1,0 +1,97 @@
+<ion-header>
+  <app-header [title]="'task_detail' | translate" [showMenu]="false" [showBack]="true" [isGoBack]="back">
+  </app-header>
+</ion-header>
+<ion-content>
+  <!-- Task view -->
+  <ion-card class="welcome-card">
+    <ion-card-content *ngIf="task">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <div class="label-divider">
+              <ion-label>
+                <img src="../../assets/images/tasks.png" />{{
+                  "tasks.title" | translate
+                }}</ion-label><br />
+              {{ task.title }}
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <div class="label-divider">
+              <ion-label>
+                <img src="../../assets/images/startDate.png" />
+                {{ "tasks.start_date" | translate }}</ion-label><br />
+              {{ task.startDate | date: "dd-MM-yyyy" }}
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="label-divider">
+              <ion-label><img src="../../assets/images/endDate.png" />
+                {{ "tasks.end_date" | translate }}</ion-label><br />
+              {{ task.endDate | date: "dd-MM-yyyy" }}
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <div class="label-divider">
+              <ion-label>
+                <img src="../../assets/images/status.png" />
+                {{ "tasks.status" | translate }}</ion-label><br />
+              {{ task.status }}
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <div class="label-divider" *ngIf="task.assignedTo">
+              <ion-label><img src="../../assets/images/assigned.png" />
+                {{ "tasks.assigned_to" | translate }}</ion-label><br />
+              <p *ngFor="let assign of task.assignedTo">{{ assign.name }}</p>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <div class="label-divider">
+              <ion-label>{{ "tasks.last_sync" | translate }}</ion-label><br />
+              <p>{{ task.lastSync | date: "MMM dd,yyyy" }}</p>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="label-divider" style="float:right;">
+              <ion-button color="success" (click)="syncConfirm()" size="small" style="text-transform: none;">
+                {{ "sync" | translate }} <ion-icon name="repeat"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-grid>
+        <ion-row class="action-list">
+          <ion-col style="max-width: 43%;">
+            <ion-button (click)="navigateToSubtasks()" color="light" size="small" style="text-transform: none;">
+              <ion-icon name="add" class="subtasksBtn"></ion-icon>{{ "subtasks" | translate }}
+            </ion-button>
+          </ion-col>
+          <ion-col style="float: right; margin-right: -15px;">
+            <ion-button color="dark" (click)="openDelete()" size="small" style="text-transform: none; ">
+              {{ "delete" | translate }}
+              <ion-icon name="trash" style="font-size: 16px; vertical-align: middle;"></ion-icon>
+            </ion-button>
+            <ion-button color="primary" (click)="editTask()" size="small" style="text-transform: none; float: right;">
+              {{ "edit" | translate }}
+              <ion-icon name="create" style="font-size: 16px; vertical-align: middle;"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+    <ion-card-content *ngIf="!task">
+      No Task Available.
+    </ion-card-content>
+  </ion-card>
+</ion-content>

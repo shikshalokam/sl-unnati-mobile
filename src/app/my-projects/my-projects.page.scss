@@ -1,0 +1,45 @@
+.project-card
+{
+    ion-card-header{
+        background: #f5f5f5;
+        font-size: 18px;
+        color: #000;
+        font-weight: 600;
+            ion-icon{
+              float: right;
+            }
+        }
+ ion-card-content{
+    padding: 0px;
+ }
+  .inner-card
+  {
+    background: #fff;
+    padding:0px;
+    margin:0px;
+    ion-icon{
+      float: right;
+    }
+  }
+}
+// .inner-card
+//   {
+//     margin: 5px 0px;
+//     color: #000;
+//     border-radius: 0px;
+//     .arrow-mark{
+//       margin: auto;
+//       font-size:22px;
+//       text-align: end;
+//     }
+//   }
+//   ion-card-header{
+//     background: #e3e3e3;
+//     padding: 10px;
+//     font-size: 18px;
+//     color: #000;
+//     font-weight: 600;
+//         ion-icon{
+//           float: right;
+//         }
+//     }
