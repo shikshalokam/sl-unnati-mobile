@@ -1,0 +1,71 @@
+<ion-header>
+  <app-header
+    [title]="'reports.title' | translate"
+    [showMenu]="false"
+    [noBorder]="false"
+    [showBack]="true"
+    [noBorder]="false"
+    [isGoBack]="back"
+  >
+  </app-header>
+</ion-header>
+<ion-content>
+  <div *ngIf="showSkeleton">
+    <ion-card>
+      <ion-card-content class="skeleton-card-content">
+        <ion-card *ngFor="let skeleton of skeletons">
+          <ion-card-content class="skeleton-card-content">
+            <p><ion-skeleton-text animated></ion-skeleton-text></p>
+            <p>
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <div *ngIf="reports && !showSkeleton">
+    <ion-card *ngIf="reports.length == 0" padding>
+      No Reports available.
+    </ion-card>
+    <ion-card *ngIf="noSchools" class="noschools"  padding>
+      No Reports available.
+    </ion-card>
+    <ion-card
+      class="report-card"
+      *ngFor="let report of reports"
+      (click)="
+        getReportFile(report.observationSubmissionId, report.observationName)
+      "
+    >
+      <ion-card-content style="padding-inline-start: 10px;">
+        <ion-grid>
+          <ion-row>
+            <ion-col style="min-width:90%;">
+              <ion-row>
+                <ion-col>
+                  <label>{{ "reports.name" | translate }} : </label
+                  ><b> {{ report.entityName }} </b> <br />
+                  <label>{{ "reports.obsr_name" | translate }} : </label>
+                  <b> {{ report.observationName }}</b> <br />
+                  <label>{{ "reports.date" | translate }} : </label>
+                  <b>{{ report.date }}</b
+                  ><br />
+                </ion-col> </ion-row
+            ></ion-col>
+            <ion-col> <ion-icon name="ios-arrow-forward"> </ion-icon></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <ion-infinite-scroll threshold="50px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data..."
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

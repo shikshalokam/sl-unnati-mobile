@@ -1,0 +1,41 @@
+ion-slide {
+  h5 {
+    text-align: center;
+  }
+  p {
+    text-align: justify;
+    font-size: 16px;
+    color: #707070;
+  }
+  img {
+    width: 100%;
+    max-width: 350px;
+    min-height: 325px;
+    max-height: 325px;
+    margin: 20% 0px;
+  }
+}
+
+.footer-md:before {
+  background-image: none !important;
+}
+.ion-footer-custom {
+  text-align: center !important;
+  background: #fff !important;
+  .brdr-radius-30 {
+    --border-radius: 30px;
+  }
+}
+.onboard-header {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 900;
+  margin-top: 7%;
+  p{
+    text-align: center;
+  }
+}
+.img-container {
+  display: block;
+  margin: auto;
+}

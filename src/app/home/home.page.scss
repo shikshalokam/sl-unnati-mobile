@@ -1,0 +1,147 @@
+.welcome-card ion-img {
+  max-height: 35vh;
+  overflow: hidden;
+}
+.custom-card
+{
+  margin-top:10px !important;
+  margin-bottom: 10px !important;
+  .inner-card
+  {
+    padding:0px;
+  }
+}
+.inner-card
+  {
+    margin: 5px 0px;
+    color: #000;
+    border-radius: 0px;
+    .arrow-mark{
+      margin: auto;
+      font-size:22px;
+      text-align: end;
+    }
+  }
+  .arrow-mark{
+    margin: auto !important;
+    font-size:22px !important;
+    text-align: end !important;
+  }
+  // ion-card-header{
+  //   background: #f5f5f5;
+  //   padding: 10px;
+  //   font-size: 18px;
+  //   color: #000;
+  //   font-weight: 600;
+  //       ion-icon{
+  //         float: right;
+  //       }
+  //   }
+
+.card-custom-content
+{
+  border-bottom: 1px solid #f5f5f5;
+  padding:0px !important;
+  padding-bottom:15px;
+}
+.search-results{
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+  border-radius: 0px;;
+  color: #000;
+  background: #f5f5f5;
+}
+// New Ui CSS
+.tiles-container
+{
+padding: 0px 20px;
+margin-bottom: 10px;
+.tiles{
+    min-width: 48.5%;
+    max-width: 48.5%;
+    max-height: 100%;
+    min-height: 100%;
+    margin-bottom: 15px;
+    margin-left: 5px;
+  ion-card
+  {
+    border-radius: 15px;
+    background: #f2efef;
+    max-height: 100%;
+    min-height: 100%;
+    margin: 5px;
+    img{
+      margin: auto;
+      width: 40%;
+      padding: 20px 0px;
+    }
+  }
+  p{
+    text-align: center;
+    font-family: 'SourceSansPro-Bold';
+    text-transform: uppercase;
+    font-size: 18px;
+    padding: 0px;
+    margin: 0px 0px 5px 0px;
+    font-weight: bold;
+    color: #000;
+  }
+}
+}
+.activeprojects-container{
+  font-family: 'SourceSansPro-Bold';
+  margin-bottom:40px;
+  h4 {
+    text-transform: uppercase;
+    padding: 10px 35px;
+    margin: 0px 0px 0px 0px;
+    color: #000;
+    font-weight: 600;
+    font-size: 18px;
+  }
+  ion-card{
+    border-radius: 15px;
+    background: #f2efef;
+    border-top-left-radius: 0px;
+    .collection-label{
+      background: #442c2e;
+      color: #fff;
+      padding: 5px 5px 5px 25px;
+      font-size: 14px;
+      min-width: auto;
+      width: auto;
+      font-weight: 600;
+    }
+    .date-col{
+      max-width: 15%;
+      text-align: right;
+      color: #b23e33;
+      padding: 0px 0px;
+      margin-right: 10px;
+      h3{
+        font-size: 22px;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+    }
+    .title-col
+    {
+      padding: 0px 0px;
+      margin: auto;
+      font-size: 17px;
+      font-weight: 900;
+      margin-top: 5px;
+      color: #000;
+    }
+  }
+  .activeproject-btn
+  {
+    padding: 0px 40px;
+    --border-radius: 15px;
+    margin-top: -10px;
+    margin-bottom: 55px;
+    font-weight: 500;
+    font-size: 18px;
+    min-height: 40px;
+  }
+}

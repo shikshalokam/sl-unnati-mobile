@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title> {{title}}
+      <ion-icon name="close-circle" (click)="close()" style=" float: right;
+        font-size: larger;"></ion-icon>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="propertyForm" novalidate>
+    <div class="form-group">
+      <ion-item>
+        <ion-input type="text" placeholder="{{'tasks.title_placeholder' |translate }}" class="form-control"
+          formControlName="title" [(ngModel)]="task.title" required></ion-input>
+      </ion-item>
+      <div *ngIf="!propertyForm.controls.title.valid && propertyForm.controls.title.dirty" class="validator-error">
+        Please enter title of Task.
+      </div>
+    </div>
+    <!-- Start date -->
+    <div class="form-group">
+      <ion-item>
+        <ion-datetime style="--padding-start: 0px;" placeholder="{{'tasks.start_date' |translate }}"
+          display-format="DD MM YYYY" picker-format="MMMM DD YYYY" formControlName="startDate"
+          [(ngModel)]="task.startDate" required></ion-datetime>
+      </ion-item>
+      <div *ngIf="!propertyForm.controls.startDate.valid && propertyForm.controls.startDate.dirty"
+        class="validator-error">
+        Please enter Start date.
+      </div>
+    </div>
+    <!-- End date -->
+    <div class="form-group">
+      <ion-item>
+        <ion-datetime style="--padding-start: 0px;" placeholder="{{'tasks.end_date' |translate }}"
+          display-format="DD MM YYYY" picker-format="MMMM DD YYYY" formControlName="endDate" [(ngModel)]="task.endDate"
+          required></ion-datetime>
+      </ion-item>
+      <div *ngIf="!propertyForm.controls.endDate.valid && propertyForm.controls.endDate.dirty" class="validator-error">
+        Please enter End date.
+      </div>
+    </div>
+    <div class="form-group">
+      <ion-item *ngFor="let assign of task.assignedTo">
+        <ion-input type="text" placeholder="{{'tasks.assignedTo' |translate }}" readonly class="form-control"
+          formControlName="assignTo" [(ngModel)]="assign" required></ion-input>
+      </ion-item>
+      <div
+        *ngIf="!propertyForm.controls.assignTo.valid && propertyForm.controls.assignTo.dirty && propertyForm.controls.assignTo.touched"
+        class="validator-error">
+        Please enter Assign to.
+      </div>
+    </div>
+    <div class="form-group" *ngIf="title== 'Edit Task'">
+      <ion-item>
+        <ion-input type="text" placeholder="{{'tasks.status' |translate }}" class="form-control"
+          formControlName="status" [(ngModel)]="task.status" required></ion-input>
+      </ion-item>
+      <div
+        *ngIf="!propertyForm.controls.status.valid && propertyForm.controls.status.dirty && propertyForm.controls.status.touched"
+        class="validator-error">
+        Please enter Status.
+      </div>
+    </div>
+    <div style="background-color:#cccccc57; padding: 5px; margin-top:20px;">
+      <ion-button size="small" color="light" slot="start" (click)="close()"> {{'button.cancel' | translate}}
+      </ion-button>
+      <ion-button size="small" color="primary" slot="end" style="float:right" (click)="create()">
+        {{'button.save' | translate}}</ion-button>
+    </div>
+  </form>
+</ion-content>

@@ -1,0 +1,46 @@
+<ion-header>
+  <app-header
+    [title]="'notifications.title' | translate"
+    [showMenu]="false"
+    [showBack]="true"
+    [isGoBack]="back"
+    [noBorder]="false"
+  ></app-header>
+</ion-header>
+<ion-content>
+  <div *ngIf="!showSkeleton">
+    <ion-list class="noPadding">
+      <app-notification-card
+        [notifications]="notifications"
+      ></app-notification-card>
+    </ion-list>
+    <div
+      class="_flex-box _justify-content-center"
+      *ngIf="page * limit < totalCount"
+    >
+      <ion-button expand="block" class="loadMore" (click)="loadMore()">
+        {{ "button.loadMore" | translate }}
+      </ion-button>
+    </div>
+  </div>
+  <div *ngIf="showSkeleton">
+    <ion-card *ngFor="let skeleton of skeletons">
+      <ion-card-header>
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-card-header>
+      <ion-card-content class="skeleton-card-content">
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
