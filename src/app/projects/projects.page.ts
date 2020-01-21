@@ -96,6 +96,8 @@ export class ProjectsPage{
     })
   }
   public selectTab(tab) {
+    this.showSkeleton = true;
     this.activeTab = tab;
+    this.showSkeleton = false;
   }
 }

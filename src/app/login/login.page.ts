@@ -13,6 +13,8 @@ import { TranslateService } from '@ngx-translate/core';
 import * as jwt_decode from "jwt-decode";
 import { IonSlides } from '@ionic/angular';
 import { FcmProvider } from '../fcm';
+
+import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -20,26 +22,38 @@ import { FcmProvider } from '../fcm';
 })
 export class LoginPage implements OnInit {
   @ViewChild('slides') slides: IonSlides;
-  public veryFirstTime: boolean = false;
-  public responseData;
+  veryFirstTime: boolean = false;
+  responseData;
   redirect_url: string;
+  showLogin:boolean = false;
   logout_url: string;
-  auth_url: string;
+  auth_url: SafeUrl ;
   base_url: string;
-  public show: boolean = false;
+  show: boolean = false;
   buttonTitle = "Skip";
   logout_redirect_url: string;
-  public language: string = this.translateService.currentLang;
-  constructor(public storage: Storage, public router: Router, public iab: InAppBrowser, public login: Login, public translateService: TranslateService,
-    public menuCtrl: MenuController, public networkService: NetworkService, public network: Network, public fcm: FcmProvider) {
+  language: string = this.translateService.currentLang;
+  constructor(public storage: Storage,
+    public router: Router,
+    public iab: InAppBrowser,
+    public login: Login,
+    public translateService: TranslateService,
+    public menuCtrl: MenuController,
+    public networkService: NetworkService,
+    public network: Network,
+    public fcm: FcmProvider,
+    private sanitizer: DomSanitizer) {
   }
   slideOpts = {
     initialSlide: 0,
     speed: 400,
     zoom: false
   };
-  ionViewDidEnter()
-  {
+  ionViewDidEnter() {
+
+
+    let iframe = document.getElementsByTagName('iframe')[0];
+    console.log(iframe,iframe);
     if (localStorage.getItem("token") != null) {
       this.menuCtrl.enable(true, 'unnati')
       this.router.navigateByUrl('/project-view/home');
@@ -70,6 +84,7 @@ export class LoginPage implements OnInit {
     this.redirect_url = AppConfigs.keyCloak.redirection_url;
     this.auth_url = this.base_url + "/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=" + AppConfigs.clientId + "&redirect_uri=" +
       this.redirect_url;
+    //  this.auth_url =  this.sanitizer.bypassSecurityTrustResourceUrl(auth_url);
     let that = this;
     return new Promise(function (resolve, reject) {
       let closeCallback = function (event) {
@@ -77,9 +92,11 @@ export class LoginPage implements OnInit {
       };
       let browserRef = (<any>window).cordova.InAppBrowser.open(that.auth_url, "_blank", "zoom=no");
       browserRef.addEventListener('loadstart', function (event) {
+        console.log(event,"event");
         if (event.url && ((event.url).indexOf(that.redirect_url) === 0)) {
           browserRef.removeEventListener("exit", closeCallback);
           let responseParameters = (((event.url).split("?")[1]).split("="))[1];
+          console.log(responseParameters,"responseParameters");
           if (responseParameters !== undefined) {
             this.show = false;
             browserRef.close();
@@ -94,15 +111,15 @@ export class LoginPage implements OnInit {
 
   // Login call
   loginClick() {
+    // this.showLogin = true;
     this.doOAuthStepOne().then(success => {
       this.menuCtrl.enable(true);
       this.login.doOAuthStepTwo(success).then(success1 => {
         this.menuCtrl.enable(true);
         this.login.checkForCurrentUserLocalData(success1);
         let userDetails = jwt_decode(success1.access_token);
-
         this.menuCtrl.enable(true);
-        this.storage.set('userDetails',userDetails).then(userData =>{
+        this.storage.set('userDetails', userDetails).then(userData => {
         })
         this.storage.set('userTokens', success1).then(data => {
           this.router.navigateByUrl('/project-view/home');

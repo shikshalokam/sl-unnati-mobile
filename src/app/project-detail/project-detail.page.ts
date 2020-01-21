@@ -92,6 +92,8 @@ export class ProjectDetailPage {
         project.status = 'Not started';
       }
       this.project = project;
+      console.log(this.project, "this.project this.project");
+      this.sortTasks();
     })
   }
   // Copy the template project into my project
@@ -244,7 +246,6 @@ export class ProjectDetailPage {
 
   // update the task
   public updateTask() {
-    this.project.lastUpdate = new Date();
     this.createProjectService.updateByProjects(this.project);
   }
 
@@ -267,6 +268,36 @@ export class ProjectDetailPage {
   }
   // update project with all changes made.
   public updateCurrentProject(ct) {
-      this.getProject();
+    this.createProjectService.updateByProjects(this.project);
+  }
+  public sortTasks() {
+    let today = new Date();
+    let tasksWithEndDate = [];
+    let tasksWithoutEndDate = [];
+    this.project.tasks.forEach(task => {
+      if (task.endDate && !task.isDelete) {
+        tasksWithEndDate.push(task);
+      } else {
+        tasksWithoutEndDate.push(task);
+      }
+    });
+    tasksWithEndDate.sort((a, b) => {
+      return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+    });
+    console.log(tasksWithEndDate, "items sorted");
+    tasksWithEndDate.forEach(task => {
+      console.log(task.endDate,"vvv", today);
+      if (task.endDate < today) {
+        console.log('task.endDate',task.endDate);
+        console.log(task,"task going to remove from list");
+        tasksWithoutEndDate.splice(tasksWithoutEndDate.indexOf(task), 1);
+        tasksWithoutEndDate.push(task);
+      }
+    });
+    console.log(tasksWithEndDate, "tasksWithEndDate");
+    console.log(tasksWithoutEndDate, "tasksWithoutEndDate");
+    this.project.tasks = tasksWithEndDate.concat(tasksWithoutEndDate);
+    console.log(this.project.tasks, "project.tasks");
+    console.log(tasksWithEndDate, "tasksWithEndDate");
   }
 }

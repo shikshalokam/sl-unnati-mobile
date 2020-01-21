@@ -64,7 +64,7 @@ var CategoryViewPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"'library.title'| translate\" [bg]=\"bgcolor\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content padding style=\"--background: rgb(247, 247, 247);\">\n  <ion-item class=\"search-bar-custom\" style=\"margin:19px 5px 15px 5px;\">\n    <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n    <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\"></ion-input>\n  </ion-item>\n  <ion-grid>\n    <ion-row class=\"category-box\">\n      <ion-col size=\"3\">\n        <img src=\"{{categoryHead?.icon}}\" class=\"cat-icon\">\n      </ion-col>\n      <ion-col size=\"9\">\n        <h4> {{categoryHead?.title}}</h4>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n  <ion-card class=\"category-projects\" *ngFor=\"let project of projects | searchProjects: searchInput\" (click)=\"projectView(project)\">\n    <ion-card-header>\n      <ion-row>\n        <ion-col size=\"4\" class=\"label-box\">\n          {{'library_view.project_name'| translate}}\n        </ion-col>\n        <ion-col size=\"8\" class=\"val-box\">\n          {{project.title}}\n        </ion-col>\n      </ion-row>\n    </ion-card-header>\n    <ion-card-content>\n      <ion-row>\n        <ion-col size=\"4\" class=\"label-box\">\n          {{'library_view.goal'| translate}}\n        </ion-col>\n        <ion-col size=\"8\" class=\"val-box\">\n          {{project.goal}}\n        </ion-col>\n      </ion-row>\n    </ion-card-content>\n  </ion-card>\n  <ion-card class=\"category-projects\" *ngIf=\"( projects | searchProjects: searchInput).length == 0\">\n    <div class=\"no-results\">\n      No Projects available.\n    </div>\n  </ion-card>\n  <div style=\"height: 30px;\"> </div>\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"'library.title'| translate\" [bg]=\"bgcolor\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content padding style=\"--background: rgb(247, 247, 247);\">\n  <div *ngIf=\"!showSkeleton\">\n    <ion-item class=\"search-bar-custom\" style=\"margin:19px 5px 15px 5px;\">\n      <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n      <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\"></ion-input>\n    </ion-item>\n    <ion-grid>\n      <ion-row class=\"category-box\">\n        <ion-col size=\"3\">\n          <img src=\"{{categoryHead?.icon}}\" class=\"cat-icon\">\n        </ion-col>\n        <ion-col size=\"9\">\n          <h4> {{categoryHead?.title}}</h4>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n    <ion-card class=\"category-projects\" *ngFor=\"let project of projects | searchProjects: searchInput\"\n      (click)=\"projectView(project)\">\n      <ion-card-header>\n        <ion-row>\n          <ion-col size=\"4\" class=\"label-box\">\n            {{'library_view.project_name'| translate}}\n          </ion-col>\n          <ion-col size=\"8\" class=\"val-box\">\n            {{project.title}}\n          </ion-col>\n        </ion-row>\n      </ion-card-header>\n      <ion-card-content>\n        <ion-row>\n          <ion-col size=\"4\" class=\"label-box\">\n            {{'library_view.goal'| translate}}\n          </ion-col>\n          <ion-col size=\"8\" class=\"val-box\">\n            {{project.goal}}\n          </ion-col>\n        </ion-row>\n      </ion-card-content>\n    </ion-card>\n    <ion-card class=\"category-projects\" *ngIf=\"( projects | searchProjects: searchInput).length == 0\">\n      <div class=\"no-results\">\n        No Projects available.\n      </div>\n    </ion-card>\n    <div style=\"height: 30px;\"> </div>\n  </div>\n  <!-- loader -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- loader ends here -->\n</ion-content>"
 
 /***/ }),
 
@@ -75,7 +75,7 @@ module.exports = "<ion-header>\n  <app-header [title]=\"'library.title'| transla
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".category-box h4 {\n  text-transform: uppercase; }\n\n.category-box .cat-icon {\n  max-width: 60%; }\n\n.category-projects {\n  background: #fff; }\n\n.category-projects ion-card-header {\n    border-bottom: 2px solid #b23e33;\n    padding-bottom: 0px;\n    padding-top: 5px; }\n\n.category-projects .val-box {\n    font-family: 'SourceSansPro';\n    font-weight: 600;\n    font-size: 12px;\n    color: #000; }\n\n.category-projects .label-box {\n    font-family: 'SourceSansPro-Bold';\n    font-weight: 600;\n    color: #5a6779; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9Vbm5hdGktbW9iaWxlL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9jYXRlZ29yeS12aWV3L2NhdGVnb3J5LXZpZXcucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBRVEseUJBQXlCLEVBQUE7O0FBRmpDO0VBS1EsY0FBYyxFQUFBOztBQUd0QjtFQUNJLGdCQUFnQixFQUFBOztBQURwQjtJQUdRLGdDQUFnQztJQUNoQyxtQkFBa0I7SUFDbEIsZ0JBQWdCLEVBQUE7O0FBTHhCO0lBUVEsNEJBQTRCO0lBQzVCLGdCQUFnQjtJQUNoQixlQUFlO0lBQ2YsV0FBVSxFQUFBOztBQVhsQjtJQWNRLGlDQUFpQztJQUNqQyxnQkFBZ0I7SUFDaEIsY0FBYSxFQUFBIiwiZmlsZSI6InNyYy9hcHAvY2F0ZWdvcnktdmlldy9jYXRlZ29yeS12aWV3LnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5jYXRlZ29yeS1ib3h7XG4gICAgaDR7XG4gICAgICAgIHRleHQtdHJhbnNmb3JtOiB1cHBlcmNhc2U7XG4gICAgfVxuICAgIC5jYXQtaWNvbntcbiAgICAgICAgbWF4LXdpZHRoOiA2MCU7XG4gICAgfVxufVxuLmNhdGVnb3J5LXByb2plY3Rze1xuICAgIGJhY2tncm91bmQ6ICNmZmY7XG4gICAgaW9uLWNhcmQtaGVhZGVye1xuICAgICAgICBib3JkZXItYm90dG9tOiAycHggc29saWQgI2IyM2UzMzsgXG4gICAgICAgIHBhZGRpbmctYm90dG9tOjBweDsgXG4gICAgICAgIHBhZGRpbmctdG9wOiA1cHg7XG4gICAgfVxuICAgIC52YWwtYm94e1xuICAgICAgICBmb250LWZhbWlseTogJ1NvdXJjZVNhbnNQcm8nO1xuICAgICAgICBmb250LXdlaWdodDogNjAwO1xuICAgICAgICBmb250LXNpemU6IDEycHg7XG4gICAgICAgIGNvbG9yOiMwMDA7XG4gICAgfVxuICAgIC5sYWJlbC1ib3h7XG4gICAgICAgIGZvbnQtZmFtaWx5OiAnU291cmNlU2Fuc1Byby1Cb2xkJztcbiAgICAgICAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgICAgICAgY29sb3I6IzVhNjc3OTtcbiAgICB9XG59Il19 */"
+module.exports = ".category-box h4 {\n  text-transform: uppercase; }\n\n.category-box .cat-icon {\n  max-width: 60%; }\n\n.category-projects {\n  background: #fff; }\n\n.category-projects ion-card-header {\n    border-bottom: 2px solid #b23e33;\n    padding-bottom: 0px;\n    padding-top: 5px; }\n\n.category-projects .val-box {\n    font-family: 'SourceSansPro';\n    font-weight: 600;\n    font-size: 12px;\n    color: #000; }\n\n.category-projects .label-box {\n    font-family: 'SourceSansPro-Bold';\n    font-weight: 600;\n    color: #5a6779; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9jYXRlZ29yeS12aWV3L2NhdGVnb3J5LXZpZXcucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBRVEseUJBQXlCLEVBQUE7O0FBRmpDO0VBS1EsY0FBYyxFQUFBOztBQUd0QjtFQUNJLGdCQUFnQixFQUFBOztBQURwQjtJQUdRLGdDQUFnQztJQUNoQyxtQkFBa0I7SUFDbEIsZ0JBQWdCLEVBQUE7O0FBTHhCO0lBUVEsNEJBQTRCO0lBQzVCLGdCQUFnQjtJQUNoQixlQUFlO0lBQ2YsV0FBVSxFQUFBOztBQVhsQjtJQWNRLGlDQUFpQztJQUNqQyxnQkFBZ0I7SUFDaEIsY0FBYSxFQUFBIiwiZmlsZSI6InNyYy9hcHAvY2F0ZWdvcnktdmlldy9jYXRlZ29yeS12aWV3LnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5jYXRlZ29yeS1ib3h7XG4gICAgaDR7XG4gICAgICAgIHRleHQtdHJhbnNmb3JtOiB1cHBlcmNhc2U7XG4gICAgfVxuICAgIC5jYXQtaWNvbntcbiAgICAgICAgbWF4LXdpZHRoOiA2MCU7XG4gICAgfVxufVxuLmNhdGVnb3J5LXByb2plY3Rze1xuICAgIGJhY2tncm91bmQ6ICNmZmY7XG4gICAgaW9uLWNhcmQtaGVhZGVye1xuICAgICAgICBib3JkZXItYm90dG9tOiAycHggc29saWQgI2IyM2UzMzsgXG4gICAgICAgIHBhZGRpbmctYm90dG9tOjBweDsgXG4gICAgICAgIHBhZGRpbmctdG9wOiA1cHg7XG4gICAgfVxuICAgIC52YWwtYm94e1xuICAgICAgICBmb250LWZhbWlseTogJ1NvdXJjZVNhbnNQcm8nO1xuICAgICAgICBmb250LXdlaWdodDogNjAwO1xuICAgICAgICBmb250LXNpemU6IDEycHg7XG4gICAgICAgIGNvbG9yOiMwMDA7XG4gICAgfVxuICAgIC5sYWJlbC1ib3h7XG4gICAgICAgIGZvbnQtZmFtaWx5OiAnU291cmNlU2Fuc1Byby1Cb2xkJztcbiAgICAgICAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgICAgICAgY29sb3I6IzVhNjc3OTtcbiAgICB9XG59Il19 */"
 
 /***/ }),
 
@@ -110,6 +110,8 @@ var CategoryViewPage = /** @class */ (function () {
         this.apiProvider = apiProvider;
         this.router = router;
         this.back = 'project-view/library';
+        this.showSkeleton = false;
+        this.skeletons = [{}, {}, {}, {}, {}, {}];
         this.bgcolor = '#f7f7f7';
         rout.params.subscribe(function (param) {
             _this.catType = param.cat;
@@ -188,23 +190,29 @@ var CategoryViewPage = /** @class */ (function () {
         });
     }
     CategoryViewPage.prototype.ionViewDidEnter = function () {
-        if (this.catType == 'my_projects') {
-            this.getMyProjects();
-        }
+        // if (this.catType == 'my_projects') {
+        //   this.getMyProjects();
+        // }
     };
     CategoryViewPage.prototype.ngOnInit = function () {
     };
     CategoryViewPage.prototype.getMyProjects = function () {
         var _this = this;
+        this.showSkeleton = true;
         this.categaryService.getMyProjects().then(function (myProjects) {
             if (myProjects) {
+                console.log(myProjects, "myProjects");
                 myProjects = _this.getSortData(myProjects);
                 // myProjects.sort((val1, val2)=> {return new Date(val2.lastUpdate) - new 
                 //   Date(val1.lastUpdate)})
                 myProjects.forEach(function (element) {
                 });
                 _this.projects = myProjects;
+                _this.showSkeleton = false;
             }
+            _this.showSkeleton = false;
+        }, function (error) {
+            _this.showSkeleton = false;
         });
     };
     CategoryViewPage.prototype.getSortData = function (myProjects) {
@@ -220,10 +228,14 @@ var CategoryViewPage = /** @class */ (function () {
     };
     CategoryViewPage.prototype.getTemplates = function (type) {
         var _this = this;
+        this.showSkeleton = true;
         this.categaryService.getTemplates(type).then(function (templates) {
             if (templates) {
                 _this.projects = templates;
             }
+            _this.showSkeleton = false;
+        }, function (error) {
+            _this.showSkeleton = false;
         });
     };
     CategoryViewPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

@@ -21,6 +21,7 @@ import { ProjectService } from '../app/project-view/project.service';
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
   @ViewChild(NavController) nav: NavController;
   @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
   lastTimeBackPress = 0;
@@ -53,12 +54,13 @@ export class AppComponent {
     public projectService: ProjectService,
     public api: ApiProvider
   ) {
+    
     this.loginService.emit.subscribe(value => {
       this.loggedInUser = value;
       if (this.loggedInUser) {
         this.subscription = this.interval.subscribe(val => {
           this.prepareProjectToSync();
-          this.prepareMappedProjectToSync(); 
+          this.prepareMappedProjectToSync();
         });
         this.menuCtrl.enable(true, 'unnati');
         this.loggedInUser = value;
@@ -431,7 +433,6 @@ export class AppComponent {
                   project.isNew = false;
                   project.isSync = true;
                   project.isEdited = false;
-                  console.log(project.createdType, "project.createdType");
                   project.lastUpdate = data.projectDetails.data.projects[0].lastSync;
                   data.projectDetails.data.projects[0].createdType = project.createdType;
                   data.projectDetails.data.projects[0].isStarted = project.isStarted;

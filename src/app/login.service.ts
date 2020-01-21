@@ -121,7 +121,6 @@ export class Login {
 
 
   doOAuthStepTwo(token: string): Promise<any> {
-
     return new Promise(resolve => {
       const body = new URLSearchParams();
       const params = 'grant_type=authorization_code&client_id='+AppConfigs.clientId+'&code='+token+'&redirect_uri='+AppConfigs.keyCloak.redirection_url+'&scope=offline_access'
@@ -131,6 +130,8 @@ export class Login {
       body.set('redirect_uri', AppConfigs.keyCloak.redirection_url);
       body.set('scope', "offline_access");
       const url = AppConfigs.app_url  + AppConfigs.keyCloak.getAccessToken;
+      console.log(body,"body");
+      console.log(url,"url");
       this.http.post(url, body)
         .subscribe((data: any) => {
           let parsedData = JSON.parse(data._body);

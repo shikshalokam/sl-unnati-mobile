@@ -7,12 +7,14 @@ export class CreateProjectService {
     constructor(public storage: Storage) { }
     // Update task in current Project
     public UpdateCurrentMyProject(createdTask) {
+        console.log(createdTask,"createdTask");
         return this.storage.get('newcreatedproject').then(cmp => {
             cmp.tasks.forEach(function (task, i) {
                 if (task._id == createdTask._id) {
                     cmp.lastUpdate = new Date();
                     cmp.tasks[i] = createdTask;
                     cmp.isEdited = true;
+                    console.log(cmp.tasks[i] ,"cmp.tasks[i] ");
                 }
             });
             this.storage.set('newcreatedproject', cmp).then(updatedProject => {
@@ -30,9 +32,11 @@ export class CreateProjectService {
                     if (project._id == updatedProject._id) {
                         updatedProject.isEdited = true;
                         myProjects[i] = updatedProject;
+                        console.log( myProjects[i] ," myProjects[i]  myProjects[i] ");
                     }
                 });
                 this.storage.set('myprojects', myProjects).then(project => {
+                    console.log(project,"project ss");
                 }, error => {
                 })
             } else {

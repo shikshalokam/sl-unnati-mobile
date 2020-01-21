@@ -17,13 +17,17 @@
         "view_project": "View Project",
         "view_more": "View more",
         "learning_resources": "Learning Resources",
-        "start_project": "Start Project"
+        "start_project": "Start Project",
+        "mark_task_complete": "Mark Task completed",
+        "attach": "Attach",
+        "mark_complete": "Mark Complete"
     },
     "message": {
         "noUnreadNotifications": "You have no new Notifications!",
         "comingsoon": "Coming Soon",
         "after_prject_create": "Your project has been saved! View your project or continue to Edit",
-        "no_data_found": "No data found"
+        "no_data_found": "No data found",
+        "heading_complete_task_popup": "Would you like to add a reamrk or attach an image before you mark your task complete?"
     },
     "home": {
         "title": "Home",
@@ -96,7 +100,8 @@
         "charts": "Charts",
         "completed": "Completed",
         "view_resources": "View Resources",
-        "create_task": "Create Task"
+        "create_task": "Create Task",
+        "add_tasks_to_project": "ADD TASKS TO YOUR PROJECT"
     },
     "tasks": {
         "start_date": "Start date",

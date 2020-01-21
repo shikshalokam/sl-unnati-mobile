@@ -73,7 +73,7 @@ export class CreateTaskPage implements OnInit {
       androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
     }).then(
       date => {
-        this.task.endDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
+        this.task.endDate = this.datepipe.transform(new Date(date));
       },
       err => console.log('Error occurred while getting date: ', err)
     );
@@ -123,7 +123,7 @@ export class CreateTaskPage implements OnInit {
   public save() {
     if (this.from != 'pd') {
       this.showpopup = true;
-    }else {
+    } else {
       this.navigateToProjectViewScreen();
     }
   }

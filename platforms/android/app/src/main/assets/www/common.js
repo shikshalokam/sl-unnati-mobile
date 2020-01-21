@@ -481,12 +481,14 @@ var CreateProjectService = /** @class */ (function () {
     // Update task in current Project
     CreateProjectService.prototype.UpdateCurrentMyProject = function (createdTask) {
         var _this = this;
+        console.log(createdTask, "createdTask");
         return this.storage.get('newcreatedproject').then(function (cmp) {
             cmp.tasks.forEach(function (task, i) {
                 if (task._id == createdTask._id) {
                     cmp.lastUpdate = new Date();
                     cmp.tasks[i] = createdTask;
                     cmp.isEdited = true;
+                    console.log(cmp.tasks[i], "cmp.tasks[i] ");
                 }
             });
             _this.storage.set('newcreatedproject', cmp).then(function (updatedProject) {
@@ -505,9 +507,11 @@ var CreateProjectService = /** @class */ (function () {
                     if (project._id == updatedProject._id) {
                         updatedProject.isEdited = true;
                         myProjects[i] = updatedProject;
+                        console.log(myProjects[i], " myProjects[i]  myProjects[i] ");
                     }
                 });
                 _this.storage.set('myprojects', myProjects).then(function (project) {
+                    console.log(project, "project ss");
                 }, function (error) {
                 });
             }
