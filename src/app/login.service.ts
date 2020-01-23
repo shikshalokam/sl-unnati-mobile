@@ -117,11 +117,7 @@ export class Login {
 
     });
   }
-
-
-
   doOAuthStepTwo(token: string): Promise<any> {
-
     return new Promise(resolve => {
       const body = new URLSearchParams();
       const params = 'grant_type=authorization_code&client_id='+AppConfigs.clientId+'&code='+token+'&redirect_uri='+AppConfigs.keyCloak.redirection_url+'&scope=offline_access'

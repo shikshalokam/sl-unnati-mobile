@@ -14,6 +14,9 @@ import { ReportsService } from '../reports/reports.service';
 import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
+import { URLSearchParams } from '@angular/http';
+import * as jwt_decode from "jwt-decode";
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -54,6 +57,46 @@ export class HomePage implements OnInit {
     public menuCtrl: MenuController,
     public reportsService: ReportsService,
     public mySchoolsService: MyschoolsService) {
+    
+    //   let params = new URLSearchParams(window.location.search);
+    // if (typeof params == 'string') {
+    //   params = JSON.parse(params);
+    // }
+    // console.log(params, "params");
+
+    // console.log(params.rawParams, "params");
+    // let code = (((params.rawParams).split("?")[1]).split("="))[1];
+    // console.log(code, "code");
+    // this.menuCtrl.enable(true);
+    // this.login.doOAuthStepTwo(code).then(success => {
+    //   console.log(success, "success")
+    //   this.menuCtrl.enable(true);
+    //   this.login.checkForCurrentUserLocalData(success);
+    //   let userDetails = jwt_decode(success.access_token);
+    //   console.log(userDetails,"userDetails");
+    //   this.menuCtrl.enable(true);
+    //   this.storage.set('userDetails', userDetails).then(userData => {
+    //   })
+    //   this.storage.set('userTokens', success).then(data => {
+    //     console.log(data,"data user token save");
+    //     this.router.navigateByUrl('/project-view/home');
+    //     // this.fcm.initializeFCM();
+    //     this.login.loggedIn('true');
+    //     this.menuCtrl.enable(true);
+    //     this.storage.set('veryFirstTime', 'false').then(data => {
+    //       // this.veryFirstTime = false;
+    //     })
+    //   });
+    //   localStorage.setItem('token', success);
+    //   this.networkService.status(true);
+    //   this.menuCtrl.enable(true);
+    //   this.login.loggedIn('true');
+    //   localStorage.setItem("networkStatus", 'true');
+    // }).catch(error1 => {
+    // })
+    // let someParam = params.get('user');
+    // console.log(someParam, "someParam");
+
     this.menuCtrl.enable(true);
     homeService.activeProjectLoad.subscribe(data => {
       if (data == 'activeProjectLoad') {

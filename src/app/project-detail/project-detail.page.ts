@@ -6,7 +6,7 @@ import { CreateTaskService } from '../create-task/create-task.service';
 import * as moment from 'moment';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { DatePipe } from '@angular/common'
-
+import {ToastService} from '../toast.service'
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.page.html',
@@ -36,7 +36,8 @@ export class ProjectDetailPage {
     public router: Router,
     public datePicker: DatePicker,
     public datepipe: DatePipe,
-    public taskService: CreateTaskService
+    public taskService: CreateTaskService,
+    public toastService:ToastService
   ) {
     route.params.subscribe(param => {
       if (param.cat) {
@@ -92,6 +93,7 @@ export class ProjectDetailPage {
         project.status = 'Not started';
       }
       this.project = project;
+      this.sortTasks();
     })
   }
   // Copy the template project into my project
@@ -126,7 +128,6 @@ export class ProjectDetailPage {
           }
         })
       }
-
       this.storage.set('projectToBeView', this.project).then(project => {
         this.project = project;
         this.createProjectService.insertIntoMyProjects(this.project).then(data => {
@@ -168,6 +169,7 @@ export class ProjectDetailPage {
             this.checkDate();
           } else {
             this.project.startDate = this.datepipe.transform(new Date());
+            this.checkDate();
           }
         }
         this.createProjectService.updateByProjects(this.project);
@@ -244,7 +246,6 @@ export class ProjectDetailPage {
 
   // update the task
   public updateTask() {
-    this.project.lastUpdate = new Date();
     this.createProjectService.updateByProjects(this.project);
   }
 
@@ -263,10 +264,31 @@ export class ProjectDetailPage {
     task.isDelete = true;
     this.storage.set('cTask', task).then(ct => {
       this.updateCurrentProject(ct);
+      this.toastService.successToast('message.task_is_deleted');
     })
   }
   // update project with all changes made.
   public updateCurrentProject(ct) {
-      this.getProject();
+    this.createProjectService.updateByProjects(this.project);
+  }
+  public sortTasks() {
+    let today = this.datepipe.transform(new Date(), "MMM dd, yyyy");
+    let tasksWithEndDate = [];
+    let tasksWithoutEndDate = [];
+    this.project.tasks.forEach(task => {
+      if (task.endDate && !task.isDelete) {
+        if (task.endDate >= today) {
+          tasksWithEndDate.push(task);
+        } else {
+          tasksWithoutEndDate.push(task);
+        }
+      } else {
+        tasksWithoutEndDate.push(task);
+      }
+    });
+    tasksWithEndDate.sort((a, b) => {
+      return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+    });
+    this.project.tasks = tasksWithEndDate.concat(tasksWithoutEndDate);
   }
 }
