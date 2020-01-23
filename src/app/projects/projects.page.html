@@ -80,19 +80,21 @@
           <ion-card class="welcome-card custom-card">
             <ion-card-header class="project-card" >{{'projects.myProjects' | translate}}
             </ion-card-header>
-            <ion-card-content *ngFor="let project of myProjects | searchProjects: searchInput" class="inner-card"
-              (click)="projectView(project)"  style="border-bottom:1px solid #f4f5f8;padding: 0px; color:#000;">
-              <ion-grid *ngIf="project.isStarted">
-                <ion-row>
-                  <ion-col size="10">
-                    {{ project.title }}
-                  </ion-col>
-                  <ion-col size="2" style="text-align: right;">
-                    <ion-icon name="ios-arrow-forward" class="custom-arrow"> </ion-icon>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-card-content>
+            <div *ngFor="let project of myProjects | searchProjects: searchInput">
+              <ion-card-content  class="inner-card" *ngIf="!project.isDelete" (click)="projectView(project)"
+                 style="border-bottom:1px solid #f4f5f8;padding: 0px; color:#000;">
+                <ion-grid *ngIf="project.isStarted">
+                  <ion-row>
+                    <ion-col size="10">
+                      {{ project.title }}
+                    </ion-col>
+                    <ion-col size="2" style="text-align: right;">
+                      <ion-icon name="ios-arrow-forward" class="custom-arrow"> </ion-icon>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </div>
           </ion-card>
         </div>
         <div *ngIf="projectList">
@@ -102,19 +104,21 @@
             <ion-card-header class="project-card" style="background-color: #e3e3e3;" *ngIf="((projects.projects | searchProjects: searchInput).length != 0 &&searchInput) ||!searchInput">
               <ion-card-title>{{ projects?.programs.name}}</ion-card-title>
             </ion-card-header>
-            <ion-card-content *ngFor="let project of projects.projects | searchProjects: searchInput"
-              (click)="projectView(project)"  style="border-bottom: 1px solid #f4f5f8;">
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="10">
-                    {{ project.title }}
-                  </ion-col>
-                  <ion-col size="2" style="text-align: right;">
-                    <ion-icon name="ios-arrow-forward" class="custom-arrow"> </ion-icon>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-card-content>
+            <div *ngFor="let project of projects.projects | searchProjects: searchInput">
+              <ion-card-content *ngIf="!project.isDelete" (click)="projectView(project)"
+                 style="border-bottom: 1px solid #f4f5f8;">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="10">
+                      {{ project.title }}
+                    </ion-col>
+                    <ion-col size="2" style="text-align: right;">
+                      <ion-icon name="ios-arrow-forward" class="custom-arrow"> </ion-icon>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </div>
           </ion-card>
         </div>
       </div>
