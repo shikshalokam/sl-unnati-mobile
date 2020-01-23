@@ -122,35 +122,6 @@ var LastMonthReportsPage = /** @class */ (function () {
         this.showSkeleton = false;
         this.skeletons = [{}, {}, {}, {}, {}];
         this.highcharts = highcharts__WEBPACK_IMPORTED_MODULE_3__;
-        // chartOptions = {
-        //   chart: {
-        //     type: 'pie',
-        //     plotBorderWidth: null,
-        //     plotShadow: false
-        //   },
-        //   title: {
-        //     text: ''
-        //   },
-        //   tooltip: {
-        //     pointFormat: '{series.name}: <b>{point.percentage:}%</b>'
-        //   },
-        //   plotOptions: {
-        //     pie: {
-        //       shadow: false,
-        //       center: ['50%', '50%'],
-        //     }
-        //   },
-        //   series: [{
-        //     name: 'Tasks',
-        //     data: [["Completed", 5], ["Pending", 3]],
-        //     size: '70%',
-        //     innerSize: '50%',
-        //     showInLegend: true,
-        //     dataLabels: {
-        //       enabled: false
-        //     }
-        //   }]
-        // };
         this.color = "#20ba8d";
     }
     LastMonthReportsPage.prototype.ionViewDidEnter = function () {
@@ -186,6 +157,7 @@ var LastMonthReportsPage = /** @class */ (function () {
                     _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
                         _this.myReportsService.getReports(userTokens_1.access_token, 'lastMonth').subscribe(function (data) {
                             _this.report = data.data;
+                            console.log(data.data, "data.data in last month reports");
                             _this.setupChart();
                             _this.showSkeleton = false;
                         });
@@ -199,9 +171,18 @@ var LastMonthReportsPage = /** @class */ (function () {
         });
     };
     LastMonthReportsPage.prototype.setupChart = function () {
-        var totalTask = this.report.completed + this.report.pending;
-        var completed = (this.report.completed / totalTask) * 100;
-        completed = completed.toFixed(0);
+        var totalTask;
+        var completed;
+        if (this.report.completed > 0 || this.report.pending > 0) {
+            totalTask = this.report.completed + this.report.pending;
+            completed = (this.report.completed / totalTask) * 100;
+            completed = completed.toFixed(0);
+        }
+        else {
+            this.report.completed = 0;
+            this.report.pending = 0;
+            completed = 0;
+        }
         this.chartOptions = {
             chart: {
                 type: 'pie'

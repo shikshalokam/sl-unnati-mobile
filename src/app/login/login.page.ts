@@ -14,7 +14,7 @@ import * as jwt_decode from "jwt-decode";
 import { IonSlides } from '@ionic/angular';
 import { FcmProvider } from '../fcm';
 
-import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -25,9 +25,9 @@ export class LoginPage implements OnInit {
   veryFirstTime: boolean = false;
   responseData;
   redirect_url: string;
-  showLogin:boolean = false;
+  showLogin: boolean = false;
   logout_url: string;
-  auth_url: SafeUrl ;
+  auth_url: SafeUrl;
   base_url: string;
   show: boolean = false;
   buttonTitle = "Skip";
@@ -50,10 +50,6 @@ export class LoginPage implements OnInit {
     zoom: false
   };
   ionViewDidEnter() {
-
-
-    let iframe = document.getElementsByTagName('iframe')[0];
-    console.log(iframe,iframe);
     if (localStorage.getItem("token") != null) {
       this.menuCtrl.enable(true, 'unnati')
       this.router.navigateByUrl('/project-view/home');
@@ -92,11 +88,9 @@ export class LoginPage implements OnInit {
       };
       let browserRef = (<any>window).cordova.InAppBrowser.open(that.auth_url, "_blank", "zoom=no");
       browserRef.addEventListener('loadstart', function (event) {
-        console.log(event,"event");
         if (event.url && ((event.url).indexOf(that.redirect_url) === 0)) {
           browserRef.removeEventListener("exit", closeCallback);
           let responseParameters = (((event.url).split("?")[1]).split("="))[1];
-          console.log(responseParameters,"responseParameters");
           if (responseParameters !== undefined) {
             this.show = false;
             browserRef.close();

@@ -100,6 +100,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+
 
 
 
@@ -110,7 +112,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var CreateProjectPage = /** @class */ (function () {
-    function CreateProjectPage(formBuilder, router, route, datepipe, datePicker, storage, homeService) {
+    function CreateProjectPage(formBuilder, router, route, datepipe, datePicker, storage, homeService, toastService) {
         var _this = this;
         this.formBuilder = formBuilder;
         this.router = router;
@@ -119,6 +121,7 @@ var CreateProjectPage = /** @class */ (function () {
         this.datePicker = datePicker;
         this.storage = storage;
         this.homeService = homeService;
+        this.toastService = toastService;
         this.back = 'project-view/home';
         this.isValidDate = true;
         this.today = new Date();
@@ -267,6 +270,7 @@ var CreateProjectPage = /** @class */ (function () {
                         myProjects.push(_this.project);
                         _this.storage.set('myprojects', myProjects).then(function (myProjects) {
                             _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
+                                _this.toastService.successToast('message.project_is_created');
                                 _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
                             });
                         });
@@ -283,6 +287,7 @@ var CreateProjectPage = /** @class */ (function () {
                                     project.startDate = _this.project.startDate;
                                     _this.storage.set('myprojects', myProjectsList).then(function (myProjects) {
                                         _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
+                                            _this.toastService.successToast('message.project_is_created');
                                             _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
                                         });
                                     });
@@ -297,6 +302,7 @@ var CreateProjectPage = /** @class */ (function () {
                     data.push(_this.project);
                     _this.storage.set('myprojects', data).then(function (myProjects) {
                         _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
+                            _this.toastService.successToast('message.project_is_created');
                             _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
                         });
                     });
@@ -316,7 +322,8 @@ var CreateProjectPage = /** @class */ (function () {
             _angular_common__WEBPACK_IMPORTED_MODULE_3__["DatePipe"],
             _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_5__["DatePicker"],
             _ionic_storage__WEBPACK_IMPORTED_MODULE_6__["Storage"],
-            _home_home_service__WEBPACK_IMPORTED_MODULE_8__["HomeService"]])
+            _home_home_service__WEBPACK_IMPORTED_MODULE_8__["HomeService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_9__["ToastService"]])
     ], CreateProjectPage);
     return CreateProjectPage;
 }());

@@ -28,7 +28,7 @@ export class AppComponent {
   timePeriodToExit = 2000;
   subscription: Subscription;
   // 3600000
-  interval = interval(3600000);
+  interval = interval(100000);
   public title;
   public loggedIn: boolean = false;
   public appPages = [];
@@ -127,7 +127,6 @@ export class AppComponent {
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
-        // console.log(this.router.url, "this.router.url", s, "S");
         let isOpened = this.tasksService.isActive;
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
           //this.presentAlertConfirm();
@@ -479,7 +478,6 @@ export class AppComponent {
             }
           });
         }
-        console.log(projects, "projects");
         this.storage.set('projects', projects).then(myprojectsff => {
         })
       })

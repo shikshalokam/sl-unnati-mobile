@@ -403,8 +403,6 @@ var LoginPage = /** @class */ (function () {
     }
     LoginPage.prototype.ionViewDidEnter = function () {
         var _this = this;
-        var iframe = document.getElementsByTagName('iframe')[0];
-        console.log(iframe, iframe);
         if (localStorage.getItem("token") != null) {
             this.menuCtrl.enable(true, 'unnati');
             this.router.navigateByUrl('/project-view/home');
@@ -446,11 +444,9 @@ var LoginPage = /** @class */ (function () {
             };
             var browserRef = window.cordova.InAppBrowser.open(that.auth_url, "_blank", "zoom=no");
             browserRef.addEventListener('loadstart', function (event) {
-                console.log(event, "event");
                 if (event.url && ((event.url).indexOf(that.redirect_url) === 0)) {
                     browserRef.removeEventListener("exit", closeCallback);
                     var responseParameters = (((event.url).split("?")[1]).split("="))[1];
-                    console.log(responseParameters, "responseParameters");
                     if (responseParameters !== undefined) {
                         this.show = false;
                         browserRef.close();

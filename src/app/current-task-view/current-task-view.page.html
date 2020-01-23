@@ -13,7 +13,7 @@
         [ngClass]="{'required-field':markLabelsAsInvalid}">{{'add_task.add_a_task'| translate}}
       </ion-label>
       <ion-input type="text" [(ngModel)]="task.title" name="title"
-        placeholder="{{'add_task.placeholder_task_title'| translate}}" style="border-top-right-radius: 0px;
+        placeholder="{{'add_task.edit_task_title'| translate}}" style="border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;"></ion-input>
     </ion-item>
     <ion-row>
@@ -61,19 +61,23 @@
       </ion-col>
     </ion-row>
     <div class="subtask-box" *ngFor="let subtask of task?.subTasks">
-      <ion-row *ngIf="!subtask.allowEdit">
+      <ion-row *ngIf="!subtask.allowEdit && !subtask.isDelete">
         <ion-col size="1">
           <ion-icon ios="ios-radio-button-off" md="md-radio-button-off"></ion-icon>
         </ion-col>
-        <ion-col size="11" class="subtask-title" (click)="subTaskEdit(subtask)"> {{subtask.title}}
+        <ion-col size="10" class="subtask-title" (click)="subTaskEdit(subtask)"> {{subtask.title}}
+        </ion-col>
+        <ion-col size="1" style="margin: auto;
+        text-align: center;">
+          <img src="assets/images/delete.png" style="width: 30px;" (click)="delete(subtask)">
         </ion-col>
       </ion-row>
       <ion-item class="custom-ion-item" *ngIf="subtask.allowEdit" (mouseout)="subTaskEditBlock(subtask)">
         <ion-input type="text" [(ngModel)]="subtask.title" name="title"
-          placeholder="{{'add_task.placeholder_task_title'| translate}}" style="border-top-right-radius: 0px;
+          placeholder="{{'current_task.edit_subtask_title'| translate}}" style="border-top-right-radius: 0px;
           border-bottom-right-radius: 0px;"></ion-input>
       </ion-item>
-      <ion-row>
+      <ion-row *ngIf="!subtask.isDelete">
         <ion-col size="1"> </ion-col>
         <ion-col size="5" (click)="setSubTaskDate(subtask)"> <img src="assets/images/timetable.png"
             style="margin-top: 5px; max-width: 25px; float: left; margin-right: 10px;">
@@ -89,7 +93,7 @@
       </ion-row>
     </div>
   </div>
-  <div style="margin-top:30p;">
+  <div style="margin-top:30px;">
     <ion-button (click)="markTaskAsCompleted()" color="secondary" class="round-corner-btn" expand="block"
       [disabled]="!enableMarkButton">
       {{'button.mark_task_complete' | translate}}
@@ -121,10 +125,10 @@
         </ion-row>
       </div>
       <ion-row class="pop-btn">
-        <ion-col size="6">
+        <ion-col size="5">
           <ion-button color="primary" expand="block" (click)="close()"> {{'button.attach' | translate}}</ion-button>
         </ion-col>
-        <ion-col size="6">
+        <ion-col size="7">
           <ion-button color="primary" expand="block" (click)="close()"> {{'button.mark_complete' | translate}}
           </ion-button>
         </ion-col>

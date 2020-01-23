@@ -47,7 +47,7 @@
             <ion-card-content style="padding:0px;">
               <ion-row>
                 <ion-col class="date-col">
-                  <h3> {{ap.endDate}} </h3>
+                  <h3> {{ap.endDate | date : 'MMM dd'}} </h3>
                 </ion-col>
                 <ion-col class="title-col">
                   {{ap.title}}

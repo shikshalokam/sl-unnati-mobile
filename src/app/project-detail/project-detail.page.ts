@@ -6,7 +6,7 @@ import { CreateTaskService } from '../create-task/create-task.service';
 import * as moment from 'moment';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { DatePipe } from '@angular/common'
-
+import {ToastService} from '../toast.service'
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.page.html',
@@ -36,7 +36,8 @@ export class ProjectDetailPage {
     public router: Router,
     public datePicker: DatePicker,
     public datepipe: DatePipe,
-    public taskService: CreateTaskService
+    public taskService: CreateTaskService,
+    public toastService:ToastService
   ) {
     route.params.subscribe(param => {
       if (param.cat) {
@@ -92,7 +93,6 @@ export class ProjectDetailPage {
         project.status = 'Not started';
       }
       this.project = project;
-      console.log(this.project, "this.project this.project");
       this.sortTasks();
     })
   }
@@ -128,7 +128,6 @@ export class ProjectDetailPage {
           }
         })
       }
-
       this.storage.set('projectToBeView', this.project).then(project => {
         this.project = project;
         this.createProjectService.insertIntoMyProjects(this.project).then(data => {
@@ -170,6 +169,7 @@ export class ProjectDetailPage {
             this.checkDate();
           } else {
             this.project.startDate = this.datepipe.transform(new Date());
+            this.checkDate();
           }
         }
         this.createProjectService.updateByProjects(this.project);
@@ -264,6 +264,7 @@ export class ProjectDetailPage {
     task.isDelete = true;
     this.storage.set('cTask', task).then(ct => {
       this.updateCurrentProject(ct);
+      this.toastService.successToast('message.task_is_deleted');
     })
   }
   // update project with all changes made.
@@ -271,12 +272,16 @@ export class ProjectDetailPage {
     this.createProjectService.updateByProjects(this.project);
   }
   public sortTasks() {
-    let today = new Date();
+    let today = this.datepipe.transform(new Date(), "MMM dd, yyyy");
     let tasksWithEndDate = [];
     let tasksWithoutEndDate = [];
     this.project.tasks.forEach(task => {
       if (task.endDate && !task.isDelete) {
-        tasksWithEndDate.push(task);
+        if (task.endDate >= today) {
+          tasksWithEndDate.push(task);
+        } else {
+          tasksWithoutEndDate.push(task);
+        }
       } else {
         tasksWithoutEndDate.push(task);
       }
@@ -284,20 +289,6 @@ export class ProjectDetailPage {
     tasksWithEndDate.sort((a, b) => {
       return <any>new Date(a.endDate) - <any>new Date(b.endDate);
     });
-    console.log(tasksWithEndDate, "items sorted");
-    tasksWithEndDate.forEach(task => {
-      console.log(task.endDate,"vvv", today);
-      if (task.endDate < today) {
-        console.log('task.endDate',task.endDate);
-        console.log(task,"task going to remove from list");
-        tasksWithoutEndDate.splice(tasksWithoutEndDate.indexOf(task), 1);
-        tasksWithoutEndDate.push(task);
-      }
-    });
-    console.log(tasksWithEndDate, "tasksWithEndDate");
-    console.log(tasksWithoutEndDate, "tasksWithoutEndDate");
     this.project.tasks = tasksWithEndDate.concat(tasksWithoutEndDate);
-    console.log(this.project.tasks, "project.tasks");
-    console.log(tasksWithEndDate, "tasksWithEndDate");
   }
 }

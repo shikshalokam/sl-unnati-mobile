@@ -719,7 +719,6 @@ var map = {
 	],
 	"../category-view/category-view.module": [
 		"./src/app/category-view/category-view.module.ts",
-		"common",
 		"category-view-category-view-module"
 	],
 	"../charts/charts.module": [
@@ -743,7 +742,6 @@ var map = {
 	],
 	"../current-task-view/current-task-view.module": [
 		"./src/app/current-task-view/current-task-view.module.ts",
-		"common",
 		"current-task-view-current-task-view-module"
 	],
 	"../detail/detail.module": [
@@ -847,7 +845,6 @@ var map = {
 	],
 	"./category-view/category-view.module": [
 		"./src/app/category-view/category-view.module.ts",
-		"common",
 		"category-view-category-view-module"
 	],
 	"./charts/charts.module": [
@@ -871,7 +868,6 @@ var map = {
 	],
 	"./current-task-view/current-task-view.module": [
 		"./src/app/current-task-view/current-task-view.module.ts",
-		"common",
 		"current-task-view-current-task-view-module"
 	],
 	"./detail/detail.module": [
@@ -1272,7 +1268,7 @@ var AppComponent = /** @class */ (function () {
         this.lastTimeBackPress = 0;
         this.timePeriodToExit = 2000;
         // 3600000
-        this.interval = Object(rxjs__WEBPACK_IMPORTED_MODULE_12__["interval"])(3600000);
+        this.interval = Object(rxjs__WEBPACK_IMPORTED_MODULE_12__["interval"])(100000);
         this.loggedIn = false;
         this.appPages = [];
         this.history = [];
@@ -1351,7 +1347,6 @@ var AppComponent = /** @class */ (function () {
                 var tree = _this.router.parseUrl(_this.router.url);
                 var g = tree.root.children[_angular_router__WEBPACK_IMPORTED_MODULE_9__["PRIMARY_OUTLET"]];
                 var s = g.segments;
-                // console.log(this.router.url, "this.router.url", s, "S");
                 var isOpened = _this.tasksService.isActive;
                 if (_this.router.url == '/login' || _this.router.url == '/project-view/home') {
                     //this.presentAlertConfirm();
@@ -1770,7 +1765,6 @@ var AppComponent = /** @class */ (function () {
                         }
                     });
                 }
-                console.log(projects, "projects");
                 _this.storage.set('projects', projects).then(function (myprojectsff) {
                 });
             });
@@ -1841,20 +1835,6 @@ var AppConfigs = {
         getAllNotifications: "/notifications/in-app/list",
         registerDevice: "/notifications/push/registerDevice"
     },
-    //AWS Prod Urls
-    // app_url: "https://bodh.shikshalokam.org",
-    // api_url: "https://api.shikshalokam.org",
-    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
-    // clientId: "sl-ionic-connect",
-    // environment: "Production",
-    // notification: {
-    //     kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
-    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
-    //     markAsRead: "notifications/in-app/markAsRead",
-    //     getAllNotifications: "/notifications/in-app/list",
-    // registerDevice: "notifications/push/registerDevice"
-    // },
     // QA
     // app_url: "https://qa.shikshalokam.org",
     // api_url: "https://qahome.shikshalokam.org",
@@ -1868,6 +1848,20 @@ var AppConfigs = {
     //     markAsRead: "/notifications/in-app/markItRead",
     //     getAllNotifications: "/notifications/in-app/list",
     //     registerDevice: "/notifications/push/registerDevice"
+    // },
+    //AWS Prod Urls
+    // app_url: "https://bodh.shikshalokam.org",
+    // api_url: "https://api.shikshalokam.org",
+    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    // clientId: "sl-ionic-connect",
+    // environment: "Production",
+    // notification: {
+    //     kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
+    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
+    //     markAsRead: "notifications/in-app/markAsRead",
+    //     getAllNotifications: "/notifications/in-app/list",
+    // registerDevice: "notifications/push/registerDevice"
     // },
     //Staging Urls
     // app_url: "https://dev.shikshalokam.org",
@@ -1956,24 +1950,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/status-bar/ngx */ "./node_modules/@ionic-native/status-bar/ngx/index.js");
 /* harmony import */ var _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic-native/network/ngx */ "./node_modules/@ionic-native/network/ngx/index.js");
 /* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./network.service */ "./src/app/network.service.ts");
-/* harmony import */ var _current_user__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./current-user */ "./src/app/current-user.ts");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _angular_http__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/http */ "./node_modules/@angular/http/fesm5/http.js");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
-/* harmony import */ var _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @ngx-translate/http-loader */ "./node_modules/@ngx-translate/http-loader/fesm5/ngx-translate-http-loader.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _app_edit_task_edit_task_module__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../app/edit-task/edit-task.module */ "./src/app/edit-task/edit-task.module.ts");
-/* harmony import */ var _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @ionic-native/in-app-browser/ngx */ "./node_modules/@ionic-native/in-app-browser/ngx/index.js");
-/* harmony import */ var _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @ionic-native/app-launcher/ngx */ "./node_modules/@ionic-native/app-launcher/ngx/index.js");
-/* harmony import */ var _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @ionic-native/market/ngx */ "./node_modules/@ionic-native/market/ngx/index.js");
-/* harmony import */ var _angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/platform-browser-dynamic */ "./node_modules/@angular/platform-browser-dynamic/fesm5/platform-browser-dynamic.js");
-/* harmony import */ var _app_api_api__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../app/api/api */ "./src/app/api/api.ts");
-/* harmony import */ var _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @ionic-native/date-picker/ngx */ "./node_modules/@ionic-native/date-picker/ngx/index.js");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
-/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
+/* harmony import */ var _popover_popover_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./popover/popover.component */ "./src/app/popover/popover.component.ts");
+/* harmony import */ var _current_user__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./current-user */ "./src/app/current-user.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_http__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/http */ "./node_modules/@angular/http/fesm5/http.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+/* harmony import */ var _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @ngx-translate/http-loader */ "./node_modules/@ngx-translate/http-loader/fesm5/ngx-translate-http-loader.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _app_edit_task_edit_task_module__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../app/edit-task/edit-task.module */ "./src/app/edit-task/edit-task.module.ts");
+/* harmony import */ var _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @ionic-native/in-app-browser/ngx */ "./node_modules/@ionic-native/in-app-browser/ngx/index.js");
+/* harmony import */ var _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @ionic-native/app-launcher/ngx */ "./node_modules/@ionic-native/app-launcher/ngx/index.js");
+/* harmony import */ var _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @ionic-native/market/ngx */ "./node_modules/@ionic-native/market/ngx/index.js");
+/* harmony import */ var _angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @angular/platform-browser-dynamic */ "./node_modules/@angular/platform-browser-dynamic/fesm5/platform-browser-dynamic.js");
+/* harmony import */ var _app_api_api__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../app/api/api */ "./src/app/api/api.ts");
+/* harmony import */ var _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @ionic-native/date-picker/ngx */ "./node_modules/@ionic-native/date-picker/ngx/index.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
+/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
+/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
+/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
+/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
+/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
+/* harmony import */ var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @ionic-native/file-path/ngx */ "./node_modules/@ionic-native/file-path/ngx/index.js");
+/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
+
 
 
 
@@ -2005,8 +2007,14 @@ __webpack_require__.r(__webpack_exports__);
 // import { FcmProvider } from './fcm';
 
 
+
+
+
+
+
+
 function createTranslateLoader(http) {
-    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_16__["TranslateHttpLoader"](http, './assets/i18n/', '.json');
+    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_17__["TranslateHttpLoader"](http, './assets/i18n/', '.json');
 }
 var AppModule = /** @class */ (function () {
     function AppModule(statusBar) {
@@ -2016,38 +2024,240 @@ var AppModule = /** @class */ (function () {
     }
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_11__["AppComponent"]],
-            entryComponents: [],
+            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_12__["AppComponent"], _popover_popover_component__WEBPACK_IMPORTED_MODULE_10__["PopoverComponent"]],
+            entryComponents: [_popover_popover_component__WEBPACK_IMPORTED_MODULE_10__["PopoverComponent"]],
             imports: [
-                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"], _angular_http__WEBPACK_IMPORTED_MODULE_14__["HttpModule"],
-                _angular_common_http__WEBPACK_IMPORTED_MODULE_13__["HttpClientModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["ReactiveFormsModule"], _app_edit_task_edit_task_module__WEBPACK_IMPORTED_MODULE_18__["EditTaskPageModule"],
+                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"],
+                _angular_http__WEBPACK_IMPORTED_MODULE_15__["HttpModule"],
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_14__["HttpClientModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_18__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_18__["ReactiveFormsModule"],
+                _app_edit_task_edit_task_module__WEBPACK_IMPORTED_MODULE_19__["EditTaskPageModule"],
                 _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicModule"].forRoot(),
-                _app_routing_module__WEBPACK_IMPORTED_MODULE_12__["AppRoutingModule"],
+                _app_routing_module__WEBPACK_IMPORTED_MODULE_13__["AppRoutingModule"],
                 _ionic_storage__WEBPACK_IMPORTED_MODULE_4__["IonicStorageModule"].forRoot(),
-                _ngx_translate_core__WEBPACK_IMPORTED_MODULE_15__["TranslateModule"].forRoot({
+                _ngx_translate_core__WEBPACK_IMPORTED_MODULE_16__["TranslateModule"].forRoot({
                     loader: {
-                        provide: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_15__["TranslateLoader"],
+                        provide: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_16__["TranslateLoader"],
                         useFactory: (createTranslateLoader),
-                        deps: [_angular_common_http__WEBPACK_IMPORTED_MODULE_13__["HttpClient"]]
+                        deps: [_angular_common_http__WEBPACK_IMPORTED_MODULE_14__["HttpClient"]]
                     }
                 })
             ],
             providers: [
-                _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_8__["Network"], _network_service__WEBPACK_IMPORTED_MODULE_9__["NetworkService"], _current_user__WEBPACK_IMPORTED_MODULE_10__["CurrentUserProvider"], _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_19__["InAppBrowser"], _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_20__["AppLauncher"], _app_api_api__WEBPACK_IMPORTED_MODULE_23__["ApiProvider"], _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_21__["Market"], _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_24__["DatePicker"], _angular_common__WEBPACK_IMPORTED_MODULE_25__["DatePipe"],
+                _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"],
+                _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_8__["Network"],
+                _network_service__WEBPACK_IMPORTED_MODULE_9__["NetworkService"],
+                _current_user__WEBPACK_IMPORTED_MODULE_11__["CurrentUserProvider"],
+                _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_20__["InAppBrowser"],
+                _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_21__["AppLauncher"],
+                _app_api_api__WEBPACK_IMPORTED_MODULE_24__["ApiProvider"],
+                _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_22__["Market"],
+                _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_25__["DatePicker"],
+                _angular_common__WEBPACK_IMPORTED_MODULE_26__["DatePipe"],
+                _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_29__["SocialSharing"],
                 _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_6__["SplashScreen"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_30__["FileTransfer"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_30__["FileTransferObject"],
+                _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_31__["File"],
+                _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_32__["FileChooser"],
+                _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_33__["FilePath"],
+                _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_34__["Base64"],
                 { provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"], useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicRouteStrategy"] },
                 // FCM,
                 // FcmProvider,
-                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_26__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_27__["Badge"]
+                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_27__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_28__["Badge"]
             ],
-            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_11__["AppComponent"]]
+            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_12__["AppComponent"]]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"]])
     ], AppModule);
     return AppModule;
 }());
 
-Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_22__["platformBrowserDynamic"])().bootstrapModule(AppModule);
+Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_23__["platformBrowserDynamic"])().bootstrapModule(AppModule);
+
+
+/***/ }),
+
+/***/ "./src/app/category-view/category.view.service.ts":
+/*!********************************************************!*\
+  !*** ./src/app/category-view/category.view.service.ts ***!
+  \********************************************************/
+/*! exports provided: CategoryViewService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CategoryViewService", function() { return CategoryViewService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+
+
+
+var CategoryViewService = /** @class */ (function () {
+    function CategoryViewService(storage, http) {
+        this.storage = storage;
+        this.http = http;
+        this.deleteEvent = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
+    }
+    //  get my projects from local 
+    CategoryViewService.prototype.getMyProjects = function () {
+        return this.storage.get('myprojects').then(function (projects) {
+            return projects;
+        });
+    };
+    // get templates from local
+    CategoryViewService.prototype.getTemplates = function (type) {
+        return this.storage.get('templates').then(function (templates) {
+            return templates[type];
+        });
+    };
+    //  get projects by category
+    CategoryViewService.prototype.getTemplatesByCategory = function (data) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+            'x-auth-token': data
+        });
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].api_url + '/unnati/api/v1/template/all', { headers: httpHeaders });
+    };
+    //  delete project event
+    CategoryViewService.prototype.deleteProject = function (value) {
+        this.deleteEvent.next();
+    };
+    // get pdf of project
+    CategoryViewService.prototype.getPDF = function (data, token) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+            'x-auth-token': token
+        });
+        console.log(token, "token");
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].api_url + '/unnati/api/v1/getProjectPdf', data, { headers: httpHeaders });
+    };
+    CategoryViewService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]])
+    ], CategoryViewService);
+    return CategoryViewService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/create-project/create-project.service.ts":
+/*!**********************************************************!*\
+  !*** ./src/app/create-project/create-project.service.ts ***!
+  \**********************************************************/
+/*! exports provided: CreateProjectService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateProjectService", function() { return CreateProjectService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+
+
+
+var CreateProjectService = /** @class */ (function () {
+    function CreateProjectService(storage) {
+        this.storage = storage;
+    }
+    // Update task in current Project
+    CreateProjectService.prototype.UpdateCurrentMyProject = function (createdTask) {
+        var _this = this;
+        return this.storage.get('newcreatedproject').then(function (cmp) {
+            cmp.tasks.forEach(function (task, i) {
+                if (task._id == createdTask._id) {
+                    cmp.lastUpdate = new Date();
+                    cmp.tasks[i] = createdTask;
+                    cmp.isEdited = true;
+                }
+            });
+            _this.storage.set('newcreatedproject', cmp).then(function (updatedProject) {
+                _this.storage.set('projectToBeView', cmp).then(function (updatedProject) {
+                    _this.updateByProjects(updatedProject);
+                });
+            });
+        });
+    };
+    //  Update project in my projects list.
+    CreateProjectService.prototype.updateByProjects = function (updatedProject) {
+        var _this = this;
+        this.storage.get('myprojects').then(function (myProjects) {
+            if (myProjects) {
+                myProjects.forEach(function (project, i) {
+                    if (project._id == updatedProject._id) {
+                        updatedProject.isEdited = true;
+                        myProjects[i] = updatedProject;
+                    }
+                });
+                _this.storage.set('myprojects', myProjects).then(function (project) {
+                }, function (error) {
+                });
+            }
+            else {
+                updatedProject._id = 1;
+                var data = [];
+                data.push(updatedProject);
+                _this.storage.set('myprojects', data).then(function (myProjects) {
+                });
+            }
+        });
+    };
+    // add new project into my projects.
+    CreateProjectService.prototype.insertIntoMyProjects = function (project) {
+        var _this = this;
+        return this.storage.get('myprojects').then(function (myProjects) {
+            if (myProjects) {
+                project.isEdited = true;
+                myProjects.push(project);
+                _this.storage.set('myprojects', myProjects).then(function (projects) {
+                });
+            }
+            else {
+                project.isEdited = true;
+                var data = [];
+                data.push(project);
+                _this.storage.set('myprojects', data).then(function (projects) {
+                });
+            }
+        });
+    };
+    // update task in project after marking as delete. 
+    CreateProjectService.prototype.UpdateCurrentMyProjectByTask = function (createdTask) {
+        var _this = this;
+        return this.storage.get('projectToBeView').then(function (cmp) {
+            cmp.tasks.forEach(function (task, i) {
+                if (task._id == createdTask._id) {
+                    cmp.isEdited = true;
+                    cmp.tasks[i] = createdTask;
+                }
+            });
+            _this.storage.set('projectToBeView', cmp).then(function (updatedProject) {
+                _this.updateByProjects(updatedProject);
+            });
+        });
+    };
+    CreateProjectService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"]])
+    ], CreateProjectService);
+    return CreateProjectService;
+}());
+
 
 
 /***/ }),
@@ -3342,6 +3552,249 @@ var NotificationCardService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/popover/popover.component.html":
+/*!************************************************!*\
+  !*** ./src/app/popover/popover.component.html ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<ion-list>\n  <ion-item>\n    <ion-label (click)=\"getPDF()\">{{share}}</ion-label>\n  </ion-item>\n  <ion-item>\n    <ion-label (click)=\"deleteConfirmation()\">{{delete}}</ion-label>\n  </ion-item>\n</ion-list>"
+
+/***/ }),
+
+/***/ "./src/app/popover/popover.component.scss":
+/*!************************************************!*\
+  !*** ./src/app/popover/popover.component.scss ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3BvcG92ZXIvcG9wb3Zlci5jb21wb25lbnQuc2NzcyJ9 */"
+
+/***/ }),
+
+/***/ "./src/app/popover/popover.component.ts":
+/*!**********************************************!*\
+  !*** ./src/app/popover/popover.component.ts ***!
+  \**********************************************/
+/*! exports provided: PopoverComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PopoverComponent", function() { return PopoverComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
+/* harmony import */ var _category_view_category_view_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../category-view/category.view.service */ "./src/app/category-view/category.view.service.ts");
+/* harmony import */ var _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../create-project/create-project.service */ "./src/app/create-project/create-project.service.ts");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
+/* harmony import */ var _project_view_project_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../project-view/project.service */ "./src/app/project-view/project.service.ts");
+/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
+/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
+/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
+/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var PopoverComponent = /** @class */ (function () {
+    function PopoverComponent(translateService, popoverController, socialSharing, categoryViewService, createProjectService, storage, toastService, alertController, apiProvider, projectService, transfer, file, platform, fileChooser, base64) {
+        this.translateService = translateService;
+        this.popoverController = popoverController;
+        this.socialSharing = socialSharing;
+        this.categoryViewService = categoryViewService;
+        this.createProjectService = createProjectService;
+        this.storage = storage;
+        this.toastService = toastService;
+        this.alertController = alertController;
+        this.apiProvider = apiProvider;
+        this.projectService = projectService;
+        this.transfer = transfer;
+        this.file = file;
+        this.platform = platform;
+        this.fileChooser = fileChooser;
+        this.base64 = base64;
+    }
+    PopoverComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.platform.ready().then(function () {
+            _this.isIos = _this.platform.is('ios') ? true : false;
+            _this.appFolderPath = _this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
+            _this.translateService.get('button.share').subscribe(function (text) {
+                _this.share = text;
+            });
+            _this.translateService.get('button.delete').subscribe(function (text) {
+                _this.delete = text;
+            });
+            _this.translateService.get('message.delete_project_confirm').subscribe(function (text) {
+                _this.deleteConfirm = text;
+            });
+        });
+    };
+    // confirmation for delete project
+    PopoverComponent.prototype.deleteConfirmation = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var alert;
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alertController.create({
+                            message: this.deleteConfirm,
+                            buttons: [
+                                {
+                                    text: 'Cancel',
+                                    role: 'cancel',
+                                    cssClass: 'secondary',
+                                    handler: function (blah) {
+                                    }
+                                }, {
+                                    text: 'Okay',
+                                    handler: function () {
+                                        _this.deleteProject();
+                                    }
+                                }
+                            ]
+                        })];
+                    case 1:
+                        alert = _a.sent();
+                        return [4 /*yield*/, alert.present()];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // delete project
+    PopoverComponent.prototype.deleteProject = function () {
+        var _this = this;
+        this.project.isDelete = true;
+        var projectData = this.project;
+        this.storage.get('myprojects').then(function (myProjects) {
+            if (myProjects) {
+                myProjects.forEach(function (myProject, i) {
+                    if (myProject._id == projectData._id) {
+                        projectData.isEdited = true;
+                        myProjects[i] = projectData;
+                    }
+                });
+                _this.storage.set('myprojects', myProjects).then(function (project) {
+                    _this.toastService.successToast('message.project_deleted_success');
+                    _this.categoryViewService.deleteProject('deleted');
+                }, function (error) {
+                    _this.toastService.errorToast('message.project_deleted_failed');
+                });
+            }
+        }, function (error) {
+            _this.toastService.errorToast('message.project_deleted_failed');
+        });
+        this.DismissClick();
+    };
+    PopoverComponent.prototype.DismissClick = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.popoverController.dismiss()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PopoverComponent.prototype.getPDF = function () {
+        var _this = this;
+        this.storage.get('userTokens').then(function (data) {
+            _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
+                var parsedData = JSON.parse(data._body);
+                if (parsedData && parsedData.access_token) {
+                    var userTokens_1 = {
+                        access_token: parsedData.access_token,
+                        refresh_token: parsedData.refresh_token,
+                    };
+                    _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
+                        var projectData = {
+                            "projectId": _this.project._id
+                        };
+                        _this.categoryViewService.getPDF(projectData, userTokens_1.access_token).subscribe(function (data) {
+                            var fileName = _this.project.title.replace(/\s/g, "") + ".pdf";
+                            var fileTransfer = _this.transfer.create();
+                            var url = data.pdfUrl;
+                            fileTransfer.download(url, _this.appFolderPath + '/' + fileName).then(function (entry) {
+                                _this.base64.encodeFile(entry.nativeURL).then(function (base64File) {
+                                    var data = base64File.split(',');
+                                    var base64Data = "data:application/pdf;base64," + data[1];
+                                    _this.socialSharing.share("", fileName, base64Data, "").then(function () {
+                                    }, function (error) {
+                                        console.log(error, "error");
+                                    });
+                                }, function (err) {
+                                    console.log(err);
+                                });
+                            }, function (error) {
+                                console.log(error);
+                            });
+                        }, function (error) {
+                            _this.toastService.errorToast('');
+                        });
+                    }, function (error) {
+                    });
+                }
+            });
+        });
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], PopoverComponent.prototype, "project", void 0);
+    PopoverComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-popover',
+            template: __webpack_require__(/*! ./popover.component.html */ "./src/app/popover/popover.component.html"),
+            styles: [__webpack_require__(/*! ./popover.component.scss */ "./src/app/popover/popover.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["PopoverController"],
+            _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_4__["SocialSharing"],
+            _category_view_category_view_service__WEBPACK_IMPORTED_MODULE_5__["CategoryViewService"],
+            _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_6__["CreateProjectService"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_8__["ToastService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["AlertController"],
+            _api_api__WEBPACK_IMPORTED_MODULE_9__["ApiProvider"],
+            _project_view_project_service__WEBPACK_IMPORTED_MODULE_10__["ProjectService"],
+            _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_11__["FileTransfer"],
+            _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_12__["File"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"],
+            _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_13__["FileChooser"],
+            _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_14__["Base64"]])
+    ], PopoverComponent);
+    return PopoverComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/project-view/project.service.ts":
 /*!*************************************************!*\
   !*** ./src/app/project-view/project.service.ts ***!
@@ -3838,6 +4291,87 @@ var TasksService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"], _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"], _angular_common__WEBPACK_IMPORTED_MODULE_5__["Location"]])
     ], TasksService);
     return TasksService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/toast.service.ts":
+/*!**********************************!*\
+  !*** ./src/app/toast.service.ts ***!
+  \**********************************/
+/*! exports provided: ToastService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToastService", function() { return ToastService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+
+
+
+
+var ToastService = /** @class */ (function () {
+    function ToastService(toastController, translateService) {
+        this.toastController = toastController;
+        this.translateService = translateService;
+    }
+    ToastService.prototype.errorToast = function (msg) {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var toast;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.translateService.get(msg).subscribe(function (text) {
+                            msg = text;
+                        });
+                        return [4 /*yield*/, this.toastController.create({
+                                message: msg,
+                                color: 'danger',
+                                duration: 2000
+                            })];
+                    case 1:
+                        toast = _a.sent();
+                        toast.present();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ToastService.prototype.successToast = function (msg) {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var toast;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.translateService.get(msg).subscribe(function (text) {
+                            msg = text;
+                        });
+                        return [4 /*yield*/, this.toastController.create({
+                                message: msg,
+                                color: 'success',
+                                duration: 2000
+                            })];
+                    case 1:
+                        toast = _a.sent();
+                        toast.present();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ToastService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root',
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ToastController"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"]])
+    ], ToastService);
+    return ToastService;
 }());
 
 

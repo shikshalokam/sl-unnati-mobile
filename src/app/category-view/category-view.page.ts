@@ -3,6 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CategoryViewService } from './category.view.service';
 import { Storage } from '@ionic/storage';
 import { ApiProvider } from '../api/api';
+import { PopoverController } from '@ionic/angular';
+import { PopoverComponent } from '../popover/popover.component';
 @Component({
   selector: 'app-category-view',
   templateUrl: './category-view.page.html',
@@ -21,7 +23,14 @@ export class CategoryViewPage implements OnInit {
     public categaryService: CategoryViewService,
     public storage: Storage,
     public apiProvider: ApiProvider,
-    public router: Router) {
+    public router: Router,
+    public popoverController: PopoverController
+  ) {
+    categaryService.deleteEvent.subscribe(value => {
+      if (this.catType == 'my_projects') {
+        this.getMyProjects();
+      }
+    })
     rout.params.subscribe(param => {
       this.catType = param.cat;
       switch (param.cat) {
@@ -111,7 +120,6 @@ export class CategoryViewPage implements OnInit {
     this.showSkeleton = true;
     this.categaryService.getMyProjects().then((myProjects: any) => {
       if (myProjects) {
-        console.log(myProjects,"myProjects");
         myProjects = this.getSortData(myProjects);
         // myProjects.sort((val1, val2)=> {return new Date(val2.lastUpdate) - new 
         //   Date(val1.lastUpdate)})
@@ -145,5 +153,15 @@ export class CategoryViewPage implements OnInit {
     }, error => {
       this.showSkeleton = false;
     })
+  }
+
+  async showMenu(ev: any, project) {
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      componentProps: { project: project },
+      event: ev,
+      translucent: true
+    });
+    return await popover.present();
   }
 }

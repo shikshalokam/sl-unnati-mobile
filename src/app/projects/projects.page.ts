@@ -19,13 +19,12 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
   templateUrl: './projects.page.html',
   styleUrls: ['./projects.page.scss'],
 })
-export class ProjectsPage{
+export class ProjectsPage {
   connected: any = localStorage.getItem('networkStatus')
   skeletons = [{}, {}, {}, {}, {}, {}];
   projectList;
   activeTab = 'allProjects';
   back = "project-view/home";
-
   showSkeleton: boolean = false;
   showNoDataCard = '';
   myProjects;
@@ -77,7 +76,8 @@ export class ProjectsPage{
     });
     this.storage.get('projects').then(projects => {
       if (projects) {
-        this.projectList = projects;
+        this.projectList = this.getSortData(projects);
+        // this.projectList = projects;
       }
     });
   }
@@ -85,7 +85,7 @@ export class ProjectsPage{
     this.showSkeleton = true;
     this.storage.get('projects').then(projects => {
       if (projects) {
-        this.projectList = projects;
+        this.projectList = this.getSortData(projects);
       }
       this.showSkeleton = false;
     });
@@ -99,5 +99,10 @@ export class ProjectsPage{
     this.showSkeleton = true;
     this.activeTab = tab;
     this.showSkeleton = false;
+  }
+  getSortData(myProjects) {
+    return myProjects.sort((a, b) => {
+      return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+    });
   }
 }

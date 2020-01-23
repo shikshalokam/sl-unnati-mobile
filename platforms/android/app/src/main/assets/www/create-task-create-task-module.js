@@ -99,6 +99,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
 /* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
 /* harmony import */ var _create_task_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./create-task.service */ "./src/app/create-task/create-task.service.ts");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+
 
 
 
@@ -109,7 +111,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var CreateTaskPage = /** @class */ (function () {
-    function CreateTaskPage(formBuilder, router, datepipe, datePicker, storage, homeService, route, createTaskService) {
+    function CreateTaskPage(formBuilder, router, datepipe, datePicker, storage, homeService, route, createTaskService, toastService) {
         var _this = this;
         this.formBuilder = formBuilder;
         this.router = router;
@@ -119,6 +121,7 @@ var CreateTaskPage = /** @class */ (function () {
         this.homeService = homeService;
         this.route = route;
         this.createTaskService = createTaskService;
+        this.toastService = toastService;
         this.today = new Date();
         this.task = {};
         this.markLabelsAsInvalid = false;
@@ -202,6 +205,7 @@ var CreateTaskPage = /** @class */ (function () {
                             if (myProject._id == cp._id) {
                                 myProject.tasks = cp.tasks;
                                 _this.storage.set('myprojects', myProjects).then(function (success) {
+                                    _this.toastService.successToast('message.project_is_created');
                                     _this.homeService.loadActiveProjects();
                                 });
                             }
@@ -303,7 +307,8 @@ var CreateTaskPage = /** @class */ (function () {
             _ionic_storage__WEBPACK_IMPORTED_MODULE_6__["Storage"],
             _home_home_service__WEBPACK_IMPORTED_MODULE_7__["HomeService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"],
-            _create_task_service__WEBPACK_IMPORTED_MODULE_8__["CreateTaskService"]])
+            _create_task_service__WEBPACK_IMPORTED_MODULE_8__["CreateTaskService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_9__["ToastService"]])
     ], CreateTaskPage);
     return CreateTaskPage;
 }());

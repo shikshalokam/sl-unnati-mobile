@@ -74,8 +74,8 @@
         <ion-row class="task-list" *ngIf="!task.isDelete" [ngClass]="{'completed-task' : task.status === 'Completed'}">
           <ion-col size="2" *ngIf="task.endDate" class="task-endDate"
             [ngClass]="{'completed-task' : task.status === 'Completed'}">{{task.endDate | date :'MMM dd'}}</ion-col>
-          <ion-col size="2" *ngIf="!task.endDate" class="task-endDate"></ion-col>
-          <ion-col size="6" (click)="taskView(task)"> {{task?.title}} </ion-col>
+          <ion-col size="2" *ngIf="!task.endDate"></ion-col>
+          <ion-col size="6" (click)="taskView(task)"> {{task?.title}} </ion-col> 
           <ion-col size="4" *ngIf="project?.isStarted && task.status != 'Completed'"
             [ngStyle]="{'text-align': task.status != 'Completed' ? 'right' : 'center'}">
             <img src="assets/images/delete.png" style="width: 30px;" (click)="delete(task)">
@@ -91,7 +91,7 @@
       </div>
     </div>
     <div *ngIf="tasksLength == 0 && project?.isStarted" class="tasks-label">
-      <h5> {{'projectDetail.add_tasks_to_project'}} <ion-icon name="add-circle" color="primary" (click)="addTask()"
+      <h5> {{'message.add_tasks_to_project' | translate}} <ion-icon name="add-circle" color="primary" (click)="addTask()"
           style="font-size:30px;"></ion-icon>
       </h5>
     </div>
