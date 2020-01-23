@@ -18,10 +18,19 @@
     font-family: 'SourceSansPro-Bold';
     font-weight: 600;
     margin-bottom:60px;
-    min-height: 250px;
+    min-height: 45vh;
+    .completed-task{
+        background:#2c8959;
+        color:#fff !important;
+    }
     .task-list{
         border-bottom: 1px solid #b23d33;
         padding: 5px 15px 5px 15px;
+        .task-endDate{
+        font-size: 1.3em;
+        color: #b23e33;
+        text-align: center;
+        }
     }
     .tasks-label {    
         text-align: center;

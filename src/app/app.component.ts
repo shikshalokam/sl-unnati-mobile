@@ -21,13 +21,14 @@ import { ProjectService } from '../app/project-view/project.service';
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
   @ViewChild(NavController) nav: NavController;
   @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
   lastTimeBackPress = 0;
   timePeriodToExit = 2000;
   subscription: Subscription;
   // 3600000
-  interval = interval(3600000);
+  interval = interval(100000);
   public title;
   public loggedIn: boolean = false;
   public appPages = [];
@@ -53,12 +54,13 @@ export class AppComponent {
     public projectService: ProjectService,
     public api: ApiProvider
   ) {
+    
     this.loginService.emit.subscribe(value => {
       this.loggedInUser = value;
       if (this.loggedInUser) {
         this.subscription = this.interval.subscribe(val => {
           this.prepareProjectToSync();
-          this.prepareMappedProjectToSync(); 
+          this.prepareMappedProjectToSync();
         });
         this.menuCtrl.enable(true, 'unnati');
         this.loggedInUser = value;
@@ -125,7 +127,6 @@ export class AppComponent {
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
-        // console.log(this.router.url, "this.router.url", s, "S");
         let isOpened = this.tasksService.isActive;
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
           //this.presentAlertConfirm();
@@ -431,7 +432,6 @@ export class AppComponent {
                   project.isNew = false;
                   project.isSync = true;
                   project.isEdited = false;
-                  console.log(project.createdType, "project.createdType");
                   project.lastUpdate = data.projectDetails.data.projects[0].lastSync;
                   data.projectDetails.data.projects[0].createdType = project.createdType;
                   data.projectDetails.data.projects[0].isStarted = project.isStarted;
@@ -478,7 +478,6 @@ export class AppComponent {
             }
           });
         }
-        console.log(projects, "projects");
         this.storage.set('projects', projects).then(myprojectsff => {
         })
       })

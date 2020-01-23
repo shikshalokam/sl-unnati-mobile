@@ -2,6 +2,8 @@
     "app_name": "Unnati",
     "landing_page": "Home",
     "button": {
+        "share": "Share",
+        "delete": "Delete",
         "cancel": "Cancel",
         "save": "Save",
         "erase_data": "Erase Data",
@@ -17,13 +19,24 @@
         "view_project": "View Project",
         "view_more": "View more",
         "learning_resources": "Learning Resources",
-        "start_project": "Start Project"
+        "start_project": "Start Project",
+        "mark_task_complete": "Mark Task completed",
+        "attach": "Attach",
+        "mark_complete": "Mark Complete"
     },
     "message": {
         "noUnreadNotifications": "You have no new Notifications!",
         "comingsoon": "Coming Soon",
         "after_prject_create": "Your project has been saved! View your project or continue to Edit",
-        "no_data_found": "No data found"
+        "no_data_found": "No data found",
+        "heading_complete_task_popup": "Would you like to add a remark or attach an image before you mark your task complete?",
+        "add_tasks_to_project": "ADD TASKS TO YOUR PROJECT",
+        "task_is_deleted": "Task deleted successfully.",
+        "task_is_created": "Task is created successfully.",
+        "project_is_created": "Project is created successfully.",
+        "project_deleted_failed":"Unable to delete the project please try again.",
+        "project_deleted_success":"Project deleted successfully",
+        "delete_project_confirm":"Are you sure you want to delete the project"
     },
     "home": {
         "title": "Home",
@@ -184,7 +197,8 @@
         "add_a_task": "Add a task",
         "placeholder_task_title": "Add a task",
         "status": "Status",
-        "title": "Add Task"
+        "title": "Add Task",
+        "edit_task_title": "Edit task title"
     },
     "newsfeed": {
         "title": "Newsfeed"
@@ -193,8 +207,10 @@
         "status": "Status",
         "subtasks": "Subtasks",
         "add_subtask": "Add Subtask",
-        "placeholder_add_task ": "Add Subtask task name",
-        "title": "Add subtask"
+        "placeholder_add_task ": "Add Subtask name",
+        "title": "Add subtask",
+        "edit_subtask_title": "Edit subtask title",
+        "add_remarks":"Add remarks"
     },
     "library": {
         "title": "Library",

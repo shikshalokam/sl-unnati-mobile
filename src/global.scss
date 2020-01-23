@@ -200,13 +200,14 @@ ion-item {
 }
 .round-corner-btn
 {
-  padding: 0px 40px;
-  --border-radius: 20px;
+  padding: 0px 10%;
+  --border-radius: 2em;
   margin-top: -10px;
-  margin-bottom: 55px;
   font-weight: 500;
-  font-size: 18px;
-  min-height: 40px;
+  font-size: 1.2rem;
+  margin-bottom: 5em;
+  min-height: 2.2em;
+  min-width: 100%;
 }
 .label-capitalize
 {
@@ -215,5 +216,4 @@ ion-item {
 .text-notransform
 {
   text-transform: none !important;
-
 }

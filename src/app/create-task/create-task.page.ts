@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { HomeService } from '../home/home.service';
 import { CreateTaskService } from './create-task.service';
+import {ToastService} from '../toast.service';
 @Component({
   selector: 'app-create-task',
   templateUrl: './create-task.page.html',
@@ -29,7 +30,8 @@ export class CreateTaskPage implements OnInit {
     public storage: Storage,
     public homeService: HomeService,
     public route: ActivatedRoute,
-    public createTaskService: CreateTaskService
+    public createTaskService: CreateTaskService,
+    public toastService:ToastService,
   ) {
     route.params.subscribe(params => {
       this.getCurrentProject(params.id);
@@ -73,7 +75,7 @@ export class CreateTaskPage implements OnInit {
       androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
     }).then(
       date => {
-        this.task.endDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
+        this.task.endDate = this.datepipe.transform(new Date(date));
       },
       err => console.log('Error occurred while getting date: ', err)
     );
@@ -108,6 +110,7 @@ export class CreateTaskPage implements OnInit {
               if (myProject._id == cp._id) {
                 myProject.tasks = cp.tasks;
                 this.storage.set('myprojects', myProjects).then(success => {
+                  this.toastService.successToast('message.project_is_created');
                   this.homeService.loadActiveProjects();
                 })
               }
@@ -123,7 +126,7 @@ export class CreateTaskPage implements OnInit {
   public save() {
     if (this.from != 'pd') {
       this.showpopup = true;
-    }else {
+    } else {
       this.navigateToProjectViewScreen();
     }
   }

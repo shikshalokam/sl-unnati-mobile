@@ -64,7 +64,7 @@ var ProjectDetailPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=project?.title [showMenu]=\"false\" [showBack]=\"true\" [noBorder]=\"false\" [isGoBack]=\"back\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <!-- <h4 padding style=\"margin:0px;\"> {{project?.title}} </h4> -->\n  <div class=\"project-detail\" *ngIf=\"project\">\n    <div padding>\n      <ion-row *ngIf=\"!editGoal\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.goal'|translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"allowEdit('goal')\">\n          {{project?.goal}}\n        </ion-col>\n      </ion-row>\n      <ion-item class=\"custom-ion-item\" *ngIf=\"editGoal\" (mouseout)=\"blockEdit('goal')\">\n        <ion-label class=\"custom-label\" position=\"floating\"\n          [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.goal}\">\n          {{'create_project.goal' | translate}}</ion-label>\n        <ion-textarea type=\"text\" [(ngModel)]=\"project.goal\" name=\"goal\" (mouseout)=\"blockEdit('goal')\"\n          placeholder=\"{{'create_project.placeholder_goal'| translate}}\" maxlength=\"1000\"></ion-textarea>\n      </ion-item>\n      <ion-row *ngIf=\"project?.duration\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.duration' | translate}}\n        </ion-col>\n        <ion-col size=\"7\">\n          {{project?.duration}}\n        </ion-col>\n      </ion-row>\n      <ion-row *ngIf=\"project?.startDate\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.start_date' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"setDate('sd')\">\n          {{project?.startDate | date : \"dd-MM-yyyy\"}}\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.end_date' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"setDate('ed')\">\n          {{project?.endDate | date : \"dd-MM-yyyy\"}}\n        </ion-col>\n      </ion-row>\n      <ion-row *ngIf=\"project?.status\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.status' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" *ngIf=\"project?.status\">\n          <ion-select [(ngModel)]=\"project.status\" class=\"custom-select\" placeholder=\"Select Status\" [disabled]=\"true\">\n            <ion-select-option  *ngFor=\"let status of statuses\"  value=\"{{status.title}}\"\n              selected=\"status.title === project.status\">{{status.title}}</ion-select-option>\n          </ion-select>\n        </ion-col>\n      </ion-row>\n      <ion-button class=\"round-corner-btn prjdetail-btn\" expand=\"block\" color=\"secondary\"\n        (click)=\"navigateToResources()\" *ngIf=\"category != 'my_projects'\">\n        {{'button.learning_resources' | translate}}\n      </ion-button>\n    </div>\n  </div>\n  <div class=\"tasks-box\">\n    <div *ngIf=\"tasksLength > 0\">\n      <ion-row style=\"padding: 15px;\">\n        <ion-col size=\"6\"> {{'projectDetail.total_task' | translate}} : {{tasksLength}}</ion-col>\n        <ion-col style=\"text-align: right; text-transform: uppercase;\" size=\"6\">\n          {{project.category}}\n        </ion-col>\n      </ion-row>\n      <div *ngFor=\"let task of project.tasks\">\n        <ion-row class=\"task-list\" *ngIf=\"!task.isDelete\">\n          <ion-col size=\"10\" (click)=\"taskView(task)\"> {{task?.title}} </ion-col>\n          <ion-col size=\"2\" style=\"text-align: center; \" *ngIf=\"project?.isStarted\"><img\n              src=\"assets/images/delete.png\" style=\"width: 30px;\" (click)=\"delete(task)\"> </ion-col>\n        </ion-row>\n      </div>\n    </div>\n    <div *ngIf=\"tasksLength == 0 && project?.isStarted\" class=\"tasks-label\">\n      <h5> ADD TASKS TO YOUR PROJECT <ion-icon name=\"add-circle\" color=\"primary\" (click)=\"addTask()\"\n          style=\"font-size:30px;\"></ion-icon>\n      </h5>\n    </div>\n  </div>\n  \n  <ion-button class=\"round-corner-btn prjdetail-btn\" expand=\"block\" color=\"secondary\" (click)=\"copyTemplate()\"\n    *ngIf=\"!project?.isStarted\" style=\"margin-bottom: 50px;\">\n    {{'button.start_project' | translate}}\n  </ion-button>\n  <ion-fab vertical=\"bottom\" horizontal=\"end\" style=\"position: fixed;\"\n    *ngIf=\"category == 'my_projects' || category == 'projectsList' && project?.isStarted && tasksLength > 0\">\n    <ion-fab-button (click)=\"addTask()\" style=\" margin-bottom: 15px;\">\n      <ion-icon name=\"add\"></ion-icon>\n    </ion-fab-button>\n  </ion-fab>\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=project?.title [showMenu]=\"false\" [showBack]=\"true\" [noBorder]=\"false\" [isGoBack]=\"back\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <!-- <h4 padding style=\"margin:0px;\"> {{project?.title}} </h4> -->\n  <div class=\"project-detail\" *ngIf=\"project\">\n    <div padding>\n      <ion-row *ngIf=\"!editGoal\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.goal'|translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"allowEdit('goal')\">\n          {{project?.goal}}\n        </ion-col>\n      </ion-row>\n      <ion-item class=\"custom-ion-item\" *ngIf=\"editGoal\" (mouseout)=\"blockEdit('goal')\">\n        <ion-label class=\"custom-label\" position=\"floating\"\n          [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.goal}\">\n          {{'create_project.goal' | translate}}</ion-label>\n        <ion-textarea type=\"text\" [(ngModel)]=\"project.goal\" name=\"goal\" (mouseout)=\"blockEdit('goal')\"\n          placeholder=\"{{'create_project.placeholder_goal'| translate}}\" maxlength=\"1000\"></ion-textarea>\n      </ion-item>\n      <ion-row *ngIf=\"project?.duration\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.duration' | translate}}\n        </ion-col>\n        <ion-col size=\"7\">\n          {{project?.duration}}\n        </ion-col>\n      </ion-row>\n      <ion-row *ngIf=\"project?.startDate\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.start_date' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"setDate('sd')\">\n          {{project?.startDate | date : \"dd-MM-yyyy\"}}\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.end_date' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"setDate('ed')\">\n          {{project?.endDate | date : \"dd-MM-yyyy\"}}\n        </ion-col>\n      </ion-row>\n      <ion-row *ngIf=\"project?.status\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.status' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" *ngIf=\"project?.status\">\n          <ion-select [(ngModel)]=\"project.status\" class=\"custom-select\" placeholder=\"Select Status\" [disabled]=\"true\">\n            <ion-select-option  *ngFor=\"let status of statuses\"  value=\"{{status.title}}\"\n              selected=\"status.title === project.status\">{{status.title}}</ion-select-option>\n          </ion-select>\n        </ion-col>\n      </ion-row>\n      <ion-button class=\"round-corner-btn prjdetail-btn\" expand=\"block\" color=\"secondary\"\n        (click)=\"navigateToResources()\" *ngIf=\"category != 'my_projects'\">\n        {{'button.learning_resources' | translate}}\n      </ion-button>\n    </div>\n  </div>\n  <div class=\"tasks-box\">\n    <div *ngIf=\"tasksLength > 0\">\n      <ion-row style=\"padding: 15px;\">\n        <ion-col size=\"6\"> {{'projectDetail.total_task' | translate}} : {{tasksLength}}</ion-col>\n        <ion-col style=\"text-align: right; text-transform: uppercase;\" size=\"6\">\n          {{project.category}}\n        </ion-col>\n      </ion-row>\n      <div *ngFor=\"let task of project.tasks\">\n        <ion-row class=\"task-list\" *ngIf=\"!task.isDelete\" [ngClass]=\"{'completed-task' : task.status === 'Completed'}\">\n          <ion-col size=\"2\" *ngIf=\"task.endDate\" class=\"task-endDate\"\n            [ngClass]=\"{'completed-task' : task.status === 'Completed'}\">{{task.endDate | date :'MMM dd'}}</ion-col>\n          <ion-col size=\"2\" *ngIf=\"!task.endDate\"></ion-col>\n          <ion-col size=\"6\" (click)=\"taskView(task)\"> {{task?.title}} </ion-col> \n          <ion-col size=\"4\" *ngIf=\"project?.isStarted && task.status != 'Completed'\"\n            [ngStyle]=\"{'text-align': task.status != 'Completed' ? 'right' : 'center'}\">\n            <img src=\"assets/images/delete.png\" style=\"width: 30px;\" (click)=\"delete(task)\">\n          </ion-col>\n          <ion-col size=\"4\" *ngIf=\"project?.isStarted && task.status == 'Completed'\"\n            [ngStyle]=\"{'text-align': task.status != 'Completed' ? 'right' : 'center'}\">\n            <div>\n              <ion-icon name=\"checkmark\" style=\"width:100%;\"></ion-icon>\n              {{task.status}}\n            </div>\n          </ion-col>\n        </ion-row>\n      </div>\n    </div>\n    <div *ngIf=\"tasksLength == 0 && project?.isStarted\" class=\"tasks-label\">\n      <h5> {{'message.add_tasks_to_project' | translate}} <ion-icon name=\"add-circle\" color=\"primary\" (click)=\"addTask()\"\n          style=\"font-size:30px;\"></ion-icon>\n      </h5>\n    </div>\n  </div>\n  <ion-button class=\"round-corner-btn prjdetail-btn\" expand=\"block\" color=\"secondary\" (click)=\"copyTemplate()\"\n    *ngIf=\"!project?.isStarted\" style=\"margin-bottom: 50px;\">\n    {{'button.start_project' | translate}}\n  </ion-button>\n  <ion-fab vertical=\"bottom\" horizontal=\"end\" style=\"position: fixed;\"\n    *ngIf=\"category == 'my_projects' || category == 'projectsList' && project?.isStarted && tasksLength > 0\">\n    <ion-fab-button (click)=\"addTask()\" style=\" margin-bottom: 15px;\">\n      <ion-icon name=\"add\"></ion-icon>\n    </ion-fab-button>\n  </ion-fab>\n</ion-content>"
 
 /***/ }),
 
@@ -75,7 +75,7 @@ module.exports = "<ion-header>\n  <app-header [title]=project?.title [showMenu]=
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".project-detail {\n  background: #f7f7f7;\n  border-bottom: 2px solid #b23d33;\n  font-family: 'SourceSansPro-Bold';\n  font-weight: 600; }\n  .project-detail .label-box {\n    font-family: 'SourceSansPro-Bold';\n    font-weight: 600;\n    text-transform: uppercase; }\n  .project-detail ion-row {\n    padding: 5px 0px; }\n  .tasks-box {\n  background: #fff;\n  font-family: 'SourceSansPro-Bold';\n  font-weight: 600;\n  margin-bottom: 60px;\n  min-height: 250px; }\n  .tasks-box .task-list {\n    border-bottom: 1px solid #b23d33;\n    padding: 5px 15px 5px 15px; }\n  .tasks-box .tasks-label {\n    text-align: center; }\n  .tasks-box .tasks-label ion-icon {\n      font-size: 30px;\n      margin-top: -5px;\n      position: absolute;\n      margin-left: 12px; }\n  .custom-select {\n  border: 1px solid #ccc;\n  padding: 5px;\n  min-width: 70%;\n  max-width: 70%;\n  height: 36px;\n  border-radius: 4px; }\n  .prjdetail-btn {\n  margin-top: 20px;\n  margin-bottom: 0px;\n  font-size: 16px;\n  min-height: 36px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9Vbm5hdGktbW9iaWxlL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9wcm9qZWN0LWRldGFpbC9wcm9qZWN0LWRldGFpbC5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxtQkFBa0I7RUFDbEIsZ0NBQStCO0VBQy9CLGlDQUFpQztFQUNqQyxnQkFBZ0IsRUFBQTtFQUpwQjtJQU1RLGlDQUFpQztJQUNqQyxnQkFBZ0I7SUFDaEIseUJBQXlCLEVBQUE7RUFSakM7SUFZUSxnQkFBZ0IsRUFBQTtFQUd4QjtFQUNJLGdCQUFlO0VBQ2YsaUNBQWlDO0VBQ2pDLGdCQUFnQjtFQUNoQixtQkFBa0I7RUFDbEIsaUJBQWlCLEVBQUE7RUFMckI7SUFPUSxnQ0FBZ0M7SUFDaEMsMEJBQTBCLEVBQUE7RUFSbEM7SUFXUSxrQkFBa0IsRUFBQTtFQVgxQjtNQWFZLGVBQWU7TUFDZixnQkFBZ0I7TUFDaEIsa0JBQWtCO01BQ2xCLGlCQUFpQixFQUFBO0VBSTdCO0VBQ0ksc0JBQXNCO0VBQ3RCLFlBQVk7RUFDWixjQUFjO0VBQ2QsY0FBYztFQUNkLFlBQVk7RUFDWixrQkFBa0IsRUFBQTtFQUVsQjtFQUNJLGdCQUFlO0VBQ2Ysa0JBQWtCO0VBQ2xCLGVBQWU7RUFDZixnQkFBZ0IsRUFBQSIsImZpbGUiOiJzcmMvYXBwL3Byb2plY3QtZGV0YWlsL3Byb2plY3QtZGV0YWlsLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5wcm9qZWN0LWRldGFpbHtcbiAgICBiYWNrZ3JvdW5kOiNmN2Y3Zjc7XG4gICAgYm9yZGVyLWJvdHRvbToycHggc29saWQgI2IyM2QzMztcbiAgICBmb250LWZhbWlseTogJ1NvdXJjZVNhbnNQcm8tQm9sZCc7XG4gICAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgICAubGFiZWwtYm94e1xuICAgICAgICBmb250LWZhbWlseTogJ1NvdXJjZVNhbnNQcm8tQm9sZCc7XG4gICAgICAgIGZvbnQtd2VpZ2h0OiA2MDA7XG4gICAgICAgIHRleHQtdHJhbnNmb3JtOiB1cHBlcmNhc2U7XG4gICAgfVxuICAgIGlvbi1yb3dcbiAgICB7XG4gICAgICAgIHBhZGRpbmc6IDVweCAwcHg7XG4gICAgfVxufVxuLnRhc2tzLWJveHtcbiAgICBiYWNrZ3JvdW5kOiNmZmY7XG4gICAgZm9udC1mYW1pbHk6ICdTb3VyY2VTYW5zUHJvLUJvbGQnO1xuICAgIGZvbnQtd2VpZ2h0OiA2MDA7XG4gICAgbWFyZ2luLWJvdHRvbTo2MHB4O1xuICAgIG1pbi1oZWlnaHQ6IDI1MHB4O1xuICAgIC50YXNrLWxpc3R7XG4gICAgICAgIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAjYjIzZDMzO1xuICAgICAgICBwYWRkaW5nOiA1cHggMTVweCA1cHggMTVweDtcbiAgICB9XG4gICAgLnRhc2tzLWxhYmVsIHsgICAgXG4gICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICAgICAgaW9uLWljb257XG4gICAgICAgICAgICBmb250LXNpemU6IDMwcHg7XG4gICAgICAgICAgICBtYXJnaW4tdG9wOiAtNXB4O1xuICAgICAgICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgICAgICAgbWFyZ2luLWxlZnQ6IDEycHg7XG4gICAgICAgIH1cbiAgICB9XG59XG4uY3VzdG9tLXNlbGVjdHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCAjY2NjO1xuICAgIHBhZGRpbmc6IDVweDtcbiAgICBtaW4td2lkdGg6IDcwJTtcbiAgICBtYXgtd2lkdGg6IDcwJTtcbiAgICBoZWlnaHQ6IDM2cHg7XG4gICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgIH1cbiAgICAucHJqZGV0YWlsLWJ0bntcbiAgICAgICAgbWFyZ2luLXRvcDoyMHB4O1xuICAgICAgICBtYXJnaW4tYm90dG9tOiAwcHg7ICAgICBcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBtaW4taGVpZ2h0OiAzNnB4O1xuICAgIH0iXX0= */"
+module.exports = ".project-detail {\n  background: #f7f7f7;\n  border-bottom: 2px solid #b23d33;\n  font-family: 'SourceSansPro-Bold';\n  font-weight: 600; }\n  .project-detail .label-box {\n    font-family: 'SourceSansPro-Bold';\n    font-weight: 600;\n    text-transform: uppercase; }\n  .project-detail ion-row {\n    padding: 5px 0px; }\n  .tasks-box {\n  background: #fff;\n  font-family: 'SourceSansPro-Bold';\n  font-weight: 600;\n  margin-bottom: 60px;\n  min-height: 45vh; }\n  .tasks-box .completed-task {\n    background: #2c8959;\n    color: #fff !important; }\n  .tasks-box .task-list {\n    border-bottom: 1px solid #b23d33;\n    padding: 5px 15px 5px 15px; }\n  .tasks-box .task-list .task-endDate {\n      font-size: 1.3em;\n      color: #b23e33;\n      text-align: center; }\n  .tasks-box .tasks-label {\n    text-align: center; }\n  .tasks-box .tasks-label ion-icon {\n      font-size: 30px;\n      margin-top: -5px;\n      position: absolute;\n      margin-left: 12px; }\n  .custom-select {\n  border: 1px solid #ccc;\n  padding: 5px;\n  min-width: 70%;\n  max-width: 70%;\n  height: 36px;\n  border-radius: 4px; }\n  .prjdetail-btn {\n  margin-top: 20px;\n  margin-bottom: 0px;\n  font-size: 16px;\n  min-height: 36px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9wcm9qZWN0LWRldGFpbC9wcm9qZWN0LWRldGFpbC5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxtQkFBa0I7RUFDbEIsZ0NBQStCO0VBQy9CLGlDQUFpQztFQUNqQyxnQkFBZ0IsRUFBQTtFQUpwQjtJQU1RLGlDQUFpQztJQUNqQyxnQkFBZ0I7SUFDaEIseUJBQXlCLEVBQUE7RUFSakM7SUFZUSxnQkFBZ0IsRUFBQTtFQUd4QjtFQUNJLGdCQUFlO0VBQ2YsaUNBQWlDO0VBQ2pDLGdCQUFnQjtFQUNoQixtQkFBa0I7RUFDbEIsZ0JBQWdCLEVBQUE7RUFMcEI7SUFPUSxtQkFBa0I7SUFDbEIsc0JBQXFCLEVBQUE7RUFSN0I7SUFXUSxnQ0FBZ0M7SUFDaEMsMEJBQTBCLEVBQUE7RUFabEM7TUFjUSxnQkFBZ0I7TUFDaEIsY0FBYztNQUNkLGtCQUFrQixFQUFBO0VBaEIxQjtJQW9CUSxrQkFBa0IsRUFBQTtFQXBCMUI7TUFzQlksZUFBZTtNQUNmLGdCQUFnQjtNQUNoQixrQkFBa0I7TUFDbEIsaUJBQWlCLEVBQUE7RUFJN0I7RUFDSSxzQkFBc0I7RUFDdEIsWUFBWTtFQUNaLGNBQWM7RUFDZCxjQUFjO0VBQ2QsWUFBWTtFQUNaLGtCQUFrQixFQUFBO0VBRWxCO0VBQ0ksZ0JBQWU7RUFDZixrQkFBa0I7RUFDbEIsZUFBZTtFQUNmLGdCQUFnQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvcHJvamVjdC1kZXRhaWwvcHJvamVjdC1kZXRhaWwucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnByb2plY3QtZGV0YWlse1xuICAgIGJhY2tncm91bmQ6I2Y3ZjdmNztcbiAgICBib3JkZXItYm90dG9tOjJweCBzb2xpZCAjYjIzZDMzO1xuICAgIGZvbnQtZmFtaWx5OiAnU291cmNlU2Fuc1Byby1Cb2xkJztcbiAgICBmb250LXdlaWdodDogNjAwO1xuICAgIC5sYWJlbC1ib3h7XG4gICAgICAgIGZvbnQtZmFtaWx5OiAnU291cmNlU2Fuc1Byby1Cb2xkJztcbiAgICAgICAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgICAgICAgdGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcbiAgICB9XG4gICAgaW9uLXJvd1xuICAgIHtcbiAgICAgICAgcGFkZGluZzogNXB4IDBweDtcbiAgICB9XG59XG4udGFza3MtYm94e1xuICAgIGJhY2tncm91bmQ6I2ZmZjtcbiAgICBmb250LWZhbWlseTogJ1NvdXJjZVNhbnNQcm8tQm9sZCc7XG4gICAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgICBtYXJnaW4tYm90dG9tOjYwcHg7XG4gICAgbWluLWhlaWdodDogNDV2aDtcbiAgICAuY29tcGxldGVkLXRhc2t7XG4gICAgICAgIGJhY2tncm91bmQ6IzJjODk1OTtcbiAgICAgICAgY29sb3I6I2ZmZiAhaW1wb3J0YW50O1xuICAgIH1cbiAgICAudGFzay1saXN0e1xuICAgICAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgI2IyM2QzMztcbiAgICAgICAgcGFkZGluZzogNXB4IDE1cHggNXB4IDE1cHg7XG4gICAgICAgIC50YXNrLWVuZERhdGV7XG4gICAgICAgIGZvbnQtc2l6ZTogMS4zZW07XG4gICAgICAgIGNvbG9yOiAjYjIzZTMzO1xuICAgICAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgICAgIH1cbiAgICB9XG4gICAgLnRhc2tzLWxhYmVsIHsgICAgXG4gICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICAgICAgaW9uLWljb257XG4gICAgICAgICAgICBmb250LXNpemU6IDMwcHg7XG4gICAgICAgICAgICBtYXJnaW4tdG9wOiAtNXB4O1xuICAgICAgICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgICAgICAgbWFyZ2luLWxlZnQ6IDEycHg7XG4gICAgICAgIH1cbiAgICB9XG59XG4uY3VzdG9tLXNlbGVjdHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCAjY2NjO1xuICAgIHBhZGRpbmc6IDVweDtcbiAgICBtaW4td2lkdGg6IDcwJTtcbiAgICBtYXgtd2lkdGg6IDcwJTtcbiAgICBoZWlnaHQ6IDM2cHg7XG4gICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgIH1cbiAgICAucHJqZGV0YWlsLWJ0bntcbiAgICAgICAgbWFyZ2luLXRvcDoyMHB4O1xuICAgICAgICBtYXJnaW4tYm90dG9tOiAwcHg7ICAgICBcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBtaW4taGVpZ2h0OiAzNnB4O1xuICAgIH0iXX0= */"
 
 /***/ }),
 
@@ -99,6 +99,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/date-picker/ngx */ "./node_modules/@ionic-native/date-picker/ngx/index.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+
 
 
 
@@ -109,7 +111,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ProjectDetailPage = /** @class */ (function () {
-    function ProjectDetailPage(storage, route, createProjectService, router, datePicker, datepipe, taskService) {
+    function ProjectDetailPage(storage, route, createProjectService, router, datePicker, datepipe, taskService, toastService) {
         var _this = this;
         this.storage = storage;
         this.route = route;
@@ -118,6 +120,7 @@ var ProjectDetailPage = /** @class */ (function () {
         this.datePicker = datePicker;
         this.datepipe = datepipe;
         this.taskService = taskService;
+        this.toastService = toastService;
         this.tasksLength = 0;
         this.markLabelsAsInvalid = false;
         this.editGoal = false;
@@ -186,6 +189,7 @@ var ProjectDetailPage = /** @class */ (function () {
                 project.status = 'Not started';
             }
             _this.project = project;
+            _this.sortTasks();
         });
     };
     // Copy the template project into my project
@@ -266,6 +270,7 @@ var ProjectDetailPage = /** @class */ (function () {
                 }
                 else {
                     _this.project.startDate = _this.datepipe.transform(new Date());
+                    _this.checkDate();
                 }
             }
             _this.createProjectService.updateByProjects(_this.project);
@@ -340,7 +345,6 @@ var ProjectDetailPage = /** @class */ (function () {
     };
     // update the task
     ProjectDetailPage.prototype.updateTask = function () {
-        this.project.lastUpdate = new Date();
         this.createProjectService.updateByProjects(this.project);
     };
     // navigate to view task
@@ -359,14 +363,34 @@ var ProjectDetailPage = /** @class */ (function () {
         task.isDelete = true;
         this.storage.set('cTask', task).then(function (ct) {
             _this.updateCurrentProject(ct);
+            _this.toastService.successToast('message.task_is_deleted');
         });
     };
     // update project with all changes made.
     ProjectDetailPage.prototype.updateCurrentProject = function (ct) {
-        var _this = this;
-        this.createProjectService.UpdateCurrentMyProjectByTask(ct).then(function (currentMyProject) {
-            _this.getProject();
+        this.createProjectService.updateByProjects(this.project);
+    };
+    ProjectDetailPage.prototype.sortTasks = function () {
+        var today = this.datepipe.transform(new Date(), "MMM dd, yyyy");
+        var tasksWithEndDate = [];
+        var tasksWithoutEndDate = [];
+        this.project.tasks.forEach(function (task) {
+            if (task.endDate && !task.isDelete) {
+                if (task.endDate >= today) {
+                    tasksWithEndDate.push(task);
+                }
+                else {
+                    tasksWithoutEndDate.push(task);
+                }
+            }
+            else {
+                tasksWithoutEndDate.push(task);
+            }
         });
+        tasksWithEndDate.sort(function (a, b) {
+            return new Date(a.endDate) - new Date(b.endDate);
+        });
+        this.project.tasks = tasksWithEndDate.concat(tasksWithoutEndDate);
     };
     ProjectDetailPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -380,7 +404,8 @@ var ProjectDetailPage = /** @class */ (function () {
             _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"],
             _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_7__["DatePicker"],
             _angular_common__WEBPACK_IMPORTED_MODULE_8__["DatePipe"],
-            _create_task_create_task_service__WEBPACK_IMPORTED_MODULE_5__["CreateTaskService"]])
+            _create_task_create_task_service__WEBPACK_IMPORTED_MODULE_5__["CreateTaskService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_9__["ToastService"]])
     ], ProjectDetailPage);
     return ProjectDetailPage;
 }());
