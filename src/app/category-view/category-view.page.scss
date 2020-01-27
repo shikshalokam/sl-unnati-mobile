@@ -12,13 +12,14 @@
         border-bottom: 2px solid #b23e33; 
         padding-bottom:0px; 
         padding-top: 5px;
+        padding-right: 0px;
     }
     .popover-menu{
-        margin-top: 5px; 
-        float: right; 
-        font-size: 18px; 
+        margin-top: 0px;
+        float: right;
+        font-size: 26px; 
         z-index: 999; 
-        width:20px;
+        color: #b23e33;
     }
     .val-box{
         font-family: 'SourceSansPro';

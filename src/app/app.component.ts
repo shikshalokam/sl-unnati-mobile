@@ -15,6 +15,7 @@ import { NgZone } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { ApiProvider } from './api/api';
 import { ProjectService } from '../app/project-view/project.service';
+import { HomeService } from './home/home.service';
 // import { FcmProvider } from './fcm';
 @Component({
   selector: 'app-root',
@@ -28,7 +29,7 @@ export class AppComponent {
   timePeriodToExit = 2000;
   subscription: Subscription;
   // 3600000
-  interval = interval(100000);
+  interval = interval(3600000);
   public title;
   public loggedIn: boolean = false;
   public appPages = [];
@@ -52,9 +53,10 @@ export class AppComponent {
     public modalController: ModalController, public zone: NgZone,
     public route: ActivatedRoute,
     public projectService: ProjectService,
-    public api: ApiProvider
+    public api: ApiProvider,
+    public homeService: HomeService
   ) {
-    
+
     this.loginService.emit.subscribe(value => {
       this.loggedInUser = value;
       if (this.loggedInUser) {
@@ -425,6 +427,7 @@ export class AppComponent {
               refresh_token: parsedData.refresh_token,
             };
             this.storage.set('userTokens', userTokens).then(data => {
+              this.homeService.syncingProject(true);
               this.projectService.sync(project, data.access_token).subscribe((data: any) => {
                 if (data.status == "failed") {
                 } else if (data.status == "success") {
@@ -432,16 +435,19 @@ export class AppComponent {
                   project.isNew = false;
                   project.isSync = true;
                   project.isEdited = false;
-                  project.lastUpdate = data.projectDetails.data.projects[0].lastSync;
                   data.projectDetails.data.projects[0].createdType = project.createdType;
                   data.projectDetails.data.projects[0].isStarted = project.isStarted;
                   updatedProject = data.projectDetails.data.projects[0];
                   updatedProject.isSync = true;
                   updatedProject.isEdited = false;
                   updatedProject.isNew = false;
+                  updatedProject.lastUpdate = project.lastUpdate;
                   this.syncUpdateInLocal(updatedProject, project);
                 }
+                this.homeService.syncingProject(false);
+
               }, error => {
+                this.homeService.syncingProject(false);
               })
             })
           }
@@ -482,6 +488,5 @@ export class AppComponent {
         })
       })
     }
-
   }
 }
