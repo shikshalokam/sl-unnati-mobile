@@ -1,8 +1,16 @@
 <ion-list>
   <ion-item>
-    <ion-label (click)="getPDF()">{{share}}</ion-label>
+    <ion-label (click)="deleteConfirmation()">{{delete}}
+    </ion-label>
+    <ion-avatar slot="end">
+      <img src="assets/images/delete_project.png">
+    </ion-avatar>
   </ion-item>
   <ion-item>
-    <ion-label (click)="deleteConfirmation()">{{delete}}</ion-label>
+    <ion-label (click)="getPDF()">{{share}}
+    </ion-label>
+    <ion-avatar slot="end" class="avatar-style">
+      <ion-icon name="share"></ion-icon>
+    </ion-avatar>
   </ion-item>
 </ion-list>
