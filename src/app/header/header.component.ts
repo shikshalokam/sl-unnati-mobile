@@ -5,7 +5,7 @@ import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
 import { Badge } from '@ionic-native/badge/ngx';
 import { MenuController } from '@ionic/angular';
-
+import { HomeService } from '../home/home.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -18,14 +18,21 @@ export class HeaderComponent implements OnInit {
   @Input() noBorder: boolean = true;
   @Input() isGoBack: boolean = false;
   @Input() isParam;
-  @Input() bg ='#fff'
+  @Input() bg = '#fff'
+  isSyncing: boolean = false;
   public connected = navigator.onLine;
   page = 1;
   limit = 20;
   public notificationCount;
-  constructor(public router: Router, public notificationCardService: NotificationCardService, public storage: Storage,
+  constructor(public router: Router,
+    public notificationCardService: NotificationCardService,
+    public storage: Storage,
     public menuController: MenuController,
-    public badge: Badge, public api: ApiProvider) {
+    public badge: Badge, public api: ApiProvider,
+    public homeService: HomeService) {
+    homeService.isSyncing.subscribe((data: boolean) => {
+      this.isSyncing = data;
+    })
     notificationCardService.notificationCount.subscribe(count => {
       this.notificationCount = count;
       this.badge.set(this.notificationCount);
@@ -61,10 +68,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['project-view/notifications']);
   }
   public goBack() {
-    if(this.isParam){
+    if (this.isParam) {
       this.router.navigate([this.isGoBack, this.isParam]);
-    }else {
-    this.router.navigate([this.isGoBack]);
+    } else {
+      this.router.navigate([this.isGoBack]);
     }
   }
   public menuToggle() {

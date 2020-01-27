@@ -64,7 +64,7 @@ var CurrentTaskViewPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"'current_task.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [noBorder]=\"false\"\n    [isGoBack]=\"back\" [isParam]=\"parameter\">\n  </app-header>\n</ion-header>\n\n<ion-content padding *ngIf=\"task\" class=\"task-view-container\">\n  <div style=\"min-height:85%\">\n    <h3 (click)=\"allowEdit('title')\" *ngIf=\"!editTitle\">{{task?.title}}\n    </h3>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"editTitle\" (mouseout)=\"blockEdit('title')\">\n      <ion-label class=\"custom-label\" position=\"floating\" style=\"text-transform: none; margin: 0px;font-size: 20px;\"\n        [ngClass]=\"{'required-field':markLabelsAsInvalid}\">{{'add_task.add_a_task'| translate}}\n      </ion-label>\n      <ion-input type=\"text\" [(ngModel)]=\"task.title\" name=\"title\"\n        placeholder=\"{{'add_task.edit_task_title'| translate}}\" style=\"border-top-right-radius: 0px;\n        border-bottom-right-radius: 0px;\"></ion-input>\n    </ion-item>\n    <ion-row>\n      <ion-col size=\"3\" style=\"padding: 0px;\">\n        <img src=\"assets/images/timetable.png\" style=\"max-width: 40%;\" (click)=\"setDate('task')\"> </ion-col>\n      <ion-col size=\"9\" class=\"col-9-custom\" (click)=\"setDate('task')\">{{task.endDate | date : \"dd-MM-yyyy\"}}</ion-col>\n    </ion-row>\n    <ion-row>\n      <ion-col size=\"3\" style=\"margin: auto;\">\n        <ion-label>\n          {{'current_task.status' | translate}}\n        </ion-label>\n      </ion-col>\n      <ion-col size=\"9\">\n        <ion-item class=\"custom-ion-item\">\n          <ion-select [(ngModel)]=\"task.status\" class=\"custom-select\" placeholder=\"Select Status\"\n            (ionChange)=\"selectedStatus($event)\">\n            <ion-select-option  *ngFor=\"let status of statuses\"  value=\"{{status.title}}\"\n              selected=\"status.title === task.status\">{{status.title}}</ion-select-option>\n          </ion-select>\n        </ion-item>\n      </ion-col>\n    </ion-row>\n    <ion-row>\n      <h4 style=\"width: 100%;\n        margin: 0px;\">{{'current_task.subtasks' | translate}} </h4>\n      <ion-col size=\"3\" style=\"padding: 10px 0px;\">\n        <img src=\"assets/images/subdirectory_arrow.png\" style=\"width: 35%; margin-top: 5px;\"> </ion-col>\n      <ion-col size=\"9\">\n        <ion-item style=\"--border-color: #af4038;\">\n          <ion-input type=\"text\" placeholder=\"Add Subtask task name\" [(ngModel)]=\"subtask.title\">\n          </ion-input>\n        </ion-item>\n      </ion-col>\n    </ion-row>\n    <ion-row style=\"margin-top: -20px;\">\n      <ion-col size=\"3\">\n      </ion-col>\n      <ion-col size=\"9\">\n        <ion-button color=\"primary\" class=\"text-notransform\" (click)=\"addSubtask()\">\n          {{'current_task.add_subtask' | translate}}\n        </ion-button>\n        <img src=\"assets/images/timetable.png\"\n          style=\"margin-top: 5px;margin-right: 10px; float: right; max-width: 30px;\" (click)=\"setDate('subtask')\">\n      </ion-col>\n    </ion-row>\n    <div class=\"subtask-box\" *ngFor=\"let subtask of task?.subTasks\">\n      <ion-row *ngIf=\"!subtask.allowEdit && !subtask.isDelete\">\n        <ion-col size=\"1\">\n          <ion-icon ios=\"ios-radio-button-off\" md=\"md-radio-button-off\"></ion-icon>\n        </ion-col>\n        <ion-col size=\"10\" class=\"subtask-title\" (click)=\"subTaskEdit(subtask)\"> {{subtask.title}}\n        </ion-col>\n        <ion-col size=\"1\" style=\"margin: auto;\n        text-align: center;\">\n          <img src=\"assets/images/delete.png\" style=\"width: 30px;\" (click)=\"delete(subtask)\">\n        </ion-col>\n      </ion-row>\n      <ion-item class=\"custom-ion-item\" *ngIf=\"subtask.allowEdit\" (mouseout)=\"subTaskEditBlock(subtask)\">\n        <ion-input type=\"text\" [(ngModel)]=\"subtask.title\" name=\"title\"\n          placeholder=\"{{'current_task.edit_subtask_title'| translate}}\" style=\"border-top-right-radius: 0px;\n          border-bottom-right-radius: 0px;\"></ion-input>\n      </ion-item>\n      <ion-row *ngIf=\"!subtask.isDelete\">\n        <ion-col size=\"1\"> </ion-col>\n        <ion-col size=\"5\" (click)=\"setSubTaskDate(subtask)\"> <img src=\"assets/images/timetable.png\"\n            style=\"margin-top: 5px; max-width: 25px; float: left; margin-right: 10px;\">\n          <div style=\"margin-top: 10px; font-size: 14px;\">{{subtask.endDate | date : \"dd-MM-yyyy\"}}</div>\n        </ion-col>\n        <ion-col size=\"6\">\n          <ion-select [(ngModel)]=\"subtask.status\" class=\"custom-select\" placeholder=\"Select Status\"\n            (ionChange)=\"selectedSubTaskStatus($event,subtask)\">\n            <ion-select-option  *ngFor=\"let status of statuses\"  value=\"{{status.title}}\"\n              selected=\"status.title === subtask.status\">{{status.title}}</ion-select-option>\n          </ion-select>\n        </ion-col>\n      </ion-row>\n    </div>\n  </div>\n  <div style=\"margin-top:30px;\">\n    <ion-button (click)=\"markTaskAsCompleted()\" color=\"secondary\" class=\"round-corner-btn\" expand=\"block\"\n      [disabled]=\"!enableMarkButton\">\n      {{'button.mark_task_complete' | translate}}\n    </ion-button>\n  </div>\n\n  <!-- Popup -->\n  <div *ngIf=\"showpopup\" class=\"custom-popup\">\n    <div class=\"pop-container\">\n      <div class=\"pop-msg\">\n        <ion-row>\n          <ion-col size=\"10\">\n            <h5>{{'message.heading_complete_task_popup' | translate}} </h5>\n          </ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"10\">\n            <ion-textarea placeholder=\"{{'add_remarks' | translate}}\">\n            </ion-textarea>\n          </ion-col>\n          <ion-col size=\"2\" class=\"attachment-action\">\n            <div>\n              <img src=\"assets/images/gallery.png\">\n            </div>\n            <div>\n              <img src=\"assets/images/attach-pin.png\">\n            </div>\n          </ion-col>\n        </ion-row>\n      </div>\n      <ion-row class=\"pop-btn\">\n        <ion-col size=\"5\">\n          <ion-button color=\"primary\" expand=\"block\" (click)=\"close()\"> {{'button.attach' | translate}}</ion-button>\n        </ion-col>\n        <ion-col size=\"7\">\n          <ion-button color=\"primary\" expand=\"block\" (click)=\"close()\"> {{'button.mark_complete' | translate}}\n          </ion-button>\n        </ion-col>\n      </ion-row>\n    </div>\n  </div>\n  <!-- Popup ends here -->\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"'current_task.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [noBorder]=\"false\"\n    [isGoBack]=\"back\" [isParam]=\"parameter\">\n  </app-header>\n</ion-header>\n\n<ion-content padding *ngIf=\"task\" class=\"task-view-container\">\n  <div style=\"min-height:85%\">\n    <h3 (click)=\"allowEdit('title')\" *ngIf=\"!editTitle\">{{task?.title}}\n    </h3>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"editTitle\" (mouseout)=\"blockEdit('title')\">\n      <ion-label class=\"custom-label\" position=\"floating\" style=\"text-transform: none; margin: 0px;font-size: 20px;\"\n        [ngClass]=\"{'required-field':markLabelsAsInvalid}\">{{'add_task.add_a_task'| translate}}\n      </ion-label>\n      <ion-input type=\"text\" [(ngModel)]=\"task.title\" name=\"title\"\n        placeholder=\"{{'add_task.edit_task_title'| translate}}\" style=\"border-top-right-radius: 0px;\n        border-bottom-right-radius: 0px;\"></ion-input>\n    </ion-item>\n    <ion-row>\n      <ion-col size=\"3\" style=\"padding: 0px;\">\n        <img src=\"assets/images/timetable.png\" style=\"max-width: 40%;\" (click)=\"setDate('task')\"> </ion-col>\n      <ion-col size=\"9\" class=\"col-9-custom\" (click)=\"setDate('task')\">{{task.endDate | date : \"dd-MM-yyyy\"}}</ion-col>\n    </ion-row>\n    <ion-row>\n      <ion-col size=\"3\" style=\"margin: auto;\">\n        <ion-label>\n          {{'current_task.status' | translate}}\n        </ion-label>\n      </ion-col>\n      <ion-col size=\"9\">\n        <ion-item class=\"custom-ion-item\">\n          <ion-select [(ngModel)]=\"task.status\" class=\"custom-select\" placeholder=\"Select Status\"\n            (ionChange)=\"selectedStatus($event)\">\n            <ion-select-option  *ngFor=\"let status of statuses\"  value=\"{{status.title}}\"\n              selected=\"status.title === task.status\">{{status.title}}</ion-select-option>\n          </ion-select>\n        </ion-item>\n      </ion-col>\n    </ion-row>\n    <ion-row>\n      <h4 style=\"width: 100%;\n        margin: 0px;\">{{'current_task.subtasks' | translate}} </h4>\n      <ion-col size=\"3\" style=\"padding: 10px 0px;\">\n        <img src=\"assets/images/subdirectory_arrow.png\" style=\"width: 35%; margin-top: 5px;\"> </ion-col>\n      <ion-col size=\"9\">\n        <ion-item style=\"--border-color: #af4038;\">\n          <ion-input type=\"text\" placeholder=\"Add Subtask task name\" [(ngModel)]=\"subtask.title\">\n          </ion-input>\n        </ion-item>\n      </ion-col>\n    </ion-row>\n    <ion-row style=\"margin-top: -20px;\">\n      <ion-col size=\"3\">\n      </ion-col>\n      <ion-col size=\"9\">\n        <ion-button color=\"primary\" class=\"text-notransform\" (click)=\"addSubtask()\">\n          {{'current_task.add_subtask' | translate}}\n        </ion-button>\n        <img src=\"assets/images/timetable.png\"\n          style=\"margin-top: 5px;margin-right: 10px; float: right; max-width: 30px;\" (click)=\"setDate('subtask')\">\n      </ion-col>\n    </ion-row>\n    <div class=\"subtask-box\" *ngFor=\"let subtask of task?.subTasks\">\n      <ion-row *ngIf=\"!subtask.allowEdit && !subtask.isDelete\">\n        <ion-col size=\"1\">\n          <ion-icon ios=\"ios-radio-button-off\" md=\"md-radio-button-off\"></ion-icon>\n        </ion-col>\n        <ion-col size=\"10\" class=\"subtask-title\" (click)=\"subTaskEdit(subtask)\"> {{subtask.title}}\n        </ion-col>\n        <ion-col size=\"1\" style=\"margin: auto;\n        text-align: center;\">\n          <img src=\"assets/images/delete.png\" style=\"width: 30px;\" (click)=\"delete(subtask)\">\n        </ion-col>\n      </ion-row>\n      <ion-item class=\"custom-ion-item\" *ngIf=\"subtask.allowEdit\" (mouseout)=\"subTaskEditBlock(subtask)\">\n        <ion-input type=\"text\" [(ngModel)]=\"subtask.title\" name=\"title\"\n          placeholder=\"{{'current_task.edit_subtask_title'| translate}}\" style=\"border-top-right-radius: 0px;\n          border-bottom-right-radius: 0px;\"></ion-input>\n      </ion-item>\n      <ion-row *ngIf=\"!subtask.isDelete\">\n        <ion-col size=\"1\"> </ion-col>\n        <ion-col size=\"5\" (click)=\"setSubTaskDate(subtask)\"> <img src=\"assets/images/timetable.png\"\n            style=\"margin-top: 5px; max-width: 25px; float: left; margin-right: 10px;\">\n          <div style=\"margin-top: 10px; font-size: 14px;\">{{subtask.endDate | date : \"dd-MM-yyyy\"}}</div>\n        </ion-col>\n        <ion-col size=\"6\">\n          <ion-select [(ngModel)]=\"subtask.status\" class=\"custom-select\" placeholder=\"Select Status\"\n            (ionChange)=\"selectedSubTaskStatus($event,subtask)\">\n            <ion-select-option  *ngFor=\"let status of statuses\"  value=\"{{status.title}}\"\n              selected=\"status.title === subtask.status\">{{status.title}}</ion-select-option>\n          </ion-select>\n        </ion-col>\n      </ion-row>\n    </div>\n  </div>\n  <div style=\"margin-top:30px;\">\n    <ion-button (click)=\"openPopup()\" color=\"secondary\" class=\"round-corner-btn\" expand=\"block\"\n      [disabled]=\"!enableMarkButton\">\n      {{'button.mark_task_complete' | translate}}\n    </ion-button>\n  </div>\n\n  <!-- Popup -->\n  <div *ngIf=\"showpopup\" class=\"custom-popup\">\n    <div class=\"pop-container\">\n      <div class=\"pop-msg\">\n        <ion-row>\n          <ion-col size=\"10\">\n            <h5>{{'message.heading_complete_task_popup' | translate}} </h5>\n          </ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"10\">\n            <ion-textarea placeholder=\"{{'current_task.add_remarks' | translate}}\" [(ngModel)]=\"task.remarks\">\n            </ion-textarea>\n          </ion-col>\n          <ion-col size=\"2\" class=\"attachment-action\">\n            <div (click)=\"showToast()\">\n              <img src=\"assets/images/gallery.png\">\n            </div>\n            <div (click)=\"showToast()\">\n              <img src=\"assets/images/attach-pin.png\">\n            </div>\n          </ion-col>\n        </ion-row>\n      </div>\n      <ion-row class=\"pop-btn\">\n        <ion-col size=\"5\">\n          <ion-button color=\"primary\" expand=\"block\" (click)=\"showToast();close()\" [disabled]=\"true\">\n            {{'button.attach' | translate}}</ion-button>\n        </ion-col>\n        <ion-col size=\"7\">\n          <ion-button color=\"primary\" expand=\"block\" (click)=\"markTaskAsCompleted()\">\n            {{'button.mark_complete' | translate}}\n          </ion-button>\n        </ion-col>\n      </ion-row>\n    </div>\n  </div>\n  <!-- Popup ends here -->\n</ion-content>"
 
 /***/ }),
 
@@ -96,6 +96,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/date-picker/ngx */ "./node_modules/@ionic-native/date-picker/ngx/index.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../create-project/create-project.service */ "./src/app/create-project/create-project.service.ts");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+
 
 
 
@@ -104,7 +106,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var CurrentTaskViewPage = /** @class */ (function () {
-    function CurrentTaskViewPage(storage, datepipe, datePicker, router, route, createProjectService) {
+    function CurrentTaskViewPage(storage, datepipe, datePicker, router, route, createProjectService, toastService) {
         var _this = this;
         this.storage = storage;
         this.datepipe = datepipe;
@@ -112,6 +114,7 @@ var CurrentTaskViewPage = /** @class */ (function () {
         this.router = router;
         this.route = route;
         this.createProjectService = createProjectService;
+        this.toastService = toastService;
         this.showpopup = false;
         this.enableMarkButton = false;
         this.markLabelsAsInvalid = false;
@@ -202,7 +205,7 @@ var CurrentTaskViewPage = /** @class */ (function () {
             androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
         }).then(function (date) {
             subTask.endDate = _this.datepipe.transform(new Date(date));
-            _this.upDateSubTask(subTask);
+            _this.upDateSubTask(subTask, 'update');
         }, function (err) { return console.log('Error occurred while getting date: ', err); });
     };
     CurrentTaskViewPage.prototype.addSubtask = function () {
@@ -220,6 +223,7 @@ var CurrentTaskViewPage = /** @class */ (function () {
             this.updateStatus();
             this.enableMarkTaskComplete(this.task);
             this.subtask = {};
+            this.toastService.successToast('message.subtask_is_created');
         }
     };
     CurrentTaskViewPage.prototype.updateCurrentProject = function (ct) {
@@ -229,7 +233,7 @@ var CurrentTaskViewPage = /** @class */ (function () {
     };
     CurrentTaskViewPage.prototype.markTaskAsCompleted = function () {
         var _this = this;
-        this.showpopup = true;
+        // this.showpopup = true;
         this.task.status = 'Completed';
         if (this.task.subTasks) {
             this.task.subTasks.forEach(function (subtask) {
@@ -240,6 +244,9 @@ var CurrentTaskViewPage = /** @class */ (function () {
         this.task = task;
         this.storage.set('cTask', task).then(function (updatedTask) {
             _this.updateCurrentProject(updatedTask);
+            _this.toastService.successToast('message.marked_as_completed');
+            _this.showpopup = false;
+            _this.router.navigate(['/project-view/project-detail', _this.parameter]);
         });
     };
     CurrentTaskViewPage.prototype.selectedStatus = function (event) {
@@ -301,7 +308,7 @@ var CurrentTaskViewPage = /** @class */ (function () {
         if (subtask.title.length > 0) {
             this.subTaskTitle = false;
             subtask.allowEdit = false;
-            this.upDateSubTask(subtask);
+            this.upDateSubTask(subtask, 'update');
         }
         else {
             subtask.allowEdit = true;
@@ -312,28 +319,35 @@ var CurrentTaskViewPage = /** @class */ (function () {
     };
     CurrentTaskViewPage.prototype.selectedSubTaskStatus = function (event, subtask) {
         subtask.status = event.detail.value;
-        this.upDateSubTask(subtask);
+        this.upDateSubTask(subtask, 'update');
     };
     // Delete subtask
     CurrentTaskViewPage.prototype.delete = function (subtask) {
         subtask.isDelete = true;
-        this.upDateSubTask(subtask);
+        this.upDateSubTask(subtask, 'delete');
     };
     CurrentTaskViewPage.prototype.updateTask = function () {
         var _this = this;
         this.updateStatus();
         this.storage.set('cTask', this.task).then(function (ct) {
             _this.updateCurrentProject(ct);
+            _this.toastService.successToast('message.task_updated');
         });
     };
     // update subtasks in task
-    CurrentTaskViewPage.prototype.upDateSubTask = function (upDatedsubtask) {
+    CurrentTaskViewPage.prototype.upDateSubTask = function (upDatedsubtask, type) {
         this.task.subTasks.forEach(function (subtask, i) {
             if (subtask._id == upDatedsubtask._id) {
                 subtask = upDatedsubtask;
             }
         });
         this.updateStatus();
+        if (type == "update") {
+            this.toastService.successToast('message.subtask_updated');
+        }
+        else {
+            this.toastService.successToast('message.subtask_is_deleted');
+        }
     };
     CurrentTaskViewPage.prototype.updateStatus = function () {
         var _this = this;
@@ -378,6 +392,12 @@ var CurrentTaskViewPage = /** @class */ (function () {
             this.router.navigate(['/project-view/create-task', this.task.projectId, this.from]);
         }
     };
+    CurrentTaskViewPage.prototype.openPopup = function () {
+        this.showpopup = true;
+    };
+    CurrentTaskViewPage.prototype.showToast = function () {
+        this.toastService.errorToast('message.comingsoon');
+    };
     CurrentTaskViewPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-current-task-view',
@@ -389,7 +409,8 @@ var CurrentTaskViewPage = /** @class */ (function () {
             _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_4__["DatePicker"],
             _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"],
             _angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"],
-            _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_6__["CreateProjectService"]])
+            _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_6__["CreateProjectService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_7__["ToastService"]])
     ], CurrentTaskViewPage);
     return CurrentTaskViewPage;
 }());

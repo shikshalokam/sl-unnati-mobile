@@ -26,17 +26,22 @@
     },
     "message": {
         "noUnreadNotifications": "You have no new Notifications!",
-        "comingsoon": "Coming Soon",
-        "after_prject_create": "Your project has been saved! View your project or continue to Edit",
+        "comingsoon": "Coming Soon.",
+        "after_prject_create": "Your project has been saved! View your project or continue to Edit.",
         "no_data_found": "No data found",
         "heading_complete_task_popup": "Would you like to add a remark or attach an image before you mark your task complete?",
         "add_tasks_to_project": "ADD TASKS TO YOUR PROJECT",
         "task_is_deleted": "Task deleted successfully.",
         "task_is_created": "Task is created successfully.",
+        "task_updated": "Task updated successfully.",
+        "subtask_is_created": "Subtask is created successfully.",
+        "subtask_updated": "Subtask updated successfully.",
+        "subtask_is_deleted": "Subtask deleted successfully.",
         "project_is_created": "Project is created successfully.",
-        "project_deleted_failed":"Unable to delete the project please try again.",
-        "project_deleted_success":"Project deleted successfully",
-        "delete_project_confirm":"Are you sure you want to delete the project"
+        "project_deleted_failed": "Unable to delete the project please try again.",
+        "project_deleted_success": "Project deleted successfully.",
+        "delete_project_confirm": "Are you sure you want to delete the project.",
+        "marked_as_completed": "Task marked as completed."
     },
     "home": {
         "title": "Home",
@@ -210,7 +215,7 @@
         "placeholder_add_task ": "Add Subtask name",
         "title": "Add subtask",
         "edit_subtask_title": "Edit subtask title",
-        "add_remarks":"Add remarks"
+        "add_remarks": "Add remarks"
     },
     "library": {
         "title": "Library",

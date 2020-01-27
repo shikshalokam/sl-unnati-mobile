@@ -94,7 +94,7 @@
     </div>
   </div>
   <div style="margin-top:30px;">
-    <ion-button (click)="markTaskAsCompleted()" color="secondary" class="round-corner-btn" expand="block"
+    <ion-button (click)="openPopup()" color="secondary" class="round-corner-btn" expand="block"
       [disabled]="!enableMarkButton">
       {{'button.mark_task_complete' | translate}}
     </ion-button>
@@ -111,14 +111,14 @@
         </ion-row>
         <ion-row>
           <ion-col size="10">
-            <ion-textarea placeholder="{{'add_remarks' | translate}}">
+            <ion-textarea placeholder="{{'current_task.add_remarks' | translate}}" [(ngModel)]="task.remarks">
             </ion-textarea>
           </ion-col>
           <ion-col size="2" class="attachment-action">
-            <div>
+            <div (click)="showToast()">
               <img src="assets/images/gallery.png">
             </div>
-            <div>
+            <div (click)="showToast()">
               <img src="assets/images/attach-pin.png">
             </div>
           </ion-col>
@@ -126,10 +126,12 @@
       </div>
       <ion-row class="pop-btn">
         <ion-col size="5">
-          <ion-button color="primary" expand="block" (click)="close()"> {{'button.attach' | translate}}</ion-button>
+          <ion-button color="primary" expand="block" (click)="showToast();close()" [disabled]="true">
+            {{'button.attach' | translate}}</ion-button>
         </ion-col>
         <ion-col size="7">
-          <ion-button color="primary" expand="block" (click)="close()"> {{'button.mark_complete' | translate}}
+          <ion-button color="primary" expand="block" (click)="markTaskAsCompleted()">
+            {{'button.mark_complete' | translate}}
           </ion-button>
         </ion-col>
       </ion-row>

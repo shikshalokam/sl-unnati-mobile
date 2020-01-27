@@ -6,7 +6,7 @@ import { CreateTaskService } from '../create-task/create-task.service';
 import * as moment from 'moment';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { DatePipe } from '@angular/common'
-import {ToastService} from '../toast.service'
+import { ToastService } from '../toast.service'
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.page.html',
@@ -37,7 +37,7 @@ export class ProjectDetailPage {
     public datePicker: DatePicker,
     public datepipe: DatePipe,
     public taskService: CreateTaskService,
-    public toastService:ToastService
+    public toastService: ToastService
   ) {
     route.params.subscribe(param => {
       if (param.cat) {
@@ -136,6 +136,7 @@ export class ProjectDetailPage {
         })
       })
     } else {
+      this.project.lastUpdate = new Date();
       this.createProjectService.updateByProjects(this.project);
       this.storage.set('projectToBeView', this.project).then(project => {
         this.project = project;
@@ -246,6 +247,7 @@ export class ProjectDetailPage {
 
   // update the task
   public updateTask() {
+    this.project.lastUpdate = new Date();
     this.createProjectService.updateByProjects(this.project);
   }
 
@@ -269,6 +271,7 @@ export class ProjectDetailPage {
   }
   // update project with all changes made.
   public updateCurrentProject(ct) {
+    this.project.lastUpdate = new Date();
     this.createProjectService.updateByProjects(this.project);
   }
   public sortTasks() {

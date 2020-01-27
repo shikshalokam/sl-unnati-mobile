@@ -5,6 +5,7 @@ import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CreateProjectService } from '../create-project/create-project.service';
+import { ToastService } from '../toast.service'
 @Component({
   selector: 'app-current-task-view',
   templateUrl: './current-task-view.page.html',
@@ -35,7 +36,8 @@ export class CurrentTaskViewPage implements OnInit {
     public datePicker: DatePicker,
     public router: Router,
     public route: ActivatedRoute,
-    public createProjectService: CreateProjectService) {
+    public createProjectService: CreateProjectService,
+    public toastService: ToastService) {
     route.params.subscribe(param => {
       this.from = param.from;
       this.id = param.id;
@@ -114,7 +116,7 @@ export class CurrentTaskViewPage implements OnInit {
     }).then(
       date => {
         subTask.endDate = this.datepipe.transform(new Date(date));
-        this.upDateSubTask(subTask)
+        this.upDateSubTask(subTask, 'update')
       },
       err => console.log('Error occurred while getting date: ', err)
     );
@@ -134,6 +136,7 @@ export class CurrentTaskViewPage implements OnInit {
       this.updateStatus();
       this.enableMarkTaskComplete(this.task);
       this.subtask = {};
+      this.toastService.successToast('message.subtask_is_created');
     }
   }
 
@@ -143,7 +146,7 @@ export class CurrentTaskViewPage implements OnInit {
     })
   }
   public markTaskAsCompleted() {
-    this.showpopup = true;
+    // this.showpopup = true;
     this.task.status = 'Completed';
     if (this.task.subTasks) {
       this.task.subTasks.forEach(subtask => {
@@ -154,6 +157,9 @@ export class CurrentTaskViewPage implements OnInit {
     this.task = task;
     this.storage.set('cTask', task).then(updatedTask => {
       this.updateCurrentProject(updatedTask);
+      this.toastService.successToast('message.marked_as_completed');
+      this.showpopup = false;
+      this.router.navigate(['/project-view/project-detail', this.parameter]);
     })
   }
 
@@ -215,7 +221,7 @@ export class CurrentTaskViewPage implements OnInit {
     if (subtask.title.length > 0) {
       this.subTaskTitle = false;
       subtask.allowEdit = false;
-      this.upDateSubTask(subtask);
+      this.upDateSubTask(subtask, 'update');
     } else {
       subtask.allowEdit = true;
     }
@@ -225,29 +231,35 @@ export class CurrentTaskViewPage implements OnInit {
   }
   public selectedSubTaskStatus(event, subtask) {
     subtask.status = event.detail.value;
-    this.upDateSubTask(subtask);
+    this.upDateSubTask(subtask, 'update');
   }
 
   // Delete subtask
-  public delete(subtask){
+  public delete(subtask) {
     subtask.isDelete = true;
-    this.upDateSubTask(subtask);
+    this.upDateSubTask(subtask, 'delete');
   }
   public updateTask() {
     this.updateStatus();
     this.storage.set('cTask', this.task).then(ct => {
       this.updateCurrentProject(ct);
+      this.toastService.successToast('message.task_updated');
     })
   }
 
   // update subtasks in task
-  public upDateSubTask(upDatedsubtask) {
+  public upDateSubTask(upDatedsubtask, type) {
     this.task.subTasks.forEach(function (subtask, i) {
       if (subtask._id == upDatedsubtask._id) {
         subtask = upDatedsubtask;
       }
     });
     this.updateStatus();
+    if (type == "update") {
+      this.toastService.successToast('message.subtask_updated');
+    } else {
+      this.toastService.successToast('message.subtask_is_deleted');
+    }
   }
 
   public updateStatus() {
@@ -289,5 +301,12 @@ export class CurrentTaskViewPage implements OnInit {
     } else {
       this.router.navigate(['/project-view/create-task', this.task.projectId, this.from]);
     }
+  }
+  openPopup() {
+    this.showpopup = true;
+  }
+
+  public showToast() {
+    this.toastService.errorToast('message.comingsoon');
   }
 }

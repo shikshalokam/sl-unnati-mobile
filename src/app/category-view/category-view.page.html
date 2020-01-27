@@ -22,8 +22,7 @@
     <div *ngFor="let project of projects | searchProjects: searchInput">
       <ion-card class="category-projects" *ngIf="!project.isDelete">
         <ion-card-header>
-          <ion-icon *ngIf="catType === 'my_projects'" name="more"
-            class="popover-menu"
+          <ion-icon *ngIf="catType === 'my_projects'" name="more" class="popover-menu"
             (click)="showMenu($event, project)">
           </ion-icon>
           <ion-row (click)="projectView(project)">
@@ -40,7 +39,7 @@
             <ion-col size="4" class="label-box">
               {{'library_view.goal'| translate}}
             </ion-col>
-            <ion-col size="8" class="val-box">
+            <ion-col size="8" class="val-box" style="margin-left: -0.5em;">
               {{project.goal}}
             </ion-col>
           </ion-row>

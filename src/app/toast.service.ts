@@ -18,7 +18,8 @@ export class ToastService {
         const toast = await this.toastController.create({
             message: msg,
             color: 'danger',
-            duration: 2000
+            duration: 2000,
+            position: 'top'
         });
         toast.present();
     }
@@ -29,7 +30,8 @@ export class ToastService {
         const toast = await this.toastController.create({
             message: msg,
             color: 'success',
-            duration: 2000
+            duration: 2000,
+            position: 'top'
         });
         toast.present();
     }

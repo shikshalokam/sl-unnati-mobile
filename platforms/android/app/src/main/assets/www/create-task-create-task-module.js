@@ -205,7 +205,7 @@ var CreateTaskPage = /** @class */ (function () {
                             if (myProject._id == cp._id) {
                                 myProject.tasks = cp.tasks;
                                 _this.storage.set('myprojects', myProjects).then(function (success) {
-                                    _this.toastService.successToast('message.project_is_created');
+                                    _this.toastService.successToast('message.task_is_created');
                                     _this.homeService.loadActiveProjects();
                                 });
                             }

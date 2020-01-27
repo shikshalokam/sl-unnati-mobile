@@ -235,6 +235,7 @@ var ProjectDetailPage = /** @class */ (function () {
             });
         }
         else {
+            this.project.lastUpdate = new Date();
             this.createProjectService.updateByProjects(this.project);
             this.storage.set('projectToBeView', this.project).then(function (project) {
                 _this.project = project;
@@ -345,6 +346,7 @@ var ProjectDetailPage = /** @class */ (function () {
     };
     // update the task
     ProjectDetailPage.prototype.updateTask = function () {
+        this.project.lastUpdate = new Date();
         this.createProjectService.updateByProjects(this.project);
     };
     // navigate to view task
@@ -368,6 +370,7 @@ var ProjectDetailPage = /** @class */ (function () {
     };
     // update project with all changes made.
     ProjectDetailPage.prototype.updateCurrentProject = function (ct) {
+        this.project.lastUpdate = new Date();
         this.createProjectService.updateByProjects(this.project);
     };
     ProjectDetailPage.prototype.sortTasks = function () {
