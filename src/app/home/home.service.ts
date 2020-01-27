@@ -7,7 +7,7 @@ import { Subject } from 'rxjs'
 export class HomeService {
   public myProject = new Subject();
   public clearMyProject = new Subject();
-
+  public isSyncing = new Subject();
   public activeProjectLoad = new Subject();
   public searcResultsOfPrjcts = new Subject();
   constructor() {
@@ -26,8 +26,10 @@ export class HomeService {
   public loadActiveProjects() {
     this.activeProjectLoad.next('activeProjectLoad');
   }
-public clearData()
-{
-  this.clearMyProject.next();
-}
+  public clearData() {
+    this.clearMyProject.next();
+  }
+  syncingProject(status) {
+    this.isSyncing.next(status);
+  }
 }

@@ -1224,6 +1224,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./api/api */ "./src/app/api/api.ts");
 /* harmony import */ var _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../app/project-view/project.service */ "./src/app/project-view/project.service.ts");
+/* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./home/home.service */ "./src/app/home/home.service.ts");
+
 
 
 
@@ -1246,7 +1248,7 @@ __webpack_require__.r(__webpack_exports__);
 var AppComponent = /** @class */ (function () {
     function AppComponent(storage, 
     // public fcm: FcmProvider,
-    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api) {
+    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api, homeService) {
         var _this = this;
         this.storage = storage;
         this.alertController = alertController;
@@ -1265,10 +1267,11 @@ var AppComponent = /** @class */ (function () {
         this.route = route;
         this.projectService = projectService;
         this.api = api;
+        this.homeService = homeService;
         this.lastTimeBackPress = 0;
         this.timePeriodToExit = 2000;
         // 3600000
-        this.interval = Object(rxjs__WEBPACK_IMPORTED_MODULE_12__["interval"])(100000);
+        this.interval = Object(rxjs__WEBPACK_IMPORTED_MODULE_12__["interval"])(3600000);
         this.loggedIn = false;
         this.appPages = [];
         this.history = [];
@@ -1708,6 +1711,7 @@ var AppComponent = /** @class */ (function () {
                             refresh_token: parsedData.refresh_token,
                         };
                         _this.storage.set('userTokens', userTokens).then(function (data) {
+                            _this.homeService.syncingProject(true);
                             _this.projectService.sync(project, data.access_token).subscribe(function (data) {
                                 if (data.status == "failed") {
                                 }
@@ -1716,16 +1720,18 @@ var AppComponent = /** @class */ (function () {
                                     project.isNew = false;
                                     project.isSync = true;
                                     project.isEdited = false;
-                                    project.lastUpdate = data.projectDetails.data.projects[0].lastSync;
                                     data.projectDetails.data.projects[0].createdType = project.createdType;
                                     data.projectDetails.data.projects[0].isStarted = project.isStarted;
                                     updatedProject = data.projectDetails.data.projects[0];
                                     updatedProject.isSync = true;
                                     updatedProject.isEdited = false;
                                     updatedProject.isNew = false;
+                                    updatedProject.lastUpdate = project.lastUpdate;
                                     _this.syncUpdateInLocal(updatedProject, project);
                                 }
+                                _this.homeService.syncingProject(false);
                             }, function (error) {
+                                _this.homeService.syncingProject(false);
                             });
                         });
                     }
@@ -1797,7 +1803,8 @@ var AppComponent = /** @class */ (function () {
             _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ModalController"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"],
             _angular_router__WEBPACK_IMPORTED_MODULE_9__["ActivatedRoute"],
             _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__["ProjectService"],
-            _api_api__WEBPACK_IMPORTED_MODULE_13__["ApiProvider"]])
+            _api_api__WEBPACK_IMPORTED_MODULE_13__["ApiProvider"],
+            _home_home_service__WEBPACK_IMPORTED_MODULE_15__["HomeService"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -2733,7 +2740,7 @@ var EditTaskPage = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }\"\n>\n  <ion-toolbar >\n    <ion-icon\n      name=\"menu\"\n      class=\"header-action-icons\"\n      *ngIf=\"showMenu\"\n      (click)=\"menuToggle()\"\n    >\n    </ion-icon>\n    <span *ngIf=\"showMenu\" style=\"margin: 26px 10px;\n    position: absolute;\n    padding-bottom: 16px;\n    font-size: 16px; left: 0px;\"  (click)=\"menuToggle()\"> MENU</span>\n    <ion-icon\n      ios=\"ios-arrow-back\"\n      md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\"\n      *ngIf=\"showBack && !isGoBack\"\n    >\n    </ion-icon>\n    <ion-icon\n      (click)=\"goBack()\"\n      autoHide=\"false\"\n      ios=\"ios-arrow-back\"\n      md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\"\n      *ngIf=\"showBack && isGoBack\"\n    ></ion-icon>\n    <ion-title>\n      {{ title }}\n      <ion-icon\n        name=\"wifi\"\n        class=\"network-icon ion-float-right\" style=\"position:absolute;float:right;right: 20px;\"\n        [ngClass]=\"{\n          'no-connection': !connected,\n          connected: connected\n        }\"\n      ></ion-icon>\n      <span (click)=\"navigateToNotification()\">\n        <ion-icon\n          name=\"notifications\"\n          class=\"_headerIcon notificationIcon \" style=\"position:absolute;float:right;right: 50px;\"\n        ></ion-icon>\n      </span>\n      <!-- Notification counts -->\n      <!-- <span class=\"dot _flex-box\" *ngIf=\"!notificationCount\"></span> -->\n      <span\n        class=\"dot _flex-box\"\n        *ngIf=\"notificationCount\"\n        (click)=\"navigateToNotification()\"\n        >{{ notificationCount }}</span\n      >\n    </ion-title>\n  </ion-toolbar>\n  <!-- <ion-tab-bar slot=\"top\" color=\"primary\" *ngIf=\"showTabs\">\n      <ion-tab-button tab=\"last-month-reports\" class=\"activated\" [ngClass]=\"{'tab-selected' : last_month}\" (click)=\"activeTab('last_month')\">\n        <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n      </ion-tab-button>\n      <ion-tab-button tab=\"last-quarter-reports\" [ngClass]=\"{'tab-selected' : last_quarter}\" (click)=\"activeTab('last_quarter')\">\n        <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n      </ion-tab-button>\n    </ion-tab-bar>  -->\n</ion-header>\n"
+module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }\">\n  <ion-toolbar>\n    <ion-icon name=\"menu\" class=\"header-action-icons\" *ngIf=\"showMenu\" (click)=\"menuToggle()\">\n    </ion-icon>\n    <span *ngIf=\"showMenu\" style=\"margin: 26px 10px;\n    position: absolute;\n    padding-bottom: 16px;\n    font-size: 16px; left: 0px;\" (click)=\"menuToggle()\"> MENU</span>\n    <ion-icon ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\" class=\"header-action-icons\"\n      *ngIf=\"showBack && !isGoBack\">\n    </ion-icon>\n    <ion-icon (click)=\"goBack()\" autoHide=\"false\" ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\" *ngIf=\"showBack && isGoBack\"></ion-icon>\n    <ion-title>\n      {{ title }}\n      <ion-icon name=\"wifi\" class=\"network-icon ion-float-right\" style=\"position:absolute;float:right;right: 20px;\"\n        [ngClass]=\"{\n          'no-connection': !connected,\n          connected: connected\n        }\"></ion-icon>\n      <span (click)=\"navigateToNotification()\">\n        <ion-icon name=\"notifications\" class=\"_headerIcon notificationIcon \"\n          style=\"position:absolute;float:right;right: 50px;\"></ion-icon>\n      </span>\n      <!-- Notification counts -->\n      <!-- <span class=\"dot _flex-box\" *ngIf=\"!notificationCount\"></span> -->\n      <span class=\"dot _flex-box\" *ngIf=\"notificationCount\"\n        (click)=\"navigateToNotification()\">{{ notificationCount }}</span>\n    </ion-title>\n  </ion-toolbar>\n  <!-- <ion-tab-bar slot=\"top\" color=\"primary\" *ngIf=\"showTabs\">\n      <ion-tab-button tab=\"last-month-reports\" class=\"activated\" [ngClass]=\"{'tab-selected' : last_month}\" (click)=\"activeTab('last_month')\">\n        <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n      </ion-tab-button>\n      <ion-tab-button tab=\"last-quarter-reports\" [ngClass]=\"{'tab-selected' : last_quarter}\" (click)=\"activeTab('last_quarter')\">\n        <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n      </ion-tab-button>\n    </ion-tab-bar>  -->\n</ion-header>\n<!-- <div *ngIf=\"isSyncing\"> Your data is syncingup please do not turn of your data and please dont close the app.\n</div> -->"
 
 /***/ }),
 
@@ -2766,6 +2773,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
 /* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
+
 
 
 
@@ -2775,7 +2784,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var HeaderComponent = /** @class */ (function () {
-    function HeaderComponent(router, notificationCardService, storage, menuController, badge, api) {
+    function HeaderComponent(router, notificationCardService, storage, menuController, badge, api, homeService) {
         var _this = this;
         this.router = router;
         this.notificationCardService = notificationCardService;
@@ -2783,13 +2792,18 @@ var HeaderComponent = /** @class */ (function () {
         this.menuController = menuController;
         this.badge = badge;
         this.api = api;
+        this.homeService = homeService;
         this.showMenu = true;
         this.noBorder = true;
         this.isGoBack = false;
         this.bg = '#fff';
+        this.isSyncing = false;
         this.connected = navigator.onLine;
         this.page = 1;
         this.limit = 20;
+        homeService.isSyncing.subscribe(function (data) {
+            _this.isSyncing = data;
+        });
         notificationCardService.notificationCount.subscribe(function (count) {
             _this.notificationCount = count;
             _this.badge.set(_this.notificationCount);
@@ -2868,9 +2882,12 @@ var HeaderComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./header.component.html */ "./src/app/header/header.component.html"),
             styles: [__webpack_require__(/*! ./header.component.scss */ "./src/app/header/header.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_3__["NotificationCardService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_3__["NotificationCardService"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["MenuController"],
-            _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__["Badge"], _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"]])
+            _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__["Badge"], _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"],
+            _home_home_service__WEBPACK_IMPORTED_MODULE_8__["HomeService"]])
     ], HeaderComponent);
     return HeaderComponent;
 }());
@@ -2899,6 +2916,7 @@ var HomeService = /** @class */ (function () {
     function HomeService() {
         this.myProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.clearMyProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        this.isSyncing = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.activeProjectLoad = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.searcResultsOfPrjcts = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
     }
@@ -2918,6 +2936,9 @@ var HomeService = /** @class */ (function () {
     };
     HomeService.prototype.clearData = function () {
         this.clearMyProject.next();
+    };
+    HomeService.prototype.syncingProject = function (status) {
+        this.isSyncing.next(status);
     };
     HomeService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -4329,7 +4350,8 @@ var ToastService = /** @class */ (function () {
                         return [4 /*yield*/, this.toastController.create({
                                 message: msg,
                                 color: 'danger',
-                                duration: 2000
+                                duration: 2000,
+                                position: 'top'
                             })];
                     case 1:
                         toast = _a.sent();
@@ -4351,7 +4373,8 @@ var ToastService = /** @class */ (function () {
                         return [4 /*yield*/, this.toastController.create({
                                 message: msg,
                                 color: 'success',
-                                duration: 2000
+                                duration: 2000,
+                                position: 'top'
                             })];
                     case 1:
                         toast = _a.sent();
