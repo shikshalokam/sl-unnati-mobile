@@ -1,56 +1,31 @@
-<ion-header [ngStyle]="{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }"
->
-  <ion-toolbar >
-    <ion-icon
-      name="menu"
-      class="header-action-icons"
-      *ngIf="showMenu"
-      (click)="menuToggle()"
-    >
+<ion-header [ngStyle]="{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }">
+  <ion-toolbar>
+    <ion-icon name="menu" class="header-action-icons" *ngIf="showMenu" (click)="menuToggle()">
     </ion-icon>
     <span *ngIf="showMenu" style="margin: 26px 10px;
     position: absolute;
     padding-bottom: 16px;
-    font-size: 16px; left: 0px;"  (click)="menuToggle()"> MENU</span>
-    <ion-icon
-      ios="ios-arrow-back"
-      md="md-arrow-back" color="primary"
-      class="header-action-icons"
-      *ngIf="showBack && !isGoBack"
-    >
+    font-size: 16px; left: 0px;" (click)="menuToggle()"> MENU</span>
+    <ion-icon ios="ios-arrow-back" md="md-arrow-back" color="primary" class="header-action-icons"
+      *ngIf="showBack && !isGoBack">
     </ion-icon>
-    <ion-icon
-      (click)="goBack()"
-      autoHide="false"
-      ios="ios-arrow-back"
-      md="md-arrow-back" color="primary"
-      class="header-action-icons"
-      *ngIf="showBack && isGoBack"
-    ></ion-icon>
+    <ion-icon (click)="goBack()" autoHide="false" ios="ios-arrow-back" md="md-arrow-back" color="primary"
+      class="header-action-icons" *ngIf="showBack && isGoBack"></ion-icon>
     <ion-title>
       {{ title }}
-      <ion-icon
-        name="wifi"
-        class="network-icon ion-float-right" style="position:absolute;float:right;right: 20px;"
+      <ion-icon name="wifi" class="network-icon ion-float-right" style="position:absolute;float:right;right: 20px;"
         [ngClass]="{
           'no-connection': !connected,
           connected: connected
-        }"
-      ></ion-icon>
+        }"></ion-icon>
       <span (click)="navigateToNotification()">
-        <ion-icon
-          name="notifications"
-          class="_headerIcon notificationIcon " style="position:absolute;float:right;right: 50px;"
-        ></ion-icon>
+        <ion-icon name="notifications" class="_headerIcon notificationIcon "
+          style="position:absolute;float:right;right: 50px;"></ion-icon>
       </span>
       <!-- Notification counts -->
       <!-- <span class="dot _flex-box" *ngIf="!notificationCount"></span> -->
-      <span
-        class="dot _flex-box"
-        *ngIf="notificationCount"
-        (click)="navigateToNotification()"
-        >{{ notificationCount }}</span
-      >
+      <span class="dot _flex-box" *ngIf="notificationCount"
+        (click)="navigateToNotification()">{{ notificationCount }}</span>
     </ion-title>
   </ion-toolbar>
   <!-- <ion-tab-bar slot="top" color="primary" *ngIf="showTabs">
@@ -62,3 +37,5 @@
       </ion-tab-button>
     </ion-tab-bar>  -->
 </ion-header>
+<!-- <div *ngIf="isSyncing"> Your data is syncingup please do not turn of your data and please dont close the app.
+</div> -->

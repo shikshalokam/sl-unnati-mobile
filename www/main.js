@@ -1224,6 +1224,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./api/api */ "./src/app/api/api.ts");
 /* harmony import */ var _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../app/project-view/project.service */ "./src/app/project-view/project.service.ts");
+/* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./home/home.service */ "./src/app/home/home.service.ts");
+
 
 
 
@@ -1246,7 +1248,7 @@ __webpack_require__.r(__webpack_exports__);
 var AppComponent = /** @class */ (function () {
     function AppComponent(storage, 
     // public fcm: FcmProvider,
-    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api) {
+    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api, homeService) {
         var _this = this;
         this.storage = storage;
         this.alertController = alertController;
@@ -1265,10 +1267,11 @@ var AppComponent = /** @class */ (function () {
         this.route = route;
         this.projectService = projectService;
         this.api = api;
+        this.homeService = homeService;
         this.lastTimeBackPress = 0;
         this.timePeriodToExit = 2000;
         // 3600000
-        this.interval = Object(rxjs__WEBPACK_IMPORTED_MODULE_12__["interval"])(100000);
+        this.interval = Object(rxjs__WEBPACK_IMPORTED_MODULE_12__["interval"])(3600000);
         this.loggedIn = false;
         this.appPages = [];
         this.history = [];
@@ -1708,6 +1711,7 @@ var AppComponent = /** @class */ (function () {
                             refresh_token: parsedData.refresh_token,
                         };
                         _this.storage.set('userTokens', userTokens).then(function (data) {
+                            _this.homeService.syncingProject(true);
                             _this.projectService.sync(project, data.access_token).subscribe(function (data) {
                                 if (data.status == "failed") {
                                 }
@@ -1716,16 +1720,18 @@ var AppComponent = /** @class */ (function () {
                                     project.isNew = false;
                                     project.isSync = true;
                                     project.isEdited = false;
-                                    project.lastUpdate = data.projectDetails.data.projects[0].lastSync;
                                     data.projectDetails.data.projects[0].createdType = project.createdType;
                                     data.projectDetails.data.projects[0].isStarted = project.isStarted;
                                     updatedProject = data.projectDetails.data.projects[0];
                                     updatedProject.isSync = true;
                                     updatedProject.isEdited = false;
                                     updatedProject.isNew = false;
+                                    updatedProject.lastUpdate = project.lastUpdate;
                                     _this.syncUpdateInLocal(updatedProject, project);
                                 }
+                                _this.homeService.syncingProject(false);
                             }, function (error) {
+                                _this.homeService.syncingProject(false);
                             });
                         });
                     }
@@ -1797,7 +1803,8 @@ var AppComponent = /** @class */ (function () {
             _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ModalController"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"],
             _angular_router__WEBPACK_IMPORTED_MODULE_9__["ActivatedRoute"],
             _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__["ProjectService"],
-            _api_api__WEBPACK_IMPORTED_MODULE_13__["ApiProvider"]])
+            _api_api__WEBPACK_IMPORTED_MODULE_13__["ApiProvider"],
+            _home_home_service__WEBPACK_IMPORTED_MODULE_15__["HomeService"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -2136,7 +2143,6 @@ var CategoryViewService = /** @class */ (function () {
         var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
             'x-auth-token': token
         });
-        console.log(token, "token");
         return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].api_url + '/unnati/api/v1/getProjectPdf', data, { headers: httpHeaders });
     };
     CategoryViewService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -2455,7 +2461,7 @@ module.exports = "<!-- <ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".label-divider {\n  font-size: 16px; }\n  .label-divider ion-label {\n    font-size: 16px;\n    color: #000000; }\n  .label-divider ion-label img {\n      width: 22px;\n      float: left;\n      margin-right: 10px; }\n  .action-board {\n  background-color: #cccccc57;\n  padding: 5px 15px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9lZGl0LXRhc2svZWRpdC10YXNrLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLGVBQWUsRUFBQTtFQURqQjtJQUdJLGVBQWU7SUFDZixjQUFjLEVBQUE7RUFKbEI7TUFNTSxXQUFXO01BQ1gsV0FBVztNQUNYLGtCQUFrQixFQUFBO0VBSXhCO0VBQ0ksMkJBQTJCO0VBQzNCLGlCQUFpQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvZWRpdC10YXNrL2VkaXQtdGFzay5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubGFiZWwtZGl2aWRlciB7XG4gIGZvbnQtc2l6ZTogMTZweDtcbiAgaW9uLWxhYmVsIHtcbiAgICBmb250LXNpemU6IDE2cHg7XG4gICAgY29sb3I6ICMwMDAwMDA7XG4gICAgaW1nIHtcbiAgICAgIHdpZHRoOiAyMnB4O1xuICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICBtYXJnaW4tcmlnaHQ6IDEwcHg7XG4gICAgfVxuICB9XG59XG4uYWN0aW9uLWJvYXJkIHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjY2NjY2NjNTc7XG4gICAgcGFkZGluZzogNXB4IDE1cHg7XG59XG4iXX0= */"
+module.exports = ".label-divider {\n  font-size: 16px; }\n  .label-divider ion-label {\n    font-size: 16px;\n    color: #000000; }\n  .label-divider ion-label img {\n      width: 22px;\n      float: left;\n      margin-right: 10px; }\n  .action-board {\n  background-color: #cccccc57;\n  padding: 5px 15px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvZWRpdC10YXNrL2VkaXQtdGFzay5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxlQUFlLEVBQUE7RUFEakI7SUFHSSxlQUFlO0lBQ2YsY0FBYyxFQUFBO0VBSmxCO01BTU0sV0FBVztNQUNYLFdBQVc7TUFDWCxrQkFBa0IsRUFBQTtFQUl4QjtFQUNJLDJCQUEyQjtFQUMzQixpQkFBaUIsRUFBQSIsImZpbGUiOiJzcmMvYXBwL2VkaXQtdGFzay9lZGl0LXRhc2sucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmxhYmVsLWRpdmlkZXIge1xuICBmb250LXNpemU6IDE2cHg7XG4gIGlvbi1sYWJlbCB7XG4gICAgZm9udC1zaXplOiAxNnB4O1xuICAgIGNvbG9yOiAjMDAwMDAwO1xuICAgIGltZyB7XG4gICAgICB3aWR0aDogMjJweDtcbiAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgbWFyZ2luLXJpZ2h0OiAxMHB4O1xuICAgIH1cbiAgfVxufVxuLmFjdGlvbi1ib2FyZCB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogI2NjY2NjYzU3O1xuICAgIHBhZGRpbmc6IDVweCAxNXB4O1xufVxuIl19 */"
 
 /***/ }),
 
@@ -2734,7 +2740,7 @@ var EditTaskPage = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }\"\n>\n  <ion-toolbar >\n    <ion-icon\n      name=\"menu\"\n      class=\"header-action-icons\"\n      *ngIf=\"showMenu\"\n      (click)=\"menuToggle()\"\n    >\n    </ion-icon>\n    <span *ngIf=\"showMenu\" style=\"margin: 26px 10px;\n    position: absolute;\n    padding-bottom: 16px;\n    font-size: 16px; left: 0px;\"  (click)=\"menuToggle()\"> MENU</span>\n    <ion-icon\n      ios=\"ios-arrow-back\"\n      md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\"\n      *ngIf=\"showBack && !isGoBack\"\n    >\n    </ion-icon>\n    <ion-icon\n      (click)=\"goBack()\"\n      autoHide=\"false\"\n      ios=\"ios-arrow-back\"\n      md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\"\n      *ngIf=\"showBack && isGoBack\"\n    ></ion-icon>\n    <ion-title>\n      {{ title }}\n      <ion-icon\n        name=\"wifi\"\n        class=\"network-icon ion-float-right\" style=\"position:absolute;float:right;right: 20px;\"\n        [ngClass]=\"{\n          'no-connection': !connected,\n          connected: connected\n        }\"\n      ></ion-icon>\n      <span (click)=\"navigateToNotification()\">\n        <ion-icon\n          name=\"notifications\"\n          class=\"_headerIcon notificationIcon \" style=\"position:absolute;float:right;right: 50px;\"\n        ></ion-icon>\n      </span>\n      <!-- Notification counts -->\n      <!-- <span class=\"dot _flex-box\" *ngIf=\"!notificationCount\"></span> -->\n      <span\n        class=\"dot _flex-box\"\n        *ngIf=\"notificationCount\"\n        (click)=\"navigateToNotification()\"\n        >{{ notificationCount }}</span\n      >\n    </ion-title>\n  </ion-toolbar>\n  <!-- <ion-tab-bar slot=\"top\" color=\"primary\" *ngIf=\"showTabs\">\n      <ion-tab-button tab=\"last-month-reports\" class=\"activated\" [ngClass]=\"{'tab-selected' : last_month}\" (click)=\"activeTab('last_month')\">\n        <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n      </ion-tab-button>\n      <ion-tab-button tab=\"last-quarter-reports\" [ngClass]=\"{'tab-selected' : last_quarter}\" (click)=\"activeTab('last_quarter')\">\n        <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n      </ion-tab-button>\n    </ion-tab-bar>  -->\n</ion-header>\n"
+module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }\">\n  <ion-toolbar>\n    <ion-icon name=\"menu\" class=\"header-action-icons\" *ngIf=\"showMenu\" (click)=\"menuToggle()\">\n    </ion-icon>\n    <span *ngIf=\"showMenu\" style=\"margin: 26px 10px;\n    position: absolute;\n    padding-bottom: 16px;\n    font-size: 16px; left: 0px;\" (click)=\"menuToggle()\"> MENU</span>\n    <ion-icon ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\" class=\"header-action-icons\"\n      *ngIf=\"showBack && !isGoBack\">\n    </ion-icon>\n    <ion-icon (click)=\"goBack()\" autoHide=\"false\" ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\" *ngIf=\"showBack && isGoBack\"></ion-icon>\n    <ion-title>\n      {{ title }}\n      <ion-icon name=\"wifi\" class=\"network-icon ion-float-right\" style=\"position:absolute;float:right;right: 20px;\"\n        [ngClass]=\"{\n          'no-connection': !connected,\n          connected: connected\n        }\"></ion-icon>\n      <span (click)=\"navigateToNotification()\">\n        <ion-icon name=\"notifications\" class=\"_headerIcon notificationIcon \"\n          style=\"position:absolute;float:right;right: 50px;\"></ion-icon>\n      </span>\n      <!-- Notification counts -->\n      <!-- <span class=\"dot _flex-box\" *ngIf=\"!notificationCount\"></span> -->\n      <span class=\"dot _flex-box\" *ngIf=\"notificationCount\"\n        (click)=\"navigateToNotification()\">{{ notificationCount }}</span>\n    </ion-title>\n  </ion-toolbar>\n  <!-- <ion-tab-bar slot=\"top\" color=\"primary\" *ngIf=\"showTabs\">\n      <ion-tab-button tab=\"last-month-reports\" class=\"activated\" [ngClass]=\"{'tab-selected' : last_month}\" (click)=\"activeTab('last_month')\">\n        <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n      </ion-tab-button>\n      <ion-tab-button tab=\"last-quarter-reports\" [ngClass]=\"{'tab-selected' : last_quarter}\" (click)=\"activeTab('last_quarter')\">\n        <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n      </ion-tab-button>\n    </ion-tab-bar>  -->\n</ion-header>\n<!-- <div *ngIf=\"isSyncing\"> Your data is syncingup please do not turn of your data and please dont close the app.\n</div> -->"
 
 /***/ }),
 
@@ -2745,7 +2751,7 @@ module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': no
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".dot {\n  width: auto;\n  min-width: 16px;\n  height: 16px;\n  background: red;\n  border-radius: 10px;\n  position: absolute;\n  right: 50px;\n  top: 5px;\n  z-index: 2;\n  -webkit-box-pack: center;\n  justify-content: center;\n  color: #fff;\n  font-size: 8px;\n  font-weight: bold;\n  text-align: center;\n  padding: 4px; }\n\n.relative {\n  position: relative; }\n\n.notificationIcon {\n  font-size: 28px;\n  margin-right: 5px; }\n\n.margin {\n  margin: 0 8px !important; }\n\n.textCapital {\n  text-transform: capitalize; }\n\n.tab-selected, .activated {\n  border-bottom: 4px solid #fff !important; }\n\nion-tab-button ion-label {\n  font-size: 16px !important; }\n\n.header-action-icons {\n  font-size: 28px;\n  padding-left: 15px;\n  float: left; }\n\n.header-md:after {\n  height: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9oZWFkZXIvaGVhZGVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsV0FBVztFQUNYLGVBQWU7RUFDZixZQUFZO0VBQ1osZUFBZTtFQUNmLG1CQUFtQjtFQUNuQixrQkFBa0I7RUFDbEIsV0FBVztFQUNYLFFBQVE7RUFDUixVQUFVO0VBQ1Ysd0JBQXdCO0VBQ3hCLHVCQUF1QjtFQUN2QixXQUFXO0VBQ1gsY0FBYztFQUNkLGlCQUFpQjtFQUNqQixrQkFBa0I7RUFDbEIsWUFBWSxFQUFBOztBQUVkO0VBQ0Usa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsZUFBZTtFQUNmLGlCQUFpQixFQUFBOztBQUVuQjtFQUNFLHdCQUF3QixFQUFBOztBQUUxQjtFQUNFLDBCQUEwQixFQUFBOztBQUU1QjtFQUNFLHdDQUF3QyxFQUFBOztBQUUxQztFQUVJLDBCQUEwQixFQUFBOztBQUc5QjtFQUNFLGVBQWM7RUFDZCxrQkFBaUI7RUFDakIsV0FBVyxFQUFBOztBQUViO0VBRUUsc0JBQXNCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9oZWFkZXIvaGVhZGVyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmRvdCB7XG4gIHdpZHRoOiBhdXRvO1xuICBtaW4td2lkdGg6IDE2cHg7XG4gIGhlaWdodDogMTZweDtcbiAgYmFja2dyb3VuZDogcmVkO1xuICBib3JkZXItcmFkaXVzOiAxMHB4O1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHJpZ2h0OiA1MHB4O1xuICB0b3A6IDVweDtcbiAgei1pbmRleDogMjtcbiAgLXdlYmtpdC1ib3gtcGFjazogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgY29sb3I6ICNmZmY7XG4gIGZvbnQtc2l6ZTogOHB4O1xuICBmb250LXdlaWdodDogYm9sZDtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBwYWRkaW5nOiA0cHg7XG59XG4ucmVsYXRpdmUge1xuICBwb3NpdGlvbjogcmVsYXRpdmU7XG59XG5cbi5ub3RpZmljYXRpb25JY29uIHtcbiAgZm9udC1zaXplOiAyOHB4O1xuICBtYXJnaW4tcmlnaHQ6IDVweDtcbn1cbi5tYXJnaW4ge1xuICBtYXJnaW46IDAgOHB4ICFpbXBvcnRhbnQ7XG59XG4udGV4dENhcGl0YWwge1xuICB0ZXh0LXRyYW5zZm9ybTogY2FwaXRhbGl6ZTtcbn1cbi50YWItc2VsZWN0ZWQsIC5hY3RpdmF0ZWQge1xuICBib3JkZXItYm90dG9tOiA0cHggc29saWQgI2ZmZiAhaW1wb3J0YW50O1xufVxuaW9uLXRhYi1idXR0b24ge1xuICBpb24tbGFiZWwge1xuICAgIGZvbnQtc2l6ZTogMTZweCAhaW1wb3J0YW50O1xuICB9XG59XG4uaGVhZGVyLWFjdGlvbi1pY29uc3tcbiAgZm9udC1zaXplOjI4cHg7XG4gIHBhZGRpbmctbGVmdDoxNXB4O1xuICBmbG9hdDogbGVmdDtcbn1cbi5oZWFkZXItbWQ6YWZ0ZXJcbntcbiAgaGVpZ2h0OiAwcHggIWltcG9ydGFudDtcbn0iXX0= */"
+module.exports = ".dot {\n  width: auto;\n  min-width: 16px;\n  height: 16px;\n  background: red;\n  border-radius: 10px;\n  position: absolute;\n  right: 50px;\n  top: 5px;\n  z-index: 2;\n  -webkit-box-pack: center;\n  justify-content: center;\n  color: #fff;\n  font-size: 8px;\n  font-weight: bold;\n  text-align: center;\n  padding: 4px; }\n\n.relative {\n  position: relative; }\n\n.notificationIcon {\n  font-size: 28px;\n  margin-right: 5px; }\n\n.margin {\n  margin: 0 8px !important; }\n\n.textCapital {\n  text-transform: capitalize; }\n\n.tab-selected, .activated {\n  border-bottom: 4px solid #fff !important; }\n\nion-tab-button ion-label {\n  font-size: 16px !important; }\n\n.header-action-icons {\n  font-size: 28px;\n  padding-left: 15px;\n  float: left; }\n\n.header-md:after {\n  height: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvaGVhZGVyL2hlYWRlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFdBQVc7RUFDWCxlQUFlO0VBQ2YsWUFBWTtFQUNaLGVBQWU7RUFDZixtQkFBbUI7RUFDbkIsa0JBQWtCO0VBQ2xCLFdBQVc7RUFDWCxRQUFRO0VBQ1IsVUFBVTtFQUNWLHdCQUF3QjtFQUN4Qix1QkFBdUI7RUFDdkIsV0FBVztFQUNYLGNBQWM7RUFDZCxpQkFBaUI7RUFDakIsa0JBQWtCO0VBQ2xCLFlBQVksRUFBQTs7QUFFZDtFQUNFLGtCQUFrQixFQUFBOztBQUdwQjtFQUNFLGVBQWU7RUFDZixpQkFBaUIsRUFBQTs7QUFFbkI7RUFDRSx3QkFBd0IsRUFBQTs7QUFFMUI7RUFDRSwwQkFBMEIsRUFBQTs7QUFFNUI7RUFDRSx3Q0FBd0MsRUFBQTs7QUFFMUM7RUFFSSwwQkFBMEIsRUFBQTs7QUFHOUI7RUFDRSxlQUFjO0VBQ2Qsa0JBQWlCO0VBQ2pCLFdBQVcsRUFBQTs7QUFFYjtFQUVFLHNCQUFzQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvaGVhZGVyL2hlYWRlci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5kb3Qge1xuICB3aWR0aDogYXV0bztcbiAgbWluLXdpZHRoOiAxNnB4O1xuICBoZWlnaHQ6IDE2cHg7XG4gIGJhY2tncm91bmQ6IHJlZDtcbiAgYm9yZGVyLXJhZGl1czogMTBweDtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICByaWdodDogNTBweDtcbiAgdG9wOiA1cHg7XG4gIHotaW5kZXg6IDI7XG4gIC13ZWJraXQtYm94LXBhY2s6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGNvbG9yOiAjZmZmO1xuICBmb250LXNpemU6IDhweDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgcGFkZGluZzogNHB4O1xufVxuLnJlbGF0aXZlIHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xufVxuXG4ubm90aWZpY2F0aW9uSWNvbiB7XG4gIGZvbnQtc2l6ZTogMjhweDtcbiAgbWFyZ2luLXJpZ2h0OiA1cHg7XG59XG4ubWFyZ2luIHtcbiAgbWFyZ2luOiAwIDhweCAhaW1wb3J0YW50O1xufVxuLnRleHRDYXBpdGFsIHtcbiAgdGV4dC10cmFuc2Zvcm06IGNhcGl0YWxpemU7XG59XG4udGFiLXNlbGVjdGVkLCAuYWN0aXZhdGVkIHtcbiAgYm9yZGVyLWJvdHRvbTogNHB4IHNvbGlkICNmZmYgIWltcG9ydGFudDtcbn1cbmlvbi10YWItYnV0dG9uIHtcbiAgaW9uLWxhYmVsIHtcbiAgICBmb250LXNpemU6IDE2cHggIWltcG9ydGFudDtcbiAgfVxufVxuLmhlYWRlci1hY3Rpb24taWNvbnN7XG4gIGZvbnQtc2l6ZToyOHB4O1xuICBwYWRkaW5nLWxlZnQ6MTVweDtcbiAgZmxvYXQ6IGxlZnQ7XG59XG4uaGVhZGVyLW1kOmFmdGVyXG57XG4gIGhlaWdodDogMHB4ICFpbXBvcnRhbnQ7XG59Il19 */"
 
 /***/ }),
 
@@ -2767,6 +2773,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
 /* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
+
 
 
 
@@ -2776,7 +2784,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var HeaderComponent = /** @class */ (function () {
-    function HeaderComponent(router, notificationCardService, storage, menuController, badge, api) {
+    function HeaderComponent(router, notificationCardService, storage, menuController, badge, api, homeService) {
         var _this = this;
         this.router = router;
         this.notificationCardService = notificationCardService;
@@ -2784,13 +2792,18 @@ var HeaderComponent = /** @class */ (function () {
         this.menuController = menuController;
         this.badge = badge;
         this.api = api;
+        this.homeService = homeService;
         this.showMenu = true;
         this.noBorder = true;
         this.isGoBack = false;
         this.bg = '#fff';
+        this.isSyncing = false;
         this.connected = navigator.onLine;
         this.page = 1;
         this.limit = 20;
+        homeService.isSyncing.subscribe(function (data) {
+            _this.isSyncing = data;
+        });
         notificationCardService.notificationCount.subscribe(function (count) {
             _this.notificationCount = count;
             _this.badge.set(_this.notificationCount);
@@ -2869,9 +2882,12 @@ var HeaderComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./header.component.html */ "./src/app/header/header.component.html"),
             styles: [__webpack_require__(/*! ./header.component.scss */ "./src/app/header/header.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_3__["NotificationCardService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_3__["NotificationCardService"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["MenuController"],
-            _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__["Badge"], _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"]])
+            _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__["Badge"], _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"],
+            _home_home_service__WEBPACK_IMPORTED_MODULE_8__["HomeService"]])
     ], HeaderComponent);
     return HeaderComponent;
 }());
@@ -2900,6 +2916,7 @@ var HomeService = /** @class */ (function () {
     function HomeService() {
         this.myProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.clearMyProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        this.isSyncing = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.activeProjectLoad = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.searcResultsOfPrjcts = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
     }
@@ -2919,6 +2936,9 @@ var HomeService = /** @class */ (function () {
     };
     HomeService.prototype.clearData = function () {
         this.clearMyProject.next();
+    };
+    HomeService.prototype.syncingProject = function (status) {
+        this.isSyncing.next(status);
     };
     HomeService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -3124,8 +3144,6 @@ var Login = /** @class */ (function () {
             body.set('redirect_uri', _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].keyCloak.redirection_url);
             body.set('scope', "offline_access");
             var url = _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].app_url + _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].keyCloak.getAccessToken;
-            console.log(body, "body");
-            console.log(url, "url");
             _this.http.post(url, body)
                 .subscribe(function (data) {
                 var parsedData = JSON.parse(data._body);
@@ -3296,7 +3314,7 @@ module.exports = "<ion-list text-wrap class=\"container\" *ngIf=\"notifications?
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".dot {\n  width: 10px;\n  height: 10px;\n  margin-right: 10px;\n  background-color: #b23d33;\n  border-radius: 50%; }\n\n.notificationCard {\n  border-radius: 15px;\n  margin: 15px 0;\n  box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.16);\n  padding: 5px 30px; }\n\n.custom-list {\n  --background: transparent;\n  --border-color: transparent; }\n\n.inactiveDot {\n  background-color: #000; }\n\n.action-notifications {\n  text-align: center; }\n\n.old-notification {\n  background: #ebebeb;\n  color: #000;\n  padding: 10px 25px; }\n\n.new-notification {\n  background: #b23d33;\n  color: #fff;\n  padding: 10px 25px; }\n\n.notificationTitle {\n  font-family: 'Source Sans Pro', sans-serif !important;\n  -webkit-box-pack: justify;\n  justify-content: space-between;\n  font-size: 14px;\n  font-weight: 600;\n  padding-bottom: 5px; }\n\n.container {\n  padding: 0 15px !important; }\n\n.errorContainer {\n  padding: 0 15px !important;\n  height: 80vh !important; }\n\n.childContainer {\n  text-align: center; }\n\n.time {\n  color: #080808;\n  font-size: 12px; }\n\n.time-ago {\n  color: #000; }\n\n.errorMessage {\n  color: #080808; }\n\n.vertical-align-text {\n  margin: 0;\n  top: 50%;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n  text-align: center;\n  margin: 0px 26px;\n  font-weight: 500; }\n\n.custom-title-col {\n  float: left;\n  max-width: 60% !important;\n  min-width: 60% !important;\n  padding: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9ub3RpZmljYXRpb24tY2FyZC9ub3RpZmljYXRpb24tY2FyZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFdBQVc7RUFDWCxZQUFZO0VBQ1osa0JBQWtCO0VBQ2xCLHlCQUF5QjtFQUN6QixrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxtQkFBbUI7RUFDbkIsY0FBYztFQUNkLDJDQUEyQztFQUUzQyxpQkFBaUIsRUFBQTs7QUFFbkI7RUFDRSx5QkFBYTtFQUNiLDJCQUFlLEVBQUE7O0FBRWpCO0VBQ0Usc0JBQXNCLEVBQUE7O0FBR3hCO0VBQ0Usa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsbUJBQW1CO0VBQ25CLFdBQVc7RUFDWCxrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxtQkFBbUI7RUFDbkIsV0FBVztFQUNYLGtCQUFrQixFQUFBOztBQUdwQjtFQUNFLHFEQUFxRDtFQUNyRCx5QkFBeUI7RUFDekIsOEJBQThCO0VBQzlCLGVBQWU7RUFDZixnQkFBZ0I7RUFDaEIsbUJBQW1CLEVBQUE7O0FBR3JCO0VBQ0UsMEJBQTBCLEVBQUE7O0FBRzVCO0VBQ0UsMEJBQTBCO0VBQzFCLHVCQUF1QixFQUFBOztBQUd6QjtFQUNFLGtCQUFrQixFQUFBOztBQUdwQjtFQUNFLGNBQWM7RUFDZCxlQUFlLEVBQUE7O0FBRWpCO0VBQ0UsV0FBVyxFQUFBOztBQUViO0VBQ0UsY0FBYyxFQUFBOztBQUVoQjtFQUNFLFNBQVM7RUFDVCxRQUFRO0VBRVIsbUNBQTJCO1VBQTNCLDJCQUEyQjtFQUMzQixrQkFBa0I7RUFDbEIsZ0JBQWdCO0VBQ2hCLGdCQUFnQixFQUFBOztBQUVsQjtFQUNFLFdBQVc7RUFDWCx5QkFBeUI7RUFDekIseUJBQXlCO0VBQ3pCLHVCQUF1QixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbm90aWZpY2F0aW9uLWNhcmQvbm90aWZpY2F0aW9uLWNhcmQuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZG90IHtcbiAgd2lkdGg6IDEwcHg7XG4gIGhlaWdodDogMTBweDtcbiAgbWFyZ2luLXJpZ2h0OiAxMHB4O1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjYjIzZDMzO1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG59XG5cbi5ub3RpZmljYXRpb25DYXJkIHtcbiAgYm9yZGVyLXJhZGl1czogMTVweDtcbiAgbWFyZ2luOiAxNXB4IDA7XG4gIGJveC1zaGFkb3c6IDBweCA2cHggNXB4IHJnYmEoMCwgMCwgMCwgMC4xNik7XG4gIC8vIHBhZGRpbmc6IDEwcHg7XG4gIHBhZGRpbmc6IDVweCAzMHB4O1xufVxuLmN1c3RvbS1saXN0IHtcbiAgLS1iYWNrZ3JvdW5kOiB0cmFuc3BhcmVudDtcbiAgLS1ib3JkZXItY29sb3I6IHRyYW5zcGFyZW50O1xufVxuLmluYWN0aXZlRG90IHtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzAwMDtcbn1cblxuLmFjdGlvbi1ub3RpZmljYXRpb25zIHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xufVxuXG4ub2xkLW5vdGlmaWNhdGlvbiB7XG4gIGJhY2tncm91bmQ6ICNlYmViZWI7XG4gIGNvbG9yOiAjMDAwO1xuICBwYWRkaW5nOiAxMHB4IDI1cHg7XG59XG5cbi5uZXctbm90aWZpY2F0aW9uIHtcbiAgYmFja2dyb3VuZDogI2IyM2QzMztcbiAgY29sb3I6ICNmZmY7XG4gIHBhZGRpbmc6IDEwcHggMjVweDtcbn1cblxuLm5vdGlmaWNhdGlvblRpdGxlIHtcbiAgZm9udC1mYW1pbHk6ICdTb3VyY2UgU2FucyBQcm8nLCBzYW5zLXNlcmlmICFpbXBvcnRhbnQ7XG4gIC13ZWJraXQtYm94LXBhY2s6IGp1c3RpZnk7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcbiAgZm9udC1zaXplOiAxNHB4O1xuICBmb250LXdlaWdodDogNjAwO1xuICBwYWRkaW5nLWJvdHRvbTogNXB4O1xufVxuXG4uY29udGFpbmVyIHtcbiAgcGFkZGluZzogMCAxNXB4ICFpbXBvcnRhbnQ7XG59XG5cbi5lcnJvckNvbnRhaW5lciB7XG4gIHBhZGRpbmc6IDAgMTVweCAhaW1wb3J0YW50O1xuICBoZWlnaHQ6IDgwdmggIWltcG9ydGFudDtcbn1cblxuLmNoaWxkQ29udGFpbmVyIHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xufVxuXG4udGltZSB7XG4gIGNvbG9yOiAjMDgwODA4O1xuICBmb250LXNpemU6IDEycHg7XG59XG4udGltZS1hZ28ge1xuICBjb2xvcjogIzAwMDtcbn1cbi5lcnJvck1lc3NhZ2Uge1xuICBjb2xvcjogIzA4MDgwODtcbn1cbi52ZXJ0aWNhbC1hbGlnbi10ZXh0IHtcbiAgbWFyZ2luOiAwO1xuICB0b3A6IDUwJTtcbiAgLW1zLXRyYW5zZm9ybTogdHJhbnNsYXRlWSgtNTAlKTtcbiAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKC01MCUpO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIG1hcmdpbjogMHB4IDI2cHg7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG4uY3VzdG9tLXRpdGxlLWNvbCB7XG4gIGZsb2F0OiBsZWZ0O1xuICBtYXgtd2lkdGg6IDYwJSAhaW1wb3J0YW50O1xuICBtaW4td2lkdGg6IDYwJSAhaW1wb3J0YW50O1xuICBwYWRkaW5nOiAwcHggIWltcG9ydGFudDtcbn1cbiJdfQ== */"
+module.exports = ".dot {\n  width: 10px;\n  height: 10px;\n  margin-right: 10px;\n  background-color: #b23d33;\n  border-radius: 50%; }\n\n.notificationCard {\n  border-radius: 15px;\n  margin: 15px 0;\n  box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.16);\n  padding: 5px 30px; }\n\n.custom-list {\n  --background: transparent;\n  --border-color: transparent; }\n\n.inactiveDot {\n  background-color: #000; }\n\n.action-notifications {\n  text-align: center; }\n\n.old-notification {\n  background: #ebebeb;\n  color: #000;\n  padding: 10px 25px; }\n\n.new-notification {\n  background: #b23d33;\n  color: #fff;\n  padding: 10px 25px; }\n\n.notificationTitle {\n  font-family: 'Source Sans Pro', sans-serif !important;\n  -webkit-box-pack: justify;\n  justify-content: space-between;\n  font-size: 14px;\n  font-weight: 600;\n  padding-bottom: 5px; }\n\n.container {\n  padding: 0 15px !important; }\n\n.errorContainer {\n  padding: 0 15px !important;\n  height: 80vh !important; }\n\n.childContainer {\n  text-align: center; }\n\n.time {\n  color: #080808;\n  font-size: 12px; }\n\n.time-ago {\n  color: #000; }\n\n.errorMessage {\n  color: #080808; }\n\n.vertical-align-text {\n  margin: 0;\n  top: 50%;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n  text-align: center;\n  margin: 0px 26px;\n  font-weight: 500; }\n\n.custom-title-col {\n  float: left;\n  max-width: 60% !important;\n  min-width: 60% !important;\n  padding: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvbm90aWZpY2F0aW9uLWNhcmQvbm90aWZpY2F0aW9uLWNhcmQuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxXQUFXO0VBQ1gsWUFBWTtFQUNaLGtCQUFrQjtFQUNsQix5QkFBeUI7RUFDekIsa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsbUJBQW1CO0VBQ25CLGNBQWM7RUFDZCwyQ0FBMkM7RUFFM0MsaUJBQWlCLEVBQUE7O0FBRW5CO0VBQ0UseUJBQWE7RUFDYiwyQkFBZSxFQUFBOztBQUVqQjtFQUNFLHNCQUFzQixFQUFBOztBQUd4QjtFQUNFLGtCQUFrQixFQUFBOztBQUdwQjtFQUNFLG1CQUFtQjtFQUNuQixXQUFXO0VBQ1gsa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsbUJBQW1CO0VBQ25CLFdBQVc7RUFDWCxrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxxREFBcUQ7RUFDckQseUJBQXlCO0VBQ3pCLDhCQUE4QjtFQUM5QixlQUFlO0VBQ2YsZ0JBQWdCO0VBQ2hCLG1CQUFtQixFQUFBOztBQUdyQjtFQUNFLDBCQUEwQixFQUFBOztBQUc1QjtFQUNFLDBCQUEwQjtFQUMxQix1QkFBdUIsRUFBQTs7QUFHekI7RUFDRSxrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxjQUFjO0VBQ2QsZUFBZSxFQUFBOztBQUVqQjtFQUNFLFdBQVcsRUFBQTs7QUFFYjtFQUNFLGNBQWMsRUFBQTs7QUFFaEI7RUFDRSxTQUFTO0VBQ1QsUUFBUTtFQUVSLG1DQUEyQjtVQUEzQiwyQkFBMkI7RUFDM0Isa0JBQWtCO0VBQ2xCLGdCQUFnQjtFQUNoQixnQkFBZ0IsRUFBQTs7QUFFbEI7RUFDRSxXQUFXO0VBQ1gseUJBQXlCO0VBQ3pCLHlCQUF5QjtFQUN6Qix1QkFBdUIsRUFBQSIsImZpbGUiOiJzcmMvYXBwL25vdGlmaWNhdGlvbi1jYXJkL25vdGlmaWNhdGlvbi1jYXJkLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmRvdCB7XG4gIHdpZHRoOiAxMHB4O1xuICBoZWlnaHQ6IDEwcHg7XG4gIG1hcmdpbi1yaWdodDogMTBweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2IyM2QzMztcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xufVxuXG4ubm90aWZpY2F0aW9uQ2FyZCB7XG4gIGJvcmRlci1yYWRpdXM6IDE1cHg7XG4gIG1hcmdpbjogMTVweCAwO1xuICBib3gtc2hhZG93OiAwcHggNnB4IDVweCByZ2JhKDAsIDAsIDAsIDAuMTYpO1xuICAvLyBwYWRkaW5nOiAxMHB4O1xuICBwYWRkaW5nOiA1cHggMzBweDtcbn1cbi5jdXN0b20tbGlzdCB7XG4gIC0tYmFja2dyb3VuZDogdHJhbnNwYXJlbnQ7XG4gIC0tYm9yZGVyLWNvbG9yOiB0cmFuc3BhcmVudDtcbn1cbi5pbmFjdGl2ZURvdCB7XG4gIGJhY2tncm91bmQtY29sb3I6ICMwMDA7XG59XG5cbi5hY3Rpb24tbm90aWZpY2F0aW9ucyB7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbn1cblxuLm9sZC1ub3RpZmljYXRpb24ge1xuICBiYWNrZ3JvdW5kOiAjZWJlYmViO1xuICBjb2xvcjogIzAwMDtcbiAgcGFkZGluZzogMTBweCAyNXB4O1xufVxuXG4ubmV3LW5vdGlmaWNhdGlvbiB7XG4gIGJhY2tncm91bmQ6ICNiMjNkMzM7XG4gIGNvbG9yOiAjZmZmO1xuICBwYWRkaW5nOiAxMHB4IDI1cHg7XG59XG5cbi5ub3RpZmljYXRpb25UaXRsZSB7XG4gIGZvbnQtZmFtaWx5OiAnU291cmNlIFNhbnMgUHJvJywgc2Fucy1zZXJpZiAhaW1wb3J0YW50O1xuICAtd2Via2l0LWJveC1wYWNrOiBqdXN0aWZ5O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG4gIGZvbnQtc2l6ZTogMTRweDtcbiAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgcGFkZGluZy1ib3R0b206IDVweDtcbn1cblxuLmNvbnRhaW5lciB7XG4gIHBhZGRpbmc6IDAgMTVweCAhaW1wb3J0YW50O1xufVxuXG4uZXJyb3JDb250YWluZXIge1xuICBwYWRkaW5nOiAwIDE1cHggIWltcG9ydGFudDtcbiAgaGVpZ2h0OiA4MHZoICFpbXBvcnRhbnQ7XG59XG5cbi5jaGlsZENvbnRhaW5lciB7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbn1cblxuLnRpbWUge1xuICBjb2xvcjogIzA4MDgwODtcbiAgZm9udC1zaXplOiAxMnB4O1xufVxuLnRpbWUtYWdvIHtcbiAgY29sb3I6ICMwMDA7XG59XG4uZXJyb3JNZXNzYWdlIHtcbiAgY29sb3I6ICMwODA4MDg7XG59XG4udmVydGljYWwtYWxpZ24tdGV4dCB7XG4gIG1hcmdpbjogMDtcbiAgdG9wOiA1MCU7XG4gIC1tcy10cmFuc2Zvcm06IHRyYW5zbGF0ZVkoLTUwJSk7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgtNTAlKTtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBtYXJnaW46IDBweCAyNnB4O1xuICBmb250LXdlaWdodDogNTAwO1xufVxuLmN1c3RvbS10aXRsZS1jb2wge1xuICBmbG9hdDogbGVmdDtcbiAgbWF4LXdpZHRoOiA2MCUgIWltcG9ydGFudDtcbiAgbWluLXdpZHRoOiA2MCUgIWltcG9ydGFudDtcbiAgcGFkZGluZzogMHB4ICFpbXBvcnRhbnQ7XG59XG4iXX0= */"
 
 /***/ }),
 
@@ -3559,7 +3577,7 @@ var NotificationCardService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-list>\n  <ion-item>\n    <ion-label (click)=\"getPDF()\">{{share}}</ion-label>\n  </ion-item>\n  <ion-item>\n    <ion-label (click)=\"deleteConfirmation()\">{{delete}}</ion-label>\n  </ion-item>\n</ion-list>"
+module.exports = "<ion-list>\n  <ion-item>\n    <ion-label (click)=\"deleteConfirmation()\">{{delete}}\n    </ion-label>\n    <ion-avatar slot=\"end\">\n      <img src=\"assets/images/delete_project.png\">\n    </ion-avatar>\n  </ion-item>\n  <ion-item>\n    <ion-label (click)=\"getPDF()\">{{share}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <ion-icon name=\"share\"></ion-icon>\n    </ion-avatar>\n  </ion-item>\n</ion-list>"
 
 /***/ }),
 
@@ -3570,7 +3588,7 @@ module.exports = "<ion-list>\n  <ion-item>\n    <ion-label (click)=\"getPDF()\">
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3BvcG92ZXIvcG9wb3Zlci5jb21wb25lbnQuc2NzcyJ9 */"
+module.exports = ".avatar-style {\n  margin: auto;\n  text-align: center;\n  font-size: 30px;\n  color: #727272;\n  margin-top: 8px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvcG9wb3Zlci9wb3BvdmVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksWUFBWTtFQUNaLGtCQUFrQjtFQUNsQixlQUFlO0VBQ2YsY0FBYztFQUNkLGVBQWUsRUFBQSIsImZpbGUiOiJzcmMvYXBwL3BvcG92ZXIvcG9wb3Zlci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5hdmF0YXItc3R5bGV7XG4gICAgbWFyZ2luOiBhdXRvO1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICBmb250LXNpemU6IDMwcHg7XG4gICAgY29sb3I6ICM3MjcyNzI7XG4gICAgbWFyZ2luLXRvcDogOHB4O1xufSJdfQ== */"
 
 /***/ }),
 
@@ -3736,7 +3754,7 @@ var PopoverComponent = /** @class */ (function () {
                             "projectId": _this.project._id
                         };
                         _this.categoryViewService.getPDF(projectData, userTokens_1.access_token).subscribe(function (data) {
-                            var fileName = _this.project.title.replace(/\s/g, "") + ".pdf";
+                            var fileName = _this.project.title.replace(/\s/g, "");
                             var fileTransfer = _this.transfer.create();
                             var url = data.pdfUrl;
                             fileTransfer.download(url, _this.appFolderPath + '/' + fileName).then(function (entry) {
@@ -4332,7 +4350,8 @@ var ToastService = /** @class */ (function () {
                         return [4 /*yield*/, this.toastController.create({
                                 message: msg,
                                 color: 'danger',
-                                duration: 2000
+                                duration: 2000,
+                                position: 'top'
                             })];
                     case 1:
                         toast = _a.sent();
@@ -4354,7 +4373,8 @@ var ToastService = /** @class */ (function () {
                         return [4 /*yield*/, this.toastController.create({
                                 message: msg,
                                 color: 'success',
-                                duration: 2000
+                                duration: 2000,
+                                position: 'top'
                             })];
                     case 1:
                         toast = _a.sent();
@@ -4439,7 +4459,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/vishwanathbadiger/Documents/apps/sl-unnati/Unnati/sl-unnati-mobile/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /Users/vishwanathbadiger/Documents/apps/sl-unnati/unnati-feb/sl-unnati-mobile/src/main.ts */"./src/main.ts");
 
 
 /***/ })

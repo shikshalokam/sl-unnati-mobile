@@ -124,7 +124,7 @@ export class PopoverComponent implements OnInit {
               "projectId": this.project._id
             }
             this.categoryViewService.getPDF(projectData, userTokens.access_token).subscribe((data: any) => {
-              const fileName = this.project.title.replace(/\s/g, "") + ".pdf";
+              const fileName = this.project.title.replace(/\s/g, "");
               const fileTransfer: FileTransferObject = this.transfer.create();
               const url = data.pdfUrl;
               fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
