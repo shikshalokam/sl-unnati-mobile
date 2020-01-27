@@ -158,7 +158,7 @@ module.exports = "<ion-tabs>\n    <ion-header\n      style=\"position: initial; 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".tab-selected {\n  border-bottom: 4px solid #b23e33; }\n\nion-tab-button ion-label {\n  font-size: 16px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9teS1yZXBvcnRzL215LXJlcG9ydHMucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBRUksZ0NBQStCLEVBQUE7O0FBRW5DO0VBRVEsZUFBYyxFQUFBIiwiZmlsZSI6InNyYy9hcHAvbXktcmVwb3J0cy9teS1yZXBvcnRzLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi50YWItc2VsZWN0ZWRcbntcbiAgICBib3JkZXItYm90dG9tOjRweCBzb2xpZCAjYjIzZTMzO1xufVxuaW9uLXRhYi1idXR0b24ge1xuICAgIGlvbi1sYWJlbCB7XG4gICAgICAgIGZvbnQtc2l6ZToxNnB4O1xuICAgIH1cbn1cbiJdfQ== */"
+module.exports = ".tab-selected {\n  border-bottom: 4px solid #b23e33; }\n\nion-tab-button ion-label {\n  font-size: 16px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvbXktcmVwb3J0cy9teS1yZXBvcnRzLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUVJLGdDQUErQixFQUFBOztBQUVuQztFQUVRLGVBQWMsRUFBQSIsImZpbGUiOiJzcmMvYXBwL215LXJlcG9ydHMvbXktcmVwb3J0cy5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIudGFiLXNlbGVjdGVkXG57XG4gICAgYm9yZGVyLWJvdHRvbTo0cHggc29saWQgI2IyM2UzMztcbn1cbmlvbi10YWItYnV0dG9uIHtcbiAgICBpb24tbGFiZWwge1xuICAgICAgICBmb250LXNpemU6MTZweDtcbiAgICB9XG59XG4iXX0= */"
 
 /***/ }),
 
