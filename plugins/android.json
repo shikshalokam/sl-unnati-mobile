@@ -68,6 +68,10 @@
     },
     "com-badrit-base64": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-camera": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "org.shikshalokam.unnati.qa"
     }
   },
   "dependent_plugins": {

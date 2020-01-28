@@ -1195,7 +1195,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser >\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n             <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n            </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content >\n        <ion-list>\n            <div *ngFor=\"let p of appPages\">\n          <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.url\">\n            <ion-item [routerDirection]=\"'root'\" [routerLink]=\"[p.url]\"> \n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon> \n              <ion-label >\n                {{p.title}}\n              </ion-label>\n            </ion-item>\n          </ion-menu-toggle>\n          <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\" detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon> \n              <ion-label >{{ p.title }}</ion-label>\n            </ion-item>\n             <!-- Children List for clicked Item -->\n        <ion-list *ngIf=\"p.open\">\n          <ion-menu-toggle auto-hide=\"false\" >\n            <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n              routerLinkActive=\"active\" style=\"padding-left:30px;\" (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n              <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n              <ion-label>\n                {{ sub.title }}\n              </ion-label>\n            </ion-item>\n          </ion-menu-toggle>\n        </ion-list>\n            </div>\n        </ion-list>\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n</ion-app>\n"
+module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser>\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n            <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n          </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content>\n        <ion-list>\n          <div *ngFor=\"let p of appPages\">\n            <!-- *ngIf=\"p.url\" -->\n            <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.title != 'Settings'\">\n              <ion-item [routerDirection]=\"'root'\" (click)=\"navigate(p.url)\">\n                <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n                <ion-label (click)=\"initiateSync(p.title)\">\n                  {{p.title}}\n                </ion-label>\n              </ion-item>\n            </ion-menu-toggle>\n            <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\"\n              detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n              <ion-label>{{ p.title }}</ion-label>\n            </ion-item>\n            <!-- Children List for clicked Item -->\n            <ion-list *ngIf=\"p.open\">\n              <ion-menu-toggle auto-hide=\"false\">\n                <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n                  routerLinkActive=\"active\" style=\"padding-left:30px;\"\n                  (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n                  <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n                  <ion-label>\n                    {{ sub.title }}\n                  </ion-label>\n                </ion-item>\n              </ion-menu-toggle>\n            </ion-list>\n          </div>\n        </ion-list>\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n</ion-app>"
 
 /***/ }),
 
@@ -1225,6 +1225,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./api/api */ "./src/app/api/api.ts");
 /* harmony import */ var _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../app/project-view/project.service */ "./src/app/project-view/project.service.ts");
 /* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./home/home.service */ "./src/app/home/home.service.ts");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./toast.service */ "./src/app/toast.service.ts");
+
 
 
 
@@ -1248,7 +1250,7 @@ __webpack_require__.r(__webpack_exports__);
 var AppComponent = /** @class */ (function () {
     function AppComponent(storage, 
     // public fcm: FcmProvider,
-    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api, homeService) {
+    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api, homeService, toastService) {
         var _this = this;
         this.storage = storage;
         this.alertController = alertController;
@@ -1268,6 +1270,7 @@ var AppComponent = /** @class */ (function () {
         this.projectService = projectService;
         this.api = api;
         this.homeService = homeService;
+        this.toastService = toastService;
         this.lastTimeBackPress = 0;
         this.timePeriodToExit = 2000;
         // 3600000
@@ -1276,6 +1279,11 @@ var AppComponent = /** @class */ (function () {
         this.appPages = [];
         this.history = [];
         this.isConnected = localStorage.getItem('networkStatus');
+        this.homeService.tobeSync.subscribe(function (value) {
+            console.log('in project syncing');
+            _this.prepareProjectToSync();
+            _this.prepareMappedProjectToSync();
+        });
         this.loginService.emit.subscribe(function (value) {
             _this.loggedInUser = value;
             if (_this.loggedInUser) {
@@ -1290,6 +1298,11 @@ var AppComponent = /** @class */ (function () {
                         title: 'Home',
                         url: '/project-view/home',
                         icon: 'home'
+                    },
+                    {
+                        title: 'Sync',
+                        icon: 'sync',
+                        url: '',
                     },
                     {
                         title: 'About',
@@ -1485,6 +1498,11 @@ var AppComponent = /** @class */ (function () {
             });
         }
     };
+    AppComponent.prototype.navigate = function (url) {
+        if (url) {
+            this.router.navigate([url]);
+        }
+    };
     AppComponent.prototype.presentAlertCheckbox = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             var language, selectLan, alert;
@@ -1662,6 +1680,7 @@ var AppComponent = /** @class */ (function () {
                                 }
                             });
                         }
+                        console.log('calling');
                         _this.autoSync(project);
                     }
                     else {
@@ -1690,6 +1709,7 @@ var AppComponent = /** @class */ (function () {
                                 }
                             });
                         }
+                        console.log('calling 2');
                         _this.autoSync(project);
                     }
                     else {
@@ -1712,6 +1732,7 @@ var AppComponent = /** @class */ (function () {
                         };
                         _this.storage.set('userTokens', userTokens).then(function (data) {
                             _this.homeService.syncingProject(true);
+                            console.log(project, "project to sync");
                             _this.projectService.sync(project, data.access_token).subscribe(function (data) {
                                 if (data.status == "failed") {
                                 }
@@ -1776,6 +1797,18 @@ var AppComponent = /** @class */ (function () {
             });
         }
     };
+    AppComponent.prototype.initiateSync = function (value) {
+        console.log(value, "value");
+        if (navigator.onLine) {
+            if (value == 'Sync') {
+                this.prepareProjectToSync();
+                this.prepareMappedProjectToSync();
+            }
+        }
+        else {
+            this.toastService.errorToast('message.nerwork_connection_check');
+        }
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["NavController"]),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["NavController"])
@@ -1804,7 +1837,8 @@ var AppComponent = /** @class */ (function () {
             _angular_router__WEBPACK_IMPORTED_MODULE_9__["ActivatedRoute"],
             _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__["ProjectService"],
             _api_api__WEBPACK_IMPORTED_MODULE_13__["ApiProvider"],
-            _home_home_service__WEBPACK_IMPORTED_MODULE_15__["HomeService"]])
+            _home_home_service__WEBPACK_IMPORTED_MODULE_15__["HomeService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_16__["ToastService"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -1974,14 +2008,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_api_api__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../app/api/api */ "./src/app/api/api.ts");
 /* harmony import */ var _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @ionic-native/date-picker/ngx */ "./node_modules/@ionic-native/date-picker/ngx/index.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
-/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
-/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
-/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
-/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
-/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
-/* harmony import */ var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @ionic-native/file-path/ngx */ "./node_modules/@ionic-native/file-path/ngx/index.js");
-/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
+/* harmony import */ var _ionic_native_camera_ngx__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @ionic-native/camera/ngx */ "./node_modules/@ionic-native/camera/ngx/index.js");
+/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
+/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
+/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
+/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
+/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
+/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
+/* harmony import */ var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @ionic-native/file-path/ngx */ "./node_modules/@ionic-native/file-path/ngx/index.js");
+/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
+
 
 
 
@@ -2062,18 +2098,19 @@ var AppModule = /** @class */ (function () {
                 _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_22__["Market"],
                 _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_25__["DatePicker"],
                 _angular_common__WEBPACK_IMPORTED_MODULE_26__["DatePipe"],
-                _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_29__["SocialSharing"],
+                _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_30__["SocialSharing"],
                 _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_6__["SplashScreen"],
-                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_30__["FileTransfer"],
-                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_30__["FileTransferObject"],
-                _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_31__["File"],
-                _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_32__["FileChooser"],
-                _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_33__["FilePath"],
-                _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_34__["Base64"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_31__["FileTransfer"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_31__["FileTransferObject"],
+                _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_32__["File"],
+                _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_33__["FileChooser"],
+                _ionic_native_camera_ngx__WEBPACK_IMPORTED_MODULE_27__["Camera"],
+                _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_34__["FilePath"],
+                _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_35__["Base64"],
                 { provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"], useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicRouteStrategy"] },
                 // FCM,
                 // FcmProvider,
-                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_27__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_28__["Badge"]
+                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_28__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_29__["Badge"]
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_12__["AppComponent"]]
         }),
@@ -2190,7 +2227,9 @@ var CreateProjectService = /** @class */ (function () {
                     cmp.isEdited = true;
                 }
             });
+            console.log(cmp, "cmp");
             _this.storage.set('newcreatedproject', cmp).then(function (updatedProject) {
+                console.log(updatedProject, "updatedProject");
                 _this.storage.set('projectToBeView', cmp).then(function (updatedProject) {
                     _this.updateByProjects(updatedProject);
                 });
@@ -2200,6 +2239,7 @@ var CreateProjectService = /** @class */ (function () {
     //  Update project in my projects list.
     CreateProjectService.prototype.updateByProjects = function (updatedProject) {
         var _this = this;
+        console.log(updatedProject, "updatedProjectupdatedProjectupdatedProject");
         this.storage.get('myprojects').then(function (myProjects) {
             if (myProjects) {
                 myProjects.forEach(function (project, i) {
@@ -2916,6 +2956,7 @@ var HomeService = /** @class */ (function () {
     function HomeService() {
         this.myProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.clearMyProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        this.tobeSync = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.isSyncing = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.activeProjectLoad = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.searcResultsOfPrjcts = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
@@ -2939,6 +2980,9 @@ var HomeService = /** @class */ (function () {
     };
     HomeService.prototype.syncingProject = function (status) {
         this.isSyncing.next(status);
+    };
+    HomeService.prototype.syncProjects = function () {
+        this.tobeSync.next();
     };
     HomeService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -3577,7 +3621,7 @@ var NotificationCardService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-list>\n  <ion-item>\n    <ion-label (click)=\"deleteConfirmation()\">{{delete}}\n    </ion-label>\n    <ion-avatar slot=\"end\">\n      <img src=\"assets/images/delete_project.png\">\n    </ion-avatar>\n  </ion-item>\n  <ion-item>\n    <ion-label (click)=\"getPDF()\">{{share}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <ion-icon name=\"share\"></ion-icon>\n    </ion-avatar>\n  </ion-item>\n</ion-list>"
+module.exports = "<ion-list>\n  <ion-item>\n    <ion-label (click)=\"deleteConfirmation()\">{{delete}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <i class=\"material-icons\" style=\"font-size: 1.4em;\">\n        delete_forever\n      </i>\n    </ion-avatar>\n  </ion-item>\n  <ion-item>\n    <ion-label (click)=\"getPDF()\">{{share}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <ion-icon name=\"share\"></ion-icon>\n    </ion-avatar>\n  </ion-item>\n</ion-list>"
 
 /***/ }),
 
@@ -3588,7 +3632,7 @@ module.exports = "<ion-list>\n  <ion-item>\n    <ion-label (click)=\"deleteConfi
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".avatar-style {\n  margin: auto;\n  text-align: center;\n  font-size: 30px;\n  color: #727272;\n  margin-top: 8px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvcG9wb3Zlci9wb3BvdmVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksWUFBWTtFQUNaLGtCQUFrQjtFQUNsQixlQUFlO0VBQ2YsY0FBYztFQUNkLGVBQWUsRUFBQSIsImZpbGUiOiJzcmMvYXBwL3BvcG92ZXIvcG9wb3Zlci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5hdmF0YXItc3R5bGV7XG4gICAgbWFyZ2luOiBhdXRvO1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICBmb250LXNpemU6IDMwcHg7XG4gICAgY29sb3I6ICM3MjcyNzI7XG4gICAgbWFyZ2luLXRvcDogOHB4O1xufSJdfQ== */"
+module.exports = ".avatar-style {\n  margin: auto;\n  text-align: center;\n  font-size: 1.4em;\n  color: #727272;\n  margin-top: 8px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvcG9wb3Zlci9wb3BvdmVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksWUFBWTtFQUNaLGtCQUFrQjtFQUNsQixnQkFBZ0I7RUFDaEIsY0FBYztFQUNkLGVBQWUsRUFBQSIsImZpbGUiOiJzcmMvYXBwL3BvcG92ZXIvcG9wb3Zlci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5hdmF0YXItc3R5bGV7XG4gICAgbWFyZ2luOiBhdXRvO1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICBmb250LXNpemU6IDEuNGVtO1xuICAgIGNvbG9yOiAjNzI3MjcyO1xuICAgIG1hcmdpbi10b3A6IDhweDtcbn0iXX0= */"
 
 /***/ }),
 

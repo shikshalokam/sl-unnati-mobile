@@ -26,6 +26,7 @@
     },
     "message": {
         "noUnreadNotifications": "You have no new Notifications!",
+        "nerwork_connection_check": "Please check your internet connection.",
         "comingsoon": "Coming Soon.",
         "after_prject_create": "Your project has been saved! View your project or continue to Edit.",
         "no_data_found": "No data found",
@@ -41,7 +42,9 @@
         "project_deleted_failed": "Unable to delete the project please try again.",
         "project_deleted_success": "Project deleted successfully.",
         "delete_project_confirm": "Are you sure you want to delete the project.",
-        "marked_as_completed": "Task marked as completed."
+        "marked_as_completed": "Task marked as completed.",
+        "local_data_changes": "You have made changes in projects",
+        "want_sync_before_erase": "Do you want to syc the project before erase your data"
     },
     "home": {
         "title": "Home",
