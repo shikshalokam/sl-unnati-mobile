@@ -24,6 +24,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { ApiProvider } from '../app/api/api';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { DatePipe } from '@angular/common';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 //Google charts
 // import { FCM } from '@ionic-native/fcm/ngx';
 // import { FcmProvider } from './fcm';
@@ -76,6 +77,7 @@ export function createTranslateLoader(http: HttpClient) {
     FileTransferObject,
     File,
     FileChooser,
+    Camera, 
     FilePath,
     Base64,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

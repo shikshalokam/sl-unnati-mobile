@@ -1,11 +1,6 @@
 <ion-header>
-  <app-header
-    [title]="'about.title' | translate"
-    [showMenu]="false"
-    [showBack]="true"
-    [isGoBack]="back"
-    [noBorder]="false"
-  >
+  <app-header [title]="'about.title' | translate" [showMenu]="false" [showBack]="true" [isGoBack]="back"
+    [noBorder]="false">
   </app-header>
 </ion-header>
 <ion-content class="ion-padding">
@@ -24,8 +19,7 @@
   <ion-list *ngIf="userDetails">
     {{ "about.user" | translate }} : {{ userDetails.preferred_username }}
   </ion-list>
-  <ion-button expand="block" color="danger" (click)="logout()"
-    ><ion-icon name="trash"></ion-icon
-    >{{ "button.erase_data" | translate }}</ion-button
-  >
+  <ion-button expand="block" color="danger" (click)="checkLocalData()">
+    <ion-icon name="trash"></ion-icon>{{ "button.erase_data" | translate }}
+  </ion-button>
 </ion-content>

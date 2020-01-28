@@ -110,23 +110,33 @@
           </ion-col>
         </ion-row>
         <ion-row>
+
           <ion-col size="10">
             <ion-textarea placeholder="{{'current_task.add_remarks' | translate}}" [(ngModel)]="task.remarks">
             </ion-textarea>
           </ion-col>
           <ion-col size="2" class="attachment-action">
-            <div (click)="showToast()">
-              <img src="assets/images/gallery.png">
-            </div>
-            <div (click)="showToast()">
-              <img src="assets/images/attach-pin.png">
-            </div>
+            <!-- <form>
+              <div class="fileUpload">
+                <img src="assets/images/gallery.png">
+                <input #imageInputImage type="file" class="upload" accept="image/*"
+                  (change)="selectedFile(imageInputImage,'image')" />
+              </div>
+            </form> -->
+            <img src="assets/images/gallery.png" (click)="openCamera()">
+            <form>
+              <div class="fileUpload">
+                <img src="assets/images/attach-pin.png">
+                <input #imageInputFile type="file" class="upload" accept="image/*"
+                  (change)="selectedFile(imageInputFile,'file')" />
+              </div>
+            </form>
           </ion-col>
         </ion-row>
       </div>
       <ion-row class="pop-btn">
         <ion-col size="5">
-          <ion-button color="primary" expand="block" (click)="showToast();close()" [disabled]="true">
+          <ion-button color="primary" expand="block" (click)="attach()">
             {{'button.attach' | translate}}</ion-button>
         </ion-col>
         <ion-col size="7">
