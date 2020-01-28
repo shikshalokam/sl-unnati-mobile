@@ -1,67 +1,68 @@
 <ion-header>
-    <app-header [title]="'create_project.create_new_project' | translate" [showMenu]="false" [showBack]="true"
-      [isGoBack]="back" [noBorder]="false">
-    </app-header>
-  </ion-header>
-  <ion-content padding>
-    <!-- Error message, if fileds are not filled -->
-    <h5 class="required-field" *ngIf="markLabelsAsInvalid" style="padding-left:15px;">
-      {{'create_project.fileds_mandatory' | translate}}</h5>
-      <!-- Error message ends here-->
-      <!-- Project creation form starts here -->
-    <form [formGroup]="createProject" class="create-project">
-      <!-- Project title start here -->
-      <ion-item class="custom-ion-item">
-        <ion-label class="custom-label" position="floating"
-          [ngClass]="{'required-field':markLabelsAsInvalid && !project.title}">
-          {{'create_project.title_of_project' | translate}}</ion-label>
-        <ion-input type="text" [(ngModel)]="project.title" name="title" formControlName="title"
-          placeholder="{{'create_project.placeholder_project_title'| translate}}" maxlength="280"></ion-input>
-      </ion-item>
-      <!-- Project title ends here -->
-      <!-- project goal starts here -->
-      <ion-item class="custom-ion-item">
-        <ion-label class="custom-label" position="floating"
-          [ngClass]="{'required-field':markLabelsAsInvalid && !project.goal}">
-          {{'create_project.goal' | translate}}</ion-label>
-        <ion-textarea type="text" [(ngModel)]="project.goal" name="goal" formControlName="goal"
-          placeholder="{{'create_project.placeholder_goal'| translate}}" maxlength="1000"></ion-textarea>
-      </ion-item>
-      <!-- project goal end here -->
-      <!-- Project start and end date start here -->
-      <ion-row>
-        <ion-col size="6">
-          <ion-item class="custom-ion-item" (click)="setDate('sd')">
-            <ion-label class="custom-label" position="floating">
-              {{'create_project.start_date' | translate}}</ion-label>
-            <ion-input type="text" [(ngModel)]="startDate" name="title" formControlName="startDate"
-              placeholder="{{today}}" class="no-rght-brdr-rds"></ion-input>
-            <ion-icon ios="ios-arrow-dropdown" md="md-arrow-dropdown" slot="end" class="right-icon"></ion-icon>
-          </ion-item>
-        </ion-col>
-        <ion-col size="6">
-          <ion-item class="custom-ion-item" (click)="setDate('ed')">
-            <ion-label class="custom-label" position="floating">
-              {{'create_project.end_date' | translate}}</ion-label>
-            <ion-input type="text" [(ngModel)]="endDate" name="title" formControlName="endDate" placeholder="{{today}}"
-              class="no-rght-brdr-rds"></ion-input>
-            <ion-icon ios="ios-arrow-dropdown" md="md-arrow-dropdown" slot="end" class="right-icon"></ion-icon>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <!-- Project start and end date end here -->
-      <!-- Project improvement areas starts here -->
-      <ion-item class="custom-ion-item" style="margin-bottom:50px;">
-        <ion-label class="custom-label text-wrap-overflow" position="floating"
-          [ngClass]="{'required-field':markLabelsAsInvalid && !category}">
-          {{'create_project.areas' | translate}}</ion-label>
-        <ion-textarea type="text" [(ngModel)]="project.category" name="category" formControlName="category"
-          placeholder="{{'create_project.placeholder_areas'| translate}}" maxlength="90"></ion-textarea>
-      </ion-item>
-      <!-- Project improvement areas end here -->
-      <ion-button (click)="create()" color="secondary" class="round-corner-btn" expand="block">
-        {{'button.save_create_task' | translate}}
-      </ion-button>
-    </form>
-      <!-- Project creation form starts here -->
-  </ion-content>
+  <app-header [title]="'create_project.create_new_project' | translate" [showMenu]="false" [showBack]="true"
+    [isGoBack]="back" [noBorder]="false">
+  </app-header>
+</ion-header>
+<ion-content padding>
+  <!-- Error message, if fileds are not filled -->
+  <h5 class="required-field" *ngIf="markLabelsAsInvalid" style="padding-left:15px;">
+    {{'create_project.fileds_mandatory' | translate}}</h5>
+  <!-- Error message ends here-->
+  <!-- Project creation form starts here -->
+  <form [formGroup]="createProject" class="create-project">
+    <!-- Project title start here -->
+    <ion-item class="custom-ion-item">
+      <ion-label class="custom-label" position="floating"
+        [ngClass]="{'required-field':markLabelsAsInvalid && !project.title}">
+        {{'create_project.title_of_project' | translate}}</ion-label>
+      <ion-input type="text" [(ngModel)]="project.title" name="title" formControlName="title"
+        placeholder="{{'create_project.placeholder_project_title'| translate}}" maxlength="280"></ion-input>
+    </ion-item>
+    <!-- Project title ends here -->
+    <!-- project goal starts here -->
+    <ion-item class="custom-ion-item">
+      <ion-label class="custom-label" position="floating"
+        [ngClass]="{'required-field':markLabelsAsInvalid && !project.goal}">
+        {{'create_project.goal' | translate}}</ion-label>
+      <ion-textarea type="text" [(ngModel)]="project.goal" name="goal" formControlName="goal"
+        placeholder="{{'create_project.placeholder_goal'| translate}}" maxlength="1000"></ion-textarea>
+    </ion-item>
+    <!-- project goal end here -->
+    <!-- Project start and end date start here -->
+    <ion-row>
+      <ion-col size="6">
+        <ion-label class="custom-label" position="floating" style=" margin-left: 15px; font-size: 18px !important;">
+          {{'create_project.start_date' | translate}}</ion-label>
+        <ion-item class="custom-ion-item" (click)="setDate('sd')">
+          <ion-input type="text" [(ngModel)]="startDate" name="title" formControlName="startDate"
+            placeholder="{{today}}" class="no-rght-brdr-rds"></ion-input>
+          <ion-icon ios="ios-arrow-dropdown" md="md-arrow-dropdown" slot="end" class="right-icon"></ion-icon>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6">
+        <ion-label class="custom-label" position="floating" style=" margin-left: 15px; font-size: 18px !important;"
+          [ngClass]="{'required-field':markLabelsAsInvalid && !validate}">
+          {{'create_project.end_date' | translate}}</ion-label>
+        <ion-item class="custom-ion-item" (click)="setDate('ed')">
+          <ion-input type="text" [(ngModel)]="endDate" name="title" formControlName="endDate" placeholder="{{today}}"
+            class="no-rght-brdr-rds"></ion-input>
+          <ion-icon ios="ios-arrow-dropdown" md="md-arrow-dropdown" slot="end" class="right-icon"></ion-icon>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <!-- Project start and end date end here -->
+    <!-- Project improvement areas starts here -->
+    <ion-item class="custom-ion-item" style="margin-bottom:50px;">
+      <ion-label class="custom-label text-wrap-overflow" position="floating"
+        [ngClass]="{'required-field':markLabelsAsInvalid && !project.category}">
+        {{'create_project.areas' | translate}}</ion-label>
+      <ion-textarea type="text" [(ngModel)]="project.category" name="category" formControlName="category"
+        placeholder="{{'create_project.placeholder_areas'| translate}}" maxlength="90"></ion-textarea>
+    </ion-item>
+    <!-- Project improvement areas end here -->
+    <ion-button (click)="create()" color="secondary" class="round-corner-btn" expand="block">
+      {{'button.save_create_task' | translate}}
+    </ion-button>
+  </form>
+  <!-- Project creation form starts here -->
+</ion-content>

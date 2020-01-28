@@ -16,6 +16,7 @@ import { interval, Subscription } from 'rxjs';
 import { ApiProvider } from './api/api';
 import { ProjectService } from '../app/project-view/project.service';
 import { HomeService } from './home/home.service';
+import { ToastService } from './toast.service';
 // import { FcmProvider } from './fcm';
 @Component({
   selector: 'app-root',
@@ -54,9 +55,13 @@ export class AppComponent {
     public route: ActivatedRoute,
     public projectService: ProjectService,
     public api: ApiProvider,
-    public homeService: HomeService
+    public homeService: HomeService,
+    public toastService: ToastService
   ) {
-
+    this.homeService.tobeSync.subscribe(value => {
+      this.prepareProjectToSync();
+      this.prepareMappedProjectToSync();
+    })
     this.loginService.emit.subscribe(value => {
       this.loggedInUser = value;
       if (this.loggedInUser) {
@@ -68,9 +73,14 @@ export class AppComponent {
         this.loggedInUser = value;
         this.appPages = [
           {
-            title: 'Home',
+            title: 'Home', 
             url: '/project-view/home',
             icon: 'home'
+          },
+          {
+            title: 'Sync',
+            icon: 'sync',
+            url: '',
           },
           {
             title: 'About',
@@ -240,6 +250,12 @@ export class AppComponent {
           });
         }
       });
+    }
+  }
+
+  public navigate(url) {
+    if (url) {
+      this.router.navigate([url]);
     }
   }
   async presentAlertCheckbox() {
@@ -487,6 +503,16 @@ export class AppComponent {
         this.storage.set('projects', projects).then(myprojectsff => {
         })
       })
+    }
+  }
+  public initiateSync(value) {
+    if (navigator.onLine) {
+      if (value == 'Sync') {
+        this.prepareProjectToSync();
+        this.prepareMappedProjectToSync();
+      }
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
 }

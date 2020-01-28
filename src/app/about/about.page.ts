@@ -8,6 +8,9 @@ import { Login } from '../login.service';
 import { Storage } from '@ionic/storage';
 import * as jwt_decode from "jwt-decode";
 import { Badge } from '@ionic-native/badge/ngx';
+import { AlertController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { HomeService } from '../home/home.service'
 @Component({
   selector: 'app-about',
   templateUrl: './about.page.html',
@@ -16,7 +19,7 @@ import { Badge } from '@ionic-native/badge/ngx';
 export class AboutPage implements OnInit {
   public connected: any = false;
   public token;
-  back ="project-view/home"
+  back = "project-view/home"
   public userDetails;
   public infoData = {
     showEraseBtn: true,
@@ -24,7 +27,16 @@ export class AboutPage implements OnInit {
     app_version: `${AppConfigs.appVersion}`
 
   }
-  constructor(public storage: Storage, public router: Router, public badge: Badge, public networkService: NetworkService, public login: Login, public network: Network, public currentUser: CurrentUserProvider) {
+  constructor(public storage: Storage,
+    public router: Router,
+    public badge: Badge,
+    public networkService: NetworkService,
+    public login: Login,
+    public network: Network,
+    public currentUser: CurrentUserProvider,
+    public alertController: AlertController,
+    public homeService: HomeService,
+    public translateService: TranslateService) {
     if (localStorage.getItem('networkStatus') != null) {
       this.connected = localStorage.getItem('networkStatus');
     } else {
@@ -67,5 +79,51 @@ export class AboutPage implements OnInit {
     if (!localStorage.getItem("token")) {
       this.router.navigateByUrl('/login');
     }
+  }
+  public checkLocalData() {
+    let isDirty: boolean = false;
+    this.storage.get('myprojects').then(myProjects => {
+      if (myProjects && navigator.onLine) {
+        myProjects.forEach(project => {
+          if (project.isEdited || project.isNew) {
+            isDirty = true;
+          }
+        })
+        if (isDirty) {
+          this.showConfirmAlert();
+        } else {
+          this.logout();
+        }
+      } else {
+        this.logout();
+      }
+    })
+  }
+
+  async showConfirmAlert() {
+    let alertTexts;
+    this.translateService.get(['message.local_data_changes'], ['message.want_sync_before_erase']).subscribe((texts: string) => {
+      alertTexts = texts;
+    });
+    const alert = await this.alertController.create({
+      header: alertTexts['message.local_data_changes'],
+      message: alertTexts['message.want_sync_before_erase'],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            this.logout();
+          }
+        }, {
+          text: 'Okay',
+          handler: () => {
+            this.homeService.syncProjects();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

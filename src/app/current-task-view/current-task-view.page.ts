@@ -6,6 +6,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { Router, ActivatedRoute } from '@angular/router';
 import { CreateProjectService } from '../create-project/create-project.service';
 import { ToastService } from '../toast.service'
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 @Component({
   selector: 'app-current-task-view',
   templateUrl: './current-task-view.page.html',
@@ -14,6 +15,9 @@ import { ToastService } from '../toast.service'
 export class CurrentTaskViewPage implements OnInit {
   createSubtask: FormGroup;
   back;
+  file;
+  imageUrl;
+  fileUrl;
   from;
   showpopup: boolean = false;
   enableMarkButton: boolean = false;
@@ -37,7 +41,8 @@ export class CurrentTaskViewPage implements OnInit {
     public router: Router,
     public route: ActivatedRoute,
     public createProjectService: CreateProjectService,
-    public toastService: ToastService) {
+    public toastService: ToastService,
+    public camera: Camera) {
     route.params.subscribe(param => {
       this.from = param.from;
       this.id = param.id;
@@ -45,6 +50,7 @@ export class CurrentTaskViewPage implements OnInit {
   }
   ionViewDidEnter() {
     this.getTask();
+    this.showpopup = false;
     this.enableMarkButton = false;
   }
   ngOnInit() {
@@ -157,6 +163,7 @@ export class CurrentTaskViewPage implements OnInit {
     this.task = task;
     this.storage.set('cTask', task).then(updatedTask => {
       this.updateCurrentProject(updatedTask);
+
       this.toastService.successToast('message.marked_as_completed');
       this.showpopup = false;
       this.router.navigate(['/project-view/project-detail', this.parameter]);
@@ -306,7 +313,44 @@ export class CurrentTaskViewPage implements OnInit {
     this.showpopup = true;
   }
 
-  public showToast() {
-    this.toastService.errorToast('message.comingsoon');
+  //  Converting Attachments into Base64
+  selectedFile(imageInput: any, type) {
+    let value;
+    const file: File = imageInput.files[0];
+    this.file = file;
+    // this.file.type = file.type;
+    // let fPath = this.file.name;
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      value = event.target.result.split(',');
+      if (type == 'image') {
+        this.imageUrl = value[1];
+      } else {
+        this.fileUrl = value[1];
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+  public attach() {
+    this.task.imageUrl = this.imageUrl;
+    this.task.fileUrl = this.fileUrl;
+    this.updateTask();
+  }
+
+  openCamera() {
+    const options: CameraOptions = {
+      quality: 20,
+      targetWidth: 600,
+      targetHeight: 600,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    this.camera.getPicture(options).then((imageData) => {
+      this.imageUrl = imageData;
+      let base64Image = 'data:image/jpeg;base64,' + imageData;
+    }, (err) => {
+      // Handle error
+    });
   }
 }
