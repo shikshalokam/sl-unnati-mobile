@@ -14,7 +14,29 @@ export class CreateTaskService {
                         return this.project = project;
                     }
                 });
+                console.log(this.project, "project selected");
+                if (!this.project) {
+                    return this.storage.get('projects').then(projectList => {
+                        console.log(projectList[0], "projectList");
+                        projectList[0].projects.forEach(project => {
+                            console.log(project, "project", project._id);
+                            if (project._id == projectId) {
+                                return this.project = project;
+                            }
+                        });
+                    })
+                }
                 return this.project;
+            } else {
+                return this.storage.get('projects').then(projectList => {
+                    console.log(projectList[0], "projectList");
+                    projectList[0].projects.forEach(project => {
+                        console.log(project, "project", project._id);
+                        if (project._id == projectId) {
+                            return this.project = project;
+                        }
+                    });
+                })
             }
         })
     }

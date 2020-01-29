@@ -116,7 +116,6 @@ var ProjectsService = /** @class */ (function () {
             //'x-auth-token': this.currentUser.curretUser.accessToken
             'x-auth-token': data
         });
-        //   alert(this.currentUser.curretUser.accessToken);
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/all?type=' + type, { headers: httpHeaders });
     };
     ProjectsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

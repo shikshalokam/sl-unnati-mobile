@@ -64,7 +64,7 @@ var AboutPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"'about.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <ion-list>\n    <h3>{{ \"about.app_info\" | translate }}</h3>\n  </ion-list>\n  <div style=\"text-align:center;\">\n    <img src=\"../assets/icon/unnati-prod.png\" style=\"width: 100px;\" />\n  </div>\n  <ion-list>\n    {{ \"about.app_name\" | translate }} : {{ infoData.app_name }}\n  </ion-list>\n  <ion-list>\n    {{ \"about.app_version\" | translate }} : {{ infoData.app_version }}\n  </ion-list>\n  <ion-list *ngIf=\"userDetails\">\n    {{ \"about.user\" | translate }} : {{ userDetails.preferred_username }}\n  </ion-list>\n  <ion-button expand=\"block\" color=\"danger\" (click)=\"checkLocalData()\">\n    <ion-icon name=\"trash\"></ion-icon>{{ \"button.erase_data\" | translate }}\n  </ion-button>\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"'about.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <ion-list>\n    <h3>{{ \"about.app_info\" | translate }}</h3>\n  </ion-list>\n  <div style=\"text-align:center;\">\n    <img src=\"../assets/icon/unnati-prod.png\" style=\"width: 100px;\" />\n  </div>\n  <ion-list>\n    {{ \"about.app_name\" | translate }} : {{ infoData.app_name }}\n  </ion-list>\n  <ion-list>\n    {{ \"about.app_version\" | translate }} : {{ infoData.app_version }}\n  </ion-list>\n  <ion-list *ngIf=\"userDetails\">\n    {{ \"about.user\" | translate }} : {{ userDetails.preferred_username }}\n  </ion-list>\n  <ion-button expand=\"block\" color=\"danger\" (click)=\"showConfirmAlert()\">\n    <ion-icon name=\"trash\"></ion-icon>{{ \"button.erase_data\" | translate }}\n  </ion-button>\n</ion-content>"
 
 /***/ }),
 
@@ -104,6 +104,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
 /* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+
 
 
 
@@ -119,7 +121,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AboutPage = /** @class */ (function () {
-    function AboutPage(storage, router, badge, networkService, login, network, currentUser, alertController, homeService, translateService) {
+    function AboutPage(storage, router, badge, networkService, login, network, currentUser, alertController, homeService, ToastService, translateService) {
         var _this = this;
         this.storage = storage;
         this.router = router;
@@ -130,6 +132,7 @@ var AboutPage = /** @class */ (function () {
         this.currentUser = currentUser;
         this.alertController = alertController;
         this.homeService = homeService;
+        this.ToastService = ToastService;
         this.translateService = translateService;
         this.connected = false;
         this.back = "project-view/home";
@@ -187,57 +190,54 @@ var AboutPage = /** @class */ (function () {
         }
     };
     AboutPage.prototype.checkLocalData = function () {
-        var _this = this;
         var isDirty = false;
-        this.storage.get('myprojects').then(function (myProjects) {
-            if (myProjects && navigator.onLine) {
-                myProjects.forEach(function (project) {
-                    if (project.isEdited || project.isNew) {
-                        isDirty = true;
-                    }
-                });
-                console.log('isDirty', isDirty);
-                if (isDirty) {
-                    _this.showConfirmAlert();
-                }
-                else {
-                    console.log('logout 1');
-                    _this.logout();
-                }
-            }
-            else {
-                console.log('logout 2');
-                _this.logout();
-            }
-        });
+        console.log(isDirty, "isDirty");
+        // this.storage.get('myprojects').then(myProjects => {
+        //   console.log(myProjects, "myProjects");
+        //   if (myProjects && navigator.onLine) {
+        //     myProjects.forEach(project => {
+        //       console.log(project, "project", project.isEdited, project.isNew);
+        //       if (project.isEdited || project.isNew) {
+        //         console.log(project.isEdited, project.isNew, "project edit and isNew");
+        //         isDirty = true;
+        //       }
+        //     })
+        //     console.log(isDirty, "isDirty");
+        //     if (isDirty) {
+        //       this.showConfirmAlert();
+        //     } else {
+        //       this.logout();
+        //     }
+        //   } else {
+        //     this.logout();
+        //   }
+        // })
     };
     AboutPage.prototype.showConfirmAlert = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             var alertTexts, alert;
-            var _this = this;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.translateService.get(['message.local_data_changes'], ['message.want_sync_before_erase']).subscribe(function (texts) {
+                        this.translateService.get(['message.local_data_changes'], ['message.please_syc_before_logout']).subscribe(function (texts) {
                             alertTexts = texts;
-                            console.log(alertTexts, "alertTexts");
                         });
                         return [4 /*yield*/, this.alertController.create({
                                 header: alertTexts['message.local_data_changes'],
                                 message: alertTexts['message.want_sync_before_erase'],
                                 buttons: [
+                                    // {
+                                    //   text: 'Cancel',
+                                    //   role: 'cancel',
+                                    //   cssClass: 'secondary',
+                                    //   handler: (blah) => {
+                                    //     this.logout();
+                                    //   }
+                                    // },
                                     {
-                                        text: 'Cancel',
-                                        role: 'cancel',
-                                        cssClass: 'secondary',
-                                        handler: function (blah) {
-                                            console.log('Confirm Cancel: blah');
-                                            _this.logout();
-                                        }
-                                    }, {
                                         text: 'Okay',
                                         handler: function () {
-                                            _this.homeService.syncProjects();
+                                            // this.homeService.syncProjects();
                                         }
                                     }
                                 ]
@@ -267,6 +267,7 @@ var AboutPage = /** @class */ (function () {
             _current_user__WEBPACK_IMPORTED_MODULE_5__["CurrentUserProvider"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_11__["AlertController"],
             _home_home_service__WEBPACK_IMPORTED_MODULE_13__["HomeService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_14__["ToastService"],
             _ngx_translate_core__WEBPACK_IMPORTED_MODULE_12__["TranslateService"]])
     ], AboutPage);
     return AboutPage;

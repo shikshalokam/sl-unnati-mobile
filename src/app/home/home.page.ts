@@ -136,7 +136,9 @@ export class HomePage implements OnInit {
     this.login.loggedIn('true');
     this.checkUser();
     this.storage.get('projects').then(projects => {
+      console.log(!projects,"projects");
       if (!projects) {
+        console.log('calling get projects');
         this.getProjects();
       }
     });
@@ -188,6 +190,7 @@ export class HomePage implements OnInit {
             this.showSkeleton = true;
             this.projectsService.getAssignedProjects(usertoken.access_token, this.type).subscribe((resp: any) => {
               if (resp.status != 'failed') {
+                console.log(resp.data,"resp.data get projects");
                 resp.data.forEach(programs => {
                   programs.projects.forEach(project => {
                     project.lastUpdate = project.lastSync;
@@ -198,15 +201,21 @@ export class HomePage implements OnInit {
                       project.isStarted = true;
                     }
                     project.programName = programs.programs.name;
+                    console.log(project,"project getting and filtering");
                     if (project.createdType == 'by self' || project.createdType == 'by reference') {
                       myProjects.push(project);
+                    }else {
+                      project.toDisplay = true;
+                      console.log(project,"project.toDisplay");
                     }
                   });
                 });
                 this.projectList = resp.data;
+                console.log(this.projectList ,"this.projectList ");
                 this.storage.set('projects', this.projectList).then(resp1 => {
                 })
                 if (myProjects) {
+                  console.log(myProjects,"myProjects");
                   this.storage.set('myprojects', myProjects).then(data => {
                     this.getActiveProjects();
                   })

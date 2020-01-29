@@ -236,7 +236,9 @@ var HomePage = /** @class */ (function () {
         this.login.loggedIn('true');
         this.checkUser();
         this.storage.get('projects').then(function (projects) {
+            console.log(!projects, "projects");
             if (!projects) {
+                console.log('calling get projects');
                 _this.getProjects();
             }
         });
@@ -291,6 +293,7 @@ var HomePage = /** @class */ (function () {
                         _this.showSkeleton = true;
                         _this.projectsService.getAssignedProjects(usertoken.access_token, _this.type).subscribe(function (resp) {
                             if (resp.status != 'failed') {
+                                console.log(resp.data, "resp.data get projects");
                                 resp.data.forEach(function (programs) {
                                     programs.projects.forEach(function (project) {
                                         project.lastUpdate = project.lastSync;
@@ -301,15 +304,22 @@ var HomePage = /** @class */ (function () {
                                             project.isStarted = true;
                                         }
                                         project.programName = programs.programs.name;
+                                        console.log(project, "project getting and filtering");
                                         if (project.createdType == 'by self' || project.createdType == 'by reference') {
                                             myProjects.push(project);
+                                        }
+                                        else {
+                                            project.toDisplay = true;
+                                            console.log(project, "project.toDisplay");
                                         }
                                     });
                                 });
                                 _this.projectList = resp.data;
+                                console.log(_this.projectList, "this.projectList ");
                                 _this.storage.set('projects', _this.projectList).then(function (resp1) {
                                 });
                                 if (myProjects) {
+                                    console.log(myProjects, "myProjects");
                                     _this.storage.set('myprojects', myProjects).then(function (data) {
                                         _this.getActiveProjects();
                                     });
