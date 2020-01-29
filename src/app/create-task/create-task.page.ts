@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { HomeService } from '../home/home.service';
 import { CreateTaskService } from './create-task.service';
 import { ToastService } from '../toast.service';
+import { projection } from '@angular/core/src/render3';
 @Component({
   selector: 'app-create-task',
   templateUrl: './create-task.page.html',
@@ -34,6 +35,7 @@ export class CreateTaskPage implements OnInit {
     public toastService: ToastService,
   ) {
     route.params.subscribe(params => {
+      console.log(params.id);
       this.getCurrentProject(params.id);
       this.from = params.from;
       if (params.from == 'cp') {
@@ -65,6 +67,7 @@ export class CreateTaskPage implements OnInit {
   public getCurrentProject(id) {
     this.createTaskService.getProjectById(id).then(project => {
       this.currentMyProject = project;
+      console.log(this.currentMyProject, "this.currentMyProject");
     })
   }
   // set date
@@ -104,6 +107,7 @@ export class CreateTaskPage implements OnInit {
       this.currentMyProject.tasks.push(this.task);
       this.storage.set('newcreatedproject', this.currentMyProject).then(cp => {
         this.currentMyProject = cp;
+        // if (this.currentMyProject.createdType) {
         this.storage.get('myprojects').then(myProjects => {
           if (myProjects) {
             myProjects.forEach(myProject => {
@@ -117,6 +121,9 @@ export class CreateTaskPage implements OnInit {
             });
           }
         })
+        // } else {
+        //   //  project list update  
+        // }
       })
       this.task = {};
       this.prepareForm();
