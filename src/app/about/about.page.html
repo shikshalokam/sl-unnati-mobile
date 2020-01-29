@@ -19,7 +19,7 @@
   <ion-list *ngIf="userDetails">
     {{ "about.user" | translate }} : {{ userDetails.preferred_username }}
   </ion-list>
-  <ion-button expand="block" color="danger" (click)="checkLocalData()">
+  <ion-button expand="block" color="danger" (click)="showConfirmAlert()">
     <ion-icon name="trash"></ion-icon>{{ "button.erase_data" | translate }}
   </ion-button>
 </ion-content>

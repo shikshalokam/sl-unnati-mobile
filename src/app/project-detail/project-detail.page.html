@@ -71,7 +71,7 @@
         </ion-col>
       </ion-row>
       <div *ngFor="let task of project.tasks">
-        <ion-row class="task-list" *ngIf="!task.isDelete" [ngClass]="{'completed-task' : task.status === 'Completed'}">
+        <ion-row class="task-list" *ngIf="!task.isDeleted" [ngClass]="{'completed-task' : task.status === 'Completed'}">
           <ion-col size="2" *ngIf="task.endDate" class="task-endDate"
             [ngClass]="{'completed-task' : task.status === 'Completed'}">{{task.endDate | date :'MMM dd'}}</ion-col>
           <ion-col size="2" *ngIf="!task.endDate"></ion-col>
@@ -101,7 +101,7 @@
     {{'button.start_project' | translate}}
   </ion-button>
   <ion-fab vertical="bottom" horizontal="end" style="position: fixed;"
-    *ngIf="category == 'my_projects' || category == 'projectsList' && project?.isStarted && tasksLength > 0">
+    *ngIf="project?.isStarted && tasksLength > 0">
     <ion-fab-button (click)="addTask()" style=" margin-bottom: 15px;">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

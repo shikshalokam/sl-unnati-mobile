@@ -10,7 +10,8 @@ import * as jwt_decode from "jwt-decode";
 import { Badge } from '@ionic-native/badge/ngx';
 import { AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { HomeService } from '../home/home.service'
+import { HomeService } from '../home/home.service';
+import { ToastService } from '../toast.service';
 @Component({
   selector: 'app-about',
   templateUrl: './about.page.html',
@@ -36,6 +37,7 @@ export class AboutPage implements OnInit {
     public currentUser: CurrentUserProvider,
     public alertController: AlertController,
     public homeService: HomeService,
+    public ToastService: ToastService,
     public translateService: TranslateService) {
     if (localStorage.getItem('networkStatus') != null) {
       this.connected = localStorage.getItem('networkStatus');
@@ -82,27 +84,32 @@ export class AboutPage implements OnInit {
   }
   public checkLocalData() {
     let isDirty: boolean = false;
-    this.storage.get('myprojects').then(myProjects => {
-      if (myProjects && navigator.onLine) {
-        myProjects.forEach(project => {
-          if (project.isEdited || project.isNew) {
-            isDirty = true;
-          }
-        })
-        if (isDirty) {
-          this.showConfirmAlert();
-        } else {
-          this.logout();
-        }
-      } else {
-        this.logout();
-      }
-    })
+    console.log(isDirty, "isDirty");
+    // this.storage.get('myprojects').then(myProjects => {
+    //   console.log(myProjects, "myProjects");
+    //   if (myProjects && navigator.onLine) {
+    //     myProjects.forEach(project => {
+    //       console.log(project, "project", project.isEdited, project.isNew);
+    //       if (project.isEdited || project.isNew) {
+    //         console.log(project.isEdited, project.isNew, "project edit and isNew");
+    //         isDirty = true;
+    //       }
+    //     })
+    //     console.log(isDirty, "isDirty");
+    //     if (isDirty) {
+    //       this.showConfirmAlert();
+    //     } else {
+    //       this.logout();
+    //     }
+    //   } else {
+    //     this.logout();
+    //   }
+    // })
   }
 
   async showConfirmAlert() {
     let alertTexts;
-    this.translateService.get(['message.local_data_changes'], ['message.want_sync_before_erase']).subscribe((texts: string) => {
+    this.translateService.get(['message.local_data_changes'], ['message.please_syc_before_logout']).subscribe((texts: string) => {
       alertTexts = texts;
     });
     const alert = await this.alertController.create({
@@ -110,16 +117,17 @@ export class AboutPage implements OnInit {
       message: alertTexts['message.want_sync_before_erase'],
       buttons: [
         {
-          text: 'Cancel',
+          text: 'Logout',
           role: 'cancel',
           cssClass: 'secondary',
           handler: (blah) => {
             this.logout();
           }
-        }, {
+        },
+        {
           text: 'Okay',
           handler: () => {
-            this.homeService.syncProjects();
+            // this.homeService.syncProjects();
           }
         }
       ]

@@ -9,12 +9,13 @@ import { ToastService } from '../toast.service';
 import { AlertController } from '@ionic/angular';
 import { ApiProvider } from '../api/api';
 import { ProjectService } from '../project-view/project.service';
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { Platform } from '@ionic/angular';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
-import { FilePath } from '@ionic-native/file-path/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
+import { LoadingController } from '@ionic/angular';
+
 declare var cordova: any;
 @Component({
   selector: 'app-popover',
@@ -43,7 +44,8 @@ export class PopoverComponent implements OnInit {
     public file: File,
     public platform: Platform,
     public fileChooser: FileChooser,
-    public base64: Base64) { }
+    public base64: Base64,
+    public loadingController: LoadingController) { }
 
   ngOnInit() {
     this.platform.ready().then(() => {
@@ -85,7 +87,7 @@ export class PopoverComponent implements OnInit {
 
   // delete project
   public deleteProject() {
-    this.project.isDelete = true;
+    this.project.isDeleted = true;
     let projectData = this.project;
     this.storage.get('myprojects').then(myProjects => {
       if (myProjects) {
@@ -108,9 +110,46 @@ export class PopoverComponent implements OnInit {
     this.DismissClick();
   }
   async DismissClick() {
-    await this.popoverController.dismiss();
   }
-  public getPDF() {
+
+  public syncProject() {
+    console.log(navigator.onLine, "navigator.onLine");
+    if (!this.project.isSync) {
+      this.storage.get('userTokens').then(data => {
+        this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
+          let parsedData = JSON.parse(data._body);
+          if (parsedData && parsedData.access_token) {
+            let userTokens = {
+              access_token: parsedData.access_token,
+              refresh_token: parsedData.refresh_token,
+            };
+            this.storage.set('userTokens', userTokens).then(data => {
+              this.loader();
+              this.projectService.sync(this.project, data.access_token).subscribe((data: any) => {
+                if (data.status == "failed") {
+                } else if (data.status == "success") {
+                  this.updateInLocal(this.project, data.projectDetails.data.projects[0]);
+                  this.getPDF(data.projectDetails.data.projects[0]._id);
+                  this.DismissClick();
+                }
+              }, error => {
+                console.log('error', error);
+              })
+            })
+          }
+        }, error => {
+          // this.showSkeleton = false;
+          console.log(error, "error");
+        })
+      })
+    } else {
+      this.loader();
+      this.DismissClick();
+      this.getPDF(this.project._id);
+      this.DismissClick();
+    }
+  }
+  public getPDF(id) {
     this.storage.get('userTokens').then(data => {
       this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
         let parsedData = JSON.parse(data._body);
@@ -121,7 +160,7 @@ export class PopoverComponent implements OnInit {
           };
           this.storage.set('userTokens', userTokens).then(usertoken => {
             let projectData = {
-              "projectId": this.project._id
+              "projectId": id
             }
             this.categoryViewService.getPDF(projectData, userTokens.access_token).subscribe((data: any) => {
               const fileName = this.project.title.replace(/\s/g, "");
@@ -147,6 +186,30 @@ export class PopoverComponent implements OnInit {
           }, error => {
           })
         }
+      })
+    })
+  }
+
+  async loader() {
+    const loading = await this.loadingController.create({
+      message: 'Syncing your data.',
+      duration:500
+    });
+    await loading.present();
+    const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!');
+  }
+  updateInLocal(project, oldProject) {
+    this.storage.get('myprojects').then(myprojects => {
+      if (myprojects) {
+        myprojects.forEach(function (prj, i) {
+          if (prj._id == oldProject._id) {
+            myprojects[i] = project;
+          }
+        });
+      }
+      this.storage.set('myprojects', myprojects).then(myprojects => {
+        console.log(myprojects, "myprojects updated");
       })
     })
   }

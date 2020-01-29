@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CategoryViewService } from './category.view.service';
 import { Storage } from '@ionic/storage';
 import { ApiProvider } from '../api/api';
 import { PopoverController } from '@ionic/angular';
 import { PopoverComponent } from '../popover/popover.component';
+
 @Component({
   selector: 'app-category-view',
   templateUrl: './category-view.page.html',
   styleUrls: ['./category-view.page.scss'],
 })
-export class CategoryViewPage implements OnInit {
+export class CategoryViewPage {
   back = 'project-view/library'
   projects;
   searchInput;
@@ -24,11 +25,23 @@ export class CategoryViewPage implements OnInit {
     public storage: Storage,
     public apiProvider: ApiProvider,
     public router: Router,
-    public popoverController: PopoverController
+    public popoverController: PopoverController,
   ) {
     categaryService.deleteEvent.subscribe(value => {
       if (this.catType == 'my_projects') {
-        this.getMyProjects();
+        this.categaryService.getMyProjects().then((myProjects: any) => {
+          if (myProjects) {
+            myProjects = this.getSortData(myProjects);
+            // myProjects.sort((val1, val2)=> {return new Date(val2.lastUpdate) - new 
+            //   Date(val1.lastUpdate)})
+            myProjects.forEach(element => {
+            });
+            this.projects = myProjects;
+          }
+        }, error => {
+          console.log('error', error)
+          this.showSkeleton = false;
+        })
       }
     })
     rout.params.subscribe(param => {
@@ -108,23 +121,11 @@ export class CategoryViewPage implements OnInit {
     })
   }
   bgcolor = '#f7f7f7';
-
-  ionViewDidEnter() {
-    // if (this.catType == 'my_projects') {
-    //   this.getMyProjects();
-    // }
-  }
-  ngOnInit() {
-  }
   public getMyProjects() {
     this.showSkeleton = true;
     this.categaryService.getMyProjects().then((myProjects: any) => {
       if (myProjects) {
         myProjects = this.getSortData(myProjects);
-        // myProjects.sort((val1, val2)=> {return new Date(val2.lastUpdate) - new 
-        //   Date(val1.lastUpdate)})
-        myProjects.forEach(element => {
-        });
         this.projects = myProjects;
         this.showSkeleton = false;
       }

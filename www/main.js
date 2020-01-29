@@ -1246,11 +1246,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 // import { FcmProvider } from './fcm';
 var AppComponent = /** @class */ (function () {
     function AppComponent(storage, 
     // public fcm: FcmProvider,
-    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api, homeService, toastService) {
+    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api, homeService, loadingController, toastService) {
         var _this = this;
         this.storage = storage;
         this.alertController = alertController;
@@ -1270,6 +1271,7 @@ var AppComponent = /** @class */ (function () {
         this.projectService = projectService;
         this.api = api;
         this.homeService = homeService;
+        this.loadingController = loadingController;
         this.toastService = toastService;
         this.lastTimeBackPress = 0;
         this.timePeriodToExit = 2000;
@@ -1280,9 +1282,9 @@ var AppComponent = /** @class */ (function () {
         this.history = [];
         this.isConnected = localStorage.getItem('networkStatus');
         this.homeService.tobeSync.subscribe(function (value) {
-            console.log('in project syncing');
             _this.prepareProjectToSync();
             _this.prepareMappedProjectToSync();
+            // this.toastService.loadingController.dismiss();
         });
         this.loginService.emit.subscribe(function (value) {
             _this.loggedInUser = value;
@@ -1363,6 +1365,7 @@ var AppComponent = /** @class */ (function () {
                 var tree = _this.router.parseUrl(_this.router.url);
                 var g = tree.root.children[_angular_router__WEBPACK_IMPORTED_MODULE_9__["PRIMARY_OUTLET"]];
                 var s = g.segments;
+                console.log(_this.router.url, "this.router.url");
                 var isOpened = _this.tasksService.isActive;
                 if (_this.router.url == '/login' || _this.router.url == '/project-view/home') {
                     //this.presentAlertConfirm();
@@ -1593,79 +1596,18 @@ var AppComponent = /** @class */ (function () {
             // this.networkSubscriber();
         });
     };
-    AppComponent.prototype.closeAppPopUP = function () {
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var alert;
-            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alertController.create({
-                            header: 'App termination',
-                            message: 'Do you want to close the app?',
-                            buttons: [
-                                {
-                                    text: 'Cancel',
-                                    role: 'cancel',
-                                    cssClass: 'secondary, custom-btn',
-                                    handler: function (blah) {
-                                    }
-                                }, {
-                                    cssClass: 'secondary, custom-btn',
-                                    text: 'Close app',
-                                    handler: function () {
-                                        navigator['app'].exitApp();
-                                    }
-                                }
-                            ]
-                        })];
-                    case 1:
-                        alert = _a.sent();
-                        return [4 /*yield*/, alert.present()];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    AppComponent.prototype.presentAlertConfirm = function () {
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var alert;
-            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alertController.create({
-                            // header: 'Confirm!',
-                            message: 'Are you sure you want to exit the app?',
-                            buttons: [{
-                                    text: 'Cancel',
-                                    role: 'cancel',
-                                    cssClass: 'secondary',
-                                    handler: function (blah) { }
-                                }, {
-                                    text: 'Close App',
-                                    handler: function () {
-                                        navigator['app'].exitApp();
-                                    }
-                                }]
-                        })];
-                    case 1:
-                        alert = _a.sent();
-                        return [4 /*yield*/, alert.present()];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
     AppComponent.prototype.prepareProjectToSync = function () {
         var _this = this;
+        var projectsToSync = false;
         this.storage.get('myprojects').then(function (myProjects) {
             if (myProjects && navigator.onLine) {
                 myProjects.forEach(function (project) {
+                    console.log(project.isEdited, project.isNew, 'myprojects');
                     if (project.isEdited || project.isNew) {
                         if (project.isSync) {
                             project.createdType = '';
                         }
+                        projectsToSync = true;
                         if (project.tasks && project.tasks.length > 0) {
                             project.tasks.forEach(function (task) {
                                 if (task.isNew && task._id) {
@@ -1680,47 +1622,59 @@ var AppComponent = /** @class */ (function () {
                                 }
                             });
                         }
-                        console.log('calling');
                         _this.autoSync(project);
                     }
                     else {
+                        //this.toastService.;
                     }
                 });
+                console.log(projectsToSync, "projectsToSync");
+                if (!projectsToSync) {
+                    _this.toastService.successToast('message.no_projects');
+                }
             }
         });
     };
     AppComponent.prototype.prepareMappedProjectToSync = function () {
         var _this = this;
+        var projectsToSync = false;
         this.storage.get('projects').then(function (myProjects) {
-            if (myProjects && navigator.onLine) {
-                myProjects.forEach(function (project) {
-                    if (project.isEdited) {
-                        if (project.tasks && project.tasks.length > 0) {
-                            project.tasks.forEach(function (task) {
-                                if (task.isNew && task._id) {
-                                    delete task._id;
-                                }
-                                if (task.subTasks && task.subTasks.length > 0) {
-                                    task.subTasks.forEach(function (subtasks) {
-                                        if (subtasks.isNew && subtasks._id) {
-                                            delete subtasks._id;
-                                        }
-                                    });
-                                }
-                            });
+            if (myProjects) {
+                myProjects.forEach(function (projectList) {
+                    projectList.projects.forEach(function (project) {
+                        console.log(project.isEdited, project.createdType, project.toDisplay, 'myprojects');
+                        if (project.isEdited && !project.createdType && !project.toDisplay) {
+                            project.createdType = '';
+                            projectsToSync = true;
+                            if (project.tasks && project.tasks.length > 0) {
+                                project.tasks.forEach(function (task) {
+                                    if (task.isNew && task._id) {
+                                        delete task._id;
+                                    }
+                                    if (task.subTasks && task.subTasks.length > 0) {
+                                        task.subTasks.forEach(function (subtasks) {
+                                            if (subtasks.isNew && subtasks._id) {
+                                                delete subtasks._id;
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            _this.autoSync(project);
                         }
-                        console.log('calling 2');
-                        _this.autoSync(project);
-                    }
-                    else {
-                    }
+                    });
                 });
+                console.log(projectsToSync, "projectsToSync");
+                if (!projectsToSync) {
+                    _this.toastService.successToast('message.no_projects');
+                }
             }
         });
     };
     // auto sync
     AppComponent.prototype.autoSync = function (project) {
         var _this = this;
+        this.toastService.startLoader('Your data is syncing');
         this.storage.get('userTokens').then(function (data) {
             if (data) {
                 _this.api.refershToken(data.refresh_token).subscribe(function (data) {
@@ -1732,27 +1686,44 @@ var AppComponent = /** @class */ (function () {
                         };
                         _this.storage.set('userTokens', userTokens).then(function (data) {
                             _this.homeService.syncingProject(true);
-                            console.log(project, "project to sync");
                             _this.projectService.sync(project, data.access_token).subscribe(function (data) {
                                 if (data.status == "failed") {
+                                    _this.toastService.stopLoader();
                                 }
-                                else if (data.status == "success") {
-                                    var updatedProject = void 0;
-                                    project.isNew = false;
-                                    project.isSync = true;
-                                    project.isEdited = false;
-                                    data.projectDetails.data.projects[0].createdType = project.createdType;
-                                    data.projectDetails.data.projects[0].isStarted = project.isStarted;
-                                    updatedProject = data.projectDetails.data.projects[0];
-                                    updatedProject.isSync = true;
-                                    updatedProject.isEdited = false;
-                                    updatedProject.isNew = false;
-                                    updatedProject.lastUpdate = project.lastUpdate;
-                                    _this.syncUpdateInLocal(updatedProject, project);
+                                else if (data.status == "success" || data.status == "succes") {
+                                    if (data.projectDetails) {
+                                        var updatedProject = void 0;
+                                        project.isNew = false;
+                                        project.isSync = true;
+                                        project.isEdited = false;
+                                        data.projectDetails.data.projects[0].createdType = project.createdType;
+                                        data.projectDetails.data.projects[0].isStarted = project.isStarted;
+                                        updatedProject = data.projectDetails.data.projects[0];
+                                        updatedProject.isSync = true;
+                                        updatedProject.isEdited = false;
+                                        updatedProject.isNew = false;
+                                        updatedProject.lastUpdate = project.lastUpdate;
+                                        _this.syncUpdateInLocal(updatedProject, project);
+                                    }
+                                    else {
+                                        var updatedProject = void 0;
+                                        project.isNew = false;
+                                        project.isSync = true;
+                                        project.isEdited = false;
+                                        data.data.createdType = project.createdType;
+                                        data.data.isStarted = project.isStarted;
+                                        updatedProject = data.data;
+                                        updatedProject.isSync = true;
+                                        updatedProject.isEdited = false;
+                                        updatedProject.isNew = false;
+                                        updatedProject.lastUpdate = project.lastUpdate;
+                                        _this.syncUpdateInLocal(updatedProject, project);
+                                    }
                                 }
                                 _this.homeService.syncingProject(false);
                             }, function (error) {
                                 _this.homeService.syncingProject(false);
+                                _this.toastService.stopLoader();
                             });
                         });
                     }
@@ -1760,12 +1731,16 @@ var AppComponent = /** @class */ (function () {
                     // this.showSkeleton = false;
                     if (error.status === 0) {
                         _this.router.navigateByUrl('/login');
+                        _this.toastService.stopLoader();
                     }
                 });
             }
             else {
                 _this.router.navigateByUrl('/login');
+                _this.toastService.stopLoader();
             }
+        }, function (error) {
+            _this.toastService.stopLoader();
         });
     };
     AppComponent.prototype.syncUpdateInLocal = function (project, oldProject) {
@@ -1780,6 +1755,8 @@ var AppComponent = /** @class */ (function () {
                     });
                 }
                 _this.storage.set('myprojects', myprojects).then(function (myprojectsff) {
+                    _this.toastService.successToast('message.sync_success');
+                    _this.toastService.stopLoader();
                 });
             });
         }
@@ -1793,21 +1770,21 @@ var AppComponent = /** @class */ (function () {
                     });
                 }
                 _this.storage.set('projects', projects).then(function (myprojectsff) {
+                    _this.toastService.successToast('message.sync_success');
+                    _this.toastService.stopLoader();
                 });
             });
         }
     };
     AppComponent.prototype.initiateSync = function (value) {
-        console.log(value, "value");
-        if (navigator.onLine) {
-            if (value == 'Sync') {
-                this.prepareProjectToSync();
-                this.prepareMappedProjectToSync();
-            }
+        if (value == 'Sync') {
+            console.log('in sync');
+            this.prepareProjectToSync();
+            this.prepareMappedProjectToSync();
         }
-        else {
-            this.toastService.errorToast('message.nerwork_connection_check');
-        }
+        // } else {
+        //   this.toastService.errorToast('message.nerwork_connection_check');
+        // }
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["NavController"]),
@@ -1838,6 +1815,7 @@ var AppComponent = /** @class */ (function () {
             _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__["ProjectService"],
             _api_api__WEBPACK_IMPORTED_MODULE_13__["ApiProvider"],
             _home_home_service__WEBPACK_IMPORTED_MODULE_15__["HomeService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["LoadingController"],
             _toast_service__WEBPACK_IMPORTED_MODULE_16__["ToastService"]])
     ], AppComponent);
     return AppComponent;
@@ -2227,9 +2205,7 @@ var CreateProjectService = /** @class */ (function () {
                     cmp.isEdited = true;
                 }
             });
-            console.log(cmp, "cmp");
             _this.storage.set('newcreatedproject', cmp).then(function (updatedProject) {
-                console.log(updatedProject, "updatedProject");
                 _this.storage.set('projectToBeView', cmp).then(function (updatedProject) {
                     _this.updateByProjects(updatedProject);
                 });
@@ -2239,7 +2215,6 @@ var CreateProjectService = /** @class */ (function () {
     //  Update project in my projects list.
     CreateProjectService.prototype.updateByProjects = function (updatedProject) {
         var _this = this;
-        console.log(updatedProject, "updatedProjectupdatedProjectupdatedProject");
         this.storage.get('myprojects').then(function (myProjects) {
             if (myProjects) {
                 myProjects.forEach(function (project, i) {
@@ -2878,6 +2853,7 @@ var HeaderComponent = /** @class */ (function () {
         this.router.navigate(['project-view/notifications']);
     };
     HeaderComponent.prototype.goBack = function () {
+        console.log(this.isGoBack, this.isParam, "this.isGoBack, this.isParam");
         if (this.isParam) {
             this.router.navigate([this.isGoBack, this.isParam]);
         }
@@ -3621,7 +3597,7 @@ var NotificationCardService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-list>\n  <ion-item>\n    <ion-label (click)=\"deleteConfirmation()\">{{delete}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <i class=\"material-icons\" style=\"font-size: 1.4em;\">\n        delete_forever\n      </i>\n    </ion-avatar>\n  </ion-item>\n  <ion-item>\n    <ion-label (click)=\"getPDF()\">{{share}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <ion-icon name=\"share\"></ion-icon>\n    </ion-avatar>\n  </ion-item>\n</ion-list>"
+module.exports = "<ion-list>\n  <ion-item (click)=\"deleteConfirmation()\">\n    <ion-label>{{delete}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <i class=\"material-icons\" style=\"font-size: 1.4em;\">\n        delete_forever\n      </i>\n    </ion-avatar>\n  </ion-item>\n  <ion-item (click)=\"syncProject()\">\n    <ion-label>{{share}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <ion-icon name=\"share\"></ion-icon>\n    </ion-avatar>\n  </ion-item>\n</ion-list>"
 
 /***/ }),
 
@@ -3678,8 +3654,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var PopoverComponent = /** @class */ (function () {
-    function PopoverComponent(translateService, popoverController, socialSharing, categoryViewService, createProjectService, storage, toastService, alertController, apiProvider, projectService, transfer, file, platform, fileChooser, base64) {
+    function PopoverComponent(translateService, popoverController, socialSharing, categoryViewService, createProjectService, storage, toastService, alertController, apiProvider, projectService, transfer, file, platform, fileChooser, base64, loadingController) {
         this.translateService = translateService;
         this.popoverController = popoverController;
         this.socialSharing = socialSharing;
@@ -3695,6 +3672,7 @@ var PopoverComponent = /** @class */ (function () {
         this.platform = platform;
         this.fileChooser = fileChooser;
         this.base64 = base64;
+        this.loadingController = loadingController;
     }
     PopoverComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -3749,7 +3727,7 @@ var PopoverComponent = /** @class */ (function () {
     // delete project
     PopoverComponent.prototype.deleteProject = function () {
         var _this = this;
-        this.project.isDelete = true;
+        this.project.isDeleted = true;
         var projectData = this.project;
         this.storage.get('myprojects').then(function (myProjects) {
             if (myProjects) {
@@ -3774,16 +3752,51 @@ var PopoverComponent = /** @class */ (function () {
     PopoverComponent.prototype.DismissClick = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.popoverController.dismiss()];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                return [2 /*return*/];
             });
         });
     };
-    PopoverComponent.prototype.getPDF = function () {
+    PopoverComponent.prototype.syncProject = function () {
+        var _this = this;
+        console.log(navigator.onLine, "navigator.onLine");
+        if (!this.project.isSync) {
+            this.storage.get('userTokens').then(function (data) {
+                _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
+                    var parsedData = JSON.parse(data._body);
+                    if (parsedData && parsedData.access_token) {
+                        var userTokens = {
+                            access_token: parsedData.access_token,
+                            refresh_token: parsedData.refresh_token,
+                        };
+                        _this.storage.set('userTokens', userTokens).then(function (data) {
+                            _this.loader();
+                            _this.projectService.sync(_this.project, data.access_token).subscribe(function (data) {
+                                if (data.status == "failed") {
+                                }
+                                else if (data.status == "success") {
+                                    _this.updateInLocal(_this.project, data.projectDetails.data.projects[0]);
+                                    _this.getPDF(data.projectDetails.data.projects[0]._id);
+                                    _this.DismissClick();
+                                }
+                            }, function (error) {
+                                console.log('error', error);
+                            });
+                        });
+                    }
+                }, function (error) {
+                    // this.showSkeleton = false;
+                    console.log(error, "error");
+                });
+            });
+        }
+        else {
+            this.loader();
+            this.DismissClick();
+            this.getPDF(this.project._id);
+            this.DismissClick();
+        }
+    };
+    PopoverComponent.prototype.getPDF = function (id) {
         var _this = this;
         this.storage.get('userTokens').then(function (data) {
             _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
@@ -3795,7 +3808,7 @@ var PopoverComponent = /** @class */ (function () {
                     };
                     _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
                         var projectData = {
-                            "projectId": _this.project._id
+                            "projectId": id
                         };
                         _this.categoryViewService.getPDF(projectData, userTokens_1.access_token).subscribe(function (data) {
                             var fileName = _this.project.title.replace(/\s/g, "");
@@ -3824,6 +3837,44 @@ var PopoverComponent = /** @class */ (function () {
             });
         });
     };
+    PopoverComponent.prototype.loader = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var loading, _a, role, data;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.loadingController.create({
+                            message: 'Syncing your data.',
+                            duration: 500
+                        })];
+                    case 1:
+                        loading = _b.sent();
+                        return [4 /*yield*/, loading.present()];
+                    case 2:
+                        _b.sent();
+                        return [4 /*yield*/, loading.onDidDismiss()];
+                    case 3:
+                        _a = _b.sent(), role = _a.role, data = _a.data;
+                        console.log('Loading dismissed!');
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PopoverComponent.prototype.updateInLocal = function (project, oldProject) {
+        var _this = this;
+        this.storage.get('myprojects').then(function (myprojects) {
+            if (myprojects) {
+                myprojects.forEach(function (prj, i) {
+                    if (prj._id == oldProject._id) {
+                        myprojects[i] = project;
+                    }
+                });
+            }
+            _this.storage.set('myprojects', myprojects).then(function (myprojects) {
+                console.log(myprojects, "myprojects updated");
+            });
+        });
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
@@ -3848,7 +3899,8 @@ var PopoverComponent = /** @class */ (function () {
             _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_12__["File"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"],
             _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_13__["FileChooser"],
-            _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_14__["Base64"]])
+            _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_14__["Base64"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"]])
     ], PopoverComponent);
     return PopoverComponent;
 }());
@@ -4377,10 +4429,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var ToastService = /** @class */ (function () {
-    function ToastService(toastController, translateService) {
+    function ToastService(toastController, translateService, loadingController) {
         this.toastController = toastController;
         this.translateService = translateService;
+        this.loadingController = loadingController;
+        this.pending = false;
     }
     ToastService.prototype.errorToast = function (msg) {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
@@ -4428,12 +4483,71 @@ var ToastService = /** @class */ (function () {
             });
         });
     };
+    ToastService.prototype.loader = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var loading, _a, role, data;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.loadingController.create({
+                            message: 'Syncing your data.',
+                        })];
+                    case 1:
+                        loading = _b.sent();
+                        return [4 /*yield*/, loading.present()];
+                    case 2:
+                        _b.sent();
+                        return [4 /*yield*/, loading.onDidDismiss()];
+                    case 3:
+                        _a = _b.sent(), role = _a.role, data = _a.data;
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ToastService.prototype.startLoader = function (msg) {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var _a;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        console.log('msg', this.pending);
+                        // if (!this.pending) {
+                        this.pending = true;
+                        _a = this;
+                        return [4 /*yield*/, this.loadingController.create({
+                                message: msg
+                            })];
+                    case 1:
+                        _a.loading = _b.sent();
+                        return [4 /*yield*/, this.loading.present()];
+                    case 2:
+                        _b.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ToastService.prototype.stopLoader = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log('stop loader', this.pending);
+                        // if (this.pending) {
+                        this.pending = false;
+                        return [4 /*yield*/, this.loadingController.dismiss().then(function () { return console.log('dismissed'); })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     ToastService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root',
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ToastController"],
-            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"]])
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["LoadingController"]])
     ], ToastService);
     return ToastService;
 }());

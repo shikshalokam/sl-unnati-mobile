@@ -62,8 +62,9 @@ export class ProjectDetailPage {
       let notStarted = 0;
       this.tasksLength = 0;
       let inProgress = 0;
+      console.log(project, "project");
       project.tasks.forEach(task => {
-        if (!task.isDelete) {
+        if (!task.isDeleted) {
           this.tasksLength = this.tasksLength + 1;
         }
         // set the project status if project is started
@@ -93,6 +94,7 @@ export class ProjectDetailPage {
         project.status = 'Not started';
       }
       this.project = project;
+      console.log(this.project, "this.project ");
       this.sortTasks();
     })
   }
@@ -104,6 +106,7 @@ export class ProjectDetailPage {
     this.project.startDate = new Date();
     if (this.category != 'my_projects') {
       this.project.createdType = "by reference";
+      this.project.lastUpdate = new Date();
       this.project.isNew = true;
       this.project.templateId = this.project._id;
       if (this.project.tasks) {
@@ -147,6 +150,7 @@ export class ProjectDetailPage {
     this.router.navigate(['/project-view/courses', this.category]);
   }
   public addTask() {
+    console.log(this.project._id, "this.project._id");
     this.router.navigate(['/project-view/create-task', this.project._id, "pd"]);
   }
   // set date
@@ -253,17 +257,19 @@ export class ProjectDetailPage {
 
   // navigate to view task
   public taskView(task) {
-    this.storage.set('newcreatedproject', this.project).then(cmp => {
-      task.projectStarted = this.project.isStarted;
-      this.storage.set('cTask', task).then(ct => {
-        this.router.navigate(['/project-view/current-task', task._id, 'pd']);
-      });
-    })
+    if (this.project.isStarted) {
+      this.storage.set('newcreatedproject', this.project).then(cmp => {
+        task.projectStarted = this.project.isStarted;
+        this.storage.set('cTask', task).then(ct => {
+          this.router.navigate(['/project-view/current-task', task._id, 'pd']);
+        });
+      })
+    }
   }
 
   // mark the task as deleted
   public delete(task) {
-    task.isDelete = true;
+    task.isDeleted = true;
     this.storage.set('cTask', task).then(ct => {
       this.updateCurrentProject(ct);
       this.toastService.successToast('message.task_is_deleted');
@@ -279,7 +285,7 @@ export class ProjectDetailPage {
     let tasksWithEndDate = [];
     let tasksWithoutEndDate = [];
     this.project.tasks.forEach(task => {
-      if (task.endDate && !task.isDelete) {
+      if (task.endDate && !task.isDeleted) {
         if (task.endDate >= today) {
           tasksWithEndDate.push(task);
         } else {

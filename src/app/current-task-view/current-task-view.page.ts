@@ -243,10 +243,11 @@ export class CurrentTaskViewPage implements OnInit {
 
   // Delete subtask
   public delete(subtask) {
-    subtask.isDelete = true;
+    subtask.isDeleted = true;
     this.upDateSubTask(subtask, 'delete');
   }
   public updateTask() {
+
     this.updateStatus();
     this.storage.set('cTask', this.task).then(ct => {
       this.updateCurrentProject(ct);
@@ -293,6 +294,14 @@ export class CurrentTaskViewPage implements OnInit {
         this.task.subTask.forEach(subtask => {
           subtask.status = 'Completed';
         });
+        this.storage.set('cTask', this.task).then(ct => {
+          this.task = ct;
+          this.enableMarkTaskComplete(this.task);
+          this.updateCurrentProject(ct);
+        })
+      } else {
+        console.log(this.task.status, "this.task.status");
+        this.task.status = 'Completed';
         this.storage.set('cTask', this.task).then(ct => {
           this.task = ct;
           this.enableMarkTaskComplete(this.task);
