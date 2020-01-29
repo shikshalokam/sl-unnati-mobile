@@ -44,7 +44,10 @@
         "delete_project_confirm": "Are you sure you want to delete the project.",
         "marked_as_completed": "Task marked as completed.",
         "local_data_changes": "You have made changes in projects",
-        "want_sync_before_erase": "Do you want to syc the project before erase your data"
+        "want_sync_before_erase": "Do you want to syc the project before erase your data",
+        "sync_success": "Project sync successfully",
+        "no_projects": "No projects to sync.",
+        "please_syc_before_logout": "Pelase sync the projects before logout"
     },
     "home": {
         "title": "Home",

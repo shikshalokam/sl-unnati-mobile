@@ -64,7 +64,7 @@ var ProjectDetailPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=project?.title [showMenu]=\"false\" [showBack]=\"true\" [noBorder]=\"false\" [isGoBack]=\"back\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <!-- <h4 padding style=\"margin:0px;\"> {{project?.title}} </h4> -->\n  <div class=\"project-detail\" *ngIf=\"project\">\n    <div padding>\n      <ion-row *ngIf=\"!editGoal\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.goal'|translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"allowEdit('goal')\">\n          {{project?.goal}}\n        </ion-col>\n      </ion-row>\n      <ion-item class=\"custom-ion-item\" *ngIf=\"editGoal\" (mouseout)=\"blockEdit('goal')\">\n        <ion-label class=\"custom-label\" position=\"floating\"\n          [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.goal}\">\n          {{'create_project.goal' | translate}}</ion-label>\n        <ion-textarea type=\"text\" [(ngModel)]=\"project.goal\" name=\"goal\" (mouseout)=\"blockEdit('goal')\"\n          placeholder=\"{{'create_project.placeholder_goal'| translate}}\" maxlength=\"1000\"></ion-textarea>\n      </ion-item>\n      <ion-row *ngIf=\"project?.duration\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.duration' | translate}}\n        </ion-col>\n        <ion-col size=\"7\">\n          {{project?.duration}}\n        </ion-col>\n      </ion-row>\n      <ion-row *ngIf=\"project?.startDate\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.start_date' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"setDate('sd')\">\n          {{project?.startDate | date : \"dd-MM-yyyy\"}}\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.end_date' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"setDate('ed')\">\n          {{project?.endDate | date : \"dd-MM-yyyy\"}}\n        </ion-col>\n      </ion-row>\n      <ion-row *ngIf=\"project?.status\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.status' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" *ngIf=\"project?.status\">\n          <ion-select [(ngModel)]=\"project.status\" class=\"custom-select\" placeholder=\"Select Status\" [disabled]=\"true\">\n            <ion-select-option  *ngFor=\"let status of statuses\"  value=\"{{status.title}}\"\n              selected=\"status.title === project.status\">{{status.title}}</ion-select-option>\n          </ion-select>\n        </ion-col>\n      </ion-row>\n      <ion-button class=\"round-corner-btn prjdetail-btn\" expand=\"block\" color=\"secondary\"\n        (click)=\"navigateToResources()\" *ngIf=\"category != 'my_projects'\">\n        {{'button.learning_resources' | translate}}\n      </ion-button>\n    </div>\n  </div>\n  <div class=\"tasks-box\">\n    <div *ngIf=\"tasksLength > 0\">\n      <ion-row style=\"padding: 15px;\">\n        <ion-col size=\"6\"> {{'projectDetail.total_task' | translate}} : {{tasksLength}}</ion-col>\n        <ion-col style=\"text-align: right; text-transform: uppercase;\" size=\"6\">\n          {{project.category}}\n        </ion-col>\n      </ion-row>\n      <div *ngFor=\"let task of project.tasks\">\n        <ion-row class=\"task-list\" *ngIf=\"!task.isDelete\" [ngClass]=\"{'completed-task' : task.status === 'Completed'}\">\n          <ion-col size=\"2\" *ngIf=\"task.endDate\" class=\"task-endDate\"\n            [ngClass]=\"{'completed-task' : task.status === 'Completed'}\">{{task.endDate | date :'MMM dd'}}</ion-col>\n          <ion-col size=\"2\" *ngIf=\"!task.endDate\"></ion-col>\n          <ion-col size=\"6\" (click)=\"taskView(task)\"> {{task?.title}} </ion-col> \n          <ion-col size=\"4\" *ngIf=\"project?.isStarted && task.status != 'Completed'\"\n            [ngStyle]=\"{'text-align': task.status != 'Completed' ? 'right' : 'center'}\">\n            <img src=\"assets/images/delete.png\" style=\"width: 30px;\" (click)=\"delete(task)\">\n          </ion-col>\n          <ion-col size=\"4\" *ngIf=\"project?.isStarted && task.status == 'Completed'\"\n            [ngStyle]=\"{'text-align': task.status != 'Completed' ? 'right' : 'center'}\">\n            <div>\n              <ion-icon name=\"checkmark\" style=\"width:100%;\"></ion-icon>\n              {{task.status}}\n            </div>\n          </ion-col>\n        </ion-row>\n      </div>\n    </div>\n    <div *ngIf=\"tasksLength == 0 && project?.isStarted\" class=\"tasks-label\">\n      <h5> {{'message.add_tasks_to_project' | translate}} <ion-icon name=\"add-circle\" color=\"primary\" (click)=\"addTask()\"\n          style=\"font-size:30px;\"></ion-icon>\n      </h5>\n    </div>\n  </div>\n  <ion-button class=\"round-corner-btn prjdetail-btn\" expand=\"block\" color=\"secondary\" (click)=\"copyTemplate()\"\n    *ngIf=\"!project?.isStarted\" style=\"margin-bottom: 50px;\">\n    {{'button.start_project' | translate}}\n  </ion-button>\n  <ion-fab vertical=\"bottom\" horizontal=\"end\" style=\"position: fixed;\"\n    *ngIf=\"category == 'my_projects' || category == 'projectsList' && project?.isStarted && tasksLength > 0\">\n    <ion-fab-button (click)=\"addTask()\" style=\" margin-bottom: 15px;\">\n      <ion-icon name=\"add\"></ion-icon>\n    </ion-fab-button>\n  </ion-fab>\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=project?.title [showMenu]=\"false\" [showBack]=\"true\" [noBorder]=\"false\" [isGoBack]=\"back\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <!-- <h4 padding style=\"margin:0px;\"> {{project?.title}} </h4> -->\n  <div class=\"project-detail\" *ngIf=\"project\">\n    <div padding>\n      <ion-row *ngIf=\"!editGoal\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.goal'|translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"allowEdit('goal')\">\n          {{project?.goal}}\n        </ion-col>\n      </ion-row>\n      <ion-item class=\"custom-ion-item\" *ngIf=\"editGoal\" (mouseout)=\"blockEdit('goal')\">\n        <ion-label class=\"custom-label\" position=\"floating\"\n          [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.goal}\">\n          {{'create_project.goal' | translate}}</ion-label>\n        <ion-textarea type=\"text\" [(ngModel)]=\"project.goal\" name=\"goal\" (mouseout)=\"blockEdit('goal')\"\n          placeholder=\"{{'create_project.placeholder_goal'| translate}}\" maxlength=\"1000\"></ion-textarea>\n      </ion-item>\n      <ion-row *ngIf=\"project?.duration\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.duration' | translate}}\n        </ion-col>\n        <ion-col size=\"7\">\n          {{project?.duration}}\n        </ion-col>\n      </ion-row>\n      <ion-row *ngIf=\"project?.startDate\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.start_date' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"setDate('sd')\">\n          {{project?.startDate | date : \"dd-MM-yyyy\"}}\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.end_date' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" (click)=\"setDate('ed')\">\n          {{project?.endDate | date : \"dd-MM-yyyy\"}}\n        </ion-col>\n      </ion-row>\n      <ion-row *ngIf=\"project?.status\">\n        <ion-col size=\"5\" class=\"label-box\">\n          {{'projectDetail.status' | translate}}\n        </ion-col>\n        <ion-col size=\"7\" *ngIf=\"project?.status\">\n          <ion-select [(ngModel)]=\"project.status\" class=\"custom-select\" placeholder=\"Select Status\" [disabled]=\"true\">\n            <ion-select-option  *ngFor=\"let status of statuses\"  value=\"{{status.title}}\"\n              selected=\"status.title === project.status\">{{status.title}}</ion-select-option>\n          </ion-select>\n        </ion-col>\n      </ion-row>\n      <ion-button class=\"round-corner-btn prjdetail-btn\" expand=\"block\" color=\"secondary\"\n        (click)=\"navigateToResources()\" *ngIf=\"category != 'my_projects'\">\n        {{'button.learning_resources' | translate}}\n      </ion-button>\n    </div>\n  </div>\n  <div class=\"tasks-box\">\n    <div *ngIf=\"tasksLength > 0\">\n      <ion-row style=\"padding: 15px;\">\n        <ion-col size=\"6\"> {{'projectDetail.total_task' | translate}} : {{tasksLength}}</ion-col>\n        <ion-col style=\"text-align: right; text-transform: uppercase;\" size=\"6\">\n          {{project.category}}\n        </ion-col>\n      </ion-row>\n      <div *ngFor=\"let task of project.tasks\">\n        <ion-row class=\"task-list\" *ngIf=\"!task.isDeleted\" [ngClass]=\"{'completed-task' : task.status === 'Completed'}\">\n          <ion-col size=\"2\" *ngIf=\"task.endDate\" class=\"task-endDate\"\n            [ngClass]=\"{'completed-task' : task.status === 'Completed'}\">{{task.endDate | date :'MMM dd'}}</ion-col>\n          <ion-col size=\"2\" *ngIf=\"!task.endDate\"></ion-col>\n          <ion-col size=\"6\" (click)=\"taskView(task)\"> {{task?.title}} </ion-col> \n          <ion-col size=\"4\" *ngIf=\"project?.isStarted && task.status != 'Completed'\"\n            [ngStyle]=\"{'text-align': task.status != 'Completed' ? 'right' : 'center'}\">\n            <img src=\"assets/images/delete.png\" style=\"width: 30px;\" (click)=\"delete(task)\">\n          </ion-col>\n          <ion-col size=\"4\" *ngIf=\"project?.isStarted && task.status == 'Completed'\"\n            [ngStyle]=\"{'text-align': task.status != 'Completed' ? 'right' : 'center'}\">\n            <div>\n              <ion-icon name=\"checkmark\" style=\"width:100%;\"></ion-icon>\n              {{task.status}}\n            </div>\n          </ion-col>\n        </ion-row>\n      </div>\n    </div>\n    <div *ngIf=\"tasksLength == 0 && project?.isStarted\" class=\"tasks-label\">\n      <h5> {{'message.add_tasks_to_project' | translate}} <ion-icon name=\"add-circle\" color=\"primary\" (click)=\"addTask()\"\n          style=\"font-size:30px;\"></ion-icon>\n      </h5>\n    </div>\n  </div>\n  <ion-button class=\"round-corner-btn prjdetail-btn\" expand=\"block\" color=\"secondary\" (click)=\"copyTemplate()\"\n    *ngIf=\"!project?.isStarted\" style=\"margin-bottom: 50px;\">\n    {{'button.start_project' | translate}}\n  </ion-button>\n  <ion-fab vertical=\"bottom\" horizontal=\"end\" style=\"position: fixed;\"\n    *ngIf=\"project?.isStarted && tasksLength > 0\">\n    <ion-fab-button (click)=\"addTask()\" style=\" margin-bottom: 15px;\">\n      <ion-icon name=\"add\"></ion-icon>\n    </ion-fab-button>\n  </ion-fab>\n</ion-content>"
 
 /***/ }),
 
@@ -156,8 +156,9 @@ var ProjectDetailPage = /** @class */ (function () {
             var notStarted = 0;
             _this.tasksLength = 0;
             var inProgress = 0;
+            console.log(project, "project");
             project.tasks.forEach(function (task) {
-                if (!task.isDelete) {
+                if (!task.isDeleted) {
                     _this.tasksLength = _this.tasksLength + 1;
                 }
                 // set the project status if project is started
@@ -189,6 +190,7 @@ var ProjectDetailPage = /** @class */ (function () {
                 project.status = 'Not started';
             }
             _this.project = project;
+            console.log(_this.project, "this.project ");
             _this.sortTasks();
         });
     };
@@ -201,6 +203,7 @@ var ProjectDetailPage = /** @class */ (function () {
         this.project.startDate = new Date();
         if (this.category != 'my_projects') {
             this.project.createdType = "by reference";
+            this.project.lastUpdate = new Date();
             this.project.isNew = true;
             this.project.templateId = this.project._id;
             if (this.project.tasks) {
@@ -246,6 +249,7 @@ var ProjectDetailPage = /** @class */ (function () {
         this.router.navigate(['/project-view/courses', this.category]);
     };
     ProjectDetailPage.prototype.addTask = function () {
+        console.log(this.project._id, "this.project._id");
         this.router.navigate(['/project-view/create-task', this.project._id, "pd"]);
     };
     // set date
@@ -352,17 +356,19 @@ var ProjectDetailPage = /** @class */ (function () {
     // navigate to view task
     ProjectDetailPage.prototype.taskView = function (task) {
         var _this = this;
-        this.storage.set('newcreatedproject', this.project).then(function (cmp) {
-            task.projectStarted = _this.project.isStarted;
-            _this.storage.set('cTask', task).then(function (ct) {
-                _this.router.navigate(['/project-view/current-task', task._id, 'pd']);
+        if (this.project.isStarted) {
+            this.storage.set('newcreatedproject', this.project).then(function (cmp) {
+                task.projectStarted = _this.project.isStarted;
+                _this.storage.set('cTask', task).then(function (ct) {
+                    _this.router.navigate(['/project-view/current-task', task._id, 'pd']);
+                });
             });
-        });
+        }
     };
     // mark the task as deleted
     ProjectDetailPage.prototype.delete = function (task) {
         var _this = this;
-        task.isDelete = true;
+        task.isDeleted = true;
         this.storage.set('cTask', task).then(function (ct) {
             _this.updateCurrentProject(ct);
             _this.toastService.successToast('message.task_is_deleted');
@@ -378,7 +384,7 @@ var ProjectDetailPage = /** @class */ (function () {
         var tasksWithEndDate = [];
         var tasksWithoutEndDate = [];
         this.project.tasks.forEach(function (task) {
-            if (task.endDate && !task.isDelete) {
+            if (task.endDate && !task.isDeleted) {
                 if (task.endDate >= today) {
                     tasksWithEndDate.push(task);
                 }
