@@ -229,8 +229,10 @@ var routes = [
             { path: 'project-detail/:cat', loadChildren: '../project-detail/project-detail.module#ProjectDetailPageModule' },
             { path: 'project-detail', loadChildren: '../project-detail/project-detail.module#ProjectDetailPageModule' },
             { path: 'newsfeed', loadChildren: '../newsfeed/newsfeed.module#NewsfeedPageModule' },
-            { path: 'my-reports', loadChildren: '../my-reports/my-reports.module#MyReportsPageModule'
-            },
+            { path: 'my-reports', loadChildren: '../my-reports/my-reports.module#MyReportsPageModule' },
+            { path: 'files/:id', loadChildren: '../files/files.module#FilesPageModule' },
+            { path: 'notifications', loadChildren: '../notifications/notifications.module#NotificationsPageModule' },
+            { path: 'task-board', loadChildren: '../task-board/task-board.module#TaskBoardPageModule' },
         ]
     }
 ];

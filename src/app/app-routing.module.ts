@@ -47,6 +47,8 @@ const routes: Routes = [
   { path: 'active-projects', loadChildren: './active-projects/active-projects.module#ActiveProjectsPageModule' },
   { path: 'my-projects', loadChildren: './my-projects/my-projects.module#MyProjectsPageModule' },
   { path: 'all-projects', loadChildren: './all-projects/all-projects.module#AllProjectsPageModule' },
+  { path: 'files/:id', loadChildren: './files/files.module#FilesPageModule' },
+  { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
 ];
 
 @NgModule({

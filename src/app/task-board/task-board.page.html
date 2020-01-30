@@ -1,0 +1,63 @@
+<ion-header>
+  <app-header [title]="'open_tasks.title' | translate" [showMenu]="false" [showBack]="true" [isGoBack]="back"
+    [noBorder]="true">
+  </app-header>
+</ion-header>
+
+<ion-content>
+  <div class="tabs-list">
+    <div class="custom-tab" (click)="selectTab('ongoing')" [ngClass]="{'active-tab': activeTab == 'ongoing'}">
+      {{ "open_tasks.ongoing" | translate }}</div>
+    <div class="custom-tab" (click)="selectTab('past')" [ngClass]="{'active-tab':  activeTab == 'past'}">
+      {{ "open_tasks.past" | translate }}
+    </div>
+  </div>
+  <ion-item class="search-bar-custom" style="margin-top: 70px;">
+    <ion-icon name="search" item-left color="dark"></ion-icon>
+    <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
+    <!-- (keyup)="searchSchool(searchInput)" -->
+  </ion-item>
+  <div *ngIf="activeTab == 'ongoing'" class="ongoing-container">
+    <ion-card *ngFor="let task of ongoing">
+      <div class="title-section">
+        {{task.title}}
+      </div>
+      <div class="date-section">
+        {{task.endDate | date :'dd MMM yyyy'}}
+      </div>
+      <ion-row>
+        <ion-col size="5" *ngIf="task?.status" style="margin:auto;">
+          <ion-progress-bar value="1" color="success" *ngIf="task.status == 'Completed'"></ion-progress-bar>
+          <ion-progress-bar value="0.7" color="warning" *ngIf="task.status == 'In Progress'"></ion-progress-bar>
+          <ion-progress-bar value="1" color="medium" *ngIf="task.status == 'Not started'"></ion-progress-bar>
+        </ion-col>
+        <ion-col size="7" style="text-align:right;">
+          <span *ngIf="task.subTasks && task.subTasks.length > 0"> {{'open_tasks.number_of_subtask' | translate}} :
+            {{task.subTasks.length}}</span>
+          <span *ngIf="!task.subTasks"> {{'open_tasks.number_of_subtask' | translate}} : 0</span>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+
+  <div *ngIf="activeTab == 'past'" class="ongoing-container">
+    <ion-card *ngFor="let task of past">
+      <div class="title-section">
+        {{task.title}}
+      </div>
+      <div class="date-section">
+        {{task.endDate | date :'dd MMM yyyy'}}
+      </div>
+      <ion-row>
+        <ion-col size="5" *ngIf="task?.status" style="padding-left: 0px;margin:auto;">
+          <ion-progress-bar value="1" color="success" *ngIf="task.status == 'Completed'"></ion-progress-bar>
+        </ion-col>
+        <ion-col size="7" style="text-align:right;">
+          <span *ngIf="task.subTasks && task.subTasks.length > 0"> {{'open_tasks.number_of_subtask' | translate}} :
+            {{task.subTasks.length}}</span>
+          <span *ngIf="!task.subTasks"> {{'open_tasks.number_of_subtask' | translate}} : 0</span>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+</ion-content>

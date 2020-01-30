@@ -1,0 +1,60 @@
+<ion-header>
+  <app-header [title]="'file.title' | translate" [showMenu]="false" [showBack]="true" [isGoBack]="back"
+    [noBorder]="true">
+  </app-header>
+</ion-header>
+<ion-content>
+  <div class="tabs-list" *ngIf="!showSkeleton">
+    <div class="custom-tab" (click)="selectTab('images')" [ngClass]="{'active-tab': activeTab == 'images'}">
+      {{ "file.images" | translate }}</div>
+    <div class="custom-tab" (click)="selectTab('files')" [ngClass]="{'active-tab':  activeTab == 'files'}">
+      {{ "file.files" | translate }}
+    </div>
+  </div>
+  <div *ngIf="currentMyProject" class="image-container">
+    <div *ngFor="let task of currentMyProject.tasks">
+      <ion-card *ngIf="activeTab == 'images' && (task.remarks || task.imageUrl)">
+        <ion-card-header>
+          <h4> {{task.title}} </h4>
+        </ion-card-header>
+        <ion-card-content *ngIf="task.remarks && !task.imageUrl">
+          {{task.remarks}}
+        </ion-card-content>
+        <ion-card-content *ngIf="task.remarks && task.imageUrl">
+          <ion-row>
+            <ion-col size="6">
+              {{task.remarks}}
+            </ion-col>
+            <ion-col size="6">
+              <img src="{{task.imageUrl}}">
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+  <div *ngIf="currentMyProject" class="file-container">
+    <div *ngFor="let task of currentMyProject.tasks">
+      <ion-card *ngIf="activeTab == 'files' && task.file" style="border-radius: 4px;">
+        <ion-card-header style="background: #e3e3e3; color: #000; padding: 10px;">
+          <h5> {{task.title}} </h5>
+        </ion-card-header>
+        <ion-card-content style="padding: 0px;">
+          <ion-card style="padding: 0px; border-radius: 0px;color: #000;" >
+            <ion-grid>
+              <ion-row>
+                <ion-col style="min-width: 85%; margin: auto;
+                          font-weight: 500; font-size: 1.2em;">
+                  <a href={{task.downloadLink}} target="blank" style="color: #000;text-decoration: none; width: 100%;" >  {{ task.file.name}} </a>
+                </ion-col>
+                <ion-col class="arrow-mark">
+                  <ion-icon name="ios-arrow-forward"> </ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

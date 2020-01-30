@@ -16,6 +16,7 @@ export class ProjectDetailPage {
   project;
   back;
   category;
+  files: any;
   startDate;
   isValidDate;
   tasksLength = 0;
@@ -62,7 +63,6 @@ export class ProjectDetailPage {
       let notStarted = 0;
       this.tasksLength = 0;
       let inProgress = 0;
-      console.log(project, "project");
       project.tasks.forEach(task => {
         if (!task.isDeleted) {
           this.tasksLength = this.tasksLength + 1;
@@ -87,6 +87,7 @@ export class ProjectDetailPage {
           }
         }
       });
+
       if (project.status == 'not yet started') {
         project.status = 'Not started';
       }
@@ -94,7 +95,6 @@ export class ProjectDetailPage {
         project.status = 'Not started';
       }
       this.project = project;
-      console.log(this.project, "this.project ");
       this.sortTasks();
     })
   }
@@ -150,8 +150,12 @@ export class ProjectDetailPage {
     this.router.navigate(['/project-view/courses', this.category]);
   }
   public addTask() {
-    console.log(this.project._id, "this.project._id");
     this.router.navigate(['/project-view/create-task', this.project._id, "pd"]);
+  }
+  public navigateToFiles()
+  {
+    this.router.navigate(['/project-view/files', this.project._id]);
+
   }
   // set date
   public setDate(type) {
@@ -242,7 +246,12 @@ export class ProjectDetailPage {
         break;
       }
       case 'title': {
-        this.editTitle = false;
+        if (this.project.title) {
+          this.editTitle = false;
+          this.markLabelsAsInvalid = false;
+        } else {
+          this.markLabelsAsInvalid = true;
+        }
         break;
       }
     }
