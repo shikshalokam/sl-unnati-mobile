@@ -65,10 +65,10 @@ export class HeaderComponent implements OnInit {
   }
   // Navigate to notification screen
   public navigateToNotification() {
+    console.log('navigateToNotification');
     this.router.navigate(['project-view/notifications']);
   }
   public goBack() {
-    console.log(this.isGoBack, this.isParam, "this.isGoBack, this.isParam");
     if (this.isParam) {
       this.router.navigate([this.isGoBack, this.isParam]);
     } else {

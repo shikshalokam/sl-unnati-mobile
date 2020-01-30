@@ -102,7 +102,8 @@
     "task_detail": "Task Detail",
     "subtask_detail": "Subtask Detail",
     "projectDetail": {
-        "title": "Project Detail",
+        "title": "Project Title",
+        "page": "Project Page",
         "details": "Details",
         "goal": "Goal",
         "status": "Status",
@@ -203,6 +204,17 @@
         "fileds_mandatory": "Please fill Mandatory Fields",
         "areas": "What area of your school are you improving?",
         "placeholder_areas": "Example Teacher, Infrastructure etc"
+    },
+    "file": {
+        "title": "Files",
+        "images": "Images",
+        "files": "Files"
+    },
+    "open_tasks": {
+        "title": "OPEN TASKS",
+        "ongoing": "Ongoing",
+        "past": "Past",
+        "number_of_subtask":"Number of sub-tasks"
     },
     "add_task": {
         "add_a_task": "Add a task",

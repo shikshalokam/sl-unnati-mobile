@@ -191,7 +191,6 @@ var AboutPage = /** @class */ (function () {
     };
     AboutPage.prototype.checkLocalData = function () {
         var isDirty = false;
-        console.log(isDirty, "isDirty");
         // this.storage.get('myprojects').then(myProjects => {
         //   console.log(myProjects, "myProjects");
         //   if (myProjects && navigator.onLine) {

@@ -85,14 +85,12 @@ export class ProjectsPage {
     this.showSkeleton = true;
     this.storage.get('projects').then(projects => {
       if (projects) {
-        console.log(projects,"in projects page");
         this.projectList = this.getSortData(projects);
       }
       this.showSkeleton = false;
     });
   }
   public projectView(project) {
-    console.log(project,"project");
     this.storage.set('projectToBeView', project).then(project => {
       this.router.navigate(['/project-view/project-detail', 'projectsList'])
     })

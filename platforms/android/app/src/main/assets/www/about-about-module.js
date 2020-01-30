@@ -191,7 +191,6 @@ var AboutPage = /** @class */ (function () {
     };
     AboutPage.prototype.checkLocalData = function () {
         var isDirty = false;
-        console.log(isDirty, "isDirty");
         // this.storage.get('myprojects').then(myProjects => {
         //   console.log(myProjects, "myProjects");
         //   if (myProjects && navigator.onLine) {
@@ -216,6 +215,7 @@ var AboutPage = /** @class */ (function () {
     AboutPage.prototype.showConfirmAlert = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             var alertTexts, alert;
+            var _this = this;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -226,14 +226,14 @@ var AboutPage = /** @class */ (function () {
                                 header: alertTexts['message.local_data_changes'],
                                 message: alertTexts['message.want_sync_before_erase'],
                                 buttons: [
-                                    // {
-                                    //   text: 'Cancel',
-                                    //   role: 'cancel',
-                                    //   cssClass: 'secondary',
-                                    //   handler: (blah) => {
-                                    //     this.logout();
-                                    //   }
-                                    // },
+                                    {
+                                        text: 'Logout',
+                                        role: 'cancel',
+                                        cssClass: 'secondary',
+                                        handler: function (blah) {
+                                            _this.logout();
+                                        }
+                                    },
                                     {
                                         text: 'Okay',
                                         handler: function () {

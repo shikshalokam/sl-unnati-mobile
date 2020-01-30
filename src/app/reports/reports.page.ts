@@ -137,7 +137,6 @@ export class ReportsPage implements OnInit {
               var link = document.createElement('a');
               link.href = data.pdfUrl;
               link.download = "report.pdf";
-              // this is necessary as link.click() does not work on the latest firefox
               link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
               this.showSkeleton = false;
             }, error => {
