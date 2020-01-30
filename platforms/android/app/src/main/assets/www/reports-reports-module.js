@@ -232,7 +232,6 @@ var ReportsPage = /** @class */ (function () {
                             var link = document.createElement('a');
                             link.href = data.pdfUrl;
                             link.download = "report.pdf";
-                            // this is necessary as link.click() does not work on the latest firefox
                             link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
                             _this.showSkeleton = false;
                         }, function (error) {

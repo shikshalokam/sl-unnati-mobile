@@ -17,6 +17,7 @@ export class CurrentTaskViewPage implements OnInit {
   back;
   file;
   imageUrl;
+  remarks;
   fileUrl;
   from;
   showpopup: boolean = false;
@@ -159,6 +160,7 @@ export class CurrentTaskViewPage implements OnInit {
         subtask.status = 'Completed';
       });
     }
+    this.task.remarks = this.remarks;
     let task: any = this.task;
     this.task = task;
     this.storage.set('cTask', task).then(updatedTask => {
@@ -300,7 +302,6 @@ export class CurrentTaskViewPage implements OnInit {
           this.updateCurrentProject(ct);
         })
       } else {
-        console.log(this.task.status, "this.task.status");
         this.task.status = 'Completed';
         this.storage.set('cTask', this.task).then(ct => {
           this.task = ct;
@@ -335,14 +336,17 @@ export class CurrentTaskViewPage implements OnInit {
       if (type == 'image') {
         this.imageUrl = value[1];
       } else {
-        this.fileUrl = value[1];
+        this.fileUrl = event.target.result;
       }
     };
     reader.readAsDataURL(file);
   }
   public attach() {
     this.task.imageUrl = this.imageUrl;
-    this.task.fileUrl = this.fileUrl;
+    this.task.file = {
+      url: this.fileUrl,
+      name: this.file.name
+    }
     this.updateTask();
   }
 

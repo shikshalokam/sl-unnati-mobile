@@ -39,7 +39,6 @@ export class CategoryViewPage {
             this.projects = myProjects;
           }
         }, error => {
-          console.log('error', error)
           this.showSkeleton = false;
         })
       }

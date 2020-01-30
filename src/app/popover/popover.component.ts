@@ -100,6 +100,7 @@ export class PopoverComponent implements OnInit {
         this.storage.set('myprojects', myProjects).then(project => {
           this.toastService.successToast('message.project_deleted_success');
           this.categoryViewService.deleteProject('deleted');
+          this.DismissClick();
         }, error => {
           this.toastService.errorToast('message.project_deleted_failed');
         })
@@ -113,7 +114,6 @@ export class PopoverComponent implements OnInit {
   }
 
   public syncProject() {
-    console.log(navigator.onLine, "navigator.onLine");
     if (!this.project.isSync) {
       this.storage.get('userTokens').then(data => {
         this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
@@ -144,7 +144,6 @@ export class PopoverComponent implements OnInit {
       })
     } else {
       this.loader();
-      this.DismissClick();
       this.getPDF(this.project._id);
       this.DismissClick();
     }
@@ -193,11 +192,10 @@ export class PopoverComponent implements OnInit {
   async loader() {
     const loading = await this.loadingController.create({
       message: 'Syncing your data.',
-      duration:500
+      duration: 500
     });
     await loading.present();
     const { role, data } = await loading.onDidDismiss();
-    console.log('Loading dismissed!');
   }
   updateInLocal(project, oldProject) {
     this.storage.get('myprojects').then(myprojects => {
@@ -209,7 +207,6 @@ export class PopoverComponent implements OnInit {
         });
       }
       this.storage.set('myprojects', myprojects).then(myprojects => {
-        console.log(myprojects, "myprojects updated");
       })
     })
   }
