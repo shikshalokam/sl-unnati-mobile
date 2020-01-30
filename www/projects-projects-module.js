@@ -190,7 +190,6 @@ var ProjectsPage = /** @class */ (function () {
         this.showSkeleton = true;
         this.storage.get('projects').then(function (projects) {
             if (projects) {
-                console.log(projects, "in projects page");
                 _this.projectList = _this.getSortData(projects);
             }
             _this.showSkeleton = false;
@@ -198,7 +197,6 @@ var ProjectsPage = /** @class */ (function () {
     };
     ProjectsPage.prototype.projectView = function (project) {
         var _this = this;
-        console.log(project, "project");
         this.storage.set('projectToBeView', project).then(function (project) {
             _this.router.navigate(['/project-view/project-detail', 'projectsList']);
         });

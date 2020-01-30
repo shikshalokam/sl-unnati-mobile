@@ -128,7 +128,6 @@ var CreateTaskPage = /** @class */ (function () {
         this.editTitle = false;
         this.showpopup = false;
         route.params.subscribe(function (params) {
-            console.log(params.id);
             _this.getCurrentProject(params.id);
             _this.from = params.from;
             if (params.from == 'cp') {
@@ -161,7 +160,6 @@ var CreateTaskPage = /** @class */ (function () {
         var _this = this;
         this.createTaskService.getProjectById(id).then(function (project) {
             _this.currentMyProject = project;
-            console.log(_this.currentMyProject, "this.currentMyProject");
         });
     };
     // set date

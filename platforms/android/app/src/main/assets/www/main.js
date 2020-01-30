@@ -750,6 +750,11 @@ var map = {
 		"common",
 		"detail-detail-module"
 	],
+	"../files/files.module": [
+		"./src/app/files/files.module.ts",
+		"common",
+		"files-files-module"
+	],
 	"../fullreports/fullreports.module": [
 		"./src/app/fullreports/fullreports.module.ts",
 		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~dba1dd56",
@@ -793,6 +798,10 @@ var map = {
 		"./src/app/newsfeed/newsfeed.module.ts",
 		"newsfeed-newsfeed-module"
 	],
+	"../notifications/notifications.module": [
+		"./src/app/notifications/notifications.module.ts",
+		"notifications-notifications-module"
+	],
 	"../project-detail/project-detail.module": [
 		"./src/app/project-detail/project-detail.module.ts",
 		"common",
@@ -826,6 +835,10 @@ var map = {
 	"../subtasks/subtasks.module": [
 		"./src/app/subtasks/subtasks.module.ts",
 		"subtasks-subtasks-module"
+	],
+	"../task-board/task-board.module": [
+		"./src/app/task-board/task-board.module.ts",
+		"task-board-task-board-module"
 	],
 	"../task-view/task-view.module": [
 		"./src/app/task-view/task-view.module.ts",
@@ -882,6 +895,11 @@ var map = {
 	],
 	"./edit-task/edit-task.module": [
 		"./src/app/edit-task/edit-task.module.ts"
+	],
+	"./files/files.module": [
+		"./src/app/files/files.module.ts",
+		"common",
+		"files-files-module"
 	],
 	"./fullreports/fullreports.module": [
 		"./src/app/fullreports/fullreports.module.ts",
@@ -980,6 +998,10 @@ var map = {
 	"./subtasks/subtasks.module": [
 		"./src/app/subtasks/subtasks.module.ts",
 		"subtasks-subtasks-module"
+	],
+	"./task-board/task-board.module": [
+		"./src/app/task-board/task-board.module.ts",
+		"task-board-task-board-module"
 	],
 	"./task-view/task-view.module": [
 		"./src/app/task-view/task-view.module.ts",
@@ -1169,6 +1191,8 @@ var routes = [
     { path: 'active-projects', loadChildren: './active-projects/active-projects.module#ActiveProjectsPageModule' },
     { path: 'my-projects', loadChildren: './my-projects/my-projects.module#MyProjectsPageModule' },
     { path: 'all-projects', loadChildren: './all-projects/all-projects.module#AllProjectsPageModule' },
+    { path: 'files/:id', loadChildren: './files/files.module#FilesPageModule' },
+    { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -1195,7 +1219,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser>\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n            <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n          </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content>\n        <ion-list>\n          <div *ngFor=\"let p of appPages\">\n            <!-- *ngIf=\"p.url\" -->\n            <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.title != 'Settings'\">\n              <ion-item [routerDirection]=\"'root'\" (click)=\"navigate(p.url)\">\n                <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n                <ion-label (click)=\"initiateSync(p.title)\">\n                  {{p.title}}\n                </ion-label>\n              </ion-item>\n            </ion-menu-toggle>\n            <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\"\n              detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n              <ion-label>{{ p.title }}</ion-label>\n            </ion-item>\n            <!-- Children List for clicked Item -->\n            <ion-list *ngIf=\"p.open\">\n              <ion-menu-toggle auto-hide=\"false\">\n                <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n                  routerLinkActive=\"active\" style=\"padding-left:30px;\"\n                  (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n                  <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n                  <ion-label>\n                    {{ sub.title }}\n                  </ion-label>\n                </ion-item>\n              </ion-menu-toggle>\n            </ion-list>\n          </div>\n        </ion-list>\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n</ion-app>"
+module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser>\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n            <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n          </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content>\n        <ion-list>\n          <div *ngFor=\"let p of appPages\">\n            <!-- *ngIf=\"p.url\" -->\n            <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.title != 'Settings'\">\n              <ion-item [routerDirection]=\"'root'\" (click)=\"navigate(p.url,p.title)\">\n                <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n                <ion-label >\n                  {{p.title}}\n                </ion-label>\n              </ion-item>\n            </ion-menu-toggle>\n            <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\"\n              detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n              <ion-label>{{ p.title }}</ion-label>\n            </ion-item>\n            <!-- Children List for clicked Item -->\n            <ion-list *ngIf=\"p.open\">\n              <ion-menu-toggle auto-hide=\"false\">\n                <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n                  routerLinkActive=\"active\" style=\"padding-left:30px;\"\n                  (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n                  <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n                  <ion-label>\n                    {{ sub.title }}\n                  </ion-label>\n                </ion-item>\n              </ion-menu-toggle>\n            </ion-list>\n          </div>\n        </ion-list>\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n</ion-app>"
 
 /***/ }),
 
@@ -1374,7 +1398,7 @@ var AppComponent = /** @class */ (function () {
                 else if (_this.router.url == '/project-view/notifications' || _this.router.url == '/project-view/newsfeed' || _this.router.url == '/project-view/about' ||
                     _this.router.url == '/project-view/reports' || _this.router.url == '/project-view/my-schools' ||
                     _this.router.url == '/project-view/projects' ||
-                    _this.router.url == '/project-view/library' || s[1].path == 'create-project') {
+                    _this.router.url == '/project-view/library' || s[1].path == 'create-project' || _this.router.url == '/project-view/task-board') {
                     _this.router.navigateByUrl('project-view/home');
                 }
                 else if (_this.router.url == '/project-view/task-view' && isOpened === 'false') {
@@ -1410,7 +1434,7 @@ var AppComponent = /** @class */ (function () {
                 else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "cp")) {
                     _this.router.navigateByUrl('project-view/create-task/' + s[2].path + '/' + s[3].path);
                 }
-                else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd")) {
+                else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd") || s[1].path == "files") {
                     _this.router.navigateByUrl('project-view/project-detail');
                 }
                 else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "pd")) {
@@ -1501,8 +1525,14 @@ var AppComponent = /** @class */ (function () {
             });
         }
     };
-    AppComponent.prototype.navigate = function (url) {
-        if (url) {
+    AppComponent.prototype.navigate = function (url, title) {
+        console.log(title, "title");
+        if (title == 'Sync') {
+            console.log('in sync');
+            this.prepareProjectToSync();
+            this.prepareMappedProjectToSync();
+        }
+        else if (url) {
             this.router.navigate([url]);
         }
     };
@@ -1602,7 +1632,6 @@ var AppComponent = /** @class */ (function () {
         this.storage.get('myprojects').then(function (myProjects) {
             if (myProjects && navigator.onLine) {
                 myProjects.forEach(function (project) {
-                    console.log(project.isEdited, project.isNew, 'myprojects');
                     if (project.isEdited || project.isNew) {
                         if (project.isSync) {
                             project.createdType = '';
@@ -1622,16 +1651,21 @@ var AppComponent = /** @class */ (function () {
                                 }
                             });
                         }
+                        // this.toastService.stopLoader();
                         _this.autoSync(project);
                     }
                     else {
                         //this.toastService.;
+                        // this.toastService.stopLoader();
                     }
                 });
-                console.log(projectsToSync, "projectsToSync");
-                if (!projectsToSync) {
-                    _this.toastService.successToast('message.no_projects');
-                }
+                // console.log(projectsToSync, "projectsToSync");
+                // if (!projectsToSync) {
+                //   this.toastService.successToast('message.no_projects');
+                // }
+            }
+            else {
+                // this.toastService.stopLoader();
             }
         });
     };
@@ -1642,7 +1676,6 @@ var AppComponent = /** @class */ (function () {
             if (myProjects) {
                 myProjects.forEach(function (projectList) {
                     projectList.projects.forEach(function (project) {
-                        console.log(project.isEdited, project.createdType, project.toDisplay, 'myprojects');
                         if (project.isEdited && !project.createdType && !project.toDisplay) {
                             project.createdType = '';
                             projectsToSync = true;
@@ -1660,14 +1693,21 @@ var AppComponent = /** @class */ (function () {
                                     }
                                 });
                             }
+                            // this.toastService.stopLoader();
                             _this.autoSync(project);
+                        }
+                        else {
+                            // this.toastService.stopLoader();
                         }
                     });
                 });
-                console.log(projectsToSync, "projectsToSync");
-                if (!projectsToSync) {
-                    _this.toastService.successToast('message.no_projects');
-                }
+                // console.log(projectsToSync, "projectsToSync");
+                // if (!projectsToSync) {
+                //   this.toastService.successToast('message.no_projects');
+                // }
+            }
+            else {
+                // this.toastService.stopLoader();
             }
         });
     };
@@ -1687,43 +1727,41 @@ var AppComponent = /** @class */ (function () {
                         _this.storage.set('userTokens', userTokens).then(function (data) {
                             _this.homeService.syncingProject(true);
                             _this.projectService.sync(project, data.access_token).subscribe(function (data) {
+                                var updatedProject;
                                 if (data.status == "failed") {
                                     _this.toastService.stopLoader();
                                 }
                                 else if (data.status == "success" || data.status == "succes") {
                                     if (data.projectDetails) {
-                                        var updatedProject = void 0;
                                         project.isNew = false;
                                         project.isSync = true;
                                         project.isEdited = false;
-                                        data.projectDetails.data.projects[0].createdType = project.createdType;
                                         data.projectDetails.data.projects[0].isStarted = project.isStarted;
+                                        console.log(data.projectDetails.data.projects[0].isStarted, " data.projectDetails.data.projects[0].isStarted", project.isStarted);
                                         updatedProject = data.projectDetails.data.projects[0];
                                         updatedProject.isSync = true;
                                         updatedProject.isEdited = false;
                                         updatedProject.isNew = false;
                                         updatedProject.lastUpdate = project.lastUpdate;
-                                        _this.syncUpdateInLocal(updatedProject, project);
+                                        _this.syncUpdateInLocal(updatedProject, project, data.allProjects);
                                     }
                                     else {
-                                        var updatedProject = void 0;
                                         project.isNew = false;
                                         project.isSync = true;
                                         project.isEdited = false;
-                                        data.data.createdType = project.createdType;
                                         data.data.isStarted = project.isStarted;
+                                        console.log(data.data.isStarted, project.isStarted, "data.data.isStarted = project.isStarted;");
                                         updatedProject = data.data;
                                         updatedProject.isSync = true;
                                         updatedProject.isEdited = false;
                                         updatedProject.isNew = false;
                                         updatedProject.lastUpdate = project.lastUpdate;
-                                        _this.syncUpdateInLocal(updatedProject, project);
+                                        _this.syncUpdateInLocal(updatedProject, project, data.allProjects);
                                     }
                                 }
                                 _this.homeService.syncingProject(false);
                             }, function (error) {
                                 _this.homeService.syncingProject(false);
-                                _this.toastService.stopLoader();
                             });
                         });
                     }
@@ -1743,33 +1781,42 @@ var AppComponent = /** @class */ (function () {
             _this.toastService.stopLoader();
         });
     };
-    AppComponent.prototype.syncUpdateInLocal = function (project, oldProject) {
+    AppComponent.prototype.syncUpdateInLocal = function (project, oldProject, syncedProjects) {
         var _this = this;
+        console.log(syncedProjects, "syncedProjects", project, "project", project.createdType);
         if (project.createdType == 'by self' || project.createdType == 'by reference') {
             this.storage.get('myprojects').then(function (myprojects) {
                 if (myprojects) {
                     myprojects.forEach(function (prj, i) {
+                        console.log(prj._id == oldProject._id);
                         if (prj._id == oldProject._id) {
                             myprojects[i] = project;
+                            console.log(myprojects[i], " myprojects[i]");
                         }
                     });
                 }
+                console.log(myprojects, "myprojects");
                 _this.storage.set('myprojects', myprojects).then(function (myprojectsff) {
+                    console.log(myprojectsff, "myprojectsff");
+                    _this.toastService.stopLoader();
                     _this.toastService.successToast('message.sync_success');
                     _this.toastService.stopLoader();
                 });
             });
         }
         else {
+            console.log(project, "project in else");
             this.storage.get('projects').then(function (projects) {
                 if (projects) {
                     projects.forEach(function (prj, i) {
                         if (prj._id == oldProject._id) {
                             projects[i] = project;
+                            console.log(projects[i], " projects[i]");
                         }
                     });
                 }
                 _this.storage.set('projects', projects).then(function (myprojectsff) {
+                    _this.toastService.stopLoader();
                     _this.toastService.successToast('message.sync_success');
                     _this.toastService.stopLoader();
                 });
@@ -1778,7 +1825,6 @@ var AppComponent = /** @class */ (function () {
     };
     AppComponent.prototype.initiateSync = function (value) {
         if (value == 'Sync') {
-            console.log('in sync');
             this.prepareProjectToSync();
             this.prepareMappedProjectToSync();
         }
@@ -2850,10 +2896,10 @@ var HeaderComponent = /** @class */ (function () {
     };
     // Navigate to notification screen
     HeaderComponent.prototype.navigateToNotification = function () {
+        console.log('navigateToNotification');
         this.router.navigate(['project-view/notifications']);
     };
     HeaderComponent.prototype.goBack = function () {
-        console.log(this.isGoBack, this.isParam, "this.isGoBack, this.isParam");
         if (this.isParam) {
             this.router.navigate([this.isGoBack, this.isParam]);
         }
@@ -3740,6 +3786,7 @@ var PopoverComponent = /** @class */ (function () {
                 _this.storage.set('myprojects', myProjects).then(function (project) {
                     _this.toastService.successToast('message.project_deleted_success');
                     _this.categoryViewService.deleteProject('deleted');
+                    _this.DismissClick();
                 }, function (error) {
                     _this.toastService.errorToast('message.project_deleted_failed');
                 });
@@ -3758,7 +3805,6 @@ var PopoverComponent = /** @class */ (function () {
     };
     PopoverComponent.prototype.syncProject = function () {
         var _this = this;
-        console.log(navigator.onLine, "navigator.onLine");
         if (!this.project.isSync) {
             this.storage.get('userTokens').then(function (data) {
                 _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
@@ -3791,7 +3837,6 @@ var PopoverComponent = /** @class */ (function () {
         }
         else {
             this.loader();
-            this.DismissClick();
             this.getPDF(this.project._id);
             this.DismissClick();
         }
@@ -3854,7 +3899,6 @@ var PopoverComponent = /** @class */ (function () {
                         return [4 /*yield*/, loading.onDidDismiss()];
                     case 3:
                         _a = _b.sent(), role = _a.role, data = _a.data;
-                        console.log('Loading dismissed!');
                         return [2 /*return*/];
                 }
             });
@@ -3871,7 +3915,6 @@ var PopoverComponent = /** @class */ (function () {
                 });
             }
             _this.storage.set('myprojects', myprojects).then(function (myprojects) {
-                console.log(myprojects, "myprojects updated");
             });
         });
     };
@@ -3996,7 +4039,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./myschools/search.filter */ "./src/app/myschools/search.filter.ts");
-/* harmony import */ var _app_home_search_filter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../app/home/search.filter */ "./src/app/home/search.filter.ts");
+/* harmony import */ var _home_search_filter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./home/search.filter */ "./src/app/home/search.filter.ts");
+/* harmony import */ var _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./task-board/task-board.filter */ "./src/app/task-board/task-board.filter.ts");
+
 
 
 
@@ -4021,10 +4066,10 @@ var SharedModule = /** @class */ (function () {
                 _ngx_translate_core__WEBPACK_IMPORTED_MODULE_7__["TranslateModule"].forChild()
             ],
             declarations: [
-                _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _app_home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"]
+                _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"], _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__["TaskBoardPipe"]
             ],
             exports: [
-                highcharts_angular__WEBPACK_IMPORTED_MODULE_4__["HighchartsChartModule"], _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _app_home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"]
+                highcharts_angular__WEBPACK_IMPORTED_MODULE_4__["HighchartsChartModule"], _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"]
             ]
         })
     ], SharedModule);
@@ -4082,6 +4127,55 @@ var SubTasksService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"], _ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"]])
     ], SubTasksService);
     return SubTasksService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/task-board/task-board.filter.ts":
+/*!*************************************************!*\
+  !*** ./src/app/task-board/task-board.filter.ts ***!
+  \*************************************************/
+/*! exports provided: TaskBoardPipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TaskBoardPipe", function() { return TaskBoardPipe; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
+
+
+
+var TaskBoardPipe = /** @class */ (function () {
+    function TaskBoardPipe(homeService) {
+        this.homeService = homeService;
+    }
+    TaskBoardPipe.prototype.transform = function (items, searchText) {
+        var _this = this;
+        if (!items)
+            return [];
+        if (!searchText) {
+            return items;
+        }
+        searchText = searchText.trim();
+        searchText = searchText.toLowerCase();
+        return items.filter(function (it) {
+            if (it) {
+                var data = it.title.toLowerCase().includes(searchText);
+                _this.homeService.setCount(data);
+            }
+        });
+    };
+    TaskBoardPipe = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({
+            name: 'searchTasks'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_home_home_service__WEBPACK_IMPORTED_MODULE_2__["HomeService"]])
+    ], TaskBoardPipe);
+    return TaskBoardPipe;
 }());
 
 
@@ -4510,7 +4604,6 @@ var ToastService = /** @class */ (function () {
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log('msg', this.pending);
                         // if (!this.pending) {
                         this.pending = true;
                         _a = this;
@@ -4532,7 +4625,6 @@ var ToastService = /** @class */ (function () {
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('stop loader', this.pending);
                         // if (this.pending) {
                         this.pending = false;
                         return [4 /*yield*/, this.loadingController.dismiss().then(function () { return console.log('dismissed'); })];

@@ -432,12 +432,9 @@ var CreateTaskService = /** @class */ (function () {
                         return _this.project = project;
                     }
                 });
-                console.log(_this.project, "project selected");
                 if (!_this.project) {
                     return _this.storage.get('projects').then(function (projectList) {
-                        console.log(projectList[0], "projectList");
                         projectList[0].projects.forEach(function (project) {
-                            console.log(project, "project", project._id);
                             if (project._id == projectId) {
                                 return _this.project = project;
                             }
@@ -448,9 +445,7 @@ var CreateTaskService = /** @class */ (function () {
             }
             else {
                 return _this.storage.get('projects').then(function (projectList) {
-                    console.log(projectList[0], "projectList");
                     projectList[0].projects.forEach(function (project) {
-                        console.log(project, "project", project._id);
                         if (project._id == projectId) {
                             return _this.project = project;
                         }

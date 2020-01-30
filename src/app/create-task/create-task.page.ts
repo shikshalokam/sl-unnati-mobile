@@ -35,7 +35,6 @@ export class CreateTaskPage implements OnInit {
     public toastService: ToastService,
   ) {
     route.params.subscribe(params => {
-      console.log(params.id);
       this.getCurrentProject(params.id);
       this.from = params.from;
       if (params.from == 'cp') {
@@ -67,7 +66,6 @@ export class CreateTaskPage implements OnInit {
   public getCurrentProject(id) {
     this.createTaskService.getProjectById(id).then(project => {
       this.currentMyProject = project;
-      console.log(this.currentMyProject, "this.currentMyProject");
     })
   }
   // set date

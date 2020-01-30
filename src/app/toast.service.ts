@@ -13,8 +13,7 @@ export class ToastService {
         public toastController: ToastController,
         public translateService: TranslateService,
         public loadingController: LoadingController
-    ) {
-    }
+    ) { }
     async errorToast(msg) {
         this.translateService.get(msg).subscribe((text: string) => {
             msg = text;
@@ -48,20 +47,18 @@ export class ToastService {
     }
 
     async startLoader(msg: string) {
-        console.log('msg', this.pending);
         // if (!this.pending) {
-            this.pending = true;
-            this.loading = await this.loadingController.create({
-                message: msg
-            });
-            await this.loading.present();
+        this.pending = true;
+        this.loading = await this.loadingController.create({
+            message: msg
+        });
+        await this.loading.present();
         // }
     }
     async stopLoader() {
-        console.log('stop loader', this.pending);
         // if (this.pending) {
-            this.pending = false;
-            return await this.loadingController.dismiss().then(() => console.log('dismissed'));
+        this.pending = false;
+        return await this.loadingController.dismiss().then(() => console.log('dismissed'));
         // }
     }
 }

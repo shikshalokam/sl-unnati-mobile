@@ -84,7 +84,6 @@ export class AboutPage implements OnInit {
   }
   public checkLocalData() {
     let isDirty: boolean = false;
-    console.log(isDirty, "isDirty");
     // this.storage.get('myprojects').then(myProjects => {
     //   console.log(myProjects, "myProjects");
     //   if (myProjects && navigator.onLine) {
