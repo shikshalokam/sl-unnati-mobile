@@ -1394,7 +1394,6 @@ var AppComponent = /** @class */ (function () {
                 var tree = _this.router.parseUrl(_this.router.url);
                 var g = tree.root.children[_angular_router__WEBPACK_IMPORTED_MODULE_9__["PRIMARY_OUTLET"]];
                 var s = g.segments;
-                console.log(_this.router.url, "this.router.url");
                 var isOpened = _this.tasksService.isActive;
                 if (_this.router.url == '/login' || _this.router.url == '/project-view/home') {
                     //this.presentAlertConfirm();
@@ -1657,11 +1656,16 @@ var AppComponent = /** @class */ (function () {
                         _this.autoSync(project);
                     }
                     else {
+                        // intentially left blank
                     }
                 });
+                if (!projectsToSync) {
+                    _this.toastService.successToast('message.sync_success');
+                }
             }
             else {
                 // this.toastService.stopLoader();
+                _this.toastService.successToast('message.already_sync');
             }
         });
     };
@@ -1697,9 +1701,15 @@ var AppComponent = /** @class */ (function () {
                         }
                     });
                 });
+                if (!projectsToSync) {
+                    console.log('uptodate');
+                    _this.toastService.successToast('message.sync_success');
+                }
             }
             else {
                 // intentially left blank
+                console.log('uptodate');
+                _this.toastService.successToast('message.already_sync');
             }
         });
     };
@@ -1750,7 +1760,6 @@ var AppComponent = /** @class */ (function () {
                                     }
                                 }
                             }, function (error) {
-                                console.log(error, "error");
                                 _this.toastService.stopLoader();
                             });
                         });
@@ -1809,21 +1818,9 @@ var AppComponent = /** @class */ (function () {
         }
     };
     AppComponent.prototype.getSyncedProjects = function (syncedProjects) {
-        console.log('get synced project', syncedProjects);
         var localProjects;
         this.storage.set('myprojects', syncedProjects.data[0].projects).then(function (myprojects) {
-            console.log(myprojects, 'updated');
         });
-        // syncedProjects.data[0].projects.forEach(project => {
-        //   if(!project.isDeleted){
-        //     localProjects.forEach(localProject => {
-        //       if(localProject._id == project._id){
-        //       }
-        //     });
-        //   }
-        // });
-        //   syncedProjects.forEach(project => {
-        //  });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["NavController"]),
@@ -2892,7 +2889,6 @@ var HeaderComponent = /** @class */ (function () {
     };
     // Navigate to notification screen
     HeaderComponent.prototype.navigateToNotification = function () {
-        console.log('navigateToNotification');
         this.router.navigate(['project-view/notifications']);
     };
     HeaderComponent.prototype.goBack = function () {
@@ -3181,14 +3177,11 @@ var Login = /** @class */ (function () {
         return new Promise(function (resolve) {
             var logout_redirect_url = _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].keyCloak.logout_redirect_url;
             var logout_url = _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].app_url + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
-            console.log(logout_url, "logout_url in login service");
             var closeCallback = function (event) {
-                console.log(event, "logout event");
             };
             var browserRef = window.cordova.InAppBrowser.open(logout_url, "_blank", "zoom=no");
             browserRef.addEventListener('loadstart', function (event) {
                 if (event.url && ((event.url).indexOf(logout_redirect_url) === 0)) {
-                    console.log(event, "logout event1");
                     browserRef.removeEventListener("exit", closeCallback);
                     browserRef.close();
                     resolve();
@@ -3810,19 +3803,16 @@ var PopoverComponent = /** @class */ (function () {
                 this.project.tasks.forEach(function (task) {
                     if (task.isNew) {
                         delete task._id;
-                        console.log(task, "task");
                     }
                     if (task.subTasks && task.subTasks.length > 0) {
                         task.subTasks.forEach(function (subtask) {
                             if (subtask.isNew) {
                                 delete subtask._id;
-                                console.log(subtask, "subtask");
                             }
                         });
                     }
                 });
             }
-            console.log(this.project, "this.project");
             this.storage.get('userTokens').then(function (data) {
                 _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
                     var parsedData = JSON.parse(data._body);
@@ -3832,13 +3822,8 @@ var PopoverComponent = /** @class */ (function () {
                             refresh_token: parsedData.refresh_token,
                         };
                         _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.toastService.startLoader('Your data is syncing');
+                            _this.toastService.startLoader('Loading, please wait');
                             _this.projectService.sync(_this.project, data.access_token).subscribe(function (data) {
-                                // if (data.status == "success") {
-                                //   this.updateInLocal(this.project, data.projectDetails.data.projects[0]);
-                                //   this.getPDF(data.projectDetails.data.projects[0]._id);
-                                //   this.DismissClick();
-                                // }
                                 if (data.status == "success" || data.status == "succes") {
                                     var updatedProject = void 0;
                                     if (data.projectDetails) {
@@ -3872,6 +3857,8 @@ var PopoverComponent = /** @class */ (function () {
                                 }
                             }, function (error) {
                                 // intentially left blank
+                                _this.toastService.stopLoader();
+                                _this.toastService.errorToast(data.message);
                             });
                         });
                     }
@@ -3881,7 +3868,7 @@ var PopoverComponent = /** @class */ (function () {
             });
         }
         else {
-            this.toastService.startLoader('Loading');
+            this.toastService.startLoader('Loading, please wait');
             this.getPDF(this.project._id);
             this.DismissClick();
         }
@@ -4207,7 +4194,6 @@ var TaskBoardPipe = /** @class */ (function () {
         searchText = searchText.toLowerCase();
         return items.filter(function (it) {
             if (it) {
-                console.log(it.title);
                 return it.title.toLowerCase().includes(searchText);
             }
         });

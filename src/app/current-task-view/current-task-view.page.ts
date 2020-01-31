@@ -154,6 +154,7 @@ export class CurrentTaskViewPage implements OnInit {
   }
   public markTaskAsCompleted() {
     // this.showpopup = true;
+    // this.updateTask();
     this.task.status = 'Completed';
     if (this.task.subTasks) {
       this.task.subTasks.forEach(subtask => {
@@ -165,7 +166,6 @@ export class CurrentTaskViewPage implements OnInit {
     this.task = task;
     this.storage.set('cTask', task).then(updatedTask => {
       this.updateCurrentProject(updatedTask);
-
       this.toastService.successToast('message.marked_as_completed');
       this.showpopup = false;
       this.router.navigate(['/project-view/project-detail', this.parameter]);
@@ -249,7 +249,6 @@ export class CurrentTaskViewPage implements OnInit {
     this.upDateSubTask(subtask, 'delete');
   }
   public updateTask() {
-
     this.updateStatus();
     this.storage.set('cTask', this.task).then(ct => {
       this.updateCurrentProject(ct);
@@ -328,26 +327,20 @@ export class CurrentTaskViewPage implements OnInit {
     let value;
     const file: File = imageInput.files[0];
     this.file = file;
-    // this.file.type = file.type;
-    // let fPath = this.file.name;
     const reader = new FileReader();
     reader.onload = (event: any) => {
       value = event.target.result.split(',');
       if (type == 'image') {
         this.imageUrl = value[1];
       } else {
-        this.fileUrl = event.target.result;
+        this.task.file = {
+          url: event.target.result,
+          name: this.file.name
+        }
+        this.toastService.successToast('message.file_uploaded');
       }
     };
     reader.readAsDataURL(file);
-  }
-  public attach() {
-    this.task.imageUrl = this.imageUrl;
-    this.task.file = {
-      url: this.fileUrl,
-      name: this.file.name
-    }
-    this.updateTask();
   }
 
   openCamera() {
@@ -360,7 +353,8 @@ export class CurrentTaskViewPage implements OnInit {
       mediaType: this.camera.MediaType.PICTURE
     }
     this.camera.getPicture(options).then((imageData) => {
-      this.imageUrl = imageData;
+      this.task.imageUrl = imageData;
+      this.toastService.successToast('message.image_uploaded');
       let base64Image = 'data:image/jpeg;base64,' + imageData;
     }, (err) => {
       // Handle error
