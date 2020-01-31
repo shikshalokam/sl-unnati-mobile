@@ -45,8 +45,9 @@
         "marked_as_completed": "Task marked as completed.",
         "local_data_changes": "You have made changes in projects",
         "want_sync_before_erase": "Do you want to syc the project before erase your data",
-        "sync_success": "Project sync successfully",
+        "sync_success": "Sync Completed",
         "no_projects": "No projects to sync.",
+        "data_syncing": "Your data is syncing",
         "please_syc_before_logout": "Pelase sync the projects before logout"
     },
     "home": {
@@ -214,7 +215,7 @@
         "title": "OPEN TASKS",
         "ongoing": "Ongoing",
         "past": "Past",
-        "number_of_subtask":"Number of sub-tasks"
+        "number_of_subtask": "Number of sub-tasks"
     },
     "add_task": {
         "add_a_task": "Add a task",

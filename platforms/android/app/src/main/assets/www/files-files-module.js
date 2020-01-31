@@ -64,7 +64,7 @@ var FilesPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"'file.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"true\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <div class=\"tabs-list\" *ngIf=\"!showSkeleton\">\n    <div class=\"custom-tab\" (click)=\"selectTab('images')\" [ngClass]=\"{'active-tab': activeTab == 'images'}\">\n      {{ \"file.images\" | translate }}</div>\n    <div class=\"custom-tab\" (click)=\"selectTab('files')\" [ngClass]=\"{'active-tab':  activeTab == 'files'}\">\n      {{ \"file.files\" | translate }}\n    </div>\n  </div>\n  <div *ngIf=\"currentMyProject\" class=\"image-container\">\n    <div *ngFor=\"let task of currentMyProject.tasks\">\n      <ion-card *ngIf=\"activeTab == 'images' && (task.remarks || task.imageUrl)\">\n        <ion-card-header>\n          <h4> {{task.title}} </h4>\n        </ion-card-header>\n        <ion-card-content *ngIf=\"task.remarks && !task.imageUrl\">\n          {{task.remarks}}\n        </ion-card-content>\n        <ion-card-content *ngIf=\"task.remarks && task.imageUrl\">\n          <ion-row>\n            <ion-col size=\"6\">\n              {{task.remarks}}\n            </ion-col>\n            <ion-col size=\"6\">\n              <img src=\"{{task.imageUrl}}\">\n            </ion-col>\n          </ion-row>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n  <div *ngIf=\"currentMyProject\" class=\"file-container\">\n    <div *ngFor=\"let task of currentMyProject.tasks\">\n      <ion-card *ngIf=\"activeTab == 'files' && task.file\" style=\"border-radius: 4px;\">\n        <ion-card-header style=\"background: #e3e3e3; color: #000; padding: 10px;\">\n          <h5> {{task.title}} </h5>\n        </ion-card-header>\n        <ion-card-content style=\"padding: 0px;\">\n          <ion-card style=\"padding: 0px; border-radius: 0px;color: #000;\" >\n            <ion-grid>\n              <ion-row>\n                <ion-col style=\"min-width: 85%; margin: auto;\n                          font-weight: 500; font-size: 1.2em;\">\n                  <a href={{task.downloadLink}} target=\"blank\" style=\"color: #000;text-decoration: none; width: 100%;\" >  {{ task.file.name}} </a>\n                </ion-col>\n                <ion-col class=\"arrow-mark\">\n                  <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n                </ion-col>\n              </ion-row>\n            </ion-grid>\n          </ion-card>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"'file.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"true\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <div class=\"tabs-list\" *ngIf=\"!showSkeleton\">\n    <div class=\"custom-tab\" (click)=\"selectTab('images')\" [ngClass]=\"{'active-tab': activeTab == 'images'}\">\n      {{ \"file.images\" | translate }}</div>\n    <div class=\"custom-tab\" (click)=\"selectTab('files')\" [ngClass]=\"{'active-tab':  activeTab == 'files'}\">\n      {{ \"file.files\" | translate }}\n    </div>\n  </div>\n  <div *ngIf=\"currentMyProject\" class=\"image-container\">\n    <div *ngFor=\"let task of currentMyProject.tasks\">\n      <ion-card *ngIf=\"activeTab == 'images' && (task.remarks || task.imageUrl)\">\n        <ion-card-header>\n          <h4> {{task.title}} </h4>\n        </ion-card-header>\n        <ion-card-content *ngIf=\"task.remarks && !task.imageUrl\">\n          {{task.remarks}}\n        </ion-card-content>\n        <ion-card-content *ngIf=\"task.remarks && task.imageUrl\">\n          <ion-row>\n            <ion-col size=\"6\">\n              {{task.remarks}}\n            </ion-col>\n            <ion-col size=\"6\">\n              <img src=\"{{task.imageUrl}}\">\n            </ion-col>\n          </ion-row>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n  <div *ngIf=\"currentMyProject\" class=\"file-container\">\n    <div *ngFor=\"let task of currentMyProject.tasks\">\n      <ion-card *ngIf=\"activeTab == 'files' && task.file\" style=\"border-radius: 4px;\">\n        <ion-card-header style=\"background: #e3e3e3; color: #000; padding: 10px;\">\n          <h5> {{task.title}} </h5>\n        </ion-card-header>\n        <ion-card-content style=\"padding: 0px;\">\n          <ion-card style=\"padding: 0px; border-radius: 0px;color: #000;\" (click)=\"downloadFile(task)\">\n            <ion-grid>\n              <ion-row>\n                <ion-col style=\"min-width: 85%; margin: auto;\n                          font-weight: 500; font-size: 1.2em;\">\n                  {{ task.file.name}}\n                </ion-col>\n                <ion-col class=\"arrow-mark\">\n                  <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n                </ion-col>\n              </ion-row>\n            </ion-grid>\n          </ion-card>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>"
 
 /***/ }),
 
@@ -75,7 +75,7 @@ module.exports = "<ion-header>\n  <app-header [title]=\"'file.title' | translate
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".tabs-list {\n  position: fixed;\n  width: 100%;\n  z-index: 999; }\n\n.custom-card {\n  margin: 0px;\n  background: #fff; }\n\n.custom-card ion-card-content {\n    padding: 0px;\n    font-size: 16px;\n    color: #000; }\n\n.custom-tab {\n  width: 50%;\n  background: #fff;\n  color: #000;\n  float: left;\n  padding: 10px;\n  text-align: center;\n  font-size: 18px;\n  border-bottom: 2px solid #b23e33; }\n\n.active-tab {\n  background: #b23e33;\n  color: #fff;\n  border-radius: 6px; }\n\n.image-container {\n  margin-top: 60px; }\n\n.image-container ion-card {\n    border-radius: 1em;\n    color: #000; }\n\n.image-container ion-card ion-card-header {\n      border-bottom: 1px solid #000;\n      margin: 0px 10px;\n      padding: 10px; }\n\n.image-container ion-card ion-card-header h4 {\n        margin-top: 5px;\n        margin-bottom: 5px; }\n\n.image-container ion-card ion-card-content {\n      padding-top: 10px; }\n\n.file-container {\n  margin-top: 60px; }\n\n.file-container .arrow-mark {\n    margin: auto;\n    text-align: right;\n    font-size: 1.5em; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvZmlsZXMvZmlsZXMucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksZUFBZTtFQUNmLFdBQVc7RUFDWCxZQUFZLEVBQUE7O0FBRWQ7RUFFRSxXQUFXO0VBQ1gsZ0JBQWUsRUFBQTs7QUFIakI7SUFLRSxZQUFZO0lBQ1osZUFBZTtJQUNmLFdBQVcsRUFBQTs7QUFHYjtFQUNFLFVBQVM7RUFDVCxnQkFBZTtFQUNmLFdBQVc7RUFDVCxXQUFXO0VBQ1gsYUFBYTtFQUNiLGtCQUFrQjtFQUNsQixlQUFlO0VBQ2YsZ0NBQWdDLEVBQUE7O0FBRXBDO0VBQ0UsbUJBQW1CO0VBQ25CLFdBQVc7RUFDWCxrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxnQkFBZSxFQUFBOztBQURqQjtJQUdJLGtCQUFrQjtJQUNsQixXQUFXLEVBQUE7O0FBSmY7TUFNUSw2QkFBNkI7TUFDN0IsZ0JBQWdCO01BQ2hCLGFBQWEsRUFBQTs7QUFSckI7UUFVWSxlQUFlO1FBQ2Ysa0JBQWtCLEVBQUE7O0FBWDlCO01BZVEsaUJBQWlCLEVBQUE7O0FBSXpCO0VBRUUsZ0JBQWUsRUFBQTs7QUFGakI7SUFJSSxZQUFZO0lBQ1osaUJBQWlCO0lBQ2pCLGdCQUFnQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvZmlsZXMvZmlsZXMucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnRhYnMtbGlzdHtcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgei1pbmRleDogOTk5O1xuICB9XG4gIC5jdXN0b20tY2FyZFxuICB7XG4gICAgbWFyZ2luOiAwcHg7XG4gICAgYmFja2dyb3VuZDojZmZmO1xuICAgIGlvbi1jYXJkLWNvbnRlbnR7XG4gICAgcGFkZGluZzogMHB4O1xuICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICBjb2xvcjogIzAwMDtcbiAgICB9XG4gIH1cbiAgLmN1c3RvbS10YWJ7XG4gICAgd2lkdGg6NTAlO1xuICAgIGJhY2tncm91bmQ6I2ZmZjtcbiAgICBjb2xvcjogIzAwMDtcbiAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgcGFkZGluZzogMTBweDtcbiAgICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICAgIGZvbnQtc2l6ZTogMThweDtcbiAgICAgIGJvcmRlci1ib3R0b206IDJweCBzb2xpZCAjYjIzZTMzO1xuICB9XG4gIC5hY3RpdmUtdGFie1xuICAgIGJhY2tncm91bmQ6ICNiMjNlMzM7XG4gICAgY29sb3I6ICNmZmY7XG4gICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICB9XG5cbiAgLmltYWdlLWNvbnRhaW5lcntcbiAgICBtYXJnaW4tdG9wOjYwcHg7XG4gICAgaW9uLWNhcmR7XG4gICAgICBib3JkZXItcmFkaXVzOiAxZW07XG4gICAgICBjb2xvcjogIzAwMDtcbiAgICAgIGlvbi1jYXJkLWhlYWRlcntcbiAgICAgICAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgIzAwMDtcbiAgICAgICAgICBtYXJnaW46IDBweCAxMHB4O1xuICAgICAgICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgICAgICAgICBoNHtcbiAgICAgICAgICAgICAgbWFyZ2luLXRvcDogNXB4O1xuICAgICAgICAgICAgICBtYXJnaW4tYm90dG9tOiA1cHg7XG4gICAgICAgICAgICB9XG4gICAgICB9XG4gICAgICBpb24tY2FyZC1jb250ZW50e1xuICAgICAgICAgIHBhZGRpbmctdG9wOiAxMHB4OztcbiAgICAgIH1cbiAgICB9XG4gIH1cbiAgLmZpbGUtY29udGFpbmVyXG4gIHtcbiAgICBtYXJnaW4tdG9wOjYwcHg7XG4gICAgLmFycm93LW1hcmt7XG4gICAgICBtYXJnaW46IGF1dG87XG4gICAgICB0ZXh0LWFsaWduOiByaWdodDtcbiAgICAgIGZvbnQtc2l6ZTogMS41ZW07XG4gICAgfVxuICB9Il19 */"
+module.exports = ".tabs-list {\n  position: fixed;\n  width: 100%;\n  z-index: 999; }\n\n.custom-card {\n  margin: 0px;\n  background: #fff; }\n\n.custom-card ion-card-content {\n    padding: 0px;\n    font-size: 16px;\n    color: #000; }\n\n.custom-tab {\n  width: 50%;\n  background: #fff;\n  color: #000;\n  float: left;\n  padding: 10px;\n  text-align: center;\n  font-size: 18px;\n  border-bottom: 2px solid #b23e33; }\n\n.active-tab {\n  background: #b23e33;\n  color: #fff; }\n\n.image-container {\n  margin-top: 60px; }\n\n.image-container ion-card {\n    border-radius: 1em;\n    color: #000; }\n\n.image-container ion-card ion-card-header {\n      border-bottom: 1px solid #000;\n      margin: 0px 10px;\n      padding: 10px; }\n\n.image-container ion-card ion-card-header h4 {\n        margin-top: 5px;\n        margin-bottom: 5px; }\n\n.image-container ion-card ion-card-content {\n      padding-top: 10px; }\n\n.file-container {\n  margin-top: 60px; }\n\n.file-container .arrow-mark {\n    margin: auto;\n    text-align: right;\n    font-size: 1.5em; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvZmlsZXMvZmlsZXMucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksZUFBZTtFQUNmLFdBQVc7RUFDWCxZQUFZLEVBQUE7O0FBRWQ7RUFFRSxXQUFXO0VBQ1gsZ0JBQWUsRUFBQTs7QUFIakI7SUFLRSxZQUFZO0lBQ1osZUFBZTtJQUNmLFdBQVcsRUFBQTs7QUFHYjtFQUNFLFVBQVM7RUFDVCxnQkFBZTtFQUNmLFdBQVc7RUFDVCxXQUFXO0VBQ1gsYUFBYTtFQUNiLGtCQUFrQjtFQUNsQixlQUFlO0VBQ2YsZ0NBQWdDLEVBQUE7O0FBRXBDO0VBQ0UsbUJBQW1CO0VBQ25CLFdBQVcsRUFBQTs7QUFHYjtFQUNFLGdCQUFlLEVBQUE7O0FBRGpCO0lBR0ksa0JBQWtCO0lBQ2xCLFdBQVcsRUFBQTs7QUFKZjtNQU1RLDZCQUE2QjtNQUM3QixnQkFBZ0I7TUFDaEIsYUFBYSxFQUFBOztBQVJyQjtRQVVZLGVBQWU7UUFDZixrQkFBa0IsRUFBQTs7QUFYOUI7TUFlUSxpQkFBaUIsRUFBQTs7QUFJekI7RUFFRSxnQkFBZSxFQUFBOztBQUZqQjtJQUlJLFlBQVk7SUFDWixpQkFBaUI7SUFDakIsZ0JBQWdCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9maWxlcy9maWxlcy5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIudGFicy1saXN0e1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB3aWR0aDogMTAwJTtcbiAgICB6LWluZGV4OiA5OTk7XG4gIH1cbiAgLmN1c3RvbS1jYXJkXG4gIHtcbiAgICBtYXJnaW46IDBweDtcbiAgICBiYWNrZ3JvdW5kOiNmZmY7XG4gICAgaW9uLWNhcmQtY29udGVudHtcbiAgICBwYWRkaW5nOiAwcHg7XG4gICAgZm9udC1zaXplOiAxNnB4O1xuICAgIGNvbG9yOiAjMDAwO1xuICAgIH1cbiAgfVxuICAuY3VzdG9tLXRhYntcbiAgICB3aWR0aDo1MCU7XG4gICAgYmFja2dyb3VuZDojZmZmO1xuICAgIGNvbG9yOiAjMDAwO1xuICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICBwYWRkaW5nOiAxMHB4O1xuICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgICAgZm9udC1zaXplOiAxOHB4O1xuICAgICAgYm9yZGVyLWJvdHRvbTogMnB4IHNvbGlkICNiMjNlMzM7XG4gIH1cbiAgLmFjdGl2ZS10YWJ7XG4gICAgYmFja2dyb3VuZDogI2IyM2UzMztcbiAgICBjb2xvcjogI2ZmZjtcbiAgfVxuXG4gIC5pbWFnZS1jb250YWluZXJ7XG4gICAgbWFyZ2luLXRvcDo2MHB4O1xuICAgIGlvbi1jYXJke1xuICAgICAgYm9yZGVyLXJhZGl1czogMWVtO1xuICAgICAgY29sb3I6ICMwMDA7XG4gICAgICBpb24tY2FyZC1oZWFkZXJ7XG4gICAgICAgICAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkICMwMDA7XG4gICAgICAgICAgbWFyZ2luOiAwcHggMTBweDtcbiAgICAgICAgICBwYWRkaW5nOiAxMHB4O1xuICAgICAgICAgICAgaDR7XG4gICAgICAgICAgICAgIG1hcmdpbi10b3A6IDVweDtcbiAgICAgICAgICAgICAgbWFyZ2luLWJvdHRvbTogNXB4O1xuICAgICAgICAgICAgfVxuICAgICAgfVxuICAgICAgaW9uLWNhcmQtY29udGVudHtcbiAgICAgICAgICBwYWRkaW5nLXRvcDogMTBweDs7XG4gICAgICB9XG4gICAgfVxuICB9XG4gIC5maWxlLWNvbnRhaW5lclxuICB7XG4gICAgbWFyZ2luLXRvcDo2MHB4O1xuICAgIC5hcnJvdy1tYXJre1xuICAgICAgbWFyZ2luOiBhdXRvO1xuICAgICAgdGV4dC1hbGlnbjogcmlnaHQ7XG4gICAgICBmb250LXNpemU6IDEuNWVtO1xuICAgIH1cbiAgfSJdfQ== */"
 
 /***/ }),
 
@@ -98,6 +98,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
 /* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
 /* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
+/* harmony import */ var _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ionic-native/file-opener/ngx */ "./node_modules/@ionic-native/file-opener/ngx/index.js");
+
 
 
 
@@ -108,7 +110,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var FilesPage = /** @class */ (function () {
-    function FilesPage(createTaskService, route, platform, transfer, base64, fileChooser, file) {
+    function FilesPage(createTaskService, route, platform, transfer, base64, fileChooser, file, fileOpener) {
         var _this = this;
         this.createTaskService = createTaskService;
         this.route = route;
@@ -117,6 +119,7 @@ var FilesPage = /** @class */ (function () {
         this.base64 = base64;
         this.fileChooser = fileChooser;
         this.file = file;
+        this.fileOpener = fileOpener;
         this.activeTab = 'images';
         this.back = 'project-view/project-detail/my_projects';
         route.params.subscribe(function (params) {
@@ -135,12 +138,8 @@ var FilesPage = /** @class */ (function () {
         this.createTaskService.getProjectById(id).then(function (project) {
             if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(function (task) {
-                    console.log(task, "task");
                     if (task.imageUrl) {
                         task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl;
-                    }
-                    if (task.file) {
-                        _this.downloadFile(task);
                     }
                 });
             }
@@ -151,29 +150,22 @@ var FilesPage = /** @class */ (function () {
         this.activeTab = type;
     };
     FilesPage.prototype.downloadFile = function (task) {
-        console.log(task.file.url);
-        var downloadLink = document.createElement("a");
-        var fileName = task.file.name;
-        downloadLink.href = task.file.url;
-        downloadLink.download = fileName;
-        console.log(downloadLink, "downloadLink");
-        console.log(downloadLink.download, "downloadLink.download");
-        task.downloadLink = downloadLink.download;
-        // downloadLink.click();
-        // downloadLink.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-        // const fileName = name.replace(/\s/g, "");
-        // const fileTransfer: FileTransferObject = this.transfer.create();
-        // const url = base64Content;
-        // fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
-        //   this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
-        //     let data = base64File.split(',');
-        //     let base64Data = data;
-        //   }, (err) => {
-        //     console.log(err);
-        //   });
-        // }, (error) => {
-        //   console.log(error);
-        // });
+        var _this = this;
+        fetch(task.file.url, {
+            method: "GET"
+        }).then(function (res) { return res.blob(); }).then(function (blob) {
+            _this.file.writeFile(_this.file.externalApplicationStorageDirectory, task.file.name, blob, { replace: true }).then(function (res) {
+                _this.fileOpener.open(res.toInternalURL(), 'application/pdf').then(function (res) {
+                    console.log(res, 'sucess');
+                }).catch(function (err) {
+                    console.log(err, 'error');
+                });
+            }).catch(function (err) {
+                console.log('error in catch');
+            });
+        }).catch(function (err) {
+            console.log('error');
+        });
     };
     FilesPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -187,7 +179,8 @@ var FilesPage = /** @class */ (function () {
             _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_4__["FileTransfer"],
             _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_6__["Base64"],
             _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_8__["FileChooser"],
-            _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_7__["File"]])
+            _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_7__["File"],
+            _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_9__["FileOpener"]])
     ], FilesPage);
     return FilesPage;
 }());

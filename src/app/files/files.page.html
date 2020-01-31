@@ -40,12 +40,12 @@
           <h5> {{task.title}} </h5>
         </ion-card-header>
         <ion-card-content style="padding: 0px;">
-          <ion-card style="padding: 0px; border-radius: 0px;color: #000;" >
+          <ion-card style="padding: 0px; border-radius: 0px;color: #000;" (click)="downloadFile(task)">
             <ion-grid>
               <ion-row>
                 <ion-col style="min-width: 85%; margin: auto;
                           font-weight: 500; font-size: 1.2em;">
-                  <a href={{task.downloadLink}} target="blank" style="color: #000;text-decoration: none; width: 100%;" >  {{ task.file.name}} </a>
+                  {{ task.file.name}}
                 </ion-col>
                 <ion-col class="arrow-mark">
                   <ion-icon name="ios-arrow-forward"> </ion-icon>

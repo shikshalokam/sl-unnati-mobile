@@ -65,7 +65,6 @@ export class HeaderComponent implements OnInit {
   }
   // Navigate to notification screen
   public navigateToNotification() {
-    console.log('navigateToNotification');
     this.router.navigate(['project-view/notifications']);
   }
   public goBack() {
