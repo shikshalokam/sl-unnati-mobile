@@ -110,11 +110,29 @@ export class PopoverComponent implements OnInit {
     })
     this.DismissClick();
   }
+
+  // Dismiss popver menu 
   async DismissClick() {
+    this.popoverController.dismiss();
   }
 
+  // Sync project before share
   public syncProject() {
     if (!this.project.isSync) {
+      if (this.project.tasks && this.project.tasks.length > 0) {
+        this.project.tasks.forEach(task => {
+          if (task.isNew) {
+            delete task._id;
+          }
+          if (task.subTasks && task.subTasks.length > 0) {
+            task.subTasks.forEach(subtask => {
+              if (subtask.isNew) {
+                delete subtask._id;
+              }
+            });
+          }
+        });
+      }
       this.storage.get('userTokens').then(data => {
         this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
           let parsedData = JSON.parse(data._body);
@@ -124,30 +142,90 @@ export class PopoverComponent implements OnInit {
               refresh_token: parsedData.refresh_token,
             };
             this.storage.set('userTokens', userTokens).then(data => {
-              this.loader();
+              this.toastService.startLoader('Your data is syncing');
               this.projectService.sync(this.project, data.access_token).subscribe((data: any) => {
-                if (data.status == "failed") {
-                } else if (data.status == "success") {
-                  this.updateInLocal(this.project, data.projectDetails.data.projects[0]);
-                  this.getPDF(data.projectDetails.data.projects[0]._id);
-                  this.DismissClick();
+                // if (data.status == "success") {
+                //   this.updateInLocal(this.project, data.projectDetails.data.projects[0]);
+                //   this.getPDF(data.projectDetails.data.projects[0]._id);
+                //   this.DismissClick();
+                // }
+                if (data.status == "success" || data.status == "succes") {
+                  let updatedProject;
+                  if (data.projectDetails) {
+                    this.project.isNew = false;
+                    this.project.isSync = true;
+                    this.project.isEdited = false;
+                    data.projectDetails.data.projects[0].isStarted = this.project.isStarted;
+                    updatedProject = data.projectDetails.data.projects[0];
+                    updatedProject.isSync = true;
+                    updatedProject.isEdited = false;
+                    updatedProject.isNew = false;
+                    updatedProject.lastUpdate = this.project.lastUpdate;
+                    this.getPDF(data.projectDetails.data.projects[0]._id);
+                    this.DismissClick();
+                    this.syncUpdateInLocal(updatedProject, this.project, data.allProjects);
+                  } else {
+                    this.project.isNew = false;
+                    this.project.isSync = true;
+                    this.project.isEdited = false;
+                    data.data.isStarted = this.project.isStarted;
+                    updatedProject = data.data;
+                    updatedProject.isSync = true;
+                    updatedProject.isEdited = false;
+                    updatedProject.isNew = false;
+                    updatedProject.lastUpdate = this.project.lastUpdate;
+                    this.getPDF(data.projectDetails.data.projects[0]._id);
+                    this.DismissClick();
+                    this.syncUpdateInLocal(updatedProject, this.project, data.allProjects);
+                  }
                 }
+
               }, error => {
-                console.log('error', error);
+                // intentially left blank
               })
             })
           }
         }, error => {
-          // this.showSkeleton = false;
-          console.log(error, "error");
+          // intentially left blank
         })
       })
     } else {
-      this.loader();
+      this.toastService.startLoader('Loading');
       this.getPDF(this.project._id);
       this.DismissClick();
     }
   }
+
+  syncUpdateInLocal(project, oldProject, syncedProjects) {
+    if (project.createdType == 'by self' || project.createdType == 'by reference') {
+      this.storage.get('myprojects').then(myprojects => {
+        if (myprojects) {
+          myprojects.forEach(function (prj, i) {
+            if (prj._id == oldProject._id) {
+              myprojects[i] = project;
+            }
+          });
+        }
+        this.storage.set('myprojects', myprojects).then(myprojectsff => {
+          // get all synced projects and update in local
+        })
+      })
+    } else {
+      this.storage.get('projects').then(projects => {
+        if (projects) {
+          projects.forEach(function (prj, i) {
+            if (prj._id == oldProject._id) {
+              projects[i] = project;
+            }
+          });
+        }
+        this.storage.set('projects', projects).then(myprojectsff => {
+          // get all synced projects and update in local
+        })
+      })
+    }
+  }
+  // geting pdf file report of project and share the project
   public getPDF(id) {
     this.storage.get('userTokens').then(data => {
       this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
@@ -169,45 +247,40 @@ export class PopoverComponent implements OnInit {
                 this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
                   let data = base64File.split(',');
                   let base64Data = "data:application/pdf;base64," + data[1];
+                  this.toastService.stopLoader();
+                  this.DismissClick();
                   this.socialSharing.share("", fileName, base64Data, "").then(() => {
                   }, error => {
-                    console.log(error, "error");
+                    // intentially left blank
                   });
                 }, (err) => {
-                  console.log(err);
+                  this.toastService.stopLoader();
                 });
               }, (error) => {
-                console.log(error);
+                this.toastService.stopLoader();
               });
             }, error => {
-              this.toastService.errorToast('');
+              this.toastService.stopLoader();
             })
           }, error => {
+            this.toastService.stopLoader();
           })
         }
       })
     })
   }
 
-  async loader() {
-    const loading = await this.loadingController.create({
-      message: 'Syncing your data.',
-      duration: 500
-    });
-    await loading.present();
-    const { role, data } = await loading.onDidDismiss();
-  }
-  updateInLocal(project, oldProject) {
-    this.storage.get('myprojects').then(myprojects => {
-      if (myprojects) {
-        myprojects.forEach(function (prj, i) {
-          if (prj._id == oldProject._id) {
-            myprojects[i] = project;
-          }
-        });
-      }
-      this.storage.set('myprojects', myprojects).then(myprojects => {
-      })
-    })
-  }
+  // updateInLocal(project, oldProject) {
+  //   this.storage.get('myprojects').then(myprojects => {
+  //     if (myprojects) {
+  //       myprojects.forEach(function (prj, i) {
+  //         if (prj._id == oldProject._id) {
+  //           myprojects[i] = project;
+  //         }
+  //       });
+  //     }
+  //     this.storage.set('myprojects', myprojects).then(myprojects => {
+  //     })
+  //   })
+  // }
 }

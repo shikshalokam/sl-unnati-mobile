@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppConfigs } from "./app.config";
-import { URLSearchParams , Http} from '@angular/http';
+import { URLSearchParams, Http } from '@angular/http';
 import { ApiProvider } from './api/api';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { CurrentUserProvider } from './current-user'
@@ -101,9 +101,7 @@ export class Login {
   doLogout(): Promise<any> {
     return new Promise(function (resolve) {
       let logout_redirect_url = AppConfigs.keyCloak.logout_redirect_url;
-     // alert(logout_redirect_url + "logout_redirect_url");
       let logout_url = AppConfigs.app_url + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
-     // alert(logout_url + "logout_url");
       let closeCallback = function (event) {
       };
       let browserRef = (<any>window).cordova.InAppBrowser.open(logout_url, "_blank", "zoom=no");
@@ -120,13 +118,13 @@ export class Login {
   doOAuthStepTwo(token: string): Promise<any> {
     return new Promise(resolve => {
       const body = new URLSearchParams();
-      const params = 'grant_type=authorization_code&client_id='+AppConfigs.clientId+'&code='+token+'&redirect_uri='+AppConfigs.keyCloak.redirection_url+'&scope=offline_access'
+      const params = 'grant_type=authorization_code&client_id=' + AppConfigs.clientId + '&code=' + token + '&redirect_uri=' + AppConfigs.keyCloak.redirection_url + '&scope=offline_access'
       body.set('grant_type', "authorization_code");
       body.set('client_id', AppConfigs.clientId);
       body.set('code', token);
       body.set('redirect_uri', AppConfigs.keyCloak.redirection_url);
       body.set('scope', "offline_access");
-      const url = AppConfigs.app_url  + AppConfigs.keyCloak.getAccessToken;
+      const url = AppConfigs.app_url + AppConfigs.keyCloak.getAccessToken;
       this.http.post(url, body)
         .subscribe((data: any) => {
           let parsedData = JSON.parse(data._body);

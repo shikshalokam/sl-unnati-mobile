@@ -390,6 +390,14 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "CameraPopoverHandle"
       ]
+    },
+    {
+      "id": "cordova-plugin-file-opener2.FileOpener2",
+      "file": "plugins/cordova-plugin-file-opener2/www/plugins.FileOpener2.js",
+      "pluginId": "cordova-plugin-file-opener2",
+      "clobbers": [
+        "cordova.plugins.fileOpener2"
+      ]
     }
   ];
   module.exports.metadata = {
@@ -414,6 +422,7 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-filechooser": "1.2.0",
     "cordova-plugin-filepath": "1.5.7",
     "com-badrit-base64": "0.2.0",
-    "cordova-plugin-camera": "4.1.0"
+    "cordova-plugin-camera": "4.1.0",
+    "cordova-plugin-file-opener2": "3.0.0"
   };
 });

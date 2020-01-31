@@ -21,7 +21,7 @@ import { TaskBoardPipe } from './task-board/task-board.filter';
     HeaderComponent, NotificationCardComponent, SearchSchool, FilterPipe, TaskBoardPipe
   ],
   exports: [
-    HighchartsChartModule, HeaderComponent, NotificationCardComponent, SearchSchool, FilterPipe
+    HighchartsChartModule, HeaderComponent, NotificationCardComponent, SearchSchool, FilterPipe,TaskBoardPipe
   ]
 })
 export class SharedModule { }
