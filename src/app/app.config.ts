@@ -5,6 +5,7 @@ export const AppConfigs = {
     appName: "Unnati",
 
     // Dev urls
+
     app_url: "https://dev.shikshalokam.org",
     api_url: "https://devhome.shikshalokam.org",
     api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
@@ -19,20 +20,7 @@ export const AppConfigs = {
         getAllNotifications: "/notifications/in-app/list",
         registerDevice: "/notifications/push/registerDevice"
     },
-    //AWS Prod Urls
-    // app_url: "https://bodh.shikshalokam.org",
-    // api_url: "https://api.shikshalokam.org",
-    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
-    // clientId: "sl-ionic-connect",
-    // environment: "Production",
-    // notification: {
-    //     kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
-    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
-    //     markAsRead: "notifications/in-app/markAsRead",
-    //     getAllNotifications: "/notifications/in-app/list",
-    // registerDevice: "notifications/push/registerDevice"
-    // },
+
     // QA
     // app_url: "https://qa.shikshalokam.org",
     // api_url: "https://qahome.shikshalokam.org",
@@ -47,6 +35,22 @@ export const AppConfigs = {
     //     getAllNotifications: "/notifications/in-app/list",
     //     registerDevice: "/notifications/push/registerDevice"
     // },
+
+    //AWS Prod Urls
+    // app_url: "https://bodh.shikshalokam.org",
+    // api_url: "https://api.shikshalokam.org",
+    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    // clientId: "sl-ionic-connect",
+    // environment: "Production",
+    // notification: {
+    //     kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
+    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
+    //     markAsRead: "notifications/in-app/markAsRead",
+    //     getAllNotifications: "/notifications/in-app/list",
+    // registerDevice: "notifications/push/registerDevice"
+    // },
+
 
 
     //Staging Urls
@@ -68,7 +72,7 @@ export const AppConfigs = {
     keyCloak: {
         getAccessToken: "/auth/realms/sunbird/protocol/openid-connect/token",
         redirection_url: "http://localhost:8100/",
-        logout_redirect_url: "http://localhost:8000/oauthLogoutcallback"
+        logout_redirect_url: "http://localhost:8100/project-view/home"
     },
     survey: {
         submission: "/submissions/make/",

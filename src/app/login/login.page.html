@@ -1,12 +1,15 @@
 <ion-content class="ion-padding" *ngIf="show">
+
+
+
+  <!-- <iframe style="height: 600px;
+    padding-left: 30px;
+    padding-right: 30px;" *ngIf="showLogin"
+    src="https://dev.shikshalokam.org/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=sl-ionic-connect&redirect_uri=http://localhost:8100/project-view/home"></iframe> -->
+
   <!-- On boarding screens -->
-  <ion-slides
-    pager="true"
-    [options]="slideOpts"
-    style="min-height: 100%;"
-    (ionSlidePrevEnd)="slideDidChangePrev($event)"
-    (ionSlideNextEnd)="slideDidChangeNext($event)"
-  >
+  <ion-slides pager="true" [options]="slideOpts" style="min-height: 100%;"
+    (ionSlidePrevEnd)="slideDidChangePrev($event)" (ionSlideNextEnd)="slideDidChangeNext($event)">
     <ion-slide *ngIf="veryFirstTime">
       <ion-grid>
         <ion-row>
@@ -46,10 +49,7 @@
     <ion-slide *ngIf="!veryFirstTime">
       <ion-grid style="margin-top: 50%;">
         <ion-col>
-          <ion-icon
-            name="ios-key"
-            style="font-size: 140px;color: #777;"
-          ></ion-icon>
+          <ion-icon name="ios-key" style="font-size: 140px;color: #777;"></ion-icon>
         </ion-col>
         <ion-col>
           <br />
@@ -60,8 +60,8 @@
                 LOGIN
                 <span>
                   <ion-icon name="ios-log-in" style="vertical-align: middle;">
-                  </ion-icon
-                ></span>
+                  </ion-icon>
+                </span>
               </h1>
             </div>
           </a>
@@ -69,20 +69,13 @@
       </ion-grid>
     </ion-slide>
   </ion-slides>
+
 </ion-content>
 <ion-footer class="ion-footer-custom" *ngIf="show && veryFirstTime">
-  <ion-button
-    *ngIf="buttonTitle == 'Skip'"
-    expand="block"
-    (click)="loginClick()"
-  >
+  <ion-button *ngIf="buttonTitle == 'Skip'" expand="block" (click)="loginClick()">
     {{ buttonTitle }}
   </ion-button>
-  <ion-button
-    *ngIf="buttonTitle == 'Get started'"
-    class="brdr-radius-30"
-    (click)="loginClick()"
-  >
+  <ion-button *ngIf="buttonTitle == 'Get started'" class="brdr-radius-30" (click)="loginClick()">
     {{ buttonTitle }}
   </ion-button>
 </ion-footer>

@@ -14,6 +14,7 @@ import { ReportsService } from '../reports/reports.service';
 import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
+import {ToastService} from '../toast.service'
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -29,7 +30,7 @@ export class HomePage implements OnInit {
   tiles = [
     { title: "create project", icon: 'assets/images/homeTiles/createproject.png', url: '/project-view/create-project' },
     { title: "library", icon: 'assets/images/homeTiles/library.png', url: '/project-view/library' },
-    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '' },
+    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '' }, // /project-view/task-board
     { title: "reports", icon: 'assets/images/homeTiles/reports.png', url: '/project-view/my-reports/last-month-reports' }
   ]
   activeProjects = [];
@@ -53,7 +54,8 @@ export class HomePage implements OnInit {
     public networkService: NetworkService,
     public menuCtrl: MenuController,
     public reportsService: ReportsService,
-    public mySchoolsService: MyschoolsService) {
+    public mySchoolsService: MyschoolsService,
+    public toastService:ToastService) {
     this.menuCtrl.enable(true);
     homeService.activeProjectLoad.subscribe(data => {
       if (data == 'activeProjectLoad') {
@@ -157,6 +159,8 @@ export class HomePage implements OnInit {
                     project.programName = programs.programs.name;
                     if (project.createdType == 'by self' || project.createdType == 'by reference') {
                       myProjects.push(project);
+                    } else {
+                      project.toDisplay = true;
                     }
                   });
                 });
@@ -238,7 +242,7 @@ export class HomePage implements OnInit {
       if (myProjects) {
         myProjects.forEach(myProject => {
           if (count < 2) {
-            if (myProject.isStarted) {
+            if (myProject.isStarted && !myProject.isDeleted) {
               ap.push(myProject);
               count = count + 1;
             }
@@ -254,11 +258,12 @@ export class HomePage implements OnInit {
   public navigate(url) {
     this.homeService.clearData();
     if (url == '/project-view/create-project') {
-      // || url == '/project-view/library'
       this.homeService.clearData();
       this.router.navigate([url, 'yes']);
     } else if (url != '') {
       this.router.navigate([url]);
+    }else if(url == ''){
+      this.toastService.errorToast('message.comingsoon');
     }
   }
   public viewMore() {

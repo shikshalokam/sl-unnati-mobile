@@ -4,46 +4,72 @@
   </app-header>
 </ion-header>
 <ion-content padding style="--background: rgb(247, 247, 247);">
-  <ion-item class="search-bar-custom" style="margin:19px 5px 15px 5px;">
-    <ion-icon name="search" item-left color="dark"></ion-icon>
-    <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
-  </ion-item>
-  <ion-grid>
-    <ion-row class="category-box">
-      <ion-col size="3">
-        <img src="{{categoryHead?.icon}}" class="cat-icon">
-      </ion-col>
-      <ion-col size="9">
-        <h4> {{categoryHead?.title}}</h4>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <ion-card class="category-projects" *ngFor="let project of projects | searchProjects: searchInput" (click)="projectView(project)">
-    <ion-card-header>
-      <ion-row>
-        <ion-col size="4" class="label-box">
-          {{'library_view.project_name'| translate}}
+  <div *ngIf="!showSkeleton">
+    <ion-item class="search-bar-custom" style="margin:19px 5px 15px 5px;">
+      <ion-icon name="search" item-left color="dark"></ion-icon>
+      <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row class="category-box">
+        <ion-col size="3">
+          <img src="{{categoryHead?.icon}}" class="cat-icon">
         </ion-col>
-        <ion-col size="8" class="val-box">
-          {{project.title}}
+        <ion-col size="9">
+          <h4> {{categoryHead?.title}}</h4>
         </ion-col>
       </ion-row>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-row>
-        <ion-col size="4" class="label-box">
-          {{'library_view.goal'| translate}}
-        </ion-col>
-        <ion-col size="8" class="val-box">
-          {{project.goal}}
-        </ion-col>
-      </ion-row>
-    </ion-card-content>
-  </ion-card>
-  <ion-card class="category-projects" *ngIf="( projects | searchProjects: searchInput).length == 0">
-    <div class="no-results">
-      No Projects available.
+    </ion-grid>
+    <div *ngFor="let project of projects | searchProjects: searchInput">
+      <ion-card class="category-projects" *ngIf="!project.isDeleted">
+        <ion-card-header>
+          <ion-row>
+            <ion-col size="4" class="label-box" (click)="projectView(project)">
+              {{'library_view.project_name'| translate}}
+            </ion-col>
+            <ion-col size="7" class="val-box" (click)="projectView(project)" style="padding-left:0px;">
+              {{project.title}}
+            </ion-col>
+            <ion-col size="1">
+              <ion-icon *ngIf="catType === 'my_projects'" name="more" class="popover-menu"
+                (click)="showMenu($event, project)">
+              </ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-card-header>
+        <ion-card-content (click)="projectView(project)">
+          <ion-row>
+            <ion-col size="4" class="label-box">
+              {{'library_view.goal'| translate}}
+            </ion-col>
+            <ion-col size="8" class="val-box">
+              {{project.goal}}
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
     </div>
-  </ion-card>
-  <div style="height: 30px;"> </div>
+    <ion-card class="category-projects" *ngIf="( projects | searchProjects: searchInput).length == 0">
+      <div class="no-results">
+        No Projects available.
+      </div>
+    </ion-card>
+    <div style="height: 30px;"> </div>
+  </div>
+  <!-- loader -->
+  <div *ngIf="showSkeleton">
+    <ion-card>
+      <ion-card-content class="skeleton-card-content">
+        <ion-card *ngFor="let skeleton of skeletons">
+          <ion-card-content class="skeleton-card-content">
+            <p>
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <!-- loader ends here -->
 </ion-content>

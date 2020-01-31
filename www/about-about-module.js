@@ -64,7 +64,7 @@ var AboutPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header\n    [title]=\"'about.title' | translate\"\n    [showMenu]=\"false\"\n    [showBack]=\"true\"\n    [isGoBack]=\"back\"\n    [noBorder]=\"false\"\n  >\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <ion-list>\n    <h3>{{ \"about.app_info\" | translate }}</h3>\n  </ion-list>\n  <div style=\"text-align:center;\">\n    <img src=\"../assets/icon/unnati-prod.png\" style=\"width: 100px;\" />\n  </div>\n  <ion-list>\n    {{ \"about.app_name\" | translate }} : {{ infoData.app_name }}\n  </ion-list>\n  <ion-list>\n    {{ \"about.app_version\" | translate }} : {{ infoData.app_version }}\n  </ion-list>\n  <ion-list *ngIf=\"userDetails\">\n    {{ \"about.user\" | translate }} : {{ userDetails.preferred_username }}\n  </ion-list>\n  <ion-button expand=\"block\" color=\"danger\" (click)=\"logout()\"\n    ><ion-icon name=\"trash\"></ion-icon\n    >{{ \"button.erase_data\" | translate }}</ion-button\n  >\n</ion-content>\n"
+module.exports = "<ion-header>\n  <app-header [title]=\"'about.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <ion-list>\n    <h3>{{ \"about.app_info\" | translate }}</h3>\n  </ion-list>\n  <div style=\"text-align:center;\">\n    <img src=\"../assets/icon/unnati-prod.png\" style=\"width: 100px;\" />\n  </div>\n  <ion-list>\n    {{ \"about.app_name\" | translate }} : {{ infoData.app_name }}\n  </ion-list>\n  <ion-list>\n    {{ \"about.app_version\" | translate }} : {{ infoData.app_version }}\n  </ion-list>\n  <ion-list *ngIf=\"userDetails\">\n    {{ \"about.user\" | translate }} : {{ userDetails.preferred_username }}\n  </ion-list>\n  <ion-button expand=\"block\" color=\"danger\" (click)=\"showConfirmAlert()\">\n    <ion-icon name=\"trash\"></ion-icon>{{ \"button.erase_data\" | translate }}\n  </ion-button>\n</ion-content>"
 
 /***/ }),
 
@@ -101,6 +101,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! jwt-decode */ "./node_modules/jwt-decode/lib/index.js");
 /* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(jwt_decode__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+/* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+
+
+
+
 
 
 
@@ -113,7 +121,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AboutPage = /** @class */ (function () {
-    function AboutPage(storage, router, badge, networkService, login, network, currentUser) {
+    function AboutPage(storage, router, badge, networkService, login, network, currentUser, alertController, homeService, ToastService, translateService) {
         var _this = this;
         this.storage = storage;
         this.router = router;
@@ -122,6 +130,10 @@ var AboutPage = /** @class */ (function () {
         this.login = login;
         this.network = network;
         this.currentUser = currentUser;
+        this.alertController = alertController;
+        this.homeService = homeService;
+        this.ToastService = ToastService;
+        this.translateService = translateService;
         this.connected = false;
         this.back = "project-view/home";
         this.infoData = {
@@ -177,13 +189,66 @@ var AboutPage = /** @class */ (function () {
             this.router.navigateByUrl('/login');
         }
     };
+    AboutPage.prototype.checkLocalData = function () {
+        var isDirty = false;
+    };
+    AboutPage.prototype.showConfirmAlert = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var alertTexts, alert;
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.translateService.get(['message.local_data_changes'], ['message.please_syc_before_logout']).subscribe(function (texts) {
+                            alertTexts = texts;
+                        });
+                        return [4 /*yield*/, this.alertController.create({
+                                header: alertTexts['message.local_data_changes'],
+                                message: alertTexts['message.want_sync_before_erase'],
+                                buttons: [
+                                    {
+                                        text: 'Logout',
+                                        role: 'cancel',
+                                        cssClass: 'secondary',
+                                        handler: function (blah) {
+                                            _this.logout();
+                                        }
+                                    },
+                                    {
+                                        text: 'Okay',
+                                        handler: function () {
+                                            // this.homeService.syncProjects();
+                                        }
+                                    }
+                                ]
+                            })];
+                    case 1:
+                        alert = _a.sent();
+                        return [4 /*yield*/, alert.present()];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     AboutPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-about',
             template: __webpack_require__(/*! ./about.page.html */ "./src/app/about/about.page.html"),
             styles: [__webpack_require__(/*! ./about.page.scss */ "./src/app/about/about.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_8__["Storage"], _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_10__["Badge"], _network_service__WEBPACK_IMPORTED_MODULE_2__["NetworkService"], _login_service__WEBPACK_IMPORTED_MODULE_7__["Login"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_4__["Network"], _current_user__WEBPACK_IMPORTED_MODULE_5__["CurrentUserProvider"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_8__["Storage"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"],
+            _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_10__["Badge"],
+            _network_service__WEBPACK_IMPORTED_MODULE_2__["NetworkService"],
+            _login_service__WEBPACK_IMPORTED_MODULE_7__["Login"],
+            _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_4__["Network"],
+            _current_user__WEBPACK_IMPORTED_MODULE_5__["CurrentUserProvider"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_11__["AlertController"],
+            _home_home_service__WEBPACK_IMPORTED_MODULE_13__["HomeService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_14__["ToastService"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_12__["TranslateService"]])
     ], AboutPage);
     return AboutPage;
 }());

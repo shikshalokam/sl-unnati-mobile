@@ -4,12 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
+import {SharedModule} from '../shared.module';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { HomePage } from './home.page';
-import {SharedModule} from '../shared.module';
+
 @NgModule({
   imports: [
-    CommonModule,SharedModule,
+    CommonModule,
+    SharedModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild([

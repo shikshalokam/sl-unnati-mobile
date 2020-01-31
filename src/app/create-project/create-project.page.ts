@@ -6,6 +6,7 @@ import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { HomeService } from '../home/home.service';
+import { ToastService } from '../toast.service';
 @Component({
   selector: 'app-create-project',
   templateUrl: './create-project.page.html',
@@ -39,7 +40,8 @@ export class CreateProjectPage implements OnInit {
     public datepipe: DatePipe,
     public datePicker: DatePicker,
     public storage: Storage,
-    public homeService: HomeService
+    public homeService: HomeService,
+    public toastService: ToastService
   ) {
     this.homeService.clearMyProject.subscribe(data => {
       this.prepareForm();
@@ -95,13 +97,15 @@ export class CreateProjectPage implements OnInit {
       date => {
         if (type == 'sd') {
           this.project.startDate = this.datepipe.transform(new Date(date));
-          this.startDate = date;
+          // this.startDate = date;
+          this.startDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
           if (this.project.endDate) {
             this.checkDate();
           }
         } else if (type == "ed") {
           this.project.endDate = this.datepipe.transform(new Date(date));
-          this.endDate = date;
+          // this.endDate = date;
+          this.endDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
           if (this.project.startDate) {
             this.checkDate();
           } else {
@@ -114,16 +118,16 @@ export class CreateProjectPage implements OnInit {
   }
   // validate date
   public checkDate() {
-    this.startDate = this.datepipe.transform(new Date(this.project.startDate));
-    this.endDate = this.datepipe.transform(new Date(this.project.endDate));
-    if (new Date(this.startDate) <= new Date(this.endDate)) {
+    let projectStartDate = this.datepipe.transform(new Date(this.project.startDate));
+    let projectEndDate = this.datepipe.transform(new Date(this.project.endDate));
+    if (new Date(projectStartDate) <= new Date(projectEndDate)) {
       this.isValidDate = true;
-      let sDay = new Date(this.startDate).getDate();
-      let sMonth = new Date(this.startDate).getMonth();
-      let sYear = new Date(this.startDate).getFullYear();
-      let eDay = new Date(this.endDate).getDate();
-      let eMonth = new Date(this.endDate).getMonth();
-      let eYear = new Date(this.endDate).getFullYear();
+      let sDay = new Date(projectStartDate).getDate();
+      let sMonth = new Date(projectStartDate).getMonth();
+      let sYear = new Date(projectStartDate).getFullYear();
+      let eDay = new Date(projectEndDate).getDate();
+      let eMonth = new Date(projectEndDate).getMonth();
+      let eYear = new Date(projectEndDate).getFullYear();
       var startDate = moment([sYear, sMonth, sDay]);
       var endDate = moment([eYear, eMonth, eDay]);
       let diffInMonths = endDate.diff(startDate, 'months');
@@ -136,10 +140,9 @@ export class CreateProjectPage implements OnInit {
       } else if (diffInYears) {
         this.project.duration = diffInYears + ' years';
       }
-      this.startDate = this.datepipe.transform(new Date(this.project.startDate), "dd-MM-yyyy");
-      this.endDate = this.datepipe.transform(new Date(this.project.endDate), "dd-MM-yyyy");
     } else {
       this.isValidDate = false;
+
     }
   }
   // Create project
@@ -147,7 +150,7 @@ export class CreateProjectPage implements OnInit {
     /** if (this.createProject.status == "INVALID" || !this.isValidDate || selectedCat.length == 0) {
      New UI for Categories.
       *  */
-    if (this.createProject.status == "INVALID") {
+    if (this.createProject.status == "INVALID" || !this.isValidDate) {
       this.markLabelsAsInvalid = true;
     } else {
       this.markLabelsAsInvalid = false;
@@ -169,6 +172,7 @@ export class CreateProjectPage implements OnInit {
             myProjects.push(this.project);
             this.storage.set('myprojects', myProjects).then(myProjects => {
               this.storage.set('newcreatedproject', this.project).then(cmp => {
+                this.toastService.successToast('message.project_is_created');
                 this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
               })
             })
@@ -184,6 +188,7 @@ export class CreateProjectPage implements OnInit {
                   project.startDate = this.project.startDate;
                   this.storage.set('myprojects', myProjectsList).then(myProjects => {
                     this.storage.set('newcreatedproject', this.project).then(cmp => {
+                      this.toastService.successToast('message.project_is_created');
                       this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                     })
                   })
@@ -197,6 +202,7 @@ export class CreateProjectPage implements OnInit {
           data.push(this.project);
           this.storage.set('myprojects', data).then(myProjects => {
             this.storage.set('newcreatedproject', this.project).then(cmp => {
+              this.toastService.successToast('message.project_is_created');
               this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
             })
           })

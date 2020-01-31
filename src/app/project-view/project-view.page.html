@@ -9,14 +9,14 @@
       <img src="assets/images/bottom-tab/projects.png" class="btm-tab-img">
       <ion-label>{{ "Projects" | translate }}</ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="projects" (click)="selectTab('projects_tab')">
+    <ion-tab-button  (click)="navigateToNewsFeed()">
     </ion-tab-button>
     <ion-tab-button tab="my-schools" (click)="selectTab('schools_tab')">
-      <img src="assets/images/bottom-tab/schools.png" class="btm-tab-img">
+      <img src="assets/images/bottom-tab/baseline-domain.svg" class="btm-tab-img">
       <ion-label>{{ "schools_tab" | translate }}</ion-label>
     </ion-tab-button>
     <ion-tab-button routerLink="/project-view/my-reports/last-month-reports"  (click)="selectTab('reports_tab')">
-      <img src="assets/images/bottom-tab/reports.png" class="btm-tab-img">
+      <img src="assets/images/bottom-tab/insert_chart.svg" class="btm-tab-img">
       <ion-label>{{ "reports_tab" | translate }}</ion-label>
     </ion-tab-button>
   </ion-tab-bar>

@@ -1,59 +1,77 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CategoryViewService } from './category.view.service';
-import {Storage} from '@ionic/storage';
-import {ApiProvider} from '../api/api';
+import { Storage } from '@ionic/storage';
+import { ApiProvider } from '../api/api';
+import { PopoverController } from '@ionic/angular';
+import { PopoverComponent } from '../popover/popover.component';
+
 @Component({
   selector: 'app-category-view',
   templateUrl: './category-view.page.html',
   styleUrls: ['./category-view.page.scss'],
 })
-export class CategoryViewPage implements OnInit {
+export class CategoryViewPage {
   back = 'project-view/library'
   projects;
   searchInput;
   templates;
   categoryHead;
   catType;
-  constructor(public rout: ActivatedRoute, 
+  showSkeleton: boolean = false;
+  skeletons = [{}, {}, {}, {}, {}, {}];
+  constructor(public rout: ActivatedRoute,
     public categaryService: CategoryViewService,
-    public storage:Storage,
-    public apiProvider:ApiProvider,
-    public router:Router) {
+    public storage: Storage,
+    public apiProvider: ApiProvider,
+    public router: Router,
+    public popoverController: PopoverController,
+  ) {
+    categaryService.deleteEvent.subscribe(value => {
+      if (this.catType == 'my_projects') {
+        this.categaryService.getMyProjects().then((myProjects: any) => {
+          if (myProjects) {
+            myProjects = this.getSortData(myProjects);
+            myProjects.forEach(element => {
+            });
+            this.projects = myProjects;
+          }
+        }, error => {
+          this.showSkeleton = false;
+        })
+      }
+    })
     rout.params.subscribe(param => {
-      this.catType =param.cat;
+      this.catType = param.cat;
       switch (param.cat) {
         case 'my_projects': {
-          //statements; 
           this.categoryHead = {
-            icon:'assets/images/libraryTiles/myprojects.png',
-            title:'my projects'
+            icon: 'assets/images/libraryTiles/myprojects.png',
+            title: 'my projects'
           }
           this.getMyProjects();
           break;
         }
         case 'teacher': {
-          //statements; 
           this.categoryHead = {
-            icon:'assets/images/libraryTiles/teacher.png',
-            title:'teacher'
+            icon: 'assets/images/libraryTiles/teacher.png',
+            title: 'teacher'
           }
           this.getTemplates('Teacher');
           break;
         }
         case 'students': {
-          //statements; 
           this.categoryHead = {
-            icon:'assets/images/libraryTiles/students.png',
-            title:'students'
+            icon: 'assets/images/libraryTiles/students.png',
+            title: 'students'
           }
           this.getTemplates('Student');
           break;
         }
         case 'community': {
           this.categoryHead = {
-            icon:'assets/images/libraryTiles/community.png',
-            title:'community'
+            icon: 'assets/images/libraryTiles/community.png',
+            title: 'community'
           }
           this.getTemplates('Community');
           //statements; 
@@ -62,16 +80,16 @@ export class CategoryViewPage implements OnInit {
         case 'school_process': {
           //statements; 
           this.categoryHead = {
-            icon:'assets/images/libraryTiles/sp.png',
-            title:'school process'
+            icon: 'assets/images/libraryTiles/sp.png',
+            title: 'school process'
           }
           this.getTemplates('SchoolProcess');
           break;
         }
         case 'infrastructure': {
           this.categoryHead = {
-            icon:'assets/images/libraryTiles/infrastructure.png',
-            title:'infrastructure'
+            icon: 'assets/images/libraryTiles/infrastructure.png',
+            title: 'infrastructure'
           }
           this.getTemplates('infrastructure');
           //statements; 
@@ -79,16 +97,16 @@ export class CategoryViewPage implements OnInit {
         }
         case 'education_leader': {
           this.categoryHead = {
-            icon:'assets/images/libraryTiles/el.png',
-            title:'education leader'
+            icon: 'assets/images/libraryTiles/el.png',
+            title: 'education leader'
           }
           this.getTemplates('EducationLeader');
           break;
         }
         case 'other': {
           this.categoryHead = {
-            icon:'assets/images/libraryTiles/others.png',
-            title:'others'
+            icon: 'assets/images/libraryTiles/others.png',
+            title: 'others'
           }
           this.getTemplates('Other');
           break;
@@ -97,25 +115,17 @@ export class CategoryViewPage implements OnInit {
     })
   }
   bgcolor = '#f7f7f7';
-
-  ionViewDidEnter() {
-    if(this.catType == 'my_projects')
-    {
-      this.getMyProjects();
-    }
-  }
-  ngOnInit() {
-  }
   public getMyProjects() {
-    this.categaryService.getMyProjects().then((myProjects:any) => {
+    this.showSkeleton = true;
+    this.categaryService.getMyProjects().then((myProjects: any) => {
       if (myProjects) {
         myProjects = this.getSortData(myProjects);
-        // myProjects.sort((val1, val2)=> {return new Date(val2.lastUpdate) - new 
-        //   Date(val1.lastUpdate)})
-        myProjects.forEach(element => {
-        });
-        this.projects=myProjects;
+        this.projects = myProjects;
+        this.showSkeleton = false;
       }
+      this.showSkeleton = false;
+    }, error => {
+      this.showSkeleton = false;
     })
   }
   getSortData(myProjects) {
@@ -123,18 +133,30 @@ export class CategoryViewPage implements OnInit {
       return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
     });
   }
-  public projectView(project)
-  {
-    this.storage.set('projectToBeView',project).then(project =>{
-      this.router.navigate(['/project-view/project-detail',this.catType])
+  public projectView(project) {
+    this.storage.set('projectToBeView', project).then(project => {
+      this.router.navigate(['/project-view/project-detail', this.catType])
     })
   }
-  public getTemplates(type)
-  {
+  public getTemplates(type) {
+    this.showSkeleton = true;
     this.categaryService.getTemplates(type).then(templates => {
       if (templates) {
-        this.projects=templates;
+        this.projects = templates;
       }
+      this.showSkeleton = false;
+    }, error => {
+      this.showSkeleton = false;
     })
+  }
+
+  async showMenu(ev: any, project) {
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      componentProps: { project: project },
+      event: ev,
+      translucent: true
+    });
+    return await popover.present();
   }
 }

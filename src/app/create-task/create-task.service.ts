@@ -14,7 +14,24 @@ export class CreateTaskService {
                         return this.project = project;
                     }
                 });
+                if (!this.project) {
+                    return this.storage.get('projects').then(projectList => {
+                        projectList[0].projects.forEach(project => {
+                            if (project._id == projectId) {
+                                return this.project = project;
+                            }
+                        });
+                    })
+                }
                 return this.project;
+            } else {
+                return this.storage.get('projects').then(projectList => {
+                    projectList[0].projects.forEach(project => {
+                        if (project._id == projectId) {
+                            return this.project = project;
+                        }
+                    });
+                })
             }
         })
     }

@@ -15,17 +15,23 @@ import { NgZone } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { ApiProvider } from './api/api';
 import { ProjectService } from '../app/project-view/project.service';
+import { HomeService } from './home/home.service';
+import { ToastService } from './toast.service';
+import { LoadingController } from '@ionic/angular';
+
 // import { FcmProvider } from './fcm';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
   @ViewChild(NavController) nav: NavController;
   @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
   lastTimeBackPress = 0;
   timePeriodToExit = 2000;
   subscription: Subscription;
+  loading;
   // 3600000
   interval = interval(3600000);
   public title;
@@ -51,14 +57,22 @@ export class AppComponent {
     public modalController: ModalController, public zone: NgZone,
     public route: ActivatedRoute,
     public projectService: ProjectService,
-    public api: ApiProvider
+    public api: ApiProvider,
+    public homeService: HomeService,
+    public loadingController: LoadingController,
+    public toastService: ToastService
   ) {
+    this.homeService.tobeSync.subscribe(value => {
+      this.prepareProjectToSync();
+      this.prepareMappedProjectToSync();
+      // this.toastService.loadingController.dismiss();
+    })
     this.loginService.emit.subscribe(value => {
       this.loggedInUser = value;
       if (this.loggedInUser) {
         this.subscription = this.interval.subscribe(val => {
           this.prepareProjectToSync();
-          this.prepareMappedProjectToSync(); 
+          this.prepareMappedProjectToSync();
         });
         this.menuCtrl.enable(true, 'unnati');
         this.loggedInUser = value;
@@ -67,6 +81,11 @@ export class AppComponent {
             title: 'Home',
             url: '/project-view/home',
             icon: 'home'
+          },
+          {
+            title: 'Sync',
+            icon: 'sync',
+            url: '',
           },
           {
             title: 'About',
@@ -125,7 +144,6 @@ export class AppComponent {
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
-        // console.log(this.router.url, "this.router.url", s, "S");
         let isOpened = this.tasksService.isActive;
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
           //this.presentAlertConfirm();
@@ -133,11 +151,11 @@ export class AppComponent {
         } else if (this.router.url == '/project-view/notifications' || this.router.url == '/project-view/newsfeed' || this.router.url == '/project-view/about' ||
           this.router.url == '/project-view/reports' || this.router.url == '/project-view/my-schools' ||
           this.router.url == '/project-view/projects' ||
-          this.router.url == '/project-view/library' || s[1].path == 'create-project') {
+          this.router.url == '/project-view/library' || s[1].path == 'create-project' || this.router.url == '/project-view/task-board') {
           this.router.navigateByUrl('project-view/home');
         } else if (this.router.url == '/project-view/task-view' && isOpened === 'false') {
           this.router.navigateByUrl('project-view/detail');
-          isOpened = 'false'
+          isOpened = 'false';
         }
         else if (this.router.url == '/project-view/my-reports/last-month-reports' || this.router.url == '/project-view/my-reports/last-quarter-reports' || this.router.url == '/my-reports/last-month-reports' || this.router.url == '/my-reports/last-quarter-reports') {
           this.router.navigateByUrl('project-view/home');
@@ -160,7 +178,7 @@ export class AppComponent {
         } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "cp")) {
           this.router.navigateByUrl('project-view/create-task/' + s[2].path + '/' + s[3].path);
         }
-        else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd")) {
+        else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd") || s[1].path == "files") {
           this.router.navigateByUrl('project-view/project-detail');
         } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "pd")) {
           this.router.navigateByUrl('project-view/project-detail');
@@ -239,8 +257,16 @@ export class AppComponent {
       });
     }
   }
+
+  public navigate(url, title) {
+    if (title == 'Sync') {
+      this.prepareProjectToSync();
+      this.prepareMappedProjectToSync();
+    } else if (url) {
+      this.router.navigate([url]);
+    }
+  }
   async presentAlertCheckbox() {
-    //let currentLang = localStorage.getItem("lang");
     let language: string = this.translate.currentLang;
     let selectLan;
     this.translate.get('select_languages').subscribe((text: string) => {
@@ -315,49 +341,8 @@ export class AppComponent {
     });
   }
 
-  async closeAppPopUP() {
-    const alert = await this.alertController.create({
-      header: 'App termination',
-      message: 'Do you want to close the app?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary, custom-btn',
-          handler: (blah) => {
-          }
-        }, {
-          cssClass: 'secondary, custom-btn',
-          text: 'Close app',
-          handler: () => {
-            navigator['app'].exitApp();
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
-
-  async presentAlertConfirm() {
-    const alert = await this.alertController.create({
-      // header: 'Confirm!',
-      message: 'Are you sure you want to exit the app?',
-      buttons: [{
-        text: 'Cancel',
-        role: 'cancel',
-        cssClass: 'secondary',
-        handler: (blah) => { }
-      }, {
-        text: 'Close App',
-        handler: () => {
-          navigator['app'].exitApp();
-        }
-      }]
-    });
-    await alert.present();
-  }
-
   public prepareProjectToSync() {
+    let projectsToSync: boolean = false;
     this.storage.get('myprojects').then(myProjects => {
       if (myProjects && navigator.onLine) {
         myProjects.forEach(project => {
@@ -365,6 +350,7 @@ export class AppComponent {
             if (project.isSync) {
               project.createdType = '';
             }
+            projectsToSync = true;
             if (project.tasks && project.tasks.length > 0) {
               project.tasks.forEach(task => {
                 if (task.isNew && task._id) {
@@ -381,39 +367,60 @@ export class AppComponent {
             }
             this.autoSync(project);
           } else {
+            // intentially left blank
           }
         })
+        if (!projectsToSync) {
+          this.toastService.successToast('message.sync_success');
+        }
+      } else {
+        // this.toastService.stopLoader();
+        this.toastService.successToast('message.already_sync');
       }
     })
   }
   public prepareMappedProjectToSync() {
+    let projectsToSync: boolean = false;
     this.storage.get('projects').then(myProjects => {
-      if (myProjects && navigator.onLine) {
-        myProjects.forEach(project => {
-          if (project.isEdited) {
-            if (project.tasks && project.tasks.length > 0) {
-              project.tasks.forEach(task => {
-                if (task.isNew && task._id) {
-                  delete task._id;
-                }
-                if (task.subTasks && task.subTasks.length > 0) {
-                  task.subTasks.forEach(subtasks => {
-                    if (subtasks.isNew && subtasks._id) {
-                      delete subtasks._id;
-                    }
-                  })
-                }
-              });
+      if (myProjects) {
+        myProjects.forEach(projectList => {
+          projectList.projects.forEach(project => {
+            if (project.isEdited && !project.createdType && !project.toDisplay) {
+              project.createdType = '';
+              projectsToSync = true;
+              if (project.tasks && project.tasks.length > 0) {
+                project.tasks.forEach(task => {
+                  if (task.isNew && task._id) {
+                    delete task._id;
+                  }
+                  if (task.subTasks && task.subTasks.length > 0) {
+                    task.subTasks.forEach(subtasks => {
+                      if (subtasks.isNew && subtasks._id) {
+                        delete subtasks._id;
+                      }
+                    })
+                  }
+                });
+              }
+              // intentially left blank
+              this.autoSync(project);
+            } else {
+              // intentially left blank
             }
-            this.autoSync(project);
-          } else {
-          }
+          });
         })
+        if (!projectsToSync) {
+          this.toastService.successToast('message.sync_success');
+        }
+      } else {
+        // intentially left blank
+        this.toastService.successToast('message.already_sync');
       }
     })
   }
   // auto sync
   public autoSync(project) {
+    this.toastService.startLoader('Your data is syncing');
     this.storage.get('userTokens').then(data => {
       if (data) {
         this.api.refershToken(data.refresh_token).subscribe((data: any) => {
@@ -425,48 +432,70 @@ export class AppComponent {
             };
             this.storage.set('userTokens', userTokens).then(data => {
               this.projectService.sync(project, data.access_token).subscribe((data: any) => {
+                let updatedProject;
                 if (data.status == "failed") {
-                } else if (data.status == "success") {
-                  let updatedProject;
-                  project.isNew = false;
-                  project.isSync = true;
-                  project.isEdited = false;
-                  console.log(project.createdType, "project.createdType");
-                  project.lastUpdate = data.projectDetails.data.projects[0].lastSync;
-                  data.projectDetails.data.projects[0].createdType = project.createdType;
-                  data.projectDetails.data.projects[0].isStarted = project.isStarted;
-                  updatedProject = data.projectDetails.data.projects[0];
-                  updatedProject.isSync = true;
-                  updatedProject.isEdited = false;
-                  updatedProject.isNew = false;
-                  this.syncUpdateInLocal(updatedProject, project);
+                  this.toastService.errorToast(data.message);
+                  this.toastService.stopLoader();
+                } else if (data.status == "success" || data.status == "succes") {
+                  if (data.projectDetails) {
+                    project.isNew = false;
+                    project.isSync = true;
+                    project.isEdited = false;
+                    data.projectDetails.data.projects[0].isStarted = project.isStarted;
+                    updatedProject = data.projectDetails.data.projects[0];
+                    updatedProject.isSync = true;
+                    updatedProject.isEdited = false;
+                    updatedProject.isNew = false;
+                    updatedProject.lastUpdate = project.lastUpdate;
+                    this.syncUpdateInLocal(updatedProject, project, data.allProjects);
+                  } else {
+                    project.isNew = false;
+                    project.isSync = true;
+                    project.isEdited = false;
+                    data.data.isStarted = project.isStarted;
+                    updatedProject = data.data;
+                    updatedProject.isSync = true;
+                    updatedProject.isEdited = false;
+                    updatedProject.isNew = false;
+                    updatedProject.lastUpdate = project.lastUpdate;
+                    this.syncUpdateInLocal(updatedProject, project, data.allProjects);
+                  }
                 }
               }, error => {
+                this.toastService.stopLoader();
               })
             })
           }
         }, error => {
-          // this.showSkeleton = false;
           if (error.status === 0) {
             this.router.navigateByUrl('/login');
+            this.toastService.stopLoader();
           }
         })
       } else {
         this.router.navigateByUrl('/login');
+        this.toastService.stopLoader();
       }
+    }, error => {
+      this.toastService.stopLoader();
     })
   }
-  syncUpdateInLocal(project, oldProject) {
+  syncUpdateInLocal(project, oldProject, syncedProjects) {
     if (project.createdType == 'by self' || project.createdType == 'by reference') {
       this.storage.get('myprojects').then(myprojects => {
         if (myprojects) {
           myprojects.forEach(function (prj, i) {
             if (prj._id == oldProject._id) {
+              project.templateId = project._id;
               myprojects[i] = project;
             }
           });
         }
         this.storage.set('myprojects', myprojects).then(myprojectsff => {
+          this.toastService.successToast('message.sync_success');
+          this.toastService.stopLoader();
+          // get all synced projects and update in local
+          this.getSyncedProjects(syncedProjects);
         })
       })
     } else {
@@ -478,11 +507,20 @@ export class AppComponent {
             }
           });
         }
-        console.log(projects, "projects");
         this.storage.set('projects', projects).then(myprojectsff => {
+          this.toastService.stopLoader();
+          this.toastService.successToast('message.sync_success');
+          this.toastService.stopLoader();
+          // get all synced projects and update in local
+          this.getSyncedProjects(syncedProjects);
         })
       })
     }
+  }
 
+  public getSyncedProjects(syncedProjects) {
+    let localProjects;
+    this.storage.set('myprojects', syncedProjects.data[0].projects).then(myprojects => {
+    })
   }
 }
