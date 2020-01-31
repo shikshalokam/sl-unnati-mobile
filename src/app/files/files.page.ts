@@ -50,7 +50,6 @@ export class FilesPage implements OnInit {
         });
       }
       this.currentMyProject = project;
-      console.log(this.currentMyProject, "this.currentMyProject");
     })
   }
   public selectTab(type) {

@@ -410,12 +410,10 @@ export class AppComponent {
           });
         })
         if (!projectsToSync) {
-          console.log('uptodate');
           this.toastService.successToast('message.sync_success');
         }
       } else {
         // intentially left blank
-        console.log('uptodate');
         this.toastService.successToast('message.already_sync');
       }
     })
@@ -488,6 +486,7 @@ export class AppComponent {
         if (myprojects) {
           myprojects.forEach(function (prj, i) {
             if (prj._id == oldProject._id) {
+              project.templateId = project._id;
               myprojects[i] = project;
             }
           });

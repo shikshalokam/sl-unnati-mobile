@@ -164,7 +164,6 @@ export class CurrentTaskViewPage implements OnInit {
     this.task.remarks = this.remarks;
     let task: any = this.task;
     this.task = task;
-    console.log(task, "task");
     this.storage.set('cTask', task).then(updatedTask => {
       this.updateCurrentProject(updatedTask);
       this.toastService.successToast('message.marked_as_completed');
@@ -251,7 +250,6 @@ export class CurrentTaskViewPage implements OnInit {
   }
   public updateTask() {
     this.updateStatus();
-    console.log(this.task, "task updated");
     this.storage.set('cTask', this.task).then(ct => {
       this.updateCurrentProject(ct);
       this.toastService.successToast('message.task_updated');
@@ -339,7 +337,6 @@ export class CurrentTaskViewPage implements OnInit {
           url: event.target.result,
           name: this.file.name
         }
-        console.log(this.task.file, "file uplaoded");
         this.toastService.successToast('message.file_uploaded');
       }
     };
@@ -357,7 +354,6 @@ export class CurrentTaskViewPage implements OnInit {
     }
     this.camera.getPicture(options).then((imageData) => {
       this.task.imageUrl = imageData;
-      console.log(this.task, "image uploaded");
       this.toastService.successToast('message.image_uploaded');
       let base64Image = 'data:image/jpeg;base64,' + imageData;
     }, (err) => {
