@@ -18,7 +18,12 @@
     <!-- (keyup)="searchSchool(searchInput)" -->
   </ion-item>
   <div *ngIf="activeTab == 'ongoing'" class="ongoing-container">
-    <ion-card *ngFor="let task of ongoing">
+    <ion-card class="welcome-card custom-card" *ngIf="(  ongoing | searchTasks : searchInput).length == 0">
+      <div class="no-results">
+        No Data available.
+      </div>
+    </ion-card>
+    <ion-card *ngFor="let task of ongoing | searchTasks : searchInput">
       <div class="title-section">
         {{task.title}}
       </div>
@@ -41,7 +46,12 @@
   </div>
 
   <div *ngIf="activeTab == 'past'" class="ongoing-container">
-    <ion-card *ngFor="let task of past">
+      <ion-card class="welcome-card custom-card" *ngIf="(  past | searchTasks : searchInput).length == 0">
+          <div class="no-results">
+            No Data available.
+          </div>
+        </ion-card>
+    <ion-card *ngFor="let task of past | searchTasks : searchInput">
       <div class="title-section">
         {{task.title}}
       </div>

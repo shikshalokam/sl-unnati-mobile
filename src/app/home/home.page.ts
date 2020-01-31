@@ -14,9 +14,7 @@ import { ReportsService } from '../reports/reports.service';
 import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
-import { URLSearchParams } from '@angular/http';
-import * as jwt_decode from "jwt-decode";
-
+import {ToastService} from '../toast.service'
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -32,7 +30,7 @@ export class HomePage implements OnInit {
   tiles = [
     { title: "create project", icon: 'assets/images/homeTiles/createproject.png', url: '/project-view/create-project' },
     { title: "library", icon: 'assets/images/homeTiles/library.png', url: '/project-view/library' },
-    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '/project-view/task-board' },
+    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '' }, // /project-view/task-board
     { title: "reports", icon: 'assets/images/homeTiles/reports.png', url: '/project-view/my-reports/last-month-reports' }
   ]
   activeProjects = [];
@@ -56,47 +54,8 @@ export class HomePage implements OnInit {
     public networkService: NetworkService,
     public menuCtrl: MenuController,
     public reportsService: ReportsService,
-    public mySchoolsService: MyschoolsService) {
-    
-    //   let params = new URLSearchParams(window.location.search);
-    // if (typeof params == 'string') {
-    //   params = JSON.parse(params);
-    // }
-    // console.log(params, "params");
-
-    // console.log(params.rawParams, "params");
-    // let code = (((params.rawParams).split("?")[1]).split("="))[1];
-    // console.log(code, "code");
-    // this.menuCtrl.enable(true);
-    // this.login.doOAuthStepTwo(code).then(success => {
-    //   console.log(success, "success")
-    //   this.menuCtrl.enable(true);
-    //   this.login.checkForCurrentUserLocalData(success);
-    //   let userDetails = jwt_decode(success.access_token);
-    //   console.log(userDetails,"userDetails");
-    //   this.menuCtrl.enable(true);
-    //   this.storage.set('userDetails', userDetails).then(userData => {
-    //   })
-    //   this.storage.set('userTokens', success).then(data => {
-    //     console.log(data,"data user token save");
-    //     this.router.navigateByUrl('/project-view/home');
-    //     // this.fcm.initializeFCM();
-    //     this.login.loggedIn('true');
-    //     this.menuCtrl.enable(true);
-    //     this.storage.set('veryFirstTime', 'false').then(data => {
-    //       // this.veryFirstTime = false;
-    //     })
-    //   });
-    //   localStorage.setItem('token', success);
-    //   this.networkService.status(true);
-    //   this.menuCtrl.enable(true);
-    //   this.login.loggedIn('true');
-    //   localStorage.setItem("networkStatus", 'true');
-    // }).catch(error1 => {
-    // })
-    // let someParam = params.get('user');
-    // console.log(someParam, "someParam");
-
+    public mySchoolsService: MyschoolsService,
+    public toastService:ToastService) {
     this.menuCtrl.enable(true);
     homeService.activeProjectLoad.subscribe(data => {
       if (data == 'activeProjectLoad') {
@@ -136,9 +95,7 @@ export class HomePage implements OnInit {
     this.login.loggedIn('true');
     this.checkUser();
     this.storage.get('projects').then(projects => {
-      console.log(!projects,"projects");
       if (!projects) {
-        console.log('calling get projects');
         this.getProjects();
       }
     });
@@ -190,7 +147,6 @@ export class HomePage implements OnInit {
             this.showSkeleton = true;
             this.projectsService.getAssignedProjects(usertoken.access_token, this.type).subscribe((resp: any) => {
               if (resp.status != 'failed') {
-                console.log(resp.data,"resp.data get projects");
                 resp.data.forEach(programs => {
                   programs.projects.forEach(project => {
                     project.lastUpdate = project.lastSync;
@@ -201,21 +157,17 @@ export class HomePage implements OnInit {
                       project.isStarted = true;
                     }
                     project.programName = programs.programs.name;
-                    console.log(project,"project getting and filtering");
                     if (project.createdType == 'by self' || project.createdType == 'by reference') {
                       myProjects.push(project);
-                    }else {
+                    } else {
                       project.toDisplay = true;
-                      console.log(project,"project.toDisplay");
                     }
                   });
                 });
                 this.projectList = resp.data;
-                console.log(this.projectList ,"this.projectList ");
                 this.storage.set('projects', this.projectList).then(resp1 => {
                 })
                 if (myProjects) {
-                  console.log(myProjects,"myProjects");
                   this.storage.set('myprojects', myProjects).then(data => {
                     this.getActiveProjects();
                   })
@@ -290,7 +242,7 @@ export class HomePage implements OnInit {
       if (myProjects) {
         myProjects.forEach(myProject => {
           if (count < 2) {
-            if (myProject.isStarted) {
+            if (myProject.isStarted && !myProject.isDeleted) {
               ap.push(myProject);
               count = count + 1;
             }
@@ -306,11 +258,12 @@ export class HomePage implements OnInit {
   public navigate(url) {
     this.homeService.clearData();
     if (url == '/project-view/create-project') {
-      // || url == '/project-view/library'
       this.homeService.clearData();
       this.router.navigate([url, 'yes']);
     } else if (url != '') {
       this.router.navigate([url]);
+    }else if(url == ''){
+      this.toastService.errorToast('message.comingsoon');
     }
   }
   public viewMore() {

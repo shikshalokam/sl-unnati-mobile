@@ -123,8 +123,6 @@ var CategoryViewPage = /** @class */ (function () {
                 _this.categaryService.getMyProjects().then(function (myProjects) {
                     if (myProjects) {
                         myProjects = _this.getSortData(myProjects);
-                        // myProjects.sort((val1, val2)=> {return new Date(val2.lastUpdate) - new 
-                        //   Date(val1.lastUpdate)})
                         myProjects.forEach(function (element) {
                         });
                         _this.projects = myProjects;
@@ -138,7 +136,6 @@ var CategoryViewPage = /** @class */ (function () {
             _this.catType = param.cat;
             switch (param.cat) {
                 case 'my_projects': {
-                    //statements; 
                     _this.categoryHead = {
                         icon: 'assets/images/libraryTiles/myprojects.png',
                         title: 'my projects'
@@ -147,7 +144,6 @@ var CategoryViewPage = /** @class */ (function () {
                     break;
                 }
                 case 'teacher': {
-                    //statements; 
                     _this.categoryHead = {
                         icon: 'assets/images/libraryTiles/teacher.png',
                         title: 'teacher'
@@ -156,7 +152,6 @@ var CategoryViewPage = /** @class */ (function () {
                     break;
                 }
                 case 'students': {
-                    //statements; 
                     _this.categoryHead = {
                         icon: 'assets/images/libraryTiles/students.png',
                         title: 'students'

@@ -144,7 +144,6 @@ export class AppComponent {
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
-        console.log(this.router.url, "this.router.url");
         let isOpened = this.tasksService.isActive;
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
           //this.presentAlertConfirm();
@@ -156,7 +155,7 @@ export class AppComponent {
           this.router.navigateByUrl('project-view/home');
         } else if (this.router.url == '/project-view/task-view' && isOpened === 'false') {
           this.router.navigateByUrl('project-view/detail');
-          isOpened = 'false'
+          isOpened = 'false';
         }
         else if (this.router.url == '/project-view/my-reports/last-month-reports' || this.router.url == '/project-view/my-reports/last-quarter-reports' || this.router.url == '/my-reports/last-month-reports' || this.router.url == '/my-reports/last-quarter-reports') {
           this.router.navigateByUrl('project-view/home');
@@ -260,9 +259,7 @@ export class AppComponent {
   }
 
   public navigate(url, title) {
-    console.log(title, "title");
     if (title == 'Sync') {
-      console.log('in sync');
       this.prepareProjectToSync();
       this.prepareMappedProjectToSync();
     } else if (url) {
@@ -270,7 +267,6 @@ export class AppComponent {
     }
   }
   async presentAlertCheckbox() {
-    //let currentLang = localStorage.getItem("lang");
     let language: string = this.translate.currentLang;
     let selectLan;
     this.translate.get('select_languages').subscribe((text: string) => {
@@ -369,17 +365,10 @@ export class AppComponent {
                 }
               });
             }
-            // this.toastService.stopLoader();
             this.autoSync(project);
           } else {
-            //this.toastService.;
-            // this.toastService.stopLoader();
           }
         })
-        // console.log(projectsToSync, "projectsToSync");
-        // if (!projectsToSync) {
-        //   this.toastService.successToast('message.no_projects');
-        // }
       } else {
         // this.toastService.stopLoader();
       }
@@ -408,19 +397,15 @@ export class AppComponent {
                   }
                 });
               }
-              // this.toastService.stopLoader();
+              // intentially left blank
               this.autoSync(project);
             } else {
-              // this.toastService.stopLoader();
+              // intentially left blank
             }
           });
         })
-        // console.log(projectsToSync, "projectsToSync");
-        // if (!projectsToSync) {
-        //   this.toastService.successToast('message.no_projects');
-        // }
       } else {
-        // this.toastService.stopLoader();
+        // intentially left blank
       }
     })
   }
@@ -437,10 +422,10 @@ export class AppComponent {
               refresh_token: parsedData.refresh_token,
             };
             this.storage.set('userTokens', userTokens).then(data => {
-              this.homeService.syncingProject(true);
               this.projectService.sync(project, data.access_token).subscribe((data: any) => {
                 let updatedProject;
                 if (data.status == "failed") {
+                  this.toastService.errorToast(data.message);
                   this.toastService.stopLoader();
                 } else if (data.status == "success" || data.status == "succes") {
                   if (data.projectDetails) {
@@ -448,7 +433,6 @@ export class AppComponent {
                     project.isSync = true;
                     project.isEdited = false;
                     data.projectDetails.data.projects[0].isStarted = project.isStarted;
-                    console.log(data.projectDetails.data.projects[0].isStarted, " data.projectDetails.data.projects[0].isStarted", project.isStarted);
                     updatedProject = data.projectDetails.data.projects[0];
                     updatedProject.isSync = true;
                     updatedProject.isEdited = false;
@@ -460,7 +444,6 @@ export class AppComponent {
                     project.isSync = true;
                     project.isEdited = false;
                     data.data.isStarted = project.isStarted;
-                    console.log(data.data.isStarted, project.isStarted, "data.data.isStarted = project.isStarted;");
                     updatedProject = data.data;
                     updatedProject.isSync = true;
                     updatedProject.isEdited = false;
@@ -469,14 +452,12 @@ export class AppComponent {
                     this.syncUpdateInLocal(updatedProject, project, data.allProjects);
                   }
                 }
-                this.homeService.syncingProject(false);
               }, error => {
-                this.homeService.syncingProject(false);
+                this.toastService.stopLoader();
               })
             })
           }
         }, error => {
-          // this.showSkeleton = false;
           if (error.status === 0) {
             this.router.navigateByUrl('/login');
             this.toastService.stopLoader();
@@ -491,34 +472,28 @@ export class AppComponent {
     })
   }
   syncUpdateInLocal(project, oldProject, syncedProjects) {
-    console.log(syncedProjects, "syncedProjects", project, "project", project.createdType);
     if (project.createdType == 'by self' || project.createdType == 'by reference') {
       this.storage.get('myprojects').then(myprojects => {
         if (myprojects) {
           myprojects.forEach(function (prj, i) {
-            console.log(prj._id == oldProject._id)
             if (prj._id == oldProject._id) {
               myprojects[i] = project;
-              console.log(myprojects[i], " myprojects[i]");
             }
           });
         }
-        console.log(myprojects, "myprojects");
         this.storage.set('myprojects', myprojects).then(myprojectsff => {
-          console.log(myprojectsff, "myprojectsff");
-          this.toastService.stopLoader();
           this.toastService.successToast('message.sync_success');
           this.toastService.stopLoader();
+          // get all synced projects and update in local
+          this.getSyncedProjects(syncedProjects);
         })
       })
     } else {
-      console.log(project, "project in else");
       this.storage.get('projects').then(projects => {
         if (projects) {
           projects.forEach(function (prj, i) {
             if (prj._id == oldProject._id) {
               projects[i] = project;
-              console.log(projects[i], " projects[i]");
             }
           });
         }
@@ -526,17 +501,28 @@ export class AppComponent {
           this.toastService.stopLoader();
           this.toastService.successToast('message.sync_success');
           this.toastService.stopLoader();
+          // get all synced projects and update in local
+          this.getSyncedProjects(syncedProjects);
         })
       })
     }
   }
-  public initiateSync(value) {
-    if (value == 'Sync') {
-      this.prepareProjectToSync();
-      this.prepareMappedProjectToSync();
-    }
-    // } else {
-    //   this.toastService.errorToast('message.nerwork_connection_check');
-    // }
+
+  public getSyncedProjects(syncedProjects) {
+    let localProjects;
+    this.storage.set('myprojects', syncedProjects.data[0].projects).then(myprojects => {
+    })
+    // syncedProjects.data[0].projects.forEach(project => {
+    //   if(!project.isDeleted){
+    //     localProjects.forEach(localProject => {
+    //       if(localProject._id == project._id){
+
+    //       }
+    //     });
+    //   }
+    // });
+    //   syncedProjects.forEach(project => {
+
+    //  });
   }
 }

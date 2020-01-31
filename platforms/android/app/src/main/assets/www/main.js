@@ -914,6 +914,10 @@ var map = {
 		"common",
 		"home-home-module"
 	],
+	"./kclg/kclg.module": [
+		"./src/app/kclg/kclg.module.ts",
+		"kclg-kclg-module"
+	],
 	"./last-month-reports/last-month-reports.module": [
 		"./src/app/last-month-reports/last-month-reports.module.ts",
 		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~dba1dd56",
@@ -1193,6 +1197,7 @@ var routes = [
     { path: 'all-projects', loadChildren: './all-projects/all-projects.module#AllProjectsPageModule' },
     { path: 'files/:id', loadChildren: './files/files.module#FilesPageModule' },
     { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
+    { path: 'kclg', loadChildren: './kclg/kclg.module#KclgPageModule' },
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -1526,9 +1531,7 @@ var AppComponent = /** @class */ (function () {
         }
     };
     AppComponent.prototype.navigate = function (url, title) {
-        console.log(title, "title");
         if (title == 'Sync') {
-            console.log('in sync');
             this.prepareProjectToSync();
             this.prepareMappedProjectToSync();
         }
@@ -1651,18 +1654,11 @@ var AppComponent = /** @class */ (function () {
                                 }
                             });
                         }
-                        // this.toastService.stopLoader();
                         _this.autoSync(project);
                     }
                     else {
-                        //this.toastService.;
-                        // this.toastService.stopLoader();
                     }
                 });
-                // console.log(projectsToSync, "projectsToSync");
-                // if (!projectsToSync) {
-                //   this.toastService.successToast('message.no_projects');
-                // }
             }
             else {
                 // this.toastService.stopLoader();
@@ -1693,21 +1689,17 @@ var AppComponent = /** @class */ (function () {
                                     }
                                 });
                             }
-                            // this.toastService.stopLoader();
+                            // intentially left blank
                             _this.autoSync(project);
                         }
                         else {
-                            // this.toastService.stopLoader();
+                            // intentially left blank
                         }
                     });
                 });
-                // console.log(projectsToSync, "projectsToSync");
-                // if (!projectsToSync) {
-                //   this.toastService.successToast('message.no_projects');
-                // }
             }
             else {
-                // this.toastService.stopLoader();
+                // intentially left blank
             }
         });
     };
@@ -1725,10 +1717,10 @@ var AppComponent = /** @class */ (function () {
                             refresh_token: parsedData.refresh_token,
                         };
                         _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.homeService.syncingProject(true);
                             _this.projectService.sync(project, data.access_token).subscribe(function (data) {
                                 var updatedProject;
                                 if (data.status == "failed") {
+                                    _this.toastService.errorToast(data.message);
                                     _this.toastService.stopLoader();
                                 }
                                 else if (data.status == "success" || data.status == "succes") {
@@ -1737,7 +1729,6 @@ var AppComponent = /** @class */ (function () {
                                         project.isSync = true;
                                         project.isEdited = false;
                                         data.projectDetails.data.projects[0].isStarted = project.isStarted;
-                                        console.log(data.projectDetails.data.projects[0].isStarted, " data.projectDetails.data.projects[0].isStarted", project.isStarted);
                                         updatedProject = data.projectDetails.data.projects[0];
                                         updatedProject.isSync = true;
                                         updatedProject.isEdited = false;
@@ -1750,7 +1741,6 @@ var AppComponent = /** @class */ (function () {
                                         project.isSync = true;
                                         project.isEdited = false;
                                         data.data.isStarted = project.isStarted;
-                                        console.log(data.data.isStarted, project.isStarted, "data.data.isStarted = project.isStarted;");
                                         updatedProject = data.data;
                                         updatedProject.isSync = true;
                                         updatedProject.isEdited = false;
@@ -1759,14 +1749,13 @@ var AppComponent = /** @class */ (function () {
                                         _this.syncUpdateInLocal(updatedProject, project, data.allProjects);
                                     }
                                 }
-                                _this.homeService.syncingProject(false);
                             }, function (error) {
-                                _this.homeService.syncingProject(false);
+                                console.log(error, "error");
+                                _this.toastService.stopLoader();
                             });
                         });
                     }
                 }, function (error) {
-                    // this.showSkeleton = false;
                     if (error.status === 0) {
                         _this.router.navigateByUrl('/login');
                         _this.toastService.stopLoader();
@@ -1783,35 +1772,29 @@ var AppComponent = /** @class */ (function () {
     };
     AppComponent.prototype.syncUpdateInLocal = function (project, oldProject, syncedProjects) {
         var _this = this;
-        console.log(syncedProjects, "syncedProjects", project, "project", project.createdType);
         if (project.createdType == 'by self' || project.createdType == 'by reference') {
             this.storage.get('myprojects').then(function (myprojects) {
                 if (myprojects) {
                     myprojects.forEach(function (prj, i) {
-                        console.log(prj._id == oldProject._id);
                         if (prj._id == oldProject._id) {
                             myprojects[i] = project;
-                            console.log(myprojects[i], " myprojects[i]");
                         }
                     });
                 }
-                console.log(myprojects, "myprojects");
                 _this.storage.set('myprojects', myprojects).then(function (myprojectsff) {
-                    console.log(myprojectsff, "myprojectsff");
-                    _this.toastService.stopLoader();
                     _this.toastService.successToast('message.sync_success');
                     _this.toastService.stopLoader();
+                    // get all synced projects and update in local
+                    _this.getSyncedProjects(syncedProjects);
                 });
             });
         }
         else {
-            console.log(project, "project in else");
             this.storage.get('projects').then(function (projects) {
                 if (projects) {
                     projects.forEach(function (prj, i) {
                         if (prj._id == oldProject._id) {
                             projects[i] = project;
-                            console.log(projects[i], " projects[i]");
                         }
                     });
                 }
@@ -1819,18 +1802,28 @@ var AppComponent = /** @class */ (function () {
                     _this.toastService.stopLoader();
                     _this.toastService.successToast('message.sync_success');
                     _this.toastService.stopLoader();
+                    // get all synced projects and update in local
+                    _this.getSyncedProjects(syncedProjects);
                 });
             });
         }
     };
-    AppComponent.prototype.initiateSync = function (value) {
-        if (value == 'Sync') {
-            this.prepareProjectToSync();
-            this.prepareMappedProjectToSync();
-        }
-        // } else {
-        //   this.toastService.errorToast('message.nerwork_connection_check');
-        // }
+    AppComponent.prototype.getSyncedProjects = function (syncedProjects) {
+        console.log('get synced project', syncedProjects);
+        var localProjects;
+        this.storage.set('myprojects', syncedProjects.data[0].projects).then(function (myprojects) {
+            console.log(myprojects, 'updated');
+        });
+        // syncedProjects.data[0].projects.forEach(project => {
+        //   if(!project.isDeleted){
+        //     localProjects.forEach(localProject => {
+        //       if(localProject._id == project._id){
+        //       }
+        //     });
+        //   }
+        // });
+        //   syncedProjects.forEach(project => {
+        //  });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["NavController"]),
@@ -1886,34 +1879,34 @@ var AppConfigs = {
     appVersion: "1.1.10",
     appName: "Unnati",
     // Dev urls
-    app_url: "https://dev.shikshalokam.org",
-    api_url: "https://devhome.shikshalokam.org",
-    api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
-    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
-    clientId: "sl-ionic-connect",
-    environment: "Development",
-    //Notification urls
-    notification: {
-        kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
-        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
-        markAsRead: "/notifications/in-app/markAsRead",
-        getAllNotifications: "/notifications/in-app/list",
-        registerDevice: "/notifications/push/registerDevice"
-    },
-    // QA
-    // app_url: "https://qa.shikshalokam.org",
-    // api_url: "https://qahome.shikshalokam.org",
-    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    // app_url: "https://dev.shikshalokam.org",
+    // api_url: "https://devhome.shikshalokam.org",
+    // api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
+    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
     // clientId: "sl-ionic-connect",
-    // environment: "qa",
+    // environment: "Development",
+    // //Notification urls
     // notification: {
-    //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
-    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
-    //     markAsRead: "/notifications/in-app/markItRead",
+    //     kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
+    //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+    //     markAsRead: "/notifications/in-app/markAsRead",
     //     getAllNotifications: "/notifications/in-app/list",
     //     registerDevice: "/notifications/push/registerDevice"
     // },
+    // QA
+    app_url: "https://qa.shikshalokam.org",
+    api_url: "https://qahome.shikshalokam.org",
+    api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    clientId: "sl-ionic-connect",
+    environment: "qa",
+    notification: {
+        kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+        getUnreadNotificationCount: "notifications/in-app/unReadCount",
+        markAsRead: "/notifications/in-app/markItRead",
+        getAllNotifications: "/notifications/in-app/list",
+        registerDevice: "/notifications/push/registerDevice"
+    },
     //AWS Prod Urls
     // app_url: "https://bodh.shikshalokam.org",
     // api_url: "https://api.shikshalokam.org",
@@ -1946,7 +1939,7 @@ var AppConfigs = {
     keyCloak: {
         getAccessToken: "/auth/realms/sunbird/protocol/openid-connect/token",
         redirection_url: "http://localhost:8100/",
-        logout_redirect_url: "http://localhost:8000/oauthLogoutcallback"
+        logout_redirect_url: "http://localhost:8100/project-view/home"
     },
     survey: {
         submission: "/submissions/make/",
@@ -2033,14 +2026,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @ionic-native/date-picker/ngx */ "./node_modules/@ionic-native/date-picker/ngx/index.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _ionic_native_camera_ngx__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @ionic-native/camera/ngx */ "./node_modules/@ionic-native/camera/ngx/index.js");
-/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
-/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
-/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
-/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
-/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
-/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
-/* harmony import */ var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @ionic-native/file-path/ngx */ "./node_modules/@ionic-native/file-path/ngx/index.js");
-/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
+/* harmony import */ var _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @ionic-native/file-opener/ngx */ "./node_modules/@ionic-native/file-opener/ngx/index.js");
+/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
+/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
+/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
+/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
+/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
+/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
+/* harmony import */ var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @ionic-native/file-path/ngx */ "./node_modules/@ionic-native/file-path/ngx/index.js");
+/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
+
 
 
 
@@ -2122,19 +2117,20 @@ var AppModule = /** @class */ (function () {
                 _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_22__["Market"],
                 _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_25__["DatePicker"],
                 _angular_common__WEBPACK_IMPORTED_MODULE_26__["DatePipe"],
-                _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_30__["SocialSharing"],
+                _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_31__["SocialSharing"],
                 _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_6__["SplashScreen"],
-                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_31__["FileTransfer"],
-                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_31__["FileTransferObject"],
-                _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_32__["File"],
-                _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_33__["FileChooser"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_32__["FileTransfer"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_32__["FileTransferObject"],
+                _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_33__["File"],
+                _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_34__["FileChooser"],
                 _ionic_native_camera_ngx__WEBPACK_IMPORTED_MODULE_27__["Camera"],
-                _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_34__["FilePath"],
-                _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_35__["Base64"],
+                _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_35__["FilePath"],
+                _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_28__["FileOpener"],
+                _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_36__["Base64"],
                 { provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"], useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicRouteStrategy"] },
                 // FCM,
                 // FcmProvider,
-                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_28__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_29__["Badge"]
+                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_29__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_30__["Badge"]
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_12__["AppComponent"]]
         }),
@@ -3184,14 +3180,15 @@ var Login = /** @class */ (function () {
     Login.prototype.doLogout = function () {
         return new Promise(function (resolve) {
             var logout_redirect_url = _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].keyCloak.logout_redirect_url;
-            // alert(logout_redirect_url + "logout_redirect_url");
             var logout_url = _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].app_url + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
-            // alert(logout_url + "logout_url");
+            console.log(logout_url, "logout_url in login service");
             var closeCallback = function (event) {
+                console.log(event, "logout event");
             };
             var browserRef = window.cordova.InAppBrowser.open(logout_url, "_blank", "zoom=no");
             browserRef.addEventListener('loadstart', function (event) {
                 if (event.url && ((event.url).indexOf(logout_redirect_url) === 0)) {
+                    console.log(event, "logout event1");
                     browserRef.removeEventListener("exit", closeCallback);
                     browserRef.close();
                     resolve();
@@ -3796,16 +3793,36 @@ var PopoverComponent = /** @class */ (function () {
         });
         this.DismissClick();
     };
+    // Dismiss popver menu 
     PopoverComponent.prototype.DismissClick = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                this.popoverController.dismiss();
                 return [2 /*return*/];
             });
         });
     };
+    // Sync project before share
     PopoverComponent.prototype.syncProject = function () {
         var _this = this;
         if (!this.project.isSync) {
+            if (this.project.tasks && this.project.tasks.length > 0) {
+                this.project.tasks.forEach(function (task) {
+                    if (task.isNew) {
+                        delete task._id;
+                        console.log(task, "task");
+                    }
+                    if (task.subTasks && task.subTasks.length > 0) {
+                        task.subTasks.forEach(function (subtask) {
+                            if (subtask.isNew) {
+                                delete subtask._id;
+                                console.log(subtask, "subtask");
+                            }
+                        });
+                    }
+                });
+            }
+            console.log(this.project, "this.project");
             this.storage.get('userTokens').then(function (data) {
                 _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
                     var parsedData = JSON.parse(data._body);
@@ -3815,32 +3832,92 @@ var PopoverComponent = /** @class */ (function () {
                             refresh_token: parsedData.refresh_token,
                         };
                         _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.loader();
+                            _this.toastService.startLoader('Your data is syncing');
                             _this.projectService.sync(_this.project, data.access_token).subscribe(function (data) {
-                                if (data.status == "failed") {
-                                }
-                                else if (data.status == "success") {
-                                    _this.updateInLocal(_this.project, data.projectDetails.data.projects[0]);
-                                    _this.getPDF(data.projectDetails.data.projects[0]._id);
-                                    _this.DismissClick();
+                                // if (data.status == "success") {
+                                //   this.updateInLocal(this.project, data.projectDetails.data.projects[0]);
+                                //   this.getPDF(data.projectDetails.data.projects[0]._id);
+                                //   this.DismissClick();
+                                // }
+                                if (data.status == "success" || data.status == "succes") {
+                                    var updatedProject = void 0;
+                                    if (data.projectDetails) {
+                                        _this.project.isNew = false;
+                                        _this.project.isSync = true;
+                                        _this.project.isEdited = false;
+                                        data.projectDetails.data.projects[0].isStarted = _this.project.isStarted;
+                                        updatedProject = data.projectDetails.data.projects[0];
+                                        updatedProject.isSync = true;
+                                        updatedProject.isEdited = false;
+                                        updatedProject.isNew = false;
+                                        updatedProject.lastUpdate = _this.project.lastUpdate;
+                                        _this.getPDF(data.projectDetails.data.projects[0]._id);
+                                        _this.DismissClick();
+                                        _this.syncUpdateInLocal(updatedProject, _this.project, data.allProjects);
+                                    }
+                                    else {
+                                        _this.project.isNew = false;
+                                        _this.project.isSync = true;
+                                        _this.project.isEdited = false;
+                                        data.data.isStarted = _this.project.isStarted;
+                                        updatedProject = data.data;
+                                        updatedProject.isSync = true;
+                                        updatedProject.isEdited = false;
+                                        updatedProject.isNew = false;
+                                        updatedProject.lastUpdate = _this.project.lastUpdate;
+                                        _this.getPDF(data.projectDetails.data.projects[0]._id);
+                                        _this.DismissClick();
+                                        _this.syncUpdateInLocal(updatedProject, _this.project, data.allProjects);
+                                    }
                                 }
                             }, function (error) {
-                                console.log('error', error);
+                                // intentially left blank
                             });
                         });
                     }
                 }, function (error) {
-                    // this.showSkeleton = false;
-                    console.log(error, "error");
+                    // intentially left blank
                 });
             });
         }
         else {
-            this.loader();
+            this.toastService.startLoader('Loading');
             this.getPDF(this.project._id);
             this.DismissClick();
         }
     };
+    PopoverComponent.prototype.syncUpdateInLocal = function (project, oldProject, syncedProjects) {
+        var _this = this;
+        if (project.createdType == 'by self' || project.createdType == 'by reference') {
+            this.storage.get('myprojects').then(function (myprojects) {
+                if (myprojects) {
+                    myprojects.forEach(function (prj, i) {
+                        if (prj._id == oldProject._id) {
+                            myprojects[i] = project;
+                        }
+                    });
+                }
+                _this.storage.set('myprojects', myprojects).then(function (myprojectsff) {
+                    // get all synced projects and update in local
+                });
+            });
+        }
+        else {
+            this.storage.get('projects').then(function (projects) {
+                if (projects) {
+                    projects.forEach(function (prj, i) {
+                        if (prj._id == oldProject._id) {
+                            projects[i] = project;
+                        }
+                    });
+                }
+                _this.storage.set('projects', projects).then(function (myprojectsff) {
+                    // get all synced projects and update in local
+                });
+            });
+        }
+    };
+    // geting pdf file report of project and share the project
     PopoverComponent.prototype.getPDF = function (id) {
         var _this = this;
         this.storage.get('userTokens').then(function (data) {
@@ -3863,58 +3940,25 @@ var PopoverComponent = /** @class */ (function () {
                                 _this.base64.encodeFile(entry.nativeURL).then(function (base64File) {
                                     var data = base64File.split(',');
                                     var base64Data = "data:application/pdf;base64," + data[1];
+                                    _this.toastService.stopLoader();
+                                    _this.DismissClick();
                                     _this.socialSharing.share("", fileName, base64Data, "").then(function () {
                                     }, function (error) {
-                                        console.log(error, "error");
+                                        // intentially left blank
                                     });
                                 }, function (err) {
-                                    console.log(err);
+                                    _this.toastService.stopLoader();
                                 });
                             }, function (error) {
-                                console.log(error);
+                                _this.toastService.stopLoader();
                             });
                         }, function (error) {
-                            _this.toastService.errorToast('');
+                            _this.toastService.stopLoader();
                         });
                     }, function (error) {
+                        _this.toastService.stopLoader();
                     });
                 }
-            });
-        });
-    };
-    PopoverComponent.prototype.loader = function () {
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var loading, _a, role, data;
-            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.loadingController.create({
-                            message: 'Syncing your data.',
-                            duration: 500
-                        })];
-                    case 1:
-                        loading = _b.sent();
-                        return [4 /*yield*/, loading.present()];
-                    case 2:
-                        _b.sent();
-                        return [4 /*yield*/, loading.onDidDismiss()];
-                    case 3:
-                        _a = _b.sent(), role = _a.role, data = _a.data;
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    PopoverComponent.prototype.updateInLocal = function (project, oldProject) {
-        var _this = this;
-        this.storage.get('myprojects').then(function (myprojects) {
-            if (myprojects) {
-                myprojects.forEach(function (prj, i) {
-                    if (prj._id == oldProject._id) {
-                        myprojects[i] = project;
-                    }
-                });
-            }
-            _this.storage.set('myprojects', myprojects).then(function (myprojects) {
             });
         });
     };
@@ -4069,7 +4113,7 @@ var SharedModule = /** @class */ (function () {
                 _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"], _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__["TaskBoardPipe"]
             ],
             exports: [
-                highcharts_angular__WEBPACK_IMPORTED_MODULE_4__["HighchartsChartModule"], _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"]
+                highcharts_angular__WEBPACK_IMPORTED_MODULE_4__["HighchartsChartModule"], _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"], _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__["TaskBoardPipe"]
             ]
         })
     ], SharedModule);
@@ -4154,7 +4198,6 @@ var TaskBoardPipe = /** @class */ (function () {
         this.homeService = homeService;
     }
     TaskBoardPipe.prototype.transform = function (items, searchText) {
-        var _this = this;
         if (!items)
             return [];
         if (!searchText) {
@@ -4164,8 +4207,8 @@ var TaskBoardPipe = /** @class */ (function () {
         searchText = searchText.toLowerCase();
         return items.filter(function (it) {
             if (it) {
-                var data = it.title.toLowerCase().includes(searchText);
-                _this.homeService.setCount(data);
+                console.log(it.title);
+                return it.title.toLowerCase().includes(searchText);
             }
         });
     };
@@ -4529,8 +4572,8 @@ var ToastService = /** @class */ (function () {
         this.toastController = toastController;
         this.translateService = translateService;
         this.loadingController = loadingController;
-        this.pending = false;
     }
+    // error toast
     ToastService.prototype.errorToast = function (msg) {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             var toast;
@@ -4554,6 +4597,7 @@ var ToastService = /** @class */ (function () {
             });
         });
     };
+    // sucess toast
     ToastService.prototype.successToast = function (msg) {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             var toast;
@@ -4577,35 +4621,13 @@ var ToastService = /** @class */ (function () {
             });
         });
     };
-    ToastService.prototype.loader = function () {
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var loading, _a, role, data;
-            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.loadingController.create({
-                            message: 'Syncing your data.',
-                        })];
-                    case 1:
-                        loading = _b.sent();
-                        return [4 /*yield*/, loading.present()];
-                    case 2:
-                        _b.sent();
-                        return [4 /*yield*/, loading.onDidDismiss()];
-                    case 3:
-                        _a = _b.sent(), role = _a.role, data = _a.data;
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
+    // Start laoder
     ToastService.prototype.startLoader = function (msg) {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             var _a;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        // if (!this.pending) {
-                        this.pending = true;
                         _a = this;
                         return [4 /*yield*/, this.loadingController.create({
                                 message: msg
@@ -4620,14 +4642,12 @@ var ToastService = /** @class */ (function () {
             });
         });
     };
+    // Stop laoder
     ToastService.prototype.stopLoader = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        // if (this.pending) {
-                        this.pending = false;
-                        return [4 /*yield*/, this.loadingController.dismiss().then(function () { return console.log('dismissed'); })];
+                    case 0: return [4 /*yield*/, this.loadingController.dismiss().then(function () { return console.log('dismissed'); })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

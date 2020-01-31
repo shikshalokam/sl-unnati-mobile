@@ -108,6 +108,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../myschools/myschools.service */ "./src/app/myschools/myschools.service.ts");
 /* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "./node_modules/@ionic-native/screen-orientation/ngx/index.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+
 
 
 
@@ -126,12 +128,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var HomePage = /** @class */ (function () {
-    function HomePage(datepipe, storage, apiProvider, homeService, categoryViewService, router, projectsService, login, screenOrientation, projectService, translate, networkService, menuCtrl, reportsService, mySchoolsService) {
-        //   let params = new URLSearchParams(window.location.search);
-        // if (typeof params == 'string') {
-        //   params = JSON.parse(params);
-        // }
-        // console.log(params, "params");
+    function HomePage(datepipe, storage, apiProvider, homeService, categoryViewService, router, projectsService, login, screenOrientation, projectService, translate, networkService, menuCtrl, reportsService, mySchoolsService, toastService) {
         var _this = this;
         this.datepipe = datepipe;
         this.storage = storage;
@@ -148,6 +145,7 @@ var HomePage = /** @class */ (function () {
         this.menuCtrl = menuCtrl;
         this.reportsService = reportsService;
         this.mySchoolsService = mySchoolsService;
+        this.toastService = toastService;
         this.connected = false;
         this.loggedIn = false;
         this.type = 'quarter';
@@ -156,45 +154,13 @@ var HomePage = /** @class */ (function () {
         this.tiles = [
             { title: "create project", icon: 'assets/images/homeTiles/createproject.png', url: '/project-view/create-project' },
             { title: "library", icon: 'assets/images/homeTiles/library.png', url: '/project-view/library' },
-            { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '/project-view/task-board' },
+            { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '' },
             { title: "reports", icon: 'assets/images/homeTiles/reports.png', url: '/project-view/my-reports/last-month-reports' }
         ];
         this.activeProjects = [];
         this.showSkeleton = false;
         this.skeletons = [{}, {}, {}, {}, {}, {}];
         this.showNoProjects = '';
-        // console.log(params.rawParams, "params");
-        // let code = (((params.rawParams).split("?")[1]).split("="))[1];
-        // console.log(code, "code");
-        // this.menuCtrl.enable(true);
-        // this.login.doOAuthStepTwo(code).then(success => {
-        //   console.log(success, "success")
-        //   this.menuCtrl.enable(true);
-        //   this.login.checkForCurrentUserLocalData(success);
-        //   let userDetails = jwt_decode(success.access_token);
-        //   console.log(userDetails,"userDetails");
-        //   this.menuCtrl.enable(true);
-        //   this.storage.set('userDetails', userDetails).then(userData => {
-        //   })
-        //   this.storage.set('userTokens', success).then(data => {
-        //     console.log(data,"data user token save");
-        //     this.router.navigateByUrl('/project-view/home');
-        //     // this.fcm.initializeFCM();
-        //     this.login.loggedIn('true');
-        //     this.menuCtrl.enable(true);
-        //     this.storage.set('veryFirstTime', 'false').then(data => {
-        //       // this.veryFirstTime = false;
-        //     })
-        //   });
-        //   localStorage.setItem('token', success);
-        //   this.networkService.status(true);
-        //   this.menuCtrl.enable(true);
-        //   this.login.loggedIn('true');
-        //   localStorage.setItem("networkStatus", 'true');
-        // }).catch(error1 => {
-        // })
-        // let someParam = params.get('user');
-        // console.log(someParam, "someParam");
         this.menuCtrl.enable(true);
         homeService.activeProjectLoad.subscribe(function (data) {
             if (data == 'activeProjectLoad') {
@@ -237,9 +203,7 @@ var HomePage = /** @class */ (function () {
         this.login.loggedIn('true');
         this.checkUser();
         this.storage.get('projects').then(function (projects) {
-            console.log(!projects, "projects");
             if (!projects) {
-                console.log('calling get projects');
                 _this.getProjects();
             }
         });
@@ -294,7 +258,6 @@ var HomePage = /** @class */ (function () {
                         _this.showSkeleton = true;
                         _this.projectsService.getAssignedProjects(usertoken.access_token, _this.type).subscribe(function (resp) {
                             if (resp.status != 'failed') {
-                                console.log(resp.data, "resp.data get projects");
                                 resp.data.forEach(function (programs) {
                                     programs.projects.forEach(function (project) {
                                         project.lastUpdate = project.lastSync;
@@ -305,22 +268,18 @@ var HomePage = /** @class */ (function () {
                                             project.isStarted = true;
                                         }
                                         project.programName = programs.programs.name;
-                                        console.log(project, "project getting and filtering");
                                         if (project.createdType == 'by self' || project.createdType == 'by reference') {
                                             myProjects.push(project);
                                         }
                                         else {
                                             project.toDisplay = true;
-                                            console.log(project, "project.toDisplay");
                                         }
                                     });
                                 });
                                 _this.projectList = resp.data;
-                                console.log(_this.projectList, "this.projectList ");
                                 _this.storage.set('projects', _this.projectList).then(function (resp1) {
                                 });
                                 if (myProjects) {
-                                    console.log(myProjects, "myProjects");
                                     _this.storage.set('myprojects', myProjects).then(function (data) {
                                         _this.getActiveProjects();
                                     });
@@ -397,7 +356,7 @@ var HomePage = /** @class */ (function () {
             if (myProjects) {
                 myProjects.forEach(function (myProject) {
                     if (count < 2) {
-                        if (myProject.isStarted) {
+                        if (myProject.isStarted && !myProject.isDeleted) {
                             ap.push(myProject);
                             count = count + 1;
                         }
@@ -413,12 +372,14 @@ var HomePage = /** @class */ (function () {
     HomePage.prototype.navigate = function (url) {
         this.homeService.clearData();
         if (url == '/project-view/create-project') {
-            // || url == '/project-view/library'
             this.homeService.clearData();
             this.router.navigate([url, 'yes']);
         }
         else if (url != '') {
             this.router.navigate([url]);
+        }
+        else if (url == '') {
+            this.toastService.errorToast('message.comingsoon');
         }
     };
     HomePage.prototype.viewMore = function () {
@@ -444,7 +405,8 @@ var HomePage = /** @class */ (function () {
             _network_service__WEBPACK_IMPORTED_MODULE_2__["NetworkService"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["MenuController"],
             _reports_reports_service__WEBPACK_IMPORTED_MODULE_13__["ReportsService"],
-            _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_14__["MyschoolsService"]])
+            _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_14__["MyschoolsService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_17__["ToastService"]])
     ], HomePage);
     return HomePage;
 }());

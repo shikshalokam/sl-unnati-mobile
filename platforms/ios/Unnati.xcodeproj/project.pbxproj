@@ -59,6 +59,7 @@
 		342C9F0C0BCB43F6BA208F37 /* CDVJpegHeaderWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F9866DF5EA747B2A8AF4A04 /* CDVJpegHeaderWriter.m */; };
 		EE6A8C03406648E28FCCDBB1 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D542A118D9044929555B5A3 /* ImageIO.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B9707D97F018413193A8BBC8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F957AC712F314ECF9724E990 /* AVFoundation.framework */; };
+		A0607779B2744F49933805D0 /* FileOpener2.m in Sources */ = {isa = PBXBuildFile; fileRef = 33D711D5B0A545A6A995A78E /* FileOpener2.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -189,6 +190,8 @@
 		49DF8A6E13F045EEB4E009DE /* CDVExif.h */ = {isa = PBXFileReference; name = "CDVExif.h"; path = "cordova-plugin-camera/CDVExif.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		6D542A118D9044929555B5A3 /* ImageIO.framework */ = {isa = PBXFileReference; name = "ImageIO.framework"; path = "System/Library/Frameworks/ImageIO.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		F957AC712F314ECF9724E990 /* AVFoundation.framework */ = {isa = PBXFileReference; name = "AVFoundation.framework"; path = "System/Library/Frameworks/AVFoundation.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		33D711D5B0A545A6A995A78E /* FileOpener2.m */ = {isa = PBXFileReference; name = "FileOpener2.m"; path = "cordova-plugin-file-opener2/FileOpener2.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		9E2CD0541CA446F8BECDCCFD /* FileOpener2.h */ = {isa = PBXFileReference; name = "FileOpener2.h"; path = "cordova-plugin-file-opener2/FileOpener2.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -385,6 +388,8 @@
 				20BED3630C6940319A7E78E4 /* CDVCamera.h */,
 				7A10E07B6AFE41958C7163E1 /* CDVJpegHeaderWriter.h */,
 				49DF8A6E13F045EEB4E009DE /* CDVExif.h */,
+				33D711D5B0A545A6A995A78E /* FileOpener2.m */,
+				9E2CD0541CA446F8BECDCCFD /* FileOpener2.h */,
 			);
 			name = Plugins;
 			path = "Unnati/Plugins";
@@ -546,6 +551,7 @@
 				DFF25B2FCE724211945FACE4 /* UIImage+CropScaleOrientation.m in Sources */,
 				EE885B2644CF4DFD8F98E571 /* CDVCamera.m in Sources */,
 				342C9F0C0BCB43F6BA208F37 /* CDVJpegHeaderWriter.m in Sources */,
+				A0607779B2744F49933805D0 /* FileOpener2.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
