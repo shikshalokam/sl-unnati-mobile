@@ -49,6 +49,33 @@
     },
     "cordova-plugin-local-notification": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-x-socialsharing": {
+      "ANDROID_SUPPORT_V4_VERSION": "24.1.1+",
+      "PACKAGE_NAME": "org.shikshalokam.unnati.qa"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-filechooser": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-filepath": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "com-badrit-base64": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-camera": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "org.shikshalokam.unnati.qa"
+    },
+    "cordova-plugin-file-opener2": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "org.shikshalokam.unnati.qa"
     }
   },
   "dependent_plugins": {

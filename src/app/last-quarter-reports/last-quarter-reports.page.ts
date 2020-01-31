@@ -20,43 +20,14 @@ export class LastQuarterReportsPage implements OnInit {
   public showSkeleton: boolean = false;
   public skeletons = [{}, {}, {}, {}, {}]
   highcharts = Highcharts;
-  // chartOptions = {
-  //   chart: {
-  //     type: 'pie',
-  //     plotBorderWidth: null,
-  //     plotShadow: false
-  //   },
-  //   title: {
-  //     text: ''
-  //   },
-  //   tooltip: {
-  //     pointFormat: '{series.name}: <b>{point.percentage:}%</b>'
-  //   },
-  //   plotOptions: {
-  //     pie: {
-  //       shadow: false,
-  //       center: ['50%', '50%'],
-  //     }
-  //   },
-  //   series: [{
-  //     name: 'Tasks',
-  //     data: [["Completed", 6], ["Pending", 4]],
-  //     size: '70%',
-  //     innerSize: '50%',
-  //     showInLegend: true,
-  //     dataLabels: {
-  //       enabled: false
-  //     }
-  //   }]
-  // };
   color = "#20ba8d";
-  constructor(public router: Router, 
-    public myReportsService: MyReportsService, 
-    public toastController: ToastController, 
-    public api: ApiProvider, 
+  constructor(public router: Router,
+    public myReportsService: MyReportsService,
+    public toastController: ToastController,
+    public api: ApiProvider,
     public storage: Storage,
     public screenOrientation: ScreenOrientation
-    ) { }
+  ) { }
   ionViewDidEnter() {
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
@@ -73,7 +44,6 @@ export class LastQuarterReportsPage implements OnInit {
 
   getChart() {
     this.showChart = true;
-
   }
 
   public viewFullReport(value) {
@@ -110,9 +80,20 @@ export class LastQuarterReportsPage implements OnInit {
     })
   }
   public setupChart() {
-    let totalTask = this.report.completed + this.report.pending;
-    let completed: any = (this.report.completed / totalTask) * 100;
-    completed = completed.toFixed(0);
+    // let totalTask = this.report.completed + this.report.pending;
+    // let completed: any = (this.report.completed / totalTask) * 100;
+    // completed = completed.toFixed(0);
+    let totalTask;
+    let completed: any;
+    if (this.report.completed > 0 || this.report.pending > 0) {
+      totalTask = this.report.completed + this.report.pending;
+      completed = (this.report.completed / totalTask) * 100;
+      completed = completed.toFixed(0);
+    } else {
+      this.report.completed = 0;
+      this.report.pending = 0;
+      completed = 0;
+    }
     this.chartOptions = {
       chart: {
         type: 'pie'
@@ -148,7 +129,7 @@ export class LastQuarterReportsPage implements OnInit {
       },
       series: [{
         name: "Tasks",
-        data: [["Pending", this.report.pending],["Completed", this.report.completed]],
+        data: [["Pending", this.report.pending], ["Completed", this.report.completed]],
         size: '90%',
         innerSize: '70%',
         showInLegend: true,

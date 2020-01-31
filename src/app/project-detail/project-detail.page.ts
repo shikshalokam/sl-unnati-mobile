@@ -6,7 +6,7 @@ import { CreateTaskService } from '../create-task/create-task.service';
 import * as moment from 'moment';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { DatePipe } from '@angular/common'
-
+import { ToastService } from '../toast.service'
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.page.html',
@@ -16,6 +16,7 @@ export class ProjectDetailPage {
   project;
   back;
   category;
+  files: any;
   startDate;
   isValidDate;
   tasksLength = 0;
@@ -36,7 +37,8 @@ export class ProjectDetailPage {
     public router: Router,
     public datePicker: DatePicker,
     public datepipe: DatePipe,
-    public taskService: CreateTaskService
+    public taskService: CreateTaskService,
+    public toastService: ToastService
   ) {
     route.params.subscribe(param => {
       if (param.cat) {
@@ -62,7 +64,7 @@ export class ProjectDetailPage {
       this.tasksLength = 0;
       let inProgress = 0;
       project.tasks.forEach(task => {
-        if (!task.isDelete) {
+        if (!task.isDeleted) {
           this.tasksLength = this.tasksLength + 1;
         }
         // set the project status if project is started
@@ -85,6 +87,7 @@ export class ProjectDetailPage {
           }
         }
       });
+
       if (project.status == 'not yet started') {
         project.status = 'Not started';
       }
@@ -92,6 +95,7 @@ export class ProjectDetailPage {
         project.status = 'Not started';
       }
       this.project = project;
+      this.sortTasks();
     })
   }
   // Copy the template project into my project
@@ -102,6 +106,7 @@ export class ProjectDetailPage {
     this.project.startDate = new Date();
     if (this.category != 'my_projects') {
       this.project.createdType = "by reference";
+      this.project.lastUpdate = new Date();
       this.project.isNew = true;
       this.project.templateId = this.project._id;
       if (this.project.tasks) {
@@ -126,7 +131,6 @@ export class ProjectDetailPage {
           }
         })
       }
-
       this.storage.set('projectToBeView', this.project).then(project => {
         this.project = project;
         this.createProjectService.insertIntoMyProjects(this.project).then(data => {
@@ -135,6 +139,7 @@ export class ProjectDetailPage {
         })
       })
     } else {
+      this.project.lastUpdate = new Date();
       this.createProjectService.updateByProjects(this.project);
       this.storage.set('projectToBeView', this.project).then(project => {
         this.project = project;
@@ -146,6 +151,10 @@ export class ProjectDetailPage {
   }
   public addTask() {
     this.router.navigate(['/project-view/create-task', this.project._id, "pd"]);
+  }
+  public navigateToFiles() {
+    this.router.navigate(['/project-view/files', this.project._id]);
+
   }
   // set date
   public setDate(type) {
@@ -168,6 +177,7 @@ export class ProjectDetailPage {
             this.checkDate();
           } else {
             this.project.startDate = this.datepipe.transform(new Date());
+            this.checkDate();
           }
         }
         this.createProjectService.updateByProjects(this.project);
@@ -235,7 +245,12 @@ export class ProjectDetailPage {
         break;
       }
       case 'title': {
-        this.editTitle = false;
+        if (this.project.title) {
+          this.editTitle = false;
+          this.markLabelsAsInvalid = false;
+        } else {
+          this.markLabelsAsInvalid = true;
+        }
         break;
       }
     }
@@ -250,23 +265,47 @@ export class ProjectDetailPage {
 
   // navigate to view task
   public taskView(task) {
-    this.storage.set('newcreatedproject', this.project).then(cmp => {
-      task.projectStarted = this.project.isStarted;
-      this.storage.set('cTask', task).then(ct => {
-        this.router.navigate(['/project-view/current-task', task._id, 'pd']);
-      });
-    })
+    if (this.project.isStarted) {
+      this.storage.set('newcreatedproject', this.project).then(cmp => {
+        task.projectStarted = this.project.isStarted;
+        this.storage.set('cTask', task).then(ct => {
+          this.router.navigate(['/project-view/current-task', task._id, 'pd']);
+        });
+      })
+    }
   }
 
   // mark the task as deleted
   public delete(task) {
-    task.isDelete = true;
+    task.isDeleted = true;
     this.storage.set('cTask', task).then(ct => {
       this.updateCurrentProject(ct);
+      this.toastService.successToast('message.task_is_deleted');
     })
   }
   // update project with all changes made.
   public updateCurrentProject(ct) {
-      this.getProject();
+    this.project.lastUpdate = new Date();
+    this.createProjectService.updateByProjects(this.project);
+  }
+  public sortTasks() {
+    let today = this.datepipe.transform(new Date(), "MMM dd, yyyy");
+    let tasksWithEndDate = [];
+    let tasksWithoutEndDate = [];
+    this.project.tasks.forEach(task => {
+      if (task.endDate && !task.isDeleted) {
+        if (task.endDate >= today) {
+          tasksWithEndDate.push(task);
+        } else {
+          tasksWithoutEndDate.push(task);
+        }
+      } else {
+        tasksWithoutEndDate.push(task);
+      }
+    });
+    tasksWithEndDate.sort((a, b) => {
+      return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+    });
+    this.project.tasks = tasksWithEndDate.concat(tasksWithoutEndDate);
   }
 }

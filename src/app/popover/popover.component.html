@@ -1,0 +1,18 @@
+<ion-list>
+  <ion-item (click)="deleteConfirmation()">
+    <ion-label>{{delete}}
+    </ion-label>
+    <ion-avatar slot="end" class="avatar-style">
+      <i class="material-icons" style="font-size: 1.4em;">
+        delete_forever
+      </i>
+    </ion-avatar>
+  </ion-item>
+  <ion-item (click)="syncProject()">
+    <ion-label>{{share}}
+    </ion-label>
+    <ion-avatar slot="end" class="avatar-style">
+      <ion-icon name="share"></ion-icon>
+    </ion-avatar>
+  </ion-item>
+</ion-list>

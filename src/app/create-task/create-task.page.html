@@ -30,7 +30,7 @@
   <div class="tasks-container">
     <div *ngIf="currentMyProject?.tasks">
       <div *ngFor="let task of currentMyProject?.tasks">
-      <ion-card  (click)="navigateTaskView(task)" *ngIf="!task.isDelete">
+      <ion-card  (click)="navigateTaskView(task)" *ngIf="!task.isDeleted">
         <ion-card-header>
           <h4>{{task?.title}}</h4>
         </ion-card-header>
@@ -40,7 +40,7 @@
               <img src="assets/images/timetable.png">
               <span style="font-size: 16px;
             font-weight: 600;">
-                {{task?.endDate}} </span>
+                {{task?.endDate | date : 'dd-MM-yyyy'}} </span>
             </ion-col>
             <ion-col size="4">
               <div class="statusbar" *ngIf="task?.status"
