@@ -94,11 +94,9 @@ var KclgPage = /** @class */ (function () {
         this.route = route;
         this.router = router;
         this.route.queryParams.subscribe(function (params) {
-            console.log(params);
         });
     }
     KclgPage.prototype.ngOnInit = function () {
-        console.log('in kclg');
     };
     KclgPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
