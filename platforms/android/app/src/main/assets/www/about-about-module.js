@@ -191,26 +191,6 @@ var AboutPage = /** @class */ (function () {
     };
     AboutPage.prototype.checkLocalData = function () {
         var isDirty = false;
-        // this.storage.get('myprojects').then(myProjects => {
-        //   console.log(myProjects, "myProjects");
-        //   if (myProjects && navigator.onLine) {
-        //     myProjects.forEach(project => {
-        //       console.log(project, "project", project.isEdited, project.isNew);
-        //       if (project.isEdited || project.isNew) {
-        //         console.log(project.isEdited, project.isNew, "project edit and isNew");
-        //         isDirty = true;
-        //       }
-        //     })
-        //     console.log(isDirty, "isDirty");
-        //     if (isDirty) {
-        //       this.showConfirmAlert();
-        //     } else {
-        //       this.logout();
-        //     }
-        //   } else {
-        //     this.logout();
-        //   }
-        // })
     };
     AboutPage.prototype.showConfirmAlert = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {

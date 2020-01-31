@@ -144,7 +144,6 @@ var FilesPage = /** @class */ (function () {
                 });
             }
             _this.currentMyProject = project;
-            console.log(_this.currentMyProject, "this.currentMyProject");
         });
     };
     FilesPage.prototype.selectTab = function (type) {
