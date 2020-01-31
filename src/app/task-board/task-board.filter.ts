@@ -14,8 +14,7 @@ export class TaskBoardPipe implements PipeTransform {
     searchText = searchText.toLowerCase();
     return items.filter(it => {
       if (it) {
-        let data = it.title.toLowerCase().includes(searchText);
-        this.homeService.setCount(data);
+        return it.title.toLowerCase().includes(searchText)
       }
     });
   }

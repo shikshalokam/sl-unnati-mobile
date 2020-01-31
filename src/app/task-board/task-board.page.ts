@@ -11,11 +11,13 @@ export class TaskBoardPage {
   back = "/project-view/home";
   ongoing: any = [];
   past: any = [];
+  searchInput;
   constructor(
     public storage: Storage
   ) { }
 
   ionViewDidEnter() {
+    this.searchInput = '';
     this.getProjects();
   }
   public getProjects() {
@@ -25,7 +27,7 @@ export class TaskBoardPage {
       if (projects) {
         projects.forEach(project => {
           let count = 0;
-          if (project.tasks && project.tasks.length > 0) {
+          if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
             project.tasks.forEach(task => {
               if (task.status == 'Completed' || task.status == 'completed') {
                 if (count == 0) {

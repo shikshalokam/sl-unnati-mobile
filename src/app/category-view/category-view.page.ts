@@ -32,8 +32,6 @@ export class CategoryViewPage {
         this.categaryService.getMyProjects().then((myProjects: any) => {
           if (myProjects) {
             myProjects = this.getSortData(myProjects);
-            // myProjects.sort((val1, val2)=> {return new Date(val2.lastUpdate) - new 
-            //   Date(val1.lastUpdate)})
             myProjects.forEach(element => {
             });
             this.projects = myProjects;
@@ -47,7 +45,6 @@ export class CategoryViewPage {
       this.catType = param.cat;
       switch (param.cat) {
         case 'my_projects': {
-          //statements; 
           this.categoryHead = {
             icon: 'assets/images/libraryTiles/myprojects.png',
             title: 'my projects'
@@ -56,7 +53,6 @@ export class CategoryViewPage {
           break;
         }
         case 'teacher': {
-          //statements; 
           this.categoryHead = {
             icon: 'assets/images/libraryTiles/teacher.png',
             title: 'teacher'
@@ -65,7 +61,6 @@ export class CategoryViewPage {
           break;
         }
         case 'students': {
-          //statements; 
           this.categoryHead = {
             icon: 'assets/images/libraryTiles/students.png',
             title: 'students'

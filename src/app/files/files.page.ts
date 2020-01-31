@@ -6,6 +6,7 @@ import { Platform } from '@ionic/angular';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
 declare var cordova: any;
 
 @Component({
@@ -25,7 +26,8 @@ export class FilesPage implements OnInit {
     public transfer: FileTransfer,
     public base64: Base64,
     public fileChooser: FileChooser,
-    public file: File
+    public file: File,
+    public fileOpener: FileOpener
   ) {
     route.params.subscribe(params => {
       this.getCurrentProject(params.id);
@@ -44,12 +46,9 @@ export class FilesPage implements OnInit {
         project.tasks.forEach(task => {
           if (task.imageUrl) {
             task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
-          } if (task.file) {
-            this.downloadFile(task);
           }
         });
       }
-
       this.currentMyProject = project;
     })
   }
@@ -57,27 +56,25 @@ export class FilesPage implements OnInit {
     this.activeTab = type;
   }
   downloadFile(task) {
-    const downloadLink = document.createElement("a");
-    const fileName = task.file.name;
-    downloadLink.href = task.file.url;
-    downloadLink.download = fileName;
-    task.downloadLink = downloadLink.download;
-    // downloadLink.click();
-    // downloadLink.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-
-    // const fileName = name.replace(/\s/g, "");
-    // const fileTransfer: FileTransferObject = this.transfer.create();
-    // const url = base64Content;
-    // fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
-    //   this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
-    //     let data = base64File.split(',');
-    //     let base64Data = data;
-    //   }, (err) => {
-    //     console.log(err);
-    //   });
-    // }, (error) => {
-    //   console.log(error);
-    // });
+    fetch(task.file.url,
+      {
+        method: "GET"
+      }).then(res => res.blob()).then(blob => {
+        this.file.writeFile(this.file.externalApplicationStorageDirectory, task.file.name, blob, { replace: true }).then(res => {
+          this.fileOpener.open(
+            res.toInternalURL(),
+            'application/pdf'
+          ).then((res) => {
+            console.log(res, 'sucess');
+          }).catch(err => {
+            console.log(err, 'error');
+          });
+        }).catch(err => {
+          console.log('error in catch');
+        });
+      }).catch(err => {
+        console.log('error');
+      });
 
   }
 }

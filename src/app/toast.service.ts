@@ -8,12 +8,13 @@ import { LoadingController } from '@ionic/angular';
 })
 export class ToastService {
     loading: any;
-    pending: boolean = false;
     constructor(
         public toastController: ToastController,
         public translateService: TranslateService,
         public loadingController: LoadingController
     ) { }
+
+    // error toast
     async errorToast(msg) {
         this.translateService.get(msg).subscribe((text: string) => {
             msg = text;
@@ -26,6 +27,8 @@ export class ToastService {
         });
         toast.present();
     }
+
+    // sucess toast
     async successToast(msg) {
         this.translateService.get(msg).subscribe((text: string) => {
             msg = text;
@@ -38,27 +41,17 @@ export class ToastService {
         });
         toast.present();
     }
-    async loader() {
-        const loading = await this.loadingController.create({
-            message: 'Syncing your data.',
-        });
-        await loading.present();
-        const { role, data } = await loading.onDidDismiss();
-    }
 
+    // Start laoder
     async startLoader(msg: string) {
-        // if (!this.pending) {
-        this.pending = true;
         this.loading = await this.loadingController.create({
             message: msg
         });
         await this.loading.present();
-        // }
     }
+
+    // Stop laoder
     async stopLoader() {
-        // if (this.pending) {
-        this.pending = false;
         return await this.loadingController.dismiss().then(() => console.log('dismissed'));
-        // }
     }
 }
