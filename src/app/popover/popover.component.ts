@@ -142,13 +142,8 @@ export class PopoverComponent implements OnInit {
               refresh_token: parsedData.refresh_token,
             };
             this.storage.set('userTokens', userTokens).then(data => {
-              this.toastService.startLoader('Your data is syncing');
+              this.toastService.startLoader('Loading, please wait');
               this.projectService.sync(this.project, data.access_token).subscribe((data: any) => {
-                // if (data.status == "success") {
-                //   this.updateInLocal(this.project, data.projectDetails.data.projects[0]);
-                //   this.getPDF(data.projectDetails.data.projects[0]._id);
-                //   this.DismissClick();
-                // }
                 if (data.status == "success" || data.status == "succes") {
                   let updatedProject;
                   if (data.projectDetails) {
@@ -179,9 +174,10 @@ export class PopoverComponent implements OnInit {
                     this.syncUpdateInLocal(updatedProject, this.project, data.allProjects);
                   }
                 }
-
               }, error => {
                 // intentially left blank
+                this.toastService.stopLoader();
+                this.toastService.errorToast(data.message)
               })
             })
           }
@@ -190,7 +186,7 @@ export class PopoverComponent implements OnInit {
         })
       })
     } else {
-      this.toastService.startLoader('Loading');
+      this.toastService.startLoader('Loading, please wait');
       this.getPDF(this.project._id);
       this.DismissClick();
     }

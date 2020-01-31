@@ -84,26 +84,6 @@ export class AboutPage implements OnInit {
   }
   public checkLocalData() {
     let isDirty: boolean = false;
-    // this.storage.get('myprojects').then(myProjects => {
-    //   console.log(myProjects, "myProjects");
-    //   if (myProjects && navigator.onLine) {
-    //     myProjects.forEach(project => {
-    //       console.log(project, "project", project.isEdited, project.isNew);
-    //       if (project.isEdited || project.isNew) {
-    //         console.log(project.isEdited, project.isNew, "project edit and isNew");
-    //         isDirty = true;
-    //       }
-    //     })
-    //     console.log(isDirty, "isDirty");
-    //     if (isDirty) {
-    //       this.showConfirmAlert();
-    //     } else {
-    //       this.logout();
-    //     }
-    //   } else {
-    //     this.logout();
-    //   }
-    // })
   }
 
   async showConfirmAlert() {

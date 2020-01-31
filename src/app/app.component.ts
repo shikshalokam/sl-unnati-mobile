@@ -367,10 +367,15 @@ export class AppComponent {
             }
             this.autoSync(project);
           } else {
+            // intentially left blank
           }
         })
+        if (!projectsToSync) {
+          this.toastService.successToast('message.sync_success');
+        }
       } else {
         // this.toastService.stopLoader();
+        this.toastService.successToast('message.already_sync');
       }
     })
   }
@@ -404,8 +409,12 @@ export class AppComponent {
             }
           });
         })
+        if (!projectsToSync) {
+          this.toastService.successToast('message.sync_success');
+        }
       } else {
         // intentially left blank
+        this.toastService.successToast('message.already_sync');
       }
     })
   }
@@ -477,6 +486,7 @@ export class AppComponent {
         if (myprojects) {
           myprojects.forEach(function (prj, i) {
             if (prj._id == oldProject._id) {
+              project.templateId = project._id;
               myprojects[i] = project;
             }
           });
@@ -512,17 +522,5 @@ export class AppComponent {
     let localProjects;
     this.storage.set('myprojects', syncedProjects.data[0].projects).then(myprojects => {
     })
-    // syncedProjects.data[0].projects.forEach(project => {
-    //   if(!project.isDeleted){
-    //     localProjects.forEach(localProject => {
-    //       if(localProject._id == project._id){
-
-    //       }
-    //     });
-    //   }
-    // });
-    //   syncedProjects.forEach(project => {
-
-    //  });
   }
 }
