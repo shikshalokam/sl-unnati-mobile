@@ -133,7 +133,6 @@ var ProjectDetailPage = /** @class */ (function () {
         route.params.subscribe(function (param) {
             if (param.cat) {
                 _this.category = param.cat;
-                console.log(_this.category, "this.category");
                 if (_this.category == 'my-projects' || _this.category == 'active-projects' || _this.category == 'all-projects' || _this.category == 'projectsList') {
                     _this.back = 'project-view/projects';
                 }

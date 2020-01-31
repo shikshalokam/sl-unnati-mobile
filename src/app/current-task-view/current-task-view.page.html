@@ -95,7 +95,7 @@
   </div>
   <div style="margin-top:30px;">
     <ion-button (click)="openPopup()" color="secondary" class="round-corner-btn" expand="block"
-      [disabled]="!enableMarkButton" >
+      [disabled]="!enableMarkButton">
       {{'button.mark_task_complete' | translate}}
     </ion-button>
   </div>
@@ -127,24 +127,17 @@
             <form>
               <div class="fileUpload">
                 <img src="assets/images/attach-pin.png">
-                <input #imageInputFile type="file" class="upload"
-                  (change)="selectedFile(imageInputFile,'file')" />
+                <input #imageInputFile type="file" class="upload" (change)="selectedFile(imageInputFile,'file')" />
               </div>
             </form>
           </ion-col>
         </ion-row>
       </div>
-      <ion-row class="pop-btn">
-        <ion-col size="5">
-          <!-- <ion-button color="primary" expand="block" (click)="attach()">
-            {{'button.attach' | translate}}</ion-button> -->
-        </ion-col>
-        <ion-col size="7">
-          <ion-button color="primary" expand="block" (click)="markTaskAsCompleted()">
-            {{'button.mark_complete' | translate}}
-          </ion-button>
-        </ion-col>
-      </ion-row>
+      <div class="pop-btn">
+        <ion-button color="primary" expand="block" (click)="markTaskAsCompleted()">
+          {{'button.mark_complete' | translate}}
+        </ion-button>
+      </div>
     </div>
   </div>
   <!-- Popup ends here -->
