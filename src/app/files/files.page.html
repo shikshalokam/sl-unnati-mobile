@@ -30,6 +30,13 @@
             </ion-col>
           </ion-row>
         </ion-card-content>
+        <ion-card-content *ngIf="!task.remarks && task.imageUrl">
+            <ion-row>
+              <ion-col size="6">
+                <img src="{{task.imageUrl}}">
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
       </ion-card>
     </div>
   </div>

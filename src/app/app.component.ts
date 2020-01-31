@@ -367,10 +367,15 @@ export class AppComponent {
             }
             this.autoSync(project);
           } else {
+            // intentially left blank
           }
         })
+        if (!projectsToSync) {
+          this.toastService.successToast('message.sync_success');
+        }
       } else {
         // this.toastService.stopLoader();
+        this.toastService.successToast('message.already_sync');
       }
     })
   }
@@ -404,8 +409,14 @@ export class AppComponent {
             }
           });
         })
+        if (!projectsToSync) {
+          console.log('uptodate');
+          this.toastService.successToast('message.sync_success');
+        }
       } else {
         // intentially left blank
+        console.log('uptodate');
+        this.toastService.successToast('message.already_sync');
       }
     })
   }
@@ -512,17 +523,5 @@ export class AppComponent {
     let localProjects;
     this.storage.set('myprojects', syncedProjects.data[0].projects).then(myprojects => {
     })
-    // syncedProjects.data[0].projects.forEach(project => {
-    //   if(!project.isDeleted){
-    //     localProjects.forEach(localProject => {
-    //       if(localProject._id == project._id){
-
-    //       }
-    //     });
-    //   }
-    // });
-    //   syncedProjects.forEach(project => {
-
-    //  });
   }
 }
