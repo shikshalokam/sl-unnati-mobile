@@ -237,7 +237,7 @@
         "placeholder_add_task ": "Add Subtask name",
         "title": "Add subtask",
         "edit_subtask_title": "Edit subtask title",
-        "add_remarks": "Add remarks"
+        "add_remarks": "Add remarks here"
     },
     "library": {
         "title": "Library",

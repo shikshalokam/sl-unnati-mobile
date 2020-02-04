@@ -1638,6 +1638,7 @@ var AppComponent = /** @class */ (function () {
                         if (project.isSync) {
                             project.createdType = '';
                         }
+                        _this.toastService.startLoader('Your data is syncing');
                         projectsToSync = true;
                         if (project.tasks && project.tasks.length > 0) {
                             project.tasks.forEach(function (task) {
@@ -1660,11 +1661,11 @@ var AppComponent = /** @class */ (function () {
                     }
                 });
                 if (!projectsToSync) {
-                    _this.toastService.successToast('message.sync_success');
+                    _this.toastService.successToast('message.already_sync');
                 }
             }
             else {
-                // this.toastService.stopLoader();
+                _this.toastService.stopLoader();
                 _this.toastService.successToast('message.already_sync');
             }
         });
@@ -1677,6 +1678,7 @@ var AppComponent = /** @class */ (function () {
                 myProjects.forEach(function (projectList) {
                     projectList.projects.forEach(function (project) {
                         if (project.isEdited && !project.createdType && !project.toDisplay) {
+                            _this.toastService.startLoader('Your data is syncing');
                             project.createdType = '';
                             projectsToSync = true;
                             if (project.tasks && project.tasks.length > 0) {
@@ -1701,12 +1703,12 @@ var AppComponent = /** @class */ (function () {
                         }
                     });
                 });
+                _this.toastService.stopLoader();
                 if (!projectsToSync) {
                     _this.toastService.successToast('message.sync_success');
                 }
             }
             else {
-                // intentially left blank
                 _this.toastService.successToast('message.already_sync');
             }
         });
@@ -1714,7 +1716,6 @@ var AppComponent = /** @class */ (function () {
     // auto sync
     AppComponent.prototype.autoSync = function (project) {
         var _this = this;
-        this.toastService.startLoader('Your data is syncing');
         this.storage.get('userTokens').then(function (data) {
             if (data) {
                 _this.api.refershToken(data.refresh_token).subscribe(function (data) {
@@ -1872,7 +1873,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppConfigs", function() { return AppConfigs; });
 var AppConfigs = {
     //Dev Urls
-    appVersion: "1.1.10",
+    appVersion: "1.1.12",
     appName: "Unnati",
     // Dev urls
     app_url: "https://dev.shikshalokam.org",
@@ -1890,7 +1891,7 @@ var AppConfigs = {
         registerDevice: "/notifications/push/registerDevice"
     },
     // QA
-    // app_url: "https://qa.shikshalokam.org",
+    // app_url: "https://qa.shikshalokam.org", 
     // api_url: "https://qahome.shikshalokam.org",
     // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
     // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
@@ -1915,7 +1916,7 @@ var AppConfigs = {
     //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
     //     markAsRead: "notifications/in-app/markAsRead",
     //     getAllNotifications: "/notifications/in-app/list",
-    // registerDevice: "notifications/push/registerDevice"
+    //     registerDevice: "notifications/push/registerDevice"
     // },
     //Staging Urls
     // app_url: "https://dev.shikshalokam.org",
@@ -2503,7 +2504,7 @@ var EditTaskPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-title>\n      {{ title }}\n      <ion-icon\n        name=\"close-circle\"\n        (click)=\"close()\"\n        style=\"    float: right;\n      font-size: larger;\"\n      ></ion-icon>\n    </ion-title>\n  </ion-toolbar>\n</ion-header> -->\n<!-- <ion-header>\n  <app-header [title]=\"title\" [showMenu]=\"false\" [showBack]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content padding>\n  <form [formGroup]=\"propertyForm\" novalidate *ngIf=\"showForm\">\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/tasks.png\" />{{\n            \"tasks.title_placeholder\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          type=\"text\"\n          class=\"form-control\"\n          formControlName=\"taskTitle\"\n          [(ngModel)]=\"task.title\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskTitle.valid &&\n          propertyForm.controls.taskTitle.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter title of Task.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/startDate.png\" />{{\n            \"tasks.start_date\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          style=\"--padding-start: 0px;\"\n          display-format=\"MMM DD, YYYY\"\n          picker-format=\"MMMM DD YYYY\"\n          (click)=\"openDatePicker()\"\n          formControlName=\"taskStartDate\"\n          [(ngModel)]=\"task.startDate\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskStartDate.valid &&\n          propertyForm.controls.taskStartDate.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter Start date.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/endDate.png\" />{{\n            \"tasks.end_date\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          style=\"--padding-start: 0px;\"\n          display-format=\"MMM DD, YYYY\"\n          picker-format=\"MMMM DD YYYY\"\n          (click)=\"openDatePicker1()\"\n          formControlName=\"taskEndDate\"\n          [(ngModel)]=\"task.endDate\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskEndDate.valid &&\n          propertyForm.controls.taskEndDate.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter End date.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\" *ngFor=\"let assign of task.assignedTo\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/assigned.png\" />{{\n            \"tasks.assigned_to\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          type=\"text\"\n          placeholder=\"\"\n          readonly\n          class=\"form-control\"\n          formControlName=\"taskAssignedTo\"\n          [(ngModel)]=\"assign.name\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskAssignedTo.valid &&\n          propertyForm.controls.taskAssignedTo.dirty &&\n          propertyForm.controls.taskAssignedTo.touched\n        \"\n        class=\"validator-error\"\n      >\n        Please enter Assign to.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/status.png\" />\n          {{ \"tasks.status\" | translate }}</ion-label\n        >\n        <ion-select\n          value=\"{{ task.status }}\"\n          okText=\"✓\"\n          cancelText=\"x\"\n          formControlName=\"taskStatus\"\n          [(ngModel)]=\"task.status\"\n        >\n          <ion-select-option\n            value=\"not yet started\"\n            selected=\"task.status === 'not yet started'\"\n            >Not yet started</ion-select-option\n          >\n          <ion-select-option\n            value=\"in progress\"\n            selected=\"task.status === 'in progress'\"\n            >In progress</ion-select-option\n          >\n          <ion-select-option\n            value=\"completed\"\n            selected=\"task.status === 'completed'\"\n            >Completed</ion-select-option\n          >\n        </ion-select>\n      </ion-item>\n    </div>\n  </form>\n</ion-content>\n<ion-footer>\n  <div class=\"action-board\">\n    <ion-button size=\"small\" color=\"light\" slot=\"start\" (click)=\"close()\">\n      {{ \"button.cancel\" | translate }}</ion-button\n    >\n    <ion-button\n      size=\"small\"\n      color=\"primary\"\n      slot=\"end\"\n      style=\"float:right\"\n      (click)=\"create()\"\n    >\n      {{ \"button.save\" | translate }}</ion-button\n    >\n  </div>\n</ion-footer> -->\n"
+module.exports = "<!-- <ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-title>\n      {{ title }}\n      <ion-icon\n        name=\"close-circle\"\n        (click)=\"close()\"\n        style=\"    float: right;\n      font-size: larger;\"\n      ></ion-icon>\n    </ion-title>\n  </ion-toolbar>\n</ion-header> -->\n<!-- <ion-header>\n  <app-header [title]=\"title\" [showMenu]=\"false\" [showBack]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <form [formGroup]=\"propertyForm\" novalidate *ngIf=\"showForm\">\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/tasks.png\" />{{\n            \"tasks.title_placeholder\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          type=\"text\"\n          class=\"form-control\"\n          formControlName=\"taskTitle\"\n          [(ngModel)]=\"task.title\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskTitle.valid &&\n          propertyForm.controls.taskTitle.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter title of Task.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/startDate.png\" />{{\n            \"tasks.start_date\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          style=\"--padding-start: 0px;\"\n          display-format=\"MMM DD, YYYY\"\n          picker-format=\"MMMM DD YYYY\"\n          (click)=\"openDatePicker()\"\n          formControlName=\"taskStartDate\"\n          [(ngModel)]=\"task.startDate\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskStartDate.valid &&\n          propertyForm.controls.taskStartDate.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter Start date.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/endDate.png\" />{{\n            \"tasks.end_date\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          style=\"--padding-start: 0px;\"\n          display-format=\"MMM DD, YYYY\"\n          picker-format=\"MMMM DD YYYY\"\n          (click)=\"openDatePicker1()\"\n          formControlName=\"taskEndDate\"\n          [(ngModel)]=\"task.endDate\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskEndDate.valid &&\n          propertyForm.controls.taskEndDate.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter End date.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\" *ngFor=\"let assign of task.assignedTo\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/assigned.png\" />{{\n            \"tasks.assigned_to\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          type=\"text\"\n          placeholder=\"\"\n          readonly\n          class=\"form-control\"\n          formControlName=\"taskAssignedTo\"\n          [(ngModel)]=\"assign.name\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskAssignedTo.valid &&\n          propertyForm.controls.taskAssignedTo.dirty &&\n          propertyForm.controls.taskAssignedTo.touched\n        \"\n        class=\"validator-error\"\n      >\n        Please enter Assign to.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/status.png\" />\n          {{ \"tasks.status\" | translate }}</ion-label\n        >\n        <ion-select\n          value=\"{{ task.status }}\"\n          okText=\"✓\"\n          cancelText=\"x\"\n          formControlName=\"taskStatus\"\n          [(ngModel)]=\"task.status\"\n        >\n          <ion-select-option\n            value=\"not yet started\"\n            selected=\"task.status === 'not yet started'\"\n            >Not yet started</ion-select-option\n          >\n          <ion-select-option\n            value=\"in progress\"\n            selected=\"task.status === 'in progress'\"\n            >In progress</ion-select-option\n          >\n          <ion-select-option\n            value=\"completed\"\n            selected=\"task.status === 'completed'\"\n            >Completed</ion-select-option\n          >\n        </ion-select>\n      </ion-item>\n    </div>\n  </form>\n</ion-content>\n<ion-footer>\n  <div class=\"action-board\">\n    <ion-button size=\"small\" color=\"light\" slot=\"start\" (click)=\"close()\">\n      {{ \"button.cancel\" | translate }}</ion-button\n    >\n    <ion-button\n      size=\"small\"\n      color=\"primary\"\n      slot=\"end\"\n      style=\"float:right\"\n      (click)=\"create()\"\n    >\n      {{ \"button.save\" | translate }}</ion-button\n    >\n  </div>\n</ion-footer> -->\n"
 
 /***/ }),
 
