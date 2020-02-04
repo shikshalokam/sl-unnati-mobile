@@ -350,6 +350,7 @@ export class AppComponent {
             if (project.isSync) {
               project.createdType = '';
             }
+            this.toastService.startLoader('Your data is syncing');
             projectsToSync = true;
             if (project.tasks && project.tasks.length > 0) {
               project.tasks.forEach(task => {
@@ -371,10 +372,10 @@ export class AppComponent {
           }
         })
         if (!projectsToSync) {
-          this.toastService.successToast('message.sync_success');
+          this.toastService.successToast('message.already_sync');
         }
       } else {
-        // this.toastService.stopLoader();
+        this.toastService.stopLoader();
         this.toastService.successToast('message.already_sync');
       }
     })
@@ -386,6 +387,7 @@ export class AppComponent {
         myProjects.forEach(projectList => {
           projectList.projects.forEach(project => {
             if (project.isEdited && !project.createdType && !project.toDisplay) {
+              this.toastService.startLoader('Your data is syncing');
               project.createdType = '';
               projectsToSync = true;
               if (project.tasks && project.tasks.length > 0) {
@@ -409,18 +411,17 @@ export class AppComponent {
             }
           });
         })
+        this.toastService.stopLoader();
         if (!projectsToSync) {
           this.toastService.successToast('message.sync_success');
         }
       } else {
-        // intentially left blank
         this.toastService.successToast('message.already_sync');
       }
     })
   }
   // auto sync
   public autoSync(project) {
-    this.toastService.startLoader('Your data is syncing');
     this.storage.get('userTokens').then(data => {
       if (data) {
         this.api.refershToken(data.refresh_token).subscribe((data: any) => {

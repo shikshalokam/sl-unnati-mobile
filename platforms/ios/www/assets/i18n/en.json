@@ -2,6 +2,8 @@
     "app_name": "Unnati",
     "landing_page": "Home",
     "button": {
+        "share": "Share",
+        "delete": "Delete",
         "cancel": "Cancel",
         "save": "Save",
         "erase_data": "Erase Data",
@@ -24,10 +26,32 @@
     },
     "message": {
         "noUnreadNotifications": "You have no new Notifications!",
-        "comingsoon": "Coming Soon",
-        "after_prject_create": "Your project has been saved! View your project or continue to Edit",
+        "nerwork_connection_check": "Please check your internet connection.",
+        "comingsoon": "Coming Soon.",
+        "already_sync":"Already in sync",
+        "image_uploaded":"Image uploaded successfully.",
+        "file_uploaded":"File uploaded successfully.",
+        "after_prject_create": "Your project has been saved! View your project or continue to Edit.",
         "no_data_found": "No data found",
-        "heading_complete_task_popup": "Would you like to add a reamrk or attach an image before you mark your task complete?"
+        "heading_complete_task_popup": "Would you like to add a remark or attach an image before you mark your task complete?",
+        "add_tasks_to_project": "ADD TASKS TO YOUR PROJECT",
+        "task_is_deleted": "Task deleted successfully.",
+        "task_is_created": "Task is created successfully.",
+        "task_updated": "Task updated successfully.",
+        "subtask_is_created": "Subtask is created successfully.",
+        "subtask_updated": "Subtask updated successfully.",
+        "subtask_is_deleted": "Subtask deleted successfully.",
+        "project_is_created": "Project is created successfully.",
+        "project_deleted_failed": "Unable to delete the project please try again.",
+        "project_deleted_success": "Project deleted successfully.",
+        "delete_project_confirm": "Are you sure you want to delete the project.",
+        "marked_as_completed": "Task marked as completed.",
+        "local_data_changes": "You have made changes in projects",
+        "want_sync_before_erase": "Do you want to syc the project before erase your data",
+        "sync_success": "Sync Completed",
+        "no_projects": "No projects to sync.",
+        "data_syncing": "Your data is syncing",
+        "please_syc_before_logout": "Pelase sync the projects before logout"
     },
     "home": {
         "title": "Home",
@@ -82,7 +106,8 @@
     "task_detail": "Task Detail",
     "subtask_detail": "Subtask Detail",
     "projectDetail": {
-        "title": "Project Detail",
+        "title": "Project Title",
+        "page": "Project Page",
         "details": "Details",
         "goal": "Goal",
         "status": "Status",
@@ -100,8 +125,7 @@
         "charts": "Charts",
         "completed": "Completed",
         "view_resources": "View Resources",
-        "create_task": "Create Task",
-        "add_tasks_to_project": "ADD TASKS TO YOUR PROJECT"
+        "create_task": "Create Task"
     },
     "tasks": {
         "start_date": "Start date",
@@ -185,11 +209,23 @@
         "areas": "What area of your school are you improving?",
         "placeholder_areas": "Example Teacher, Infrastructure etc"
     },
+    "file": {
+        "title": "Files",
+        "images": "Images",
+        "files": "Files"
+    },
+    "open_tasks": {
+        "title": "OPEN TASKS",
+        "ongoing": "Ongoing",
+        "past": "Past",
+        "number_of_subtask": "Number of sub-tasks"
+    },
     "add_task": {
         "add_a_task": "Add a task",
         "placeholder_task_title": "Add a task",
         "status": "Status",
-        "title": "Add Task"
+        "title": "Add Task",
+        "edit_task_title": "Edit task title"
     },
     "newsfeed": {
         "title": "Newsfeed"
@@ -198,8 +234,10 @@
         "status": "Status",
         "subtasks": "Subtasks",
         "add_subtask": "Add Subtask",
-        "placeholder_add_task ": "Add Subtask task name",
-        "title": "Add subtask"
+        "placeholder_add_task ": "Add Subtask name",
+        "title": "Add subtask",
+        "edit_subtask_title": "Edit subtask title",
+        "add_remarks": "Add remarks here"
     },
     "library": {
         "title": "Library",
