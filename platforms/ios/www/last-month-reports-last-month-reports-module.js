@@ -66,7 +66,7 @@ var LastMonthReportsPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-content padding>\n  <div *ngIf=\"report\">\n    <h5>\n      {{ \"last_month_report.projects_cmpltd_lstmnth\" | translate }}\n    </h5>\n    <div>{{ report.startMonth }}</div>\n    <ion-grid>\n      <ion-row>\n        <ion-col class=\"status-card task-completed-box\">\n          <h3>{{ \"last_month_report.completed\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.completed <= 9\">\n              0{{ report.completed }} &nbsp;</span\n            >\n            <span *ngIf=\"report.completed >= 10\">\n              {{ report.completed }} &nbsp;</span\n            >\n          </h1>\n        </ion-col>\n        <ion-col class=\"status-card task-pending-box\">\n          <h3>{{ \"last_month_report.pending\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.pending <= 9\">\n              0{{ report.pending }} &nbsp;</span\n            >\n            <span *ngIf=\"report.pending >= 10\">\n              {{ report.pending }} &nbsp;</span\n            >\n          </h1>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n    <div class=\"action-item\" (click)=\"viewFullReport('lastMonth')\">\n      {{ \"last_month_report.view_full_reports\" | translate }}\n    </div>\n    <h5>\n      {{ \"last_month_report.tasks_cmpltd_lstmnth\" | translate }}\n    </h5>\n    {{ report.startMonth }}\n    <div>\n      <highcharts-chart\n        [Highcharts]=\"highcharts\"\n        [options]=\"chartOptions\"\n        style=\"width: 100%; height: 400px; display: block;\"\n      >\n      </highcharts-chart>\n    </div>\n    <ion-row>\n      <ion-col class=\"legend-left\">\n        <span class=\"dot-pending\"> &nbsp; </span> Tasks Pending <br />\n        <span style=\"font-size:24px; \">{{ report.pending }}</span>\n      </ion-col>\n      <ion-col class=\"legend-right\">\n        <span class=\"dot-completed\"> &nbsp; </span> Tasks Completed <br />\n        <span style=\"font-size:24px; \"> {{ report.completed }} </span>\n      </ion-col>\n    </ion-row>\n  </div>\n  <div *ngIf=\"showSkeleton\">\n    <div class=\"skeleton-card-content\">\n      <ion-card *ngFor=\"let skeleton of skeletons\">\n        <ion-card-content class=\"skeleton-card-content\">\n          <p><ion-skeleton-text animated></ion-skeleton-text></p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>\n"
+module.exports = "<ion-content class=\"ion-padding\">\n  <div *ngIf=\"report\">\n    <h5>\n      {{ \"last_month_report.projects_cmpltd_lstmnth\" | translate }}\n    </h5>\n    <div>{{ report.startMonth }}</div>\n    <ion-grid>\n      <ion-row>\n        <ion-col class=\"status-card task-completed-box\">\n          <h3>{{ \"last_month_report.completed\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.completed <= 9\">\n              0{{ report.completed }} &nbsp;</span\n            >\n            <span *ngIf=\"report.completed >= 10\">\n              {{ report.completed }} &nbsp;</span\n            >\n          </h1>\n        </ion-col>\n        <ion-col class=\"status-card task-pending-box\">\n          <h3>{{ \"last_month_report.pending\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.pending <= 9\">\n              0{{ report.pending }} &nbsp;</span\n            >\n            <span *ngIf=\"report.pending >= 10\">\n              {{ report.pending }} &nbsp;</span\n            >\n          </h1>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n    <div class=\"action-item\" (click)=\"viewFullReport('lastMonth')\">\n      {{ \"last_month_report.view_full_reports\" | translate }}\n    </div>\n    <h5>\n      {{ \"last_month_report.tasks_cmpltd_lstmnth\" | translate }}\n    </h5>\n    {{ report.startMonth }}\n    <div>\n      <highcharts-chart\n        [Highcharts]=\"highcharts\"\n        [options]=\"chartOptions\"\n        style=\"width: 100%; height: 400px; display: block;\"\n      >\n      </highcharts-chart>\n    </div>\n    <ion-row>\n      <ion-col class=\"legend-left\">\n        <span class=\"dot-pending\"> &nbsp; </span> Tasks Pending <br />\n        <span style=\"font-size:24px; \">{{ report.pending }}</span>\n      </ion-col>\n      <ion-col class=\"legend-right\">\n        <span class=\"dot-completed\"> &nbsp; </span> Tasks Completed <br />\n        <span style=\"font-size:24px; \"> {{ report.completed }} </span>\n      </ion-col>\n    </ion-row>\n  </div>\n  <div *ngIf=\"showSkeleton\">\n    <div class=\"skeleton-card-content\">\n      <ion-card *ngFor=\"let skeleton of skeletons\">\n        <ion-card-content class=\"skeleton-card-content\">\n          <p><ion-skeleton-text animated></ion-skeleton-text></p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>\n"
 
 /***/ }),
 
@@ -77,7 +77,7 @@ module.exports = "<ion-content padding>\n  <div *ngIf=\"report\">\n    <h5>\n   
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".status-card {\n  border-radius: 5px;\n  color: #fff; }\n  .status-card span {\n    border-bottom: 2px solid #fff;\n    font-size: 36px; }\n  .status-card h1 {\n    margin-top: 10px; }\n  .task-completed-box {\n  background: linear-gradient(140deg, #5bd895 32%, #45673b 71%, #1a4b00 88%);\n  margin-right: 3px; }\n  .task-pending-box {\n  background: linear-gradient(140deg, #d8735b 32%, #a31919 71%, #9f0303 88%);\n  margin-left: 3px; }\n  .action-item {\n  color: #3b86ff;\n  text-align: center;\n  border-bottom: 1px solid #000;\n  margin: 30px 0px;\n  padding-bottom: 10px; }\n  .dot-pending {\n  height: 16px;\n  width: 16px;\n  background-color: #bfbfbf;\n  border-radius: 50%;\n  display: inline-block; }\n  .dot-completed {\n  height: 16px;\n  width: 16px;\n  background-color: #20ba8d;\n  border-radius: 50%;\n  display: inline-block; }\n  .legend-left {\n  text-align: center;\n  padding: 0px;\n  margin-left: -9%;\n  font-weight: 500; }\n  .legend-right {\n  text-align: center;\n  margin-right: -7%;\n  padding: 0px;\n  font-weight: 500; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9sYXN0LW1vbnRoLXJlcG9ydHMvbGFzdC1tb250aC1yZXBvcnRzLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLGtCQUFrQjtFQUNsQixXQUFXLEVBQUE7RUFGYjtJQUlJLDZCQUE2QjtJQUM3QixlQUFlLEVBQUE7RUFMbkI7SUFRSSxnQkFBZ0IsRUFBQTtFQUdwQjtFQUNFLDBFQUEwRTtFQUMxRSxpQkFBaUIsRUFBQTtFQUVuQjtFQUNFLDBFQUEwRTtFQUMxRSxnQkFBZ0IsRUFBQTtFQUVsQjtFQUNFLGNBQWM7RUFDZCxrQkFBa0I7RUFDbEIsNkJBQTZCO0VBQzdCLGdCQUFnQjtFQUNoQixvQkFBb0IsRUFBQTtFQUV0QjtFQUNFLFlBQVk7RUFDWixXQUFXO0VBQ1gseUJBQXlCO0VBQ3pCLGtCQUFrQjtFQUNsQixxQkFBcUIsRUFBQTtFQUV2QjtFQUNFLFlBQVk7RUFDWixXQUFXO0VBQ1gseUJBQXlCO0VBQ3pCLGtCQUFrQjtFQUNsQixxQkFBcUIsRUFBQTtFQUV2QjtFQUNFLGtCQUFrQjtFQUNsQixZQUFZO0VBQ1osZ0JBQWdCO0VBQ2hCLGdCQUFnQixFQUFBO0VBRWxCO0VBQ0Usa0JBQWtCO0VBQ2xCLGlCQUFpQjtFQUNqQixZQUFZO0VBQ1osZ0JBQWdCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9sYXN0LW1vbnRoLXJlcG9ydHMvbGFzdC1tb250aC1yZXBvcnRzLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5zdGF0dXMtY2FyZCB7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgY29sb3I6ICNmZmY7XG4gIHNwYW4ge1xuICAgIGJvcmRlci1ib3R0b206IDJweCBzb2xpZCAjZmZmO1xuICAgIGZvbnQtc2l6ZTogMzZweDtcbiAgfVxuICBoMSB7XG4gICAgbWFyZ2luLXRvcDogMTBweDtcbiAgfVxufVxuLnRhc2stY29tcGxldGVkLWJveCB7XG4gIGJhY2tncm91bmQ6IGxpbmVhci1ncmFkaWVudCgxNDBkZWcsICM1YmQ4OTUgMzIlLCAjNDU2NzNiIDcxJSwgIzFhNGIwMCA4OCUpO1xuICBtYXJnaW4tcmlnaHQ6IDNweDtcbn1cbi50YXNrLXBlbmRpbmctYm94IHtcbiAgYmFja2dyb3VuZDogbGluZWFyLWdyYWRpZW50KDE0MGRlZywgI2Q4NzM1YiAzMiUsICNhMzE5MTkgNzElLCAjOWYwMzAzIDg4JSk7XG4gIG1hcmdpbi1sZWZ0OiAzcHg7XG59XG4uYWN0aW9uLWl0ZW0ge1xuICBjb2xvcjogIzNiODZmZjtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBib3JkZXItYm90dG9tOiAxcHggc29saWQgIzAwMDtcbiAgbWFyZ2luOiAzMHB4IDBweDtcbiAgcGFkZGluZy1ib3R0b206IDEwcHg7XG59XG4uZG90LXBlbmRpbmcge1xuICBoZWlnaHQ6IDE2cHg7XG4gIHdpZHRoOiAxNnB4O1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjYmZiZmJmO1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbn1cbi5kb3QtY29tcGxldGVkIHtcbiAgaGVpZ2h0OiAxNnB4O1xuICB3aWR0aDogMTZweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzIwYmE4ZDtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG59XG4ubGVnZW5kLWxlZnQge1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIHBhZGRpbmc6IDBweDtcbiAgbWFyZ2luLWxlZnQ6IC05JTtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbn1cbi5sZWdlbmQtcmlnaHQge1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIG1hcmdpbi1yaWdodDogLTclO1xuICBwYWRkaW5nOiAwcHg7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG4iXX0= */"
+module.exports = ".status-card {\n  border-radius: 5px;\n  color: #fff; }\n  .status-card span {\n    border-bottom: 2px solid #fff;\n    font-size: 36px; }\n  .status-card h1 {\n    margin-top: 10px; }\n  .task-completed-box {\n  background: linear-gradient(140deg, #5bd895 32%, #45673b 71%, #1a4b00 88%);\n  margin-right: 3px; }\n  .task-pending-box {\n  background: linear-gradient(140deg, #d8735b 32%, #a31919 71%, #9f0303 88%);\n  margin-left: 3px; }\n  .action-item {\n  color: #3b86ff;\n  text-align: center;\n  border-bottom: 1px solid #000;\n  margin: 30px 0px;\n  padding-bottom: 10px; }\n  .dot-pending {\n  height: 16px;\n  width: 16px;\n  background-color: #bfbfbf;\n  border-radius: 50%;\n  display: inline-block; }\n  .dot-completed {\n  height: 16px;\n  width: 16px;\n  background-color: #20ba8d;\n  border-radius: 50%;\n  display: inline-block; }\n  .legend-left {\n  text-align: center;\n  padding: 0px;\n  margin-left: -9%;\n  font-weight: 500; }\n  .legend-right {\n  text-align: center;\n  margin-right: -7%;\n  padding: 0px;\n  font-weight: 500; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvbGFzdC1tb250aC1yZXBvcnRzL2xhc3QtbW9udGgtcmVwb3J0cy5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxrQkFBa0I7RUFDbEIsV0FBVyxFQUFBO0VBRmI7SUFJSSw2QkFBNkI7SUFDN0IsZUFBZSxFQUFBO0VBTG5CO0lBUUksZ0JBQWdCLEVBQUE7RUFHcEI7RUFDRSwwRUFBMEU7RUFDMUUsaUJBQWlCLEVBQUE7RUFFbkI7RUFDRSwwRUFBMEU7RUFDMUUsZ0JBQWdCLEVBQUE7RUFFbEI7RUFDRSxjQUFjO0VBQ2Qsa0JBQWtCO0VBQ2xCLDZCQUE2QjtFQUM3QixnQkFBZ0I7RUFDaEIsb0JBQW9CLEVBQUE7RUFFdEI7RUFDRSxZQUFZO0VBQ1osV0FBVztFQUNYLHlCQUF5QjtFQUN6QixrQkFBa0I7RUFDbEIscUJBQXFCLEVBQUE7RUFFdkI7RUFDRSxZQUFZO0VBQ1osV0FBVztFQUNYLHlCQUF5QjtFQUN6QixrQkFBa0I7RUFDbEIscUJBQXFCLEVBQUE7RUFFdkI7RUFDRSxrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLGdCQUFnQjtFQUNoQixnQkFBZ0IsRUFBQTtFQUVsQjtFQUNFLGtCQUFrQjtFQUNsQixpQkFBaUI7RUFDakIsWUFBWTtFQUNaLGdCQUFnQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbGFzdC1tb250aC1yZXBvcnRzL2xhc3QtbW9udGgtcmVwb3J0cy5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuc3RhdHVzLWNhcmQge1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIGNvbG9yOiAjZmZmO1xuICBzcGFuIHtcbiAgICBib3JkZXItYm90dG9tOiAycHggc29saWQgI2ZmZjtcbiAgICBmb250LXNpemU6IDM2cHg7XG4gIH1cbiAgaDEge1xuICAgIG1hcmdpbi10b3A6IDEwcHg7XG4gIH1cbn1cbi50YXNrLWNvbXBsZXRlZC1ib3gge1xuICBiYWNrZ3JvdW5kOiBsaW5lYXItZ3JhZGllbnQoMTQwZGVnLCAjNWJkODk1IDMyJSwgIzQ1NjczYiA3MSUsICMxYTRiMDAgODglKTtcbiAgbWFyZ2luLXJpZ2h0OiAzcHg7XG59XG4udGFzay1wZW5kaW5nLWJveCB7XG4gIGJhY2tncm91bmQ6IGxpbmVhci1ncmFkaWVudCgxNDBkZWcsICNkODczNWIgMzIlLCAjYTMxOTE5IDcxJSwgIzlmMDMwMyA4OCUpO1xuICBtYXJnaW4tbGVmdDogM3B4O1xufVxuLmFjdGlvbi1pdGVtIHtcbiAgY29sb3I6ICMzYjg2ZmY7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkICMwMDA7XG4gIG1hcmdpbjogMzBweCAwcHg7XG4gIHBhZGRpbmctYm90dG9tOiAxMHB4O1xufVxuLmRvdC1wZW5kaW5nIHtcbiAgaGVpZ2h0OiAxNnB4O1xuICB3aWR0aDogMTZweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2JmYmZiZjtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG59XG4uZG90LWNvbXBsZXRlZCB7XG4gIGhlaWdodDogMTZweDtcbiAgd2lkdGg6IDE2cHg7XG4gIGJhY2tncm91bmQtY29sb3I6ICMyMGJhOGQ7XG4gIGJvcmRlci1yYWRpdXM6IDUwJTtcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xufVxuLmxlZ2VuZC1sZWZ0IHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBwYWRkaW5nOiAwcHg7XG4gIG1hcmdpbi1sZWZ0OiAtOSU7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG4ubGVnZW5kLXJpZ2h0IHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBtYXJnaW4tcmlnaHQ6IC03JTtcbiAgcGFkZGluZzogMHB4O1xuICBmb250LXdlaWdodDogNTAwO1xufVxuIl19 */"
 
 /***/ }),
 
@@ -122,35 +122,6 @@ var LastMonthReportsPage = /** @class */ (function () {
         this.showSkeleton = false;
         this.skeletons = [{}, {}, {}, {}, {}];
         this.highcharts = highcharts__WEBPACK_IMPORTED_MODULE_3__;
-        // chartOptions = {
-        //   chart: {
-        //     type: 'pie',
-        //     plotBorderWidth: null,
-        //     plotShadow: false
-        //   },
-        //   title: {
-        //     text: ''
-        //   },
-        //   tooltip: {
-        //     pointFormat: '{series.name}: <b>{point.percentage:}%</b>'
-        //   },
-        //   plotOptions: {
-        //     pie: {
-        //       shadow: false,
-        //       center: ['50%', '50%'],
-        //     }
-        //   },
-        //   series: [{
-        //     name: 'Tasks',
-        //     data: [["Completed", 5], ["Pending", 3]],
-        //     size: '70%',
-        //     innerSize: '50%',
-        //     showInLegend: true,
-        //     dataLabels: {
-        //       enabled: false
-        //     }
-        //   }]
-        // };
         this.color = "#20ba8d";
     }
     LastMonthReportsPage.prototype.ionViewDidEnter = function () {
@@ -199,9 +170,18 @@ var LastMonthReportsPage = /** @class */ (function () {
         });
     };
     LastMonthReportsPage.prototype.setupChart = function () {
-        var totalTask = this.report.completed + this.report.pending;
-        var completed = (this.report.completed / totalTask) * 100;
-        completed = completed.toFixed(0);
+        var totalTask;
+        var completed;
+        if (this.report.completed > 0 || this.report.pending > 0) {
+            totalTask = this.report.completed + this.report.pending;
+            completed = (this.report.completed / totalTask) * 100;
+            completed = completed.toFixed(0);
+        }
+        else {
+            this.report.completed = 0;
+            this.report.pending = 0;
+            completed = 0;
+        }
         this.chartOptions = {
             chart: {
                 type: 'pie'

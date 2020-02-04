@@ -1638,6 +1638,7 @@ var AppComponent = /** @class */ (function () {
                         if (project.isSync) {
                             project.createdType = '';
                         }
+                        _this.toastService.startLoader('Your data is syncing');
                         projectsToSync = true;
                         if (project.tasks && project.tasks.length > 0) {
                             project.tasks.forEach(function (task) {
@@ -1660,11 +1661,11 @@ var AppComponent = /** @class */ (function () {
                     }
                 });
                 if (!projectsToSync) {
-                    _this.toastService.successToast('message.sync_success');
+                    _this.toastService.successToast('message.already_sync');
                 }
             }
             else {
-                // this.toastService.stopLoader();
+                _this.toastService.stopLoader();
                 _this.toastService.successToast('message.already_sync');
             }
         });
@@ -1677,6 +1678,7 @@ var AppComponent = /** @class */ (function () {
                 myProjects.forEach(function (projectList) {
                     projectList.projects.forEach(function (project) {
                         if (project.isEdited && !project.createdType && !project.toDisplay) {
+                            _this.toastService.startLoader('Your data is syncing');
                             project.createdType = '';
                             projectsToSync = true;
                             if (project.tasks && project.tasks.length > 0) {
@@ -1701,12 +1703,12 @@ var AppComponent = /** @class */ (function () {
                         }
                     });
                 });
+                _this.toastService.stopLoader();
                 if (!projectsToSync) {
                     _this.toastService.successToast('message.sync_success');
                 }
             }
             else {
-                // intentially left blank
                 _this.toastService.successToast('message.already_sync');
             }
         });
@@ -1714,7 +1716,6 @@ var AppComponent = /** @class */ (function () {
     // auto sync
     AppComponent.prototype.autoSync = function (project) {
         var _this = this;
-        this.toastService.startLoader('Your data is syncing');
         this.storage.get('userTokens').then(function (data) {
             if (data) {
                 _this.api.refershToken(data.refresh_token).subscribe(function (data) {
@@ -1872,7 +1873,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppConfigs", function() { return AppConfigs; });
 var AppConfigs = {
     //Dev Urls
-    appVersion: "1.1.10",
+    appVersion: "1.1.12",
     appName: "Unnati",
     // Dev urls
     app_url: "https://dev.shikshalokam.org",
@@ -1890,7 +1891,7 @@ var AppConfigs = {
         registerDevice: "/notifications/push/registerDevice"
     },
     // QA
-    // app_url: "https://qa.shikshalokam.org",
+    // app_url: "https://qa.shikshalokam.org", 
     // api_url: "https://qahome.shikshalokam.org",
     // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
     // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
@@ -1915,7 +1916,7 @@ var AppConfigs = {
     //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
     //     markAsRead: "notifications/in-app/markAsRead",
     //     getAllNotifications: "/notifications/in-app/list",
-    // registerDevice: "notifications/push/registerDevice"
+    //     registerDevice: "notifications/push/registerDevice"
     // },
     //Staging Urls
     // app_url: "https://dev.shikshalokam.org",
