@@ -4,7 +4,7 @@
   </app-header>
 </ion-header>
 
-<ion-content padding *ngIf="task" class="task-view-container">
+<ion-content class="ion-padding" *ngIf="task" class="task-view-container">
   <div style="min-height:85%">
     <h3 (click)="allowEdit('title')" *ngIf="!editTitle">{{task?.title}}
     </h3>
@@ -104,29 +104,22 @@
   <div *ngIf="showpopup" class="custom-popup">
     <div class="pop-container">
       <div class="pop-msg">
+        <div>
+          <ion-textarea placeholder="{{'current_task.add_remarks' | translate}}" [(ngModel)]="remarks">
+          </ion-textarea>
+        </div>
         <ion-row>
-          <ion-col size="10">
-            <h5>{{'message.heading_complete_task_popup' | translate}} </h5>
+          <ion-col size="6">
           </ion-col>
-        </ion-row>
-        <ion-row>
-
-          <ion-col size="10">
-            <ion-textarea placeholder="{{'current_task.add_remarks' | translate}}" [(ngModel)]="remarks">
-            </ion-textarea>
+          <ion-col size="3" class="pop-action">
+          <div class="icon-attch" [ngClass]="{'isHaveData': task.imageUrl}">
+            <img src="assets/images/camera.svg" (click)="openCamera()"  style="width: 1.8em;">
+            </div>
           </ion-col>
-          <ion-col size="2" class="attachment-action">
-            <!-- <form>
+          <ion-col size="3" class="pop-action">
+            <form class="icon-attch" [ngClass]="{'isHaveData': task.file?.name}">
               <div class="fileUpload">
-                <img src="assets/images/gallery.png">
-                <input #imageInputImage type="file" class="upload" accept="image/*"
-                  (change)="selectedFile(imageInputImage,'image')" />
-              </div>
-            </form> -->
-            <img src="assets/images/gallery.png" (click)="openCamera()">
-            <form>
-              <div class="fileUpload">
-                <img src="assets/images/attach-pin.png">
+                <img src="assets/images/attach_file.svg" style="width: 1.8em;">
                 <input #imageInputFile type="file" class="upload" (change)="selectedFile(imageInputFile,'file')" />
               </div>
             </form>
@@ -135,7 +128,7 @@
       </div>
       <div class="pop-btn">
         <ion-button color="primary" expand="block" (click)="markTaskAsCompleted()">
-          {{'button.mark_complete' | translate}}
+          {{'button.continue' | translate}}
         </ion-button>
       </div>
     </div>
