@@ -719,7 +719,6 @@ var map = {
 	],
 	"../category-view/category-view.module": [
 		"./src/app/category-view/category-view.module.ts",
-		"common",
 		"category-view-category-view-module"
 	],
 	"../charts/charts.module": [
@@ -743,7 +742,6 @@ var map = {
 	],
 	"../current-task-view/current-task-view.module": [
 		"./src/app/current-task-view/current-task-view.module.ts",
-		"common",
 		"current-task-view-current-task-view-module"
 	],
 	"../detail/detail.module": [
@@ -751,6 +749,11 @@ var map = {
 		"default~detail-detail-module~home-home-module~projects-projects-module",
 		"common",
 		"detail-detail-module"
+	],
+	"../files/files.module": [
+		"./src/app/files/files.module.ts",
+		"common",
+		"files-files-module"
 	],
 	"../fullreports/fullreports.module": [
 		"./src/app/fullreports/fullreports.module.ts",
@@ -795,6 +798,10 @@ var map = {
 		"./src/app/newsfeed/newsfeed.module.ts",
 		"newsfeed-newsfeed-module"
 	],
+	"../notifications/notifications.module": [
+		"./src/app/notifications/notifications.module.ts",
+		"notifications-notifications-module"
+	],
 	"../project-detail/project-detail.module": [
 		"./src/app/project-detail/project-detail.module.ts",
 		"common",
@@ -829,6 +836,10 @@ var map = {
 		"./src/app/subtasks/subtasks.module.ts",
 		"subtasks-subtasks-module"
 	],
+	"../task-board/task-board.module": [
+		"./src/app/task-board/task-board.module.ts",
+		"task-board-task-board-module"
+	],
 	"../task-view/task-view.module": [
 		"./src/app/task-view/task-view.module.ts",
 		"task-view-task-view-module"
@@ -847,7 +858,6 @@ var map = {
 	],
 	"./category-view/category-view.module": [
 		"./src/app/category-view/category-view.module.ts",
-		"common",
 		"category-view-category-view-module"
 	],
 	"./charts/charts.module": [
@@ -871,7 +881,6 @@ var map = {
 	],
 	"./current-task-view/current-task-view.module": [
 		"./src/app/current-task-view/current-task-view.module.ts",
-		"common",
 		"current-task-view-current-task-view-module"
 	],
 	"./detail/detail.module": [
@@ -887,6 +896,11 @@ var map = {
 	"./edit-task/edit-task.module": [
 		"./src/app/edit-task/edit-task.module.ts"
 	],
+	"./files/files.module": [
+		"./src/app/files/files.module.ts",
+		"common",
+		"files-files-module"
+	],
 	"./fullreports/fullreports.module": [
 		"./src/app/fullreports/fullreports.module.ts",
 		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~dba1dd56",
@@ -899,6 +913,10 @@ var map = {
 		"default~detail-detail-module~home-home-module~projects-projects-module",
 		"common",
 		"home-home-module"
+	],
+	"./kclg/kclg.module": [
+		"./src/app/kclg/kclg.module.ts",
+		"kclg-kclg-module"
 	],
 	"./last-month-reports/last-month-reports.module": [
 		"./src/app/last-month-reports/last-month-reports.module.ts",
@@ -984,6 +1002,10 @@ var map = {
 	"./subtasks/subtasks.module": [
 		"./src/app/subtasks/subtasks.module.ts",
 		"subtasks-subtasks-module"
+	],
+	"./task-board/task-board.module": [
+		"./src/app/task-board/task-board.module.ts",
+		"task-board-task-board-module"
 	],
 	"./task-view/task-view.module": [
 		"./src/app/task-view/task-view.module.ts",
@@ -1173,6 +1195,9 @@ var routes = [
     { path: 'active-projects', loadChildren: './active-projects/active-projects.module#ActiveProjectsPageModule' },
     { path: 'my-projects', loadChildren: './my-projects/my-projects.module#MyProjectsPageModule' },
     { path: 'all-projects', loadChildren: './all-projects/all-projects.module#AllProjectsPageModule' },
+    { path: 'files/:id', loadChildren: './files/files.module#FilesPageModule' },
+    { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
+    { path: 'kclg', loadChildren: './kclg/kclg.module#KclgPageModule' },
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -1199,7 +1224,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser >\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n             <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n            </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content >\n        <ion-list>\n            <div *ngFor=\"let p of appPages\">\n          <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.url\">\n            <ion-item [routerDirection]=\"'root'\" [routerLink]=\"[p.url]\"> \n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon> \n              <ion-label >\n                {{p.title}}\n              </ion-label>\n            </ion-item>\n          </ion-menu-toggle>\n          <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\" detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon> \n              <ion-label >{{ p.title }}</ion-label>\n            </ion-item>\n             <!-- Children List for clicked Item -->\n        <ion-list *ngIf=\"p.open\">\n          <ion-menu-toggle auto-hide=\"false\" >\n            <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n              routerLinkActive=\"active\" style=\"padding-left:30px;\" (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n              <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n              <ion-label>\n                {{ sub.title }}\n              </ion-label>\n            </ion-item>\n          </ion-menu-toggle>\n        </ion-list>\n            </div>\n        </ion-list>\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n</ion-app>\n"
+module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser>\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n            <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n          </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content>\n        <ion-list>\n          <div *ngFor=\"let p of appPages\">\n            <!-- *ngIf=\"p.url\" -->\n            <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.title != 'Settings'\">\n              <ion-item [routerDirection]=\"'root'\" (click)=\"navigate(p.url,p.title)\">\n                <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n                <ion-label >\n                  {{p.title}}\n                </ion-label>\n              </ion-item>\n            </ion-menu-toggle>\n            <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\"\n              detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n              <ion-label>{{ p.title }}</ion-label>\n            </ion-item>\n            <!-- Children List for clicked Item -->\n            <ion-list *ngIf=\"p.open\">\n              <ion-menu-toggle auto-hide=\"false\">\n                <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n                  routerLinkActive=\"active\" style=\"padding-left:30px;\"\n                  (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n                  <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n                  <ion-label>\n                    {{ sub.title }}\n                  </ion-label>\n                </ion-item>\n              </ion-menu-toggle>\n            </ion-list>\n          </div>\n        </ion-list>\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n</ion-app>"
 
 /***/ }),
 
@@ -1228,6 +1253,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./api/api */ "./src/app/api/api.ts");
 /* harmony import */ var _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../app/project-view/project.service */ "./src/app/project-view/project.service.ts");
+/* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./home/home.service */ "./src/app/home/home.service.ts");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./toast.service */ "./src/app/toast.service.ts");
+
+
+
 
 
 
@@ -1250,7 +1280,7 @@ __webpack_require__.r(__webpack_exports__);
 var AppComponent = /** @class */ (function () {
     function AppComponent(storage, 
     // public fcm: FcmProvider,
-    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api) {
+    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api, homeService, loadingController, toastService) {
         var _this = this;
         this.storage = storage;
         this.alertController = alertController;
@@ -1269,6 +1299,9 @@ var AppComponent = /** @class */ (function () {
         this.route = route;
         this.projectService = projectService;
         this.api = api;
+        this.homeService = homeService;
+        this.loadingController = loadingController;
+        this.toastService = toastService;
         this.lastTimeBackPress = 0;
         this.timePeriodToExit = 2000;
         // 3600000
@@ -1277,6 +1310,11 @@ var AppComponent = /** @class */ (function () {
         this.appPages = [];
         this.history = [];
         this.isConnected = localStorage.getItem('networkStatus');
+        this.homeService.tobeSync.subscribe(function (value) {
+            _this.prepareProjectToSync();
+            _this.prepareMappedProjectToSync();
+            // this.toastService.loadingController.dismiss();
+        });
         this.loginService.emit.subscribe(function (value) {
             _this.loggedInUser = value;
             if (_this.loggedInUser) {
@@ -1291,6 +1329,11 @@ var AppComponent = /** @class */ (function () {
                         title: 'Home',
                         url: '/project-view/home',
                         icon: 'home'
+                    },
+                    {
+                        title: 'Sync',
+                        icon: 'sync',
+                        url: '',
                     },
                     {
                         title: 'About',
@@ -1359,7 +1402,7 @@ var AppComponent = /** @class */ (function () {
                 else if (_this.router.url == '/project-view/notifications' || _this.router.url == '/project-view/newsfeed' || _this.router.url == '/project-view/about' ||
                     _this.router.url == '/project-view/reports' || _this.router.url == '/project-view/my-schools' ||
                     _this.router.url == '/project-view/projects' ||
-                    _this.router.url == '/project-view/library' || s[1].path == 'create-project') {
+                    _this.router.url == '/project-view/library' || s[1].path == 'create-project' || _this.router.url == '/project-view/task-board') {
                     _this.router.navigateByUrl('project-view/home');
                 }
                 else if (_this.router.url == '/project-view/task-view' && isOpened === 'false') {
@@ -1395,7 +1438,7 @@ var AppComponent = /** @class */ (function () {
                 else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "cp")) {
                     _this.router.navigateByUrl('project-view/create-task/' + s[2].path + '/' + s[3].path);
                 }
-                else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd")) {
+                else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd") || s[1].path == "files") {
                     _this.router.navigateByUrl('project-view/project-detail');
                 }
                 else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "pd")) {
@@ -1484,6 +1527,15 @@ var AppComponent = /** @class */ (function () {
                     });
                 }
             });
+        }
+    };
+    AppComponent.prototype.navigate = function (url, title) {
+        if (title == 'Sync') {
+            this.prepareProjectToSync();
+            this.prepareMappedProjectToSync();
+        }
+        else if (url) {
+            this.router.navigate([url]);
         }
     };
     AppComponent.prototype.presentAlertCheckbox = function () {
@@ -1576,72 +1628,9 @@ var AppComponent = /** @class */ (function () {
             // this.networkSubscriber();
         });
     };
-    AppComponent.prototype.closeAppPopUP = function () {
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var alert;
-            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alertController.create({
-                            header: 'App termination',
-                            message: 'Do you want to close the app?',
-                            buttons: [
-                                {
-                                    text: 'Cancel',
-                                    role: 'cancel',
-                                    cssClass: 'secondary, custom-btn',
-                                    handler: function (blah) {
-                                    }
-                                }, {
-                                    cssClass: 'secondary, custom-btn',
-                                    text: 'Close app',
-                                    handler: function () {
-                                        navigator['app'].exitApp();
-                                    }
-                                }
-                            ]
-                        })];
-                    case 1:
-                        alert = _a.sent();
-                        return [4 /*yield*/, alert.present()];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    AppComponent.prototype.presentAlertConfirm = function () {
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var alert;
-            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alertController.create({
-                            // header: 'Confirm!',
-                            message: 'Are you sure you want to exit the app?',
-                            buttons: [{
-                                    text: 'Cancel',
-                                    role: 'cancel',
-                                    cssClass: 'secondary',
-                                    handler: function (blah) { }
-                                }, {
-                                    text: 'Close App',
-                                    handler: function () {
-                                        navigator['app'].exitApp();
-                                    }
-                                }]
-                        })];
-                    case 1:
-                        alert = _a.sent();
-                        return [4 /*yield*/, alert.present()];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
     AppComponent.prototype.prepareProjectToSync = function () {
         var _this = this;
+        var projectsToSync = false;
         this.storage.get('myprojects').then(function (myProjects) {
             if (myProjects && navigator.onLine) {
                 myProjects.forEach(function (project) {
@@ -1649,6 +1638,8 @@ var AppComponent = /** @class */ (function () {
                         if (project.isSync) {
                             project.createdType = '';
                         }
+                        _this.toastService.startLoader('Your data is syncing');
+                        projectsToSync = true;
                         if (project.tasks && project.tasks.length > 0) {
                             project.tasks.forEach(function (task) {
                                 if (task.isNew && task._id) {
@@ -1666,36 +1657,59 @@ var AppComponent = /** @class */ (function () {
                         _this.autoSync(project);
                     }
                     else {
+                        // intentially left blank
                     }
                 });
+                if (!projectsToSync) {
+                    _this.toastService.successToast('message.already_sync');
+                }
+            }
+            else {
+                _this.toastService.stopLoader();
+                _this.toastService.successToast('message.already_sync');
             }
         });
     };
     AppComponent.prototype.prepareMappedProjectToSync = function () {
         var _this = this;
+        var projectsToSync = false;
         this.storage.get('projects').then(function (myProjects) {
-            if (myProjects && navigator.onLine) {
-                myProjects.forEach(function (project) {
-                    if (project.isEdited) {
-                        if (project.tasks && project.tasks.length > 0) {
-                            project.tasks.forEach(function (task) {
-                                if (task.isNew && task._id) {
-                                    delete task._id;
-                                }
-                                if (task.subTasks && task.subTasks.length > 0) {
-                                    task.subTasks.forEach(function (subtasks) {
-                                        if (subtasks.isNew && subtasks._id) {
-                                            delete subtasks._id;
-                                        }
-                                    });
-                                }
-                            });
+            if (myProjects) {
+                myProjects.forEach(function (projectList) {
+                    projectList.projects.forEach(function (project) {
+                        if (project.isEdited && !project.createdType && !project.toDisplay) {
+                            _this.toastService.startLoader('Your data is syncing');
+                            project.createdType = '';
+                            projectsToSync = true;
+                            if (project.tasks && project.tasks.length > 0) {
+                                project.tasks.forEach(function (task) {
+                                    if (task.isNew && task._id) {
+                                        delete task._id;
+                                    }
+                                    if (task.subTasks && task.subTasks.length > 0) {
+                                        task.subTasks.forEach(function (subtasks) {
+                                            if (subtasks.isNew && subtasks._id) {
+                                                delete subtasks._id;
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            // intentially left blank
+                            _this.autoSync(project);
                         }
-                        _this.autoSync(project);
-                    }
-                    else {
-                    }
+                        else {
+                            // intentially left blank
+                        }
+                    });
                 });
+                _this.toastService.stopLoader();
+                if (!projectsToSync) {
+                    _this.toastService.successToast('message.sync_success');
+                }
+            }
+            else {
+                _this.toastService.successToast('message.already_sync');
             }
         });
     };
@@ -1713,50 +1727,74 @@ var AppComponent = /** @class */ (function () {
                         };
                         _this.storage.set('userTokens', userTokens).then(function (data) {
                             _this.projectService.sync(project, data.access_token).subscribe(function (data) {
+                                var updatedProject;
                                 if (data.status == "failed") {
+                                    _this.toastService.errorToast(data.message);
+                                    _this.toastService.stopLoader();
                                 }
-                                else if (data.status == "success") {
-                                    var updatedProject = void 0;
-                                    project.isNew = false;
-                                    project.isSync = true;
-                                    project.isEdited = false;
-                                    project.lastUpdate = data.projectDetails.data.projects[0].lastSync;
-                                    data.projectDetails.data.projects[0].createdType = project.createdType;
-                                    data.projectDetails.data.projects[0].isStarted = project.isStarted;
-                                    updatedProject = data.projectDetails.data.projects[0];
-                                    updatedProject.isSync = true;
-                                    updatedProject.isEdited = false;
-                                    updatedProject.isNew = false;
-                                    _this.syncUpdateInLocal(updatedProject, project);
+                                else if (data.status == "success" || data.status == "succes") {
+                                    if (data.projectDetails) {
+                                        project.isNew = false;
+                                        project.isSync = true;
+                                        project.isEdited = false;
+                                        data.projectDetails.data.projects[0].isStarted = project.isStarted;
+                                        updatedProject = data.projectDetails.data.projects[0];
+                                        updatedProject.isSync = true;
+                                        updatedProject.isEdited = false;
+                                        updatedProject.isNew = false;
+                                        updatedProject.lastUpdate = project.lastUpdate;
+                                        _this.syncUpdateInLocal(updatedProject, project, data.allProjects);
+                                    }
+                                    else {
+                                        project.isNew = false;
+                                        project.isSync = true;
+                                        project.isEdited = false;
+                                        data.data.isStarted = project.isStarted;
+                                        updatedProject = data.data;
+                                        updatedProject.isSync = true;
+                                        updatedProject.isEdited = false;
+                                        updatedProject.isNew = false;
+                                        updatedProject.lastUpdate = project.lastUpdate;
+                                        _this.syncUpdateInLocal(updatedProject, project, data.allProjects);
+                                    }
                                 }
                             }, function (error) {
+                                _this.toastService.stopLoader();
                             });
                         });
                     }
                 }, function (error) {
-                    // this.showSkeleton = false;
                     if (error.status === 0) {
                         _this.router.navigateByUrl('/login');
+                        _this.toastService.stopLoader();
                     }
                 });
             }
             else {
                 _this.router.navigateByUrl('/login');
+                _this.toastService.stopLoader();
             }
+        }, function (error) {
+            _this.toastService.stopLoader();
         });
     };
-    AppComponent.prototype.syncUpdateInLocal = function (project, oldProject) {
+    AppComponent.prototype.syncUpdateInLocal = function (project, oldProject, syncedProjects) {
         var _this = this;
         if (project.createdType == 'by self' || project.createdType == 'by reference') {
             this.storage.get('myprojects').then(function (myprojects) {
                 if (myprojects) {
                     myprojects.forEach(function (prj, i) {
                         if (prj._id == oldProject._id) {
+                            project.templateId = project._id;
                             myprojects[i] = project;
                         }
                     });
                 }
                 _this.storage.set('myprojects', myprojects).then(function (myprojectsff) {
+                    _this.toastService.successToast('message.sync_success');
+                    _this.toastService.stopLoader();
+                    // get all synced projects and update in local
+                    _this.getSyncedProjects(syncedProjects);
                 });
             });
         }
@@ -1770,9 +1808,19 @@ var AppComponent = /** @class */ (function () {
                     });
                 }
                 _this.storage.set('projects', projects).then(function (myprojectsff) {
+                    _this.toastService.stopLoader();
+                    _this.toastService.successToast('message.sync_success');
+                    _this.toastService.stopLoader();
+                    // get all synced projects and update in local
+                    _this.getSyncedProjects(syncedProjects);
                 });
             });
         }
+    };
+    AppComponent.prototype.getSyncedProjects = function (syncedProjects) {
+        var localProjects;
+        this.storage.set('myprojects', syncedProjects.data[0].projects).then(function (myprojects) {
+        });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["NavController"]),
@@ -1801,7 +1849,10 @@ var AppComponent = /** @class */ (function () {
             _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ModalController"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"],
             _angular_router__WEBPACK_IMPORTED_MODULE_9__["ActivatedRoute"],
             _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__["ProjectService"],
-            _api_api__WEBPACK_IMPORTED_MODULE_13__["ApiProvider"]])
+            _api_api__WEBPACK_IMPORTED_MODULE_13__["ApiProvider"],
+            _home_home_service__WEBPACK_IMPORTED_MODULE_15__["HomeService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["LoadingController"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_16__["ToastService"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -1822,7 +1873,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppConfigs", function() { return AppConfigs; });
 var AppConfigs = {
     //Dev Urls
-    appVersion: "1.1.10",
+    appVersion: "1.1.12",
     appName: "Unnati",
     // Dev urls
     app_url: "https://dev.shikshalokam.org",
@@ -1839,6 +1890,20 @@ var AppConfigs = {
         getAllNotifications: "/notifications/in-app/list",
         registerDevice: "/notifications/push/registerDevice"
     },
+    // QA
+    // app_url: "https://qa.shikshalokam.org", 
+    // api_url: "https://qahome.shikshalokam.org",
+    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    // clientId: "sl-ionic-connect",
+    // environment: "qa",
+    // notification: {
+    //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
+    //     markAsRead: "/notifications/in-app/markItRead",
+    //     getAllNotifications: "/notifications/in-app/list",
+    //     registerDevice: "/notifications/push/registerDevice"
+    // },
     //AWS Prod Urls
     // app_url: "https://bodh.shikshalokam.org",
     // api_url: "https://api.shikshalokam.org",
@@ -1851,21 +1916,7 @@ var AppConfigs = {
     //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
     //     markAsRead: "notifications/in-app/markAsRead",
     //     getAllNotifications: "/notifications/in-app/list",
-    // registerDevice: "notifications/push/registerDevice"
-    // },
-    // QA
-    // app_url: "https://qa.shikshalokam.org",
-    // api_url: "https://qahome.shikshalokam.org",
-    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
-    // clientId: "sl-ionic-connect",
-    // environment: "qa",
-    // notification: {
-    //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
-    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
-    //     markAsRead: "/notifications/in-app/markItRead",
-    //     getAllNotifications: "/notifications/in-app/list",
-    //     registerDevice: "/notifications/push/registerDevice"
+    //     registerDevice: "notifications/push/registerDevice"
     // },
     //Staging Urls
     // app_url: "https://dev.shikshalokam.org",
@@ -1885,7 +1936,7 @@ var AppConfigs = {
     keyCloak: {
         getAccessToken: "/auth/realms/sunbird/protocol/openid-connect/token",
         redirection_url: "http://localhost:8100/",
-        logout_redirect_url: "http://localhost:8000/oauthLogoutcallback"
+        logout_redirect_url: "http://localhost:8100/project-view/home"
     },
     survey: {
         submission: "/submissions/make/",
@@ -1954,24 +2005,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/status-bar/ngx */ "./node_modules/@ionic-native/status-bar/ngx/index.js");
 /* harmony import */ var _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic-native/network/ngx */ "./node_modules/@ionic-native/network/ngx/index.js");
 /* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./network.service */ "./src/app/network.service.ts");
-/* harmony import */ var _current_user__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./current-user */ "./src/app/current-user.ts");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _angular_http__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/http */ "./node_modules/@angular/http/fesm5/http.js");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
-/* harmony import */ var _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @ngx-translate/http-loader */ "./node_modules/@ngx-translate/http-loader/fesm5/ngx-translate-http-loader.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _app_edit_task_edit_task_module__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../app/edit-task/edit-task.module */ "./src/app/edit-task/edit-task.module.ts");
-/* harmony import */ var _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @ionic-native/in-app-browser/ngx */ "./node_modules/@ionic-native/in-app-browser/ngx/index.js");
-/* harmony import */ var _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @ionic-native/app-launcher/ngx */ "./node_modules/@ionic-native/app-launcher/ngx/index.js");
-/* harmony import */ var _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @ionic-native/market/ngx */ "./node_modules/@ionic-native/market/ngx/index.js");
-/* harmony import */ var _angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/platform-browser-dynamic */ "./node_modules/@angular/platform-browser-dynamic/fesm5/platform-browser-dynamic.js");
-/* harmony import */ var _app_api_api__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../app/api/api */ "./src/app/api/api.ts");
-/* harmony import */ var _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @ionic-native/date-picker/ngx */ "./node_modules/@ionic-native/date-picker/ngx/index.js");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
-/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
+/* harmony import */ var _popover_popover_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./popover/popover.component */ "./src/app/popover/popover.component.ts");
+/* harmony import */ var _current_user__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./current-user */ "./src/app/current-user.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_http__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/http */ "./node_modules/@angular/http/fesm5/http.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+/* harmony import */ var _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @ngx-translate/http-loader */ "./node_modules/@ngx-translate/http-loader/fesm5/ngx-translate-http-loader.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _app_edit_task_edit_task_module__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../app/edit-task/edit-task.module */ "./src/app/edit-task/edit-task.module.ts");
+/* harmony import */ var _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @ionic-native/in-app-browser/ngx */ "./node_modules/@ionic-native/in-app-browser/ngx/index.js");
+/* harmony import */ var _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @ionic-native/app-launcher/ngx */ "./node_modules/@ionic-native/app-launcher/ngx/index.js");
+/* harmony import */ var _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @ionic-native/market/ngx */ "./node_modules/@ionic-native/market/ngx/index.js");
+/* harmony import */ var _angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @angular/platform-browser-dynamic */ "./node_modules/@angular/platform-browser-dynamic/fesm5/platform-browser-dynamic.js");
+/* harmony import */ var _app_api_api__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../app/api/api */ "./src/app/api/api.ts");
+/* harmony import */ var _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @ionic-native/date-picker/ngx */ "./node_modules/@ionic-native/date-picker/ngx/index.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _ionic_native_camera_ngx__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @ionic-native/camera/ngx */ "./node_modules/@ionic-native/camera/ngx/index.js");
+/* harmony import */ var _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @ionic-native/file-opener/ngx */ "./node_modules/@ionic-native/file-opener/ngx/index.js");
+/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
+/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
+/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
+/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
+/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
+/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
+/* harmony import */ var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @ionic-native/file-path/ngx */ "./node_modules/@ionic-native/file-path/ngx/index.js");
+/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
+
+
+
 
 
 
@@ -2003,8 +2066,14 @@ __webpack_require__.r(__webpack_exports__);
 // import { FcmProvider } from './fcm';
 
 
+
+
+
+
+
+
 function createTranslateLoader(http) {
-    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_16__["TranslateHttpLoader"](http, './assets/i18n/', '.json');
+    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_17__["TranslateHttpLoader"](http, './assets/i18n/', '.json');
 }
 var AppModule = /** @class */ (function () {
     function AppModule(statusBar) {
@@ -2014,38 +2083,241 @@ var AppModule = /** @class */ (function () {
     }
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_11__["AppComponent"]],
-            entryComponents: [],
+            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_12__["AppComponent"], _popover_popover_component__WEBPACK_IMPORTED_MODULE_10__["PopoverComponent"]],
+            entryComponents: [_popover_popover_component__WEBPACK_IMPORTED_MODULE_10__["PopoverComponent"]],
             imports: [
-                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"], _angular_http__WEBPACK_IMPORTED_MODULE_14__["HttpModule"],
-                _angular_common_http__WEBPACK_IMPORTED_MODULE_13__["HttpClientModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["ReactiveFormsModule"], _app_edit_task_edit_task_module__WEBPACK_IMPORTED_MODULE_18__["EditTaskPageModule"],
+                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"],
+                _angular_http__WEBPACK_IMPORTED_MODULE_15__["HttpModule"],
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_14__["HttpClientModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_18__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_18__["ReactiveFormsModule"],
+                _app_edit_task_edit_task_module__WEBPACK_IMPORTED_MODULE_19__["EditTaskPageModule"],
                 _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicModule"].forRoot(),
-                _app_routing_module__WEBPACK_IMPORTED_MODULE_12__["AppRoutingModule"],
+                _app_routing_module__WEBPACK_IMPORTED_MODULE_13__["AppRoutingModule"],
                 _ionic_storage__WEBPACK_IMPORTED_MODULE_4__["IonicStorageModule"].forRoot(),
-                _ngx_translate_core__WEBPACK_IMPORTED_MODULE_15__["TranslateModule"].forRoot({
+                _ngx_translate_core__WEBPACK_IMPORTED_MODULE_16__["TranslateModule"].forRoot({
                     loader: {
-                        provide: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_15__["TranslateLoader"],
+                        provide: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_16__["TranslateLoader"],
                         useFactory: (createTranslateLoader),
-                        deps: [_angular_common_http__WEBPACK_IMPORTED_MODULE_13__["HttpClient"]]
+                        deps: [_angular_common_http__WEBPACK_IMPORTED_MODULE_14__["HttpClient"]]
                     }
                 })
             ],
             providers: [
-                _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_8__["Network"], _network_service__WEBPACK_IMPORTED_MODULE_9__["NetworkService"], _current_user__WEBPACK_IMPORTED_MODULE_10__["CurrentUserProvider"], _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_19__["InAppBrowser"], _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_20__["AppLauncher"], _app_api_api__WEBPACK_IMPORTED_MODULE_23__["ApiProvider"], _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_21__["Market"], _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_24__["DatePicker"], _angular_common__WEBPACK_IMPORTED_MODULE_25__["DatePipe"],
+                _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"],
+                _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_8__["Network"],
+                _network_service__WEBPACK_IMPORTED_MODULE_9__["NetworkService"],
+                _current_user__WEBPACK_IMPORTED_MODULE_11__["CurrentUserProvider"],
+                _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_20__["InAppBrowser"],
+                _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_21__["AppLauncher"],
+                _app_api_api__WEBPACK_IMPORTED_MODULE_24__["ApiProvider"],
+                _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_22__["Market"],
+                _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_25__["DatePicker"],
+                _angular_common__WEBPACK_IMPORTED_MODULE_26__["DatePipe"],
+                _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_31__["SocialSharing"],
                 _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_6__["SplashScreen"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_32__["FileTransfer"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_32__["FileTransferObject"],
+                _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_33__["File"],
+                _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_34__["FileChooser"],
+                _ionic_native_camera_ngx__WEBPACK_IMPORTED_MODULE_27__["Camera"],
+                _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_35__["FilePath"],
+                _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_28__["FileOpener"],
+                _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_36__["Base64"],
                 { provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"], useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicRouteStrategy"] },
                 // FCM,
                 // FcmProvider,
-                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_26__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_27__["Badge"]
+                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_29__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_30__["Badge"]
             ],
-            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_11__["AppComponent"]]
+            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_12__["AppComponent"]]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"]])
     ], AppModule);
     return AppModule;
 }());
 
-Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_22__["platformBrowserDynamic"])().bootstrapModule(AppModule);
+Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_23__["platformBrowserDynamic"])().bootstrapModule(AppModule);
+
+
+/***/ }),
+
+/***/ "./src/app/category-view/category.view.service.ts":
+/*!********************************************************!*\
+  !*** ./src/app/category-view/category.view.service.ts ***!
+  \********************************************************/
+/*! exports provided: CategoryViewService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CategoryViewService", function() { return CategoryViewService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+
+
+
+var CategoryViewService = /** @class */ (function () {
+    function CategoryViewService(storage, http) {
+        this.storage = storage;
+        this.http = http;
+        this.deleteEvent = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
+    }
+    //  get my projects from local 
+    CategoryViewService.prototype.getMyProjects = function () {
+        return this.storage.get('myprojects').then(function (projects) {
+            return projects;
+        });
+    };
+    // get templates from local
+    CategoryViewService.prototype.getTemplates = function (type) {
+        return this.storage.get('templates').then(function (templates) {
+            return templates[type];
+        });
+    };
+    //  get projects by category
+    CategoryViewService.prototype.getTemplatesByCategory = function (data) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+            'x-auth-token': data
+        });
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].api_url + '/unnati/api/v1/template/all', { headers: httpHeaders });
+    };
+    //  delete project event
+    CategoryViewService.prototype.deleteProject = function (value) {
+        this.deleteEvent.next();
+    };
+    // get pdf of project
+    CategoryViewService.prototype.getPDF = function (data, token) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+            'x-auth-token': token
+        });
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].api_url + '/unnati/api/v1/getProjectPdf', data, { headers: httpHeaders });
+    };
+    CategoryViewService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]])
+    ], CategoryViewService);
+    return CategoryViewService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/create-project/create-project.service.ts":
+/*!**********************************************************!*\
+  !*** ./src/app/create-project/create-project.service.ts ***!
+  \**********************************************************/
+/*! exports provided: CreateProjectService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateProjectService", function() { return CreateProjectService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+
+
+
+var CreateProjectService = /** @class */ (function () {
+    function CreateProjectService(storage) {
+        this.storage = storage;
+    }
+    // Update task in current Project
+    CreateProjectService.prototype.UpdateCurrentMyProject = function (createdTask) {
+        var _this = this;
+        return this.storage.get('newcreatedproject').then(function (cmp) {
+            cmp.tasks.forEach(function (task, i) {
+                if (task._id == createdTask._id) {
+                    cmp.lastUpdate = new Date();
+                    cmp.tasks[i] = createdTask;
+                    cmp.isEdited = true;
+                }
+            });
+            _this.storage.set('newcreatedproject', cmp).then(function (updatedProject) {
+                _this.storage.set('projectToBeView', cmp).then(function (updatedProject) {
+                    _this.updateByProjects(updatedProject);
+                });
+            });
+        });
+    };
+    //  Update project in my projects list.
+    CreateProjectService.prototype.updateByProjects = function (updatedProject) {
+        var _this = this;
+        this.storage.get('myprojects').then(function (myProjects) {
+            if (myProjects) {
+                myProjects.forEach(function (project, i) {
+                    if (project._id == updatedProject._id) {
+                        updatedProject.isEdited = true;
+                        myProjects[i] = updatedProject;
+                    }
+                });
+                _this.storage.set('myprojects', myProjects).then(function (project) {
+                }, function (error) {
+                });
+            }
+            else {
+                updatedProject._id = 1;
+                var data = [];
+                data.push(updatedProject);
+                _this.storage.set('myprojects', data).then(function (myProjects) {
+                });
+            }
+        });
+    };
+    // add new project into my projects.
+    CreateProjectService.prototype.insertIntoMyProjects = function (project) {
+        var _this = this;
+        return this.storage.get('myprojects').then(function (myProjects) {
+            if (myProjects) {
+                project.isEdited = true;
+                myProjects.push(project);
+                _this.storage.set('myprojects', myProjects).then(function (projects) {
+                });
+            }
+            else {
+                project.isEdited = true;
+                var data = [];
+                data.push(project);
+                _this.storage.set('myprojects', data).then(function (projects) {
+                });
+            }
+        });
+    };
+    // update task in project after marking as delete. 
+    CreateProjectService.prototype.UpdateCurrentMyProjectByTask = function (createdTask) {
+        var _this = this;
+        return this.storage.get('projectToBeView').then(function (cmp) {
+            cmp.tasks.forEach(function (task, i) {
+                if (task._id == createdTask._id) {
+                    cmp.isEdited = true;
+                    cmp.tasks[i] = createdTask;
+                }
+            });
+            _this.storage.set('projectToBeView', cmp).then(function (updatedProject) {
+                _this.updateByProjects(updatedProject);
+            });
+        });
+    };
+    CreateProjectService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"]])
+    ], CreateProjectService);
+    return CreateProjectService;
+}());
+
 
 
 /***/ }),
@@ -2232,7 +2504,7 @@ var EditTaskPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-title>\n      {{ title }}\n      <ion-icon\n        name=\"close-circle\"\n        (click)=\"close()\"\n        style=\"    float: right;\n      font-size: larger;\"\n      ></ion-icon>\n    </ion-title>\n  </ion-toolbar>\n</ion-header> -->\n<!-- <ion-header>\n  <app-header [title]=\"title\" [showMenu]=\"false\" [showBack]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content padding>\n  <form [formGroup]=\"propertyForm\" novalidate *ngIf=\"showForm\">\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/tasks.png\" />{{\n            \"tasks.title_placeholder\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          type=\"text\"\n          class=\"form-control\"\n          formControlName=\"taskTitle\"\n          [(ngModel)]=\"task.title\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskTitle.valid &&\n          propertyForm.controls.taskTitle.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter title of Task.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/startDate.png\" />{{\n            \"tasks.start_date\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          style=\"--padding-start: 0px;\"\n          display-format=\"MMM DD, YYYY\"\n          picker-format=\"MMMM DD YYYY\"\n          (click)=\"openDatePicker()\"\n          formControlName=\"taskStartDate\"\n          [(ngModel)]=\"task.startDate\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskStartDate.valid &&\n          propertyForm.controls.taskStartDate.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter Start date.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/endDate.png\" />{{\n            \"tasks.end_date\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          style=\"--padding-start: 0px;\"\n          display-format=\"MMM DD, YYYY\"\n          picker-format=\"MMMM DD YYYY\"\n          (click)=\"openDatePicker1()\"\n          formControlName=\"taskEndDate\"\n          [(ngModel)]=\"task.endDate\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskEndDate.valid &&\n          propertyForm.controls.taskEndDate.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter End date.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\" *ngFor=\"let assign of task.assignedTo\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/assigned.png\" />{{\n            \"tasks.assigned_to\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          type=\"text\"\n          placeholder=\"\"\n          readonly\n          class=\"form-control\"\n          formControlName=\"taskAssignedTo\"\n          [(ngModel)]=\"assign.name\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskAssignedTo.valid &&\n          propertyForm.controls.taskAssignedTo.dirty &&\n          propertyForm.controls.taskAssignedTo.touched\n        \"\n        class=\"validator-error\"\n      >\n        Please enter Assign to.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/status.png\" />\n          {{ \"tasks.status\" | translate }}</ion-label\n        >\n        <ion-select\n          value=\"{{ task.status }}\"\n          okText=\"✓\"\n          cancelText=\"x\"\n          formControlName=\"taskStatus\"\n          [(ngModel)]=\"task.status\"\n        >\n          <ion-select-option\n            value=\"not yet started\"\n            selected=\"task.status === 'not yet started'\"\n            >Not yet started</ion-select-option\n          >\n          <ion-select-option\n            value=\"in progress\"\n            selected=\"task.status === 'in progress'\"\n            >In progress</ion-select-option\n          >\n          <ion-select-option\n            value=\"completed\"\n            selected=\"task.status === 'completed'\"\n            >Completed</ion-select-option\n          >\n        </ion-select>\n      </ion-item>\n    </div>\n  </form>\n</ion-content>\n<ion-footer>\n  <div class=\"action-board\">\n    <ion-button size=\"small\" color=\"light\" slot=\"start\" (click)=\"close()\">\n      {{ \"button.cancel\" | translate }}</ion-button\n    >\n    <ion-button\n      size=\"small\"\n      color=\"primary\"\n      slot=\"end\"\n      style=\"float:right\"\n      (click)=\"create()\"\n    >\n      {{ \"button.save\" | translate }}</ion-button\n    >\n  </div>\n</ion-footer> -->\n"
+module.exports = "<!-- <ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-title>\n      {{ title }}\n      <ion-icon\n        name=\"close-circle\"\n        (click)=\"close()\"\n        style=\"    float: right;\n      font-size: larger;\"\n      ></ion-icon>\n    </ion-title>\n  </ion-toolbar>\n</ion-header> -->\n<!-- <ion-header>\n  <app-header [title]=\"title\" [showMenu]=\"false\" [showBack]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <form [formGroup]=\"propertyForm\" novalidate *ngIf=\"showForm\">\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/tasks.png\" />{{\n            \"tasks.title_placeholder\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          type=\"text\"\n          class=\"form-control\"\n          formControlName=\"taskTitle\"\n          [(ngModel)]=\"task.title\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskTitle.valid &&\n          propertyForm.controls.taskTitle.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter title of Task.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/startDate.png\" />{{\n            \"tasks.start_date\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          style=\"--padding-start: 0px;\"\n          display-format=\"MMM DD, YYYY\"\n          picker-format=\"MMMM DD YYYY\"\n          (click)=\"openDatePicker()\"\n          formControlName=\"taskStartDate\"\n          [(ngModel)]=\"task.startDate\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskStartDate.valid &&\n          propertyForm.controls.taskStartDate.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter Start date.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/endDate.png\" />{{\n            \"tasks.end_date\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          style=\"--padding-start: 0px;\"\n          display-format=\"MMM DD, YYYY\"\n          picker-format=\"MMMM DD YYYY\"\n          (click)=\"openDatePicker1()\"\n          formControlName=\"taskEndDate\"\n          [(ngModel)]=\"task.endDate\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskEndDate.valid &&\n          propertyForm.controls.taskEndDate.dirty\n        \"\n        class=\"validator-error\"\n      >\n        Please enter End date.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\" *ngFor=\"let assign of task.assignedTo\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/assigned.png\" />{{\n            \"tasks.assigned_to\" | translate\n          }}</ion-label\n        >\n        <ion-input\n          type=\"text\"\n          placeholder=\"\"\n          readonly\n          class=\"form-control\"\n          formControlName=\"taskAssignedTo\"\n          [(ngModel)]=\"assign.name\"\n          required\n        ></ion-input>\n      </ion-item>\n      <div\n        *ngIf=\"\n          !propertyForm.controls.taskAssignedTo.valid &&\n          propertyForm.controls.taskAssignedTo.dirty &&\n          propertyForm.controls.taskAssignedTo.touched\n        \"\n        class=\"validator-error\"\n      >\n        Please enter Assign to.\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <ion-item class=\"label-divider\">\n        <ion-label position=\"floating\"\n          ><img src=\"../../assets/images/status.png\" />\n          {{ \"tasks.status\" | translate }}</ion-label\n        >\n        <ion-select\n          value=\"{{ task.status }}\"\n          okText=\"✓\"\n          cancelText=\"x\"\n          formControlName=\"taskStatus\"\n          [(ngModel)]=\"task.status\"\n        >\n          <ion-select-option\n            value=\"not yet started\"\n            selected=\"task.status === 'not yet started'\"\n            >Not yet started</ion-select-option\n          >\n          <ion-select-option\n            value=\"in progress\"\n            selected=\"task.status === 'in progress'\"\n            >In progress</ion-select-option\n          >\n          <ion-select-option\n            value=\"completed\"\n            selected=\"task.status === 'completed'\"\n            >Completed</ion-select-option\n          >\n        </ion-select>\n      </ion-item>\n    </div>\n  </form>\n</ion-content>\n<ion-footer>\n  <div class=\"action-board\">\n    <ion-button size=\"small\" color=\"light\" slot=\"start\" (click)=\"close()\">\n      {{ \"button.cancel\" | translate }}</ion-button\n    >\n    <ion-button\n      size=\"small\"\n      color=\"primary\"\n      slot=\"end\"\n      style=\"float:right\"\n      (click)=\"create()\"\n    >\n      {{ \"button.save\" | translate }}</ion-button\n    >\n  </div>\n</ion-footer> -->\n"
 
 /***/ }),
 
@@ -2243,7 +2515,7 @@ module.exports = "<!-- <ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".label-divider {\n  font-size: 16px; }\n  .label-divider ion-label {\n    font-size: 16px;\n    color: #000000; }\n  .label-divider ion-label img {\n      width: 22px;\n      float: left;\n      margin-right: 10px; }\n  .action-board {\n  background-color: #cccccc57;\n  padding: 5px 15px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9lZGl0LXRhc2svZWRpdC10YXNrLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLGVBQWUsRUFBQTtFQURqQjtJQUdJLGVBQWU7SUFDZixjQUFjLEVBQUE7RUFKbEI7TUFNTSxXQUFXO01BQ1gsV0FBVztNQUNYLGtCQUFrQixFQUFBO0VBSXhCO0VBQ0ksMkJBQTJCO0VBQzNCLGlCQUFpQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvZWRpdC10YXNrL2VkaXQtdGFzay5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubGFiZWwtZGl2aWRlciB7XG4gIGZvbnQtc2l6ZTogMTZweDtcbiAgaW9uLWxhYmVsIHtcbiAgICBmb250LXNpemU6IDE2cHg7XG4gICAgY29sb3I6ICMwMDAwMDA7XG4gICAgaW1nIHtcbiAgICAgIHdpZHRoOiAyMnB4O1xuICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICBtYXJnaW4tcmlnaHQ6IDEwcHg7XG4gICAgfVxuICB9XG59XG4uYWN0aW9uLWJvYXJkIHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjY2NjY2NjNTc7XG4gICAgcGFkZGluZzogNXB4IDE1cHg7XG59XG4iXX0= */"
+module.exports = ".label-divider {\n  font-size: 16px; }\n  .label-divider ion-label {\n    font-size: 16px;\n    color: #000000; }\n  .label-divider ion-label img {\n      width: 22px;\n      float: left;\n      margin-right: 10px; }\n  .action-board {\n  background-color: #cccccc57;\n  padding: 5px 15px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvZWRpdC10YXNrL2VkaXQtdGFzay5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxlQUFlLEVBQUE7RUFEakI7SUFHSSxlQUFlO0lBQ2YsY0FBYyxFQUFBO0VBSmxCO01BTU0sV0FBVztNQUNYLFdBQVc7TUFDWCxrQkFBa0IsRUFBQTtFQUl4QjtFQUNJLDJCQUEyQjtFQUMzQixpQkFBaUIsRUFBQSIsImZpbGUiOiJzcmMvYXBwL2VkaXQtdGFzay9lZGl0LXRhc2sucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmxhYmVsLWRpdmlkZXIge1xuICBmb250LXNpemU6IDE2cHg7XG4gIGlvbi1sYWJlbCB7XG4gICAgZm9udC1zaXplOiAxNnB4O1xuICAgIGNvbG9yOiAjMDAwMDAwO1xuICAgIGltZyB7XG4gICAgICB3aWR0aDogMjJweDtcbiAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgbWFyZ2luLXJpZ2h0OiAxMHB4O1xuICAgIH1cbiAgfVxufVxuLmFjdGlvbi1ib2FyZCB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogI2NjY2NjYzU3O1xuICAgIHBhZGRpbmc6IDVweCAxNXB4O1xufVxuIl19 */"
 
 /***/ }),
 
@@ -2522,7 +2794,7 @@ var EditTaskPage = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }\"\n>\n  <ion-toolbar >\n    <ion-icon\n      name=\"menu\"\n      class=\"header-action-icons\"\n      *ngIf=\"showMenu\"\n      (click)=\"menuToggle()\"\n    >\n    </ion-icon>\n    <span *ngIf=\"showMenu\" style=\"margin: 26px 10px;\n    position: absolute;\n    padding-bottom: 16px;\n    font-size: 16px; left: 0px;\"  (click)=\"menuToggle()\"> MENU</span>\n    <ion-icon\n      ios=\"ios-arrow-back\"\n      md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\"\n      *ngIf=\"showBack && !isGoBack\"\n    >\n    </ion-icon>\n    <ion-icon\n      (click)=\"goBack()\"\n      autoHide=\"false\"\n      ios=\"ios-arrow-back\"\n      md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\"\n      *ngIf=\"showBack && isGoBack\"\n    ></ion-icon>\n    <ion-title>\n      {{ title }}\n      <ion-icon\n        name=\"wifi\"\n        class=\"network-icon ion-float-right\" style=\"position:absolute;float:right;right: 20px;\"\n        [ngClass]=\"{\n          'no-connection': !connected,\n          connected: connected\n        }\"\n      ></ion-icon>\n      <span (click)=\"navigateToNotification()\">\n        <ion-icon\n          name=\"notifications\"\n          class=\"_headerIcon notificationIcon \" style=\"position:absolute;float:right;right: 50px;\"\n        ></ion-icon>\n      </span>\n      <!-- Notification counts -->\n      <!-- <span class=\"dot _flex-box\" *ngIf=\"!notificationCount\"></span> -->\n      <span\n        class=\"dot _flex-box\"\n        *ngIf=\"notificationCount\"\n        (click)=\"navigateToNotification()\"\n        >{{ notificationCount }}</span\n      >\n    </ion-title>\n  </ion-toolbar>\n  <!-- <ion-tab-bar slot=\"top\" color=\"primary\" *ngIf=\"showTabs\">\n      <ion-tab-button tab=\"last-month-reports\" class=\"activated\" [ngClass]=\"{'tab-selected' : last_month}\" (click)=\"activeTab('last_month')\">\n        <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n      </ion-tab-button>\n      <ion-tab-button tab=\"last-quarter-reports\" [ngClass]=\"{'tab-selected' : last_quarter}\" (click)=\"activeTab('last_quarter')\">\n        <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n      </ion-tab-button>\n    </ion-tab-bar>  -->\n</ion-header>\n"
+module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }\">\n  <ion-toolbar>\n    <ion-icon name=\"menu\" class=\"header-action-icons\" *ngIf=\"showMenu\" (click)=\"menuToggle()\">\n    </ion-icon>\n    <span *ngIf=\"showMenu\" style=\"margin: 26px 10px;\n    position: absolute;\n    padding-bottom: 16px;\n    font-size: 16px; left: 0px;\" (click)=\"menuToggle()\"> MENU</span>\n    <ion-icon ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\" class=\"header-action-icons\"\n      *ngIf=\"showBack && !isGoBack\">\n    </ion-icon>\n    <ion-icon (click)=\"goBack()\" autoHide=\"false\" ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\" *ngIf=\"showBack && isGoBack\"></ion-icon>\n    <ion-title>\n      {{ title }}\n      <ion-icon name=\"wifi\" class=\"network-icon ion-float-right\" style=\"position:absolute;float:right;right: 20px;\"\n        [ngClass]=\"{\n          'no-connection': !connected,\n          connected: connected\n        }\"></ion-icon>\n      <span (click)=\"navigateToNotification()\">\n        <ion-icon name=\"notifications\" class=\"_headerIcon notificationIcon \"\n          style=\"position:absolute;float:right;right: 50px;\"></ion-icon>\n      </span>\n      <!-- Notification counts -->\n      <!-- <span class=\"dot _flex-box\" *ngIf=\"!notificationCount\"></span> -->\n      <span class=\"dot _flex-box\" *ngIf=\"notificationCount\"\n        (click)=\"navigateToNotification()\">{{ notificationCount }}</span>\n    </ion-title>\n  </ion-toolbar>\n  <!-- <ion-tab-bar slot=\"top\" color=\"primary\" *ngIf=\"showTabs\">\n      <ion-tab-button tab=\"last-month-reports\" class=\"activated\" [ngClass]=\"{'tab-selected' : last_month}\" (click)=\"activeTab('last_month')\">\n        <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n      </ion-tab-button>\n      <ion-tab-button tab=\"last-quarter-reports\" [ngClass]=\"{'tab-selected' : last_quarter}\" (click)=\"activeTab('last_quarter')\">\n        <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n      </ion-tab-button>\n    </ion-tab-bar>  -->\n</ion-header>\n<!-- <div *ngIf=\"isSyncing\"> Your data is syncingup please do not turn of your data and please dont close the app.\n</div> -->"
 
 /***/ }),
 
@@ -2533,7 +2805,7 @@ module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': no
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".dot {\n  width: auto;\n  min-width: 16px;\n  height: 16px;\n  background: red;\n  border-radius: 10px;\n  position: absolute;\n  right: 50px;\n  top: 5px;\n  z-index: 2;\n  -webkit-box-pack: center;\n  justify-content: center;\n  color: #fff;\n  font-size: 8px;\n  font-weight: bold;\n  text-align: center;\n  padding: 4px; }\n\n.relative {\n  position: relative; }\n\n.notificationIcon {\n  font-size: 28px;\n  margin-right: 5px; }\n\n.margin {\n  margin: 0 8px !important; }\n\n.textCapital {\n  text-transform: capitalize; }\n\n.tab-selected, .activated {\n  border-bottom: 4px solid #fff !important; }\n\nion-tab-button ion-label {\n  font-size: 16px !important; }\n\n.header-action-icons {\n  font-size: 28px;\n  padding-left: 15px;\n  float: left; }\n\n.header-md:after {\n  height: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9oZWFkZXIvaGVhZGVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsV0FBVztFQUNYLGVBQWU7RUFDZixZQUFZO0VBQ1osZUFBZTtFQUNmLG1CQUFtQjtFQUNuQixrQkFBa0I7RUFDbEIsV0FBVztFQUNYLFFBQVE7RUFDUixVQUFVO0VBQ1Ysd0JBQXdCO0VBQ3hCLHVCQUF1QjtFQUN2QixXQUFXO0VBQ1gsY0FBYztFQUNkLGlCQUFpQjtFQUNqQixrQkFBa0I7RUFDbEIsWUFBWSxFQUFBOztBQUVkO0VBQ0Usa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsZUFBZTtFQUNmLGlCQUFpQixFQUFBOztBQUVuQjtFQUNFLHdCQUF3QixFQUFBOztBQUUxQjtFQUNFLDBCQUEwQixFQUFBOztBQUU1QjtFQUNFLHdDQUF3QyxFQUFBOztBQUUxQztFQUVJLDBCQUEwQixFQUFBOztBQUc5QjtFQUNFLGVBQWM7RUFDZCxrQkFBaUI7RUFDakIsV0FBVyxFQUFBOztBQUViO0VBRUUsc0JBQXNCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9oZWFkZXIvaGVhZGVyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmRvdCB7XG4gIHdpZHRoOiBhdXRvO1xuICBtaW4td2lkdGg6IDE2cHg7XG4gIGhlaWdodDogMTZweDtcbiAgYmFja2dyb3VuZDogcmVkO1xuICBib3JkZXItcmFkaXVzOiAxMHB4O1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHJpZ2h0OiA1MHB4O1xuICB0b3A6IDVweDtcbiAgei1pbmRleDogMjtcbiAgLXdlYmtpdC1ib3gtcGFjazogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgY29sb3I6ICNmZmY7XG4gIGZvbnQtc2l6ZTogOHB4O1xuICBmb250LXdlaWdodDogYm9sZDtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBwYWRkaW5nOiA0cHg7XG59XG4ucmVsYXRpdmUge1xuICBwb3NpdGlvbjogcmVsYXRpdmU7XG59XG5cbi5ub3RpZmljYXRpb25JY29uIHtcbiAgZm9udC1zaXplOiAyOHB4O1xuICBtYXJnaW4tcmlnaHQ6IDVweDtcbn1cbi5tYXJnaW4ge1xuICBtYXJnaW46IDAgOHB4ICFpbXBvcnRhbnQ7XG59XG4udGV4dENhcGl0YWwge1xuICB0ZXh0LXRyYW5zZm9ybTogY2FwaXRhbGl6ZTtcbn1cbi50YWItc2VsZWN0ZWQsIC5hY3RpdmF0ZWQge1xuICBib3JkZXItYm90dG9tOiA0cHggc29saWQgI2ZmZiAhaW1wb3J0YW50O1xufVxuaW9uLXRhYi1idXR0b24ge1xuICBpb24tbGFiZWwge1xuICAgIGZvbnQtc2l6ZTogMTZweCAhaW1wb3J0YW50O1xuICB9XG59XG4uaGVhZGVyLWFjdGlvbi1pY29uc3tcbiAgZm9udC1zaXplOjI4cHg7XG4gIHBhZGRpbmctbGVmdDoxNXB4O1xuICBmbG9hdDogbGVmdDtcbn1cbi5oZWFkZXItbWQ6YWZ0ZXJcbntcbiAgaGVpZ2h0OiAwcHggIWltcG9ydGFudDtcbn0iXX0= */"
+module.exports = ".dot {\n  width: auto;\n  min-width: 16px;\n  height: 16px;\n  background: red;\n  border-radius: 10px;\n  position: absolute;\n  right: 50px;\n  top: 5px;\n  z-index: 2;\n  -webkit-box-pack: center;\n  justify-content: center;\n  color: #fff;\n  font-size: 8px;\n  font-weight: bold;\n  text-align: center;\n  padding: 4px; }\n\n.relative {\n  position: relative; }\n\n.notificationIcon {\n  font-size: 28px;\n  margin-right: 5px; }\n\n.margin {\n  margin: 0 8px !important; }\n\n.textCapital {\n  text-transform: capitalize; }\n\n.tab-selected, .activated {\n  border-bottom: 4px solid #fff !important; }\n\nion-tab-button ion-label {\n  font-size: 16px !important; }\n\n.header-action-icons {\n  font-size: 28px;\n  padding-left: 15px;\n  float: left; }\n\n.header-md:after {\n  height: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvaGVhZGVyL2hlYWRlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFdBQVc7RUFDWCxlQUFlO0VBQ2YsWUFBWTtFQUNaLGVBQWU7RUFDZixtQkFBbUI7RUFDbkIsa0JBQWtCO0VBQ2xCLFdBQVc7RUFDWCxRQUFRO0VBQ1IsVUFBVTtFQUNWLHdCQUF3QjtFQUN4Qix1QkFBdUI7RUFDdkIsV0FBVztFQUNYLGNBQWM7RUFDZCxpQkFBaUI7RUFDakIsa0JBQWtCO0VBQ2xCLFlBQVksRUFBQTs7QUFFZDtFQUNFLGtCQUFrQixFQUFBOztBQUdwQjtFQUNFLGVBQWU7RUFDZixpQkFBaUIsRUFBQTs7QUFFbkI7RUFDRSx3QkFBd0IsRUFBQTs7QUFFMUI7RUFDRSwwQkFBMEIsRUFBQTs7QUFFNUI7RUFDRSx3Q0FBd0MsRUFBQTs7QUFFMUM7RUFFSSwwQkFBMEIsRUFBQTs7QUFHOUI7RUFDRSxlQUFjO0VBQ2Qsa0JBQWlCO0VBQ2pCLFdBQVcsRUFBQTs7QUFFYjtFQUVFLHNCQUFzQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvaGVhZGVyL2hlYWRlci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5kb3Qge1xuICB3aWR0aDogYXV0bztcbiAgbWluLXdpZHRoOiAxNnB4O1xuICBoZWlnaHQ6IDE2cHg7XG4gIGJhY2tncm91bmQ6IHJlZDtcbiAgYm9yZGVyLXJhZGl1czogMTBweDtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICByaWdodDogNTBweDtcbiAgdG9wOiA1cHg7XG4gIHotaW5kZXg6IDI7XG4gIC13ZWJraXQtYm94LXBhY2s6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGNvbG9yOiAjZmZmO1xuICBmb250LXNpemU6IDhweDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgcGFkZGluZzogNHB4O1xufVxuLnJlbGF0aXZlIHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xufVxuXG4ubm90aWZpY2F0aW9uSWNvbiB7XG4gIGZvbnQtc2l6ZTogMjhweDtcbiAgbWFyZ2luLXJpZ2h0OiA1cHg7XG59XG4ubWFyZ2luIHtcbiAgbWFyZ2luOiAwIDhweCAhaW1wb3J0YW50O1xufVxuLnRleHRDYXBpdGFsIHtcbiAgdGV4dC10cmFuc2Zvcm06IGNhcGl0YWxpemU7XG59XG4udGFiLXNlbGVjdGVkLCAuYWN0aXZhdGVkIHtcbiAgYm9yZGVyLWJvdHRvbTogNHB4IHNvbGlkICNmZmYgIWltcG9ydGFudDtcbn1cbmlvbi10YWItYnV0dG9uIHtcbiAgaW9uLWxhYmVsIHtcbiAgICBmb250LXNpemU6IDE2cHggIWltcG9ydGFudDtcbiAgfVxufVxuLmhlYWRlci1hY3Rpb24taWNvbnN7XG4gIGZvbnQtc2l6ZToyOHB4O1xuICBwYWRkaW5nLWxlZnQ6MTVweDtcbiAgZmxvYXQ6IGxlZnQ7XG59XG4uaGVhZGVyLW1kOmFmdGVyXG57XG4gIGhlaWdodDogMHB4ICFpbXBvcnRhbnQ7XG59Il19 */"
 
 /***/ }),
 
@@ -2555,6 +2827,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
 /* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
+
 
 
 
@@ -2564,7 +2838,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var HeaderComponent = /** @class */ (function () {
-    function HeaderComponent(router, notificationCardService, storage, menuController, badge, api) {
+    function HeaderComponent(router, notificationCardService, storage, menuController, badge, api, homeService) {
         var _this = this;
         this.router = router;
         this.notificationCardService = notificationCardService;
@@ -2572,13 +2846,18 @@ var HeaderComponent = /** @class */ (function () {
         this.menuController = menuController;
         this.badge = badge;
         this.api = api;
+        this.homeService = homeService;
         this.showMenu = true;
         this.noBorder = true;
         this.isGoBack = false;
         this.bg = '#fff';
+        this.isSyncing = false;
         this.connected = navigator.onLine;
         this.page = 1;
         this.limit = 20;
+        homeService.isSyncing.subscribe(function (data) {
+            _this.isSyncing = data;
+        });
         notificationCardService.notificationCount.subscribe(function (count) {
             _this.notificationCount = count;
             _this.badge.set(_this.notificationCount);
@@ -2657,9 +2936,12 @@ var HeaderComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./header.component.html */ "./src/app/header/header.component.html"),
             styles: [__webpack_require__(/*! ./header.component.scss */ "./src/app/header/header.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_3__["NotificationCardService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_3__["NotificationCardService"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["MenuController"],
-            _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__["Badge"], _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"]])
+            _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__["Badge"], _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"],
+            _home_home_service__WEBPACK_IMPORTED_MODULE_8__["HomeService"]])
     ], HeaderComponent);
     return HeaderComponent;
 }());
@@ -2688,6 +2970,8 @@ var HomeService = /** @class */ (function () {
     function HomeService() {
         this.myProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.clearMyProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        this.tobeSync = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        this.isSyncing = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.activeProjectLoad = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.searcResultsOfPrjcts = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
     }
@@ -2707,6 +2991,12 @@ var HomeService = /** @class */ (function () {
     };
     HomeService.prototype.clearData = function () {
         this.clearMyProject.next();
+    };
+    HomeService.prototype.syncingProject = function (status) {
+        this.isSyncing.next(status);
+    };
+    HomeService.prototype.syncProjects = function () {
+        this.tobeSync.next();
     };
     HomeService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -2886,9 +3176,7 @@ var Login = /** @class */ (function () {
     Login.prototype.doLogout = function () {
         return new Promise(function (resolve) {
             var logout_redirect_url = _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].keyCloak.logout_redirect_url;
-            // alert(logout_redirect_url + "logout_redirect_url");
             var logout_url = _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].app_url + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
-            // alert(logout_url + "logout_url");
             var closeCallback = function (event) {
             };
             var browserRef = window.cordova.InAppBrowser.open(logout_url, "_blank", "zoom=no");
@@ -2912,8 +3200,6 @@ var Login = /** @class */ (function () {
             body.set('redirect_uri', _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].keyCloak.redirection_url);
             body.set('scope', "offline_access");
             var url = _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].app_url + _app_config__WEBPACK_IMPORTED_MODULE_2__["AppConfigs"].keyCloak.getAccessToken;
-            console.log(body, "body");
-            console.log(url, "url");
             _this.http.post(url, body)
                 .subscribe(function (data) {
                 var parsedData = JSON.parse(data._body);
@@ -3084,7 +3370,7 @@ module.exports = "<ion-list text-wrap class=\"container\" *ngIf=\"notifications?
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".dot {\n  width: 10px;\n  height: 10px;\n  margin-right: 10px;\n  background-color: #b23d33;\n  border-radius: 50%; }\n\n.notificationCard {\n  border-radius: 15px;\n  margin: 15px 0;\n  box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.16);\n  padding: 5px 30px; }\n\n.custom-list {\n  --background: transparent;\n  --border-color: transparent; }\n\n.inactiveDot {\n  background-color: #000; }\n\n.action-notifications {\n  text-align: center; }\n\n.old-notification {\n  background: #ebebeb;\n  color: #000;\n  padding: 10px 25px; }\n\n.new-notification {\n  background: #b23d33;\n  color: #fff;\n  padding: 10px 25px; }\n\n.notificationTitle {\n  font-family: 'Source Sans Pro', sans-serif !important;\n  -webkit-box-pack: justify;\n  justify-content: space-between;\n  font-size: 14px;\n  font-weight: 600;\n  padding-bottom: 5px; }\n\n.container {\n  padding: 0 15px !important; }\n\n.errorContainer {\n  padding: 0 15px !important;\n  height: 80vh !important; }\n\n.childContainer {\n  text-align: center; }\n\n.time {\n  color: #080808;\n  font-size: 12px; }\n\n.time-ago {\n  color: #000; }\n\n.errorMessage {\n  color: #080808; }\n\n.vertical-align-text {\n  margin: 0;\n  top: 50%;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n  text-align: center;\n  margin: 0px 26px;\n  font-weight: 500; }\n\n.custom-title-col {\n  float: left;\n  max-width: 60% !important;\n  min-width: 60% !important;\n  padding: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvVW5uYXRpL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9ub3RpZmljYXRpb24tY2FyZC9ub3RpZmljYXRpb24tY2FyZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFdBQVc7RUFDWCxZQUFZO0VBQ1osa0JBQWtCO0VBQ2xCLHlCQUF5QjtFQUN6QixrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxtQkFBbUI7RUFDbkIsY0FBYztFQUNkLDJDQUEyQztFQUUzQyxpQkFBaUIsRUFBQTs7QUFFbkI7RUFDRSx5QkFBYTtFQUNiLDJCQUFlLEVBQUE7O0FBRWpCO0VBQ0Usc0JBQXNCLEVBQUE7O0FBR3hCO0VBQ0Usa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsbUJBQW1CO0VBQ25CLFdBQVc7RUFDWCxrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxtQkFBbUI7RUFDbkIsV0FBVztFQUNYLGtCQUFrQixFQUFBOztBQUdwQjtFQUNFLHFEQUFxRDtFQUNyRCx5QkFBeUI7RUFDekIsOEJBQThCO0VBQzlCLGVBQWU7RUFDZixnQkFBZ0I7RUFDaEIsbUJBQW1CLEVBQUE7O0FBR3JCO0VBQ0UsMEJBQTBCLEVBQUE7O0FBRzVCO0VBQ0UsMEJBQTBCO0VBQzFCLHVCQUF1QixFQUFBOztBQUd6QjtFQUNFLGtCQUFrQixFQUFBOztBQUdwQjtFQUNFLGNBQWM7RUFDZCxlQUFlLEVBQUE7O0FBRWpCO0VBQ0UsV0FBVyxFQUFBOztBQUViO0VBQ0UsY0FBYyxFQUFBOztBQUVoQjtFQUNFLFNBQVM7RUFDVCxRQUFRO0VBRVIsbUNBQTJCO1VBQTNCLDJCQUEyQjtFQUMzQixrQkFBa0I7RUFDbEIsZ0JBQWdCO0VBQ2hCLGdCQUFnQixFQUFBOztBQUVsQjtFQUNFLFdBQVc7RUFDWCx5QkFBeUI7RUFDekIseUJBQXlCO0VBQ3pCLHVCQUF1QixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbm90aWZpY2F0aW9uLWNhcmQvbm90aWZpY2F0aW9uLWNhcmQuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZG90IHtcbiAgd2lkdGg6IDEwcHg7XG4gIGhlaWdodDogMTBweDtcbiAgbWFyZ2luLXJpZ2h0OiAxMHB4O1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjYjIzZDMzO1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG59XG5cbi5ub3RpZmljYXRpb25DYXJkIHtcbiAgYm9yZGVyLXJhZGl1czogMTVweDtcbiAgbWFyZ2luOiAxNXB4IDA7XG4gIGJveC1zaGFkb3c6IDBweCA2cHggNXB4IHJnYmEoMCwgMCwgMCwgMC4xNik7XG4gIC8vIHBhZGRpbmc6IDEwcHg7XG4gIHBhZGRpbmc6IDVweCAzMHB4O1xufVxuLmN1c3RvbS1saXN0IHtcbiAgLS1iYWNrZ3JvdW5kOiB0cmFuc3BhcmVudDtcbiAgLS1ib3JkZXItY29sb3I6IHRyYW5zcGFyZW50O1xufVxuLmluYWN0aXZlRG90IHtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzAwMDtcbn1cblxuLmFjdGlvbi1ub3RpZmljYXRpb25zIHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xufVxuXG4ub2xkLW5vdGlmaWNhdGlvbiB7XG4gIGJhY2tncm91bmQ6ICNlYmViZWI7XG4gIGNvbG9yOiAjMDAwO1xuICBwYWRkaW5nOiAxMHB4IDI1cHg7XG59XG5cbi5uZXctbm90aWZpY2F0aW9uIHtcbiAgYmFja2dyb3VuZDogI2IyM2QzMztcbiAgY29sb3I6ICNmZmY7XG4gIHBhZGRpbmc6IDEwcHggMjVweDtcbn1cblxuLm5vdGlmaWNhdGlvblRpdGxlIHtcbiAgZm9udC1mYW1pbHk6ICdTb3VyY2UgU2FucyBQcm8nLCBzYW5zLXNlcmlmICFpbXBvcnRhbnQ7XG4gIC13ZWJraXQtYm94LXBhY2s6IGp1c3RpZnk7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcbiAgZm9udC1zaXplOiAxNHB4O1xuICBmb250LXdlaWdodDogNjAwO1xuICBwYWRkaW5nLWJvdHRvbTogNXB4O1xufVxuXG4uY29udGFpbmVyIHtcbiAgcGFkZGluZzogMCAxNXB4ICFpbXBvcnRhbnQ7XG59XG5cbi5lcnJvckNvbnRhaW5lciB7XG4gIHBhZGRpbmc6IDAgMTVweCAhaW1wb3J0YW50O1xuICBoZWlnaHQ6IDgwdmggIWltcG9ydGFudDtcbn1cblxuLmNoaWxkQ29udGFpbmVyIHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xufVxuXG4udGltZSB7XG4gIGNvbG9yOiAjMDgwODA4O1xuICBmb250LXNpemU6IDEycHg7XG59XG4udGltZS1hZ28ge1xuICBjb2xvcjogIzAwMDtcbn1cbi5lcnJvck1lc3NhZ2Uge1xuICBjb2xvcjogIzA4MDgwODtcbn1cbi52ZXJ0aWNhbC1hbGlnbi10ZXh0IHtcbiAgbWFyZ2luOiAwO1xuICB0b3A6IDUwJTtcbiAgLW1zLXRyYW5zZm9ybTogdHJhbnNsYXRlWSgtNTAlKTtcbiAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKC01MCUpO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIG1hcmdpbjogMHB4IDI2cHg7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG4uY3VzdG9tLXRpdGxlLWNvbCB7XG4gIGZsb2F0OiBsZWZ0O1xuICBtYXgtd2lkdGg6IDYwJSAhaW1wb3J0YW50O1xuICBtaW4td2lkdGg6IDYwJSAhaW1wb3J0YW50O1xuICBwYWRkaW5nOiAwcHggIWltcG9ydGFudDtcbn1cbiJdfQ== */"
+module.exports = ".dot {\n  width: 10px;\n  height: 10px;\n  margin-right: 10px;\n  background-color: #b23d33;\n  border-radius: 50%; }\n\n.notificationCard {\n  border-radius: 15px;\n  margin: 15px 0;\n  box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.16);\n  padding: 5px 30px; }\n\n.custom-list {\n  --background: transparent;\n  --border-color: transparent; }\n\n.inactiveDot {\n  background-color: #000; }\n\n.action-notifications {\n  text-align: center; }\n\n.old-notification {\n  background: #ebebeb;\n  color: #000;\n  padding: 10px 25px; }\n\n.new-notification {\n  background: #b23d33;\n  color: #fff;\n  padding: 10px 25px; }\n\n.notificationTitle {\n  font-family: 'Source Sans Pro', sans-serif !important;\n  -webkit-box-pack: justify;\n  justify-content: space-between;\n  font-size: 14px;\n  font-weight: 600;\n  padding-bottom: 5px; }\n\n.container {\n  padding: 0 15px !important; }\n\n.errorContainer {\n  padding: 0 15px !important;\n  height: 80vh !important; }\n\n.childContainer {\n  text-align: center; }\n\n.time {\n  color: #080808;\n  font-size: 12px; }\n\n.time-ago {\n  color: #000; }\n\n.errorMessage {\n  color: #080808; }\n\n.vertical-align-text {\n  margin: 0;\n  top: 50%;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n  text-align: center;\n  margin: 0px 26px;\n  font-weight: 500; }\n\n.custom-title-col {\n  float: left;\n  max-width: 60% !important;\n  min-width: 60% !important;\n  padding: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvbm90aWZpY2F0aW9uLWNhcmQvbm90aWZpY2F0aW9uLWNhcmQuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxXQUFXO0VBQ1gsWUFBWTtFQUNaLGtCQUFrQjtFQUNsQix5QkFBeUI7RUFDekIsa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsbUJBQW1CO0VBQ25CLGNBQWM7RUFDZCwyQ0FBMkM7RUFFM0MsaUJBQWlCLEVBQUE7O0FBRW5CO0VBQ0UseUJBQWE7RUFDYiwyQkFBZSxFQUFBOztBQUVqQjtFQUNFLHNCQUFzQixFQUFBOztBQUd4QjtFQUNFLGtCQUFrQixFQUFBOztBQUdwQjtFQUNFLG1CQUFtQjtFQUNuQixXQUFXO0VBQ1gsa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsbUJBQW1CO0VBQ25CLFdBQVc7RUFDWCxrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxxREFBcUQ7RUFDckQseUJBQXlCO0VBQ3pCLDhCQUE4QjtFQUM5QixlQUFlO0VBQ2YsZ0JBQWdCO0VBQ2hCLG1CQUFtQixFQUFBOztBQUdyQjtFQUNFLDBCQUEwQixFQUFBOztBQUc1QjtFQUNFLDBCQUEwQjtFQUMxQix1QkFBdUIsRUFBQTs7QUFHekI7RUFDRSxrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxjQUFjO0VBQ2QsZUFBZSxFQUFBOztBQUVqQjtFQUNFLFdBQVcsRUFBQTs7QUFFYjtFQUNFLGNBQWMsRUFBQTs7QUFFaEI7RUFDRSxTQUFTO0VBQ1QsUUFBUTtFQUVSLG1DQUEyQjtVQUEzQiwyQkFBMkI7RUFDM0Isa0JBQWtCO0VBQ2xCLGdCQUFnQjtFQUNoQixnQkFBZ0IsRUFBQTs7QUFFbEI7RUFDRSxXQUFXO0VBQ1gseUJBQXlCO0VBQ3pCLHlCQUF5QjtFQUN6Qix1QkFBdUIsRUFBQSIsImZpbGUiOiJzcmMvYXBwL25vdGlmaWNhdGlvbi1jYXJkL25vdGlmaWNhdGlvbi1jYXJkLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmRvdCB7XG4gIHdpZHRoOiAxMHB4O1xuICBoZWlnaHQ6IDEwcHg7XG4gIG1hcmdpbi1yaWdodDogMTBweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2IyM2QzMztcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xufVxuXG4ubm90aWZpY2F0aW9uQ2FyZCB7XG4gIGJvcmRlci1yYWRpdXM6IDE1cHg7XG4gIG1hcmdpbjogMTVweCAwO1xuICBib3gtc2hhZG93OiAwcHggNnB4IDVweCByZ2JhKDAsIDAsIDAsIDAuMTYpO1xuICAvLyBwYWRkaW5nOiAxMHB4O1xuICBwYWRkaW5nOiA1cHggMzBweDtcbn1cbi5jdXN0b20tbGlzdCB7XG4gIC0tYmFja2dyb3VuZDogdHJhbnNwYXJlbnQ7XG4gIC0tYm9yZGVyLWNvbG9yOiB0cmFuc3BhcmVudDtcbn1cbi5pbmFjdGl2ZURvdCB7XG4gIGJhY2tncm91bmQtY29sb3I6ICMwMDA7XG59XG5cbi5hY3Rpb24tbm90aWZpY2F0aW9ucyB7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbn1cblxuLm9sZC1ub3RpZmljYXRpb24ge1xuICBiYWNrZ3JvdW5kOiAjZWJlYmViO1xuICBjb2xvcjogIzAwMDtcbiAgcGFkZGluZzogMTBweCAyNXB4O1xufVxuXG4ubmV3LW5vdGlmaWNhdGlvbiB7XG4gIGJhY2tncm91bmQ6ICNiMjNkMzM7XG4gIGNvbG9yOiAjZmZmO1xuICBwYWRkaW5nOiAxMHB4IDI1cHg7XG59XG5cbi5ub3RpZmljYXRpb25UaXRsZSB7XG4gIGZvbnQtZmFtaWx5OiAnU291cmNlIFNhbnMgUHJvJywgc2Fucy1zZXJpZiAhaW1wb3J0YW50O1xuICAtd2Via2l0LWJveC1wYWNrOiBqdXN0aWZ5O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG4gIGZvbnQtc2l6ZTogMTRweDtcbiAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgcGFkZGluZy1ib3R0b206IDVweDtcbn1cblxuLmNvbnRhaW5lciB7XG4gIHBhZGRpbmc6IDAgMTVweCAhaW1wb3J0YW50O1xufVxuXG4uZXJyb3JDb250YWluZXIge1xuICBwYWRkaW5nOiAwIDE1cHggIWltcG9ydGFudDtcbiAgaGVpZ2h0OiA4MHZoICFpbXBvcnRhbnQ7XG59XG5cbi5jaGlsZENvbnRhaW5lciB7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbn1cblxuLnRpbWUge1xuICBjb2xvcjogIzA4MDgwODtcbiAgZm9udC1zaXplOiAxMnB4O1xufVxuLnRpbWUtYWdvIHtcbiAgY29sb3I6ICMwMDA7XG59XG4uZXJyb3JNZXNzYWdlIHtcbiAgY29sb3I6ICMwODA4MDg7XG59XG4udmVydGljYWwtYWxpZ24tdGV4dCB7XG4gIG1hcmdpbjogMDtcbiAgdG9wOiA1MCU7XG4gIC1tcy10cmFuc2Zvcm06IHRyYW5zbGF0ZVkoLTUwJSk7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgtNTAlKTtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBtYXJnaW46IDBweCAyNnB4O1xuICBmb250LXdlaWdodDogNTAwO1xufVxuLmN1c3RvbS10aXRsZS1jb2wge1xuICBmbG9hdDogbGVmdDtcbiAgbWF4LXdpZHRoOiA2MCUgIWltcG9ydGFudDtcbiAgbWluLXdpZHRoOiA2MCUgIWltcG9ydGFudDtcbiAgcGFkZGluZzogMHB4ICFpbXBvcnRhbnQ7XG59XG4iXX0= */"
 
 /***/ }),
 
@@ -3340,6 +3626,363 @@ var NotificationCardService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/popover/popover.component.html":
+/*!************************************************!*\
+  !*** ./src/app/popover/popover.component.html ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<ion-list>\n  <ion-item (click)=\"deleteConfirmation()\">\n    <ion-label>{{delete}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <i class=\"material-icons\" style=\"font-size: 1.4em;\">\n        delete_forever\n      </i>\n    </ion-avatar>\n  </ion-item>\n  <ion-item (click)=\"syncProject()\">\n    <ion-label>{{share}}\n    </ion-label>\n    <ion-avatar slot=\"end\" class=\"avatar-style\">\n      <ion-icon name=\"share\"></ion-icon>\n    </ion-avatar>\n  </ion-item>\n</ion-list>"
+
+/***/ }),
+
+/***/ "./src/app/popover/popover.component.scss":
+/*!************************************************!*\
+  !*** ./src/app/popover/popover.component.scss ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".avatar-style {\n  margin: auto;\n  text-align: center;\n  font-size: 1.4em;\n  color: #727272;\n  margin-top: 8px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvcG9wb3Zlci9wb3BvdmVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksWUFBWTtFQUNaLGtCQUFrQjtFQUNsQixnQkFBZ0I7RUFDaEIsY0FBYztFQUNkLGVBQWUsRUFBQSIsImZpbGUiOiJzcmMvYXBwL3BvcG92ZXIvcG9wb3Zlci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5hdmF0YXItc3R5bGV7XG4gICAgbWFyZ2luOiBhdXRvO1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICBmb250LXNpemU6IDEuNGVtO1xuICAgIGNvbG9yOiAjNzI3MjcyO1xuICAgIG1hcmdpbi10b3A6IDhweDtcbn0iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/popover/popover.component.ts":
+/*!**********************************************!*\
+  !*** ./src/app/popover/popover.component.ts ***!
+  \**********************************************/
+/*! exports provided: PopoverComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PopoverComponent", function() { return PopoverComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
+/* harmony import */ var _category_view_category_view_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../category-view/category.view.service */ "./src/app/category-view/category.view.service.ts");
+/* harmony import */ var _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../create-project/create-project.service */ "./src/app/create-project/create-project.service.ts");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
+/* harmony import */ var _project_view_project_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../project-view/project.service */ "./src/app/project-view/project.service.ts");
+/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
+/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
+/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
+/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var PopoverComponent = /** @class */ (function () {
+    function PopoverComponent(translateService, popoverController, socialSharing, categoryViewService, createProjectService, storage, toastService, alertController, apiProvider, projectService, transfer, file, platform, fileChooser, base64, loadingController) {
+        this.translateService = translateService;
+        this.popoverController = popoverController;
+        this.socialSharing = socialSharing;
+        this.categoryViewService = categoryViewService;
+        this.createProjectService = createProjectService;
+        this.storage = storage;
+        this.toastService = toastService;
+        this.alertController = alertController;
+        this.apiProvider = apiProvider;
+        this.projectService = projectService;
+        this.transfer = transfer;
+        this.file = file;
+        this.platform = platform;
+        this.fileChooser = fileChooser;
+        this.base64 = base64;
+        this.loadingController = loadingController;
+    }
+    PopoverComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.platform.ready().then(function () {
+            _this.isIos = _this.platform.is('ios') ? true : false;
+            _this.appFolderPath = _this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
+            _this.translateService.get('button.share').subscribe(function (text) {
+                _this.share = text;
+            });
+            _this.translateService.get('button.delete').subscribe(function (text) {
+                _this.delete = text;
+            });
+            _this.translateService.get('message.delete_project_confirm').subscribe(function (text) {
+                _this.deleteConfirm = text;
+            });
+        });
+    };
+    // confirmation for delete project
+    PopoverComponent.prototype.deleteConfirmation = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var alert;
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alertController.create({
+                            message: this.deleteConfirm,
+                            buttons: [
+                                {
+                                    text: 'Cancel',
+                                    role: 'cancel',
+                                    cssClass: 'secondary',
+                                    handler: function (blah) {
+                                    }
+                                }, {
+                                    text: 'Okay',
+                                    handler: function () {
+                                        _this.deleteProject();
+                                    }
+                                }
+                            ]
+                        })];
+                    case 1:
+                        alert = _a.sent();
+                        return [4 /*yield*/, alert.present()];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // delete project
+    PopoverComponent.prototype.deleteProject = function () {
+        var _this = this;
+        this.project.isDeleted = true;
+        var projectData = this.project;
+        this.storage.get('myprojects').then(function (myProjects) {
+            if (myProjects) {
+                myProjects.forEach(function (myProject, i) {
+                    if (myProject._id == projectData._id) {
+                        projectData.isEdited = true;
+                        myProjects[i] = projectData;
+                    }
+                });
+                _this.storage.set('myprojects', myProjects).then(function (project) {
+                    _this.toastService.successToast('message.project_deleted_success');
+                    _this.categoryViewService.deleteProject('deleted');
+                    _this.DismissClick();
+                }, function (error) {
+                    _this.toastService.errorToast('message.project_deleted_failed');
+                });
+            }
+        }, function (error) {
+            _this.toastService.errorToast('message.project_deleted_failed');
+        });
+        this.DismissClick();
+    };
+    // Dismiss popver menu 
+    PopoverComponent.prototype.DismissClick = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                this.popoverController.dismiss();
+                return [2 /*return*/];
+            });
+        });
+    };
+    // Sync project before share
+    PopoverComponent.prototype.syncProject = function () {
+        var _this = this;
+        if (!this.project.isSync) {
+            if (this.project.tasks && this.project.tasks.length > 0) {
+                this.project.tasks.forEach(function (task) {
+                    if (task.isNew) {
+                        delete task._id;
+                    }
+                    if (task.subTasks && task.subTasks.length > 0) {
+                        task.subTasks.forEach(function (subtask) {
+                            if (subtask.isNew) {
+                                delete subtask._id;
+                            }
+                        });
+                    }
+                });
+            }
+            this.storage.get('userTokens').then(function (data) {
+                _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
+                    var parsedData = JSON.parse(data._body);
+                    if (parsedData && parsedData.access_token) {
+                        var userTokens = {
+                            access_token: parsedData.access_token,
+                            refresh_token: parsedData.refresh_token,
+                        };
+                        _this.storage.set('userTokens', userTokens).then(function (data) {
+                            _this.toastService.startLoader('Loading, please wait');
+                            _this.projectService.sync(_this.project, data.access_token).subscribe(function (data) {
+                                if (data.status == "success" || data.status == "succes") {
+                                    var updatedProject = void 0;
+                                    if (data.projectDetails) {
+                                        _this.project.isNew = false;
+                                        _this.project.isSync = true;
+                                        _this.project.isEdited = false;
+                                        data.projectDetails.data.projects[0].isStarted = _this.project.isStarted;
+                                        updatedProject = data.projectDetails.data.projects[0];
+                                        updatedProject.isSync = true;
+                                        updatedProject.isEdited = false;
+                                        updatedProject.isNew = false;
+                                        updatedProject.lastUpdate = _this.project.lastUpdate;
+                                        _this.getPDF(data.projectDetails.data.projects[0]._id);
+                                        _this.DismissClick();
+                                        _this.syncUpdateInLocal(updatedProject, _this.project, data.allProjects);
+                                    }
+                                    else {
+                                        _this.project.isNew = false;
+                                        _this.project.isSync = true;
+                                        _this.project.isEdited = false;
+                                        data.data.isStarted = _this.project.isStarted;
+                                        updatedProject = data.data;
+                                        updatedProject.isSync = true;
+                                        updatedProject.isEdited = false;
+                                        updatedProject.isNew = false;
+                                        updatedProject.lastUpdate = _this.project.lastUpdate;
+                                        _this.getPDF(data.projectDetails.data.projects[0]._id);
+                                        _this.DismissClick();
+                                        _this.syncUpdateInLocal(updatedProject, _this.project, data.allProjects);
+                                    }
+                                }
+                            }, function (error) {
+                                // intentially left blank
+                                _this.toastService.stopLoader();
+                                _this.toastService.errorToast(data.message);
+                            });
+                        });
+                    }
+                }, function (error) {
+                    // intentially left blank
+                });
+            });
+        }
+        else {
+            this.toastService.startLoader('Loading, please wait');
+            this.getPDF(this.project._id);
+            this.DismissClick();
+        }
+    };
+    PopoverComponent.prototype.syncUpdateInLocal = function (project, oldProject, syncedProjects) {
+        var _this = this;
+        if (project.createdType == 'by self' || project.createdType == 'by reference') {
+            this.storage.get('myprojects').then(function (myprojects) {
+                if (myprojects) {
+                    myprojects.forEach(function (prj, i) {
+                        if (prj._id == oldProject._id) {
+                            myprojects[i] = project;
+                        }
+                    });
+                }
+                _this.storage.set('myprojects', myprojects).then(function (myprojectsff) {
+                    // get all synced projects and update in local
+                });
+            });
+        }
+        else {
+            this.storage.get('projects').then(function (projects) {
+                if (projects) {
+                    projects.forEach(function (prj, i) {
+                        if (prj._id == oldProject._id) {
+                            projects[i] = project;
+                        }
+                    });
+                }
+                _this.storage.set('projects', projects).then(function (myprojectsff) {
+                    // get all synced projects and update in local
+                });
+            });
+        }
+    };
+    // geting pdf file report of project and share the project
+    PopoverComponent.prototype.getPDF = function (id) {
+        var _this = this;
+        this.storage.get('userTokens').then(function (data) {
+            _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
+                var parsedData = JSON.parse(data._body);
+                if (parsedData && parsedData.access_token) {
+                    var userTokens_1 = {
+                        access_token: parsedData.access_token,
+                        refresh_token: parsedData.refresh_token,
+                    };
+                    _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
+                        var projectData = {
+                            "projectId": id
+                        };
+                        _this.categoryViewService.getPDF(projectData, userTokens_1.access_token).subscribe(function (data) {
+                            var fileName = _this.project.title.replace(/\s/g, "");
+                            var fileTransfer = _this.transfer.create();
+                            var url = data.pdfUrl;
+                            fileTransfer.download(url, _this.appFolderPath + '/' + fileName).then(function (entry) {
+                                _this.base64.encodeFile(entry.nativeURL).then(function (base64File) {
+                                    var data = base64File.split(',');
+                                    var base64Data = "data:application/pdf;base64," + data[1];
+                                    _this.toastService.stopLoader();
+                                    _this.DismissClick();
+                                    _this.socialSharing.share("", fileName, base64Data, "").then(function () {
+                                    }, function (error) {
+                                        // intentially left blank
+                                    });
+                                }, function (err) {
+                                    _this.toastService.stopLoader();
+                                });
+                            }, function (error) {
+                                _this.toastService.stopLoader();
+                            });
+                        }, function (error) {
+                            _this.toastService.stopLoader();
+                        });
+                    }, function (error) {
+                        _this.toastService.stopLoader();
+                    });
+                }
+            });
+        });
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], PopoverComponent.prototype, "project", void 0);
+    PopoverComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-popover',
+            template: __webpack_require__(/*! ./popover.component.html */ "./src/app/popover/popover.component.html"),
+            styles: [__webpack_require__(/*! ./popover.component.scss */ "./src/app/popover/popover.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["PopoverController"],
+            _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_4__["SocialSharing"],
+            _category_view_category_view_service__WEBPACK_IMPORTED_MODULE_5__["CategoryViewService"],
+            _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_6__["CreateProjectService"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_8__["ToastService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["AlertController"],
+            _api_api__WEBPACK_IMPORTED_MODULE_9__["ApiProvider"],
+            _project_view_project_service__WEBPACK_IMPORTED_MODULE_10__["ProjectService"],
+            _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_11__["FileTransfer"],
+            _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_12__["File"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"],
+            _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_13__["FileChooser"],
+            _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_14__["Base64"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"]])
+    ], PopoverComponent);
+    return PopoverComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/project-view/project.service.ts":
 /*!*************************************************!*\
   !*** ./src/app/project-view/project.service.ts ***!
@@ -3427,7 +4070,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./myschools/search.filter */ "./src/app/myschools/search.filter.ts");
-/* harmony import */ var _app_home_search_filter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../app/home/search.filter */ "./src/app/home/search.filter.ts");
+/* harmony import */ var _home_search_filter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./home/search.filter */ "./src/app/home/search.filter.ts");
+/* harmony import */ var _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./task-board/task-board.filter */ "./src/app/task-board/task-board.filter.ts");
+
 
 
 
@@ -3452,10 +4097,10 @@ var SharedModule = /** @class */ (function () {
                 _ngx_translate_core__WEBPACK_IMPORTED_MODULE_7__["TranslateModule"].forChild()
             ],
             declarations: [
-                _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _app_home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"]
+                _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"], _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__["TaskBoardPipe"]
             ],
             exports: [
-                highcharts_angular__WEBPACK_IMPORTED_MODULE_4__["HighchartsChartModule"], _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _app_home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"]
+                highcharts_angular__WEBPACK_IMPORTED_MODULE_4__["HighchartsChartModule"], _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"], _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__["TaskBoardPipe"]
             ]
         })
     ], SharedModule);
@@ -3513,6 +4158,53 @@ var SubTasksService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"], _ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"]])
     ], SubTasksService);
     return SubTasksService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/task-board/task-board.filter.ts":
+/*!*************************************************!*\
+  !*** ./src/app/task-board/task-board.filter.ts ***!
+  \*************************************************/
+/*! exports provided: TaskBoardPipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TaskBoardPipe", function() { return TaskBoardPipe; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
+
+
+
+var TaskBoardPipe = /** @class */ (function () {
+    function TaskBoardPipe(homeService) {
+        this.homeService = homeService;
+    }
+    TaskBoardPipe.prototype.transform = function (items, searchText) {
+        if (!items)
+            return [];
+        if (!searchText) {
+            return items;
+        }
+        searchText = searchText.trim();
+        searchText = searchText.toLowerCase();
+        return items.filter(function (it) {
+            if (it) {
+                return it.title.toLowerCase().includes(searchText);
+            }
+        });
+    };
+    TaskBoardPipe = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({
+            name: 'searchTasks'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_home_home_service__WEBPACK_IMPORTED_MODULE_2__["HomeService"]])
+    ], TaskBoardPipe);
+    return TaskBoardPipe;
 }());
 
 
@@ -3842,6 +4534,126 @@ var TasksService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/toast.service.ts":
+/*!**********************************!*\
+  !*** ./src/app/toast.service.ts ***!
+  \**********************************/
+/*! exports provided: ToastService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToastService", function() { return ToastService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+
+
+
+
+
+var ToastService = /** @class */ (function () {
+    function ToastService(toastController, translateService, loadingController) {
+        this.toastController = toastController;
+        this.translateService = translateService;
+        this.loadingController = loadingController;
+    }
+    // error toast
+    ToastService.prototype.errorToast = function (msg) {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var toast;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.translateService.get(msg).subscribe(function (text) {
+                            msg = text;
+                        });
+                        return [4 /*yield*/, this.toastController.create({
+                                message: msg,
+                                color: 'danger',
+                                duration: 2000,
+                                position: 'top'
+                            })];
+                    case 1:
+                        toast = _a.sent();
+                        toast.present();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // sucess toast
+    ToastService.prototype.successToast = function (msg) {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var toast;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.translateService.get(msg).subscribe(function (text) {
+                            msg = text;
+                        });
+                        return [4 /*yield*/, this.toastController.create({
+                                message: msg,
+                                color: 'success',
+                                duration: 2000,
+                                position: 'top'
+                            })];
+                    case 1:
+                        toast = _a.sent();
+                        toast.present();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // Start laoder
+    ToastService.prototype.startLoader = function (msg) {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var _a;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = this;
+                        return [4 /*yield*/, this.loadingController.create({
+                                message: msg
+                            })];
+                    case 1:
+                        _a.loading = _b.sent();
+                        return [4 /*yield*/, this.loading.present()];
+                    case 2:
+                        _b.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // Stop laoder
+    ToastService.prototype.stopLoader = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadingController.dismiss().then(function () { return console.log('dismissed'); })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    ToastService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root',
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ToastController"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["LoadingController"]])
+    ], ToastService);
+    return ToastService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/environments/environment.ts":
 /*!*****************************************!*\
   !*** ./src/environments/environment.ts ***!
@@ -3903,7 +4715,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/vishwanathbadiger/Documents/apps/sl-unnati/Unnati/sl-unnati-mobile/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /Users/vishwanathbadiger/Documents/apps/sl-unnati/unnati-feb/sl-unnati-mobile/src/main.ts */"./src/main.ts");
 
 
 /***/ })

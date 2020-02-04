@@ -26,7 +26,7 @@
       {{ "projects.activeProjects" | translate }}
     </div>
   </div>
-  <div padding style="margin-top: 30px;" *ngIf="!showSkeleton">
+  <div class="ion-padding" style="margin-top: 30px;" *ngIf="!showSkeleton">
     <ion-item class="search-bar-custom" style="margin: 20px 0px 15px 0px;">
       <ion-icon name="search" item-left color="dark"></ion-icon>
       <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>

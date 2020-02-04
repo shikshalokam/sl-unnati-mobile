@@ -1,7 +1,7 @@
 export const AppConfigs = {
     //Dev Urls
 
-    appVersion: "1.1.10",
+    appVersion: "1.1.12",
     appName: "Unnati",
 
     // Dev urls
@@ -22,7 +22,7 @@ export const AppConfigs = {
     },
 
     // QA
-    // app_url: "https://qa.shikshalokam.org",
+    // app_url: "https://qa.shikshalokam.org", 
     // api_url: "https://qahome.shikshalokam.org",
     // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
     // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
@@ -48,9 +48,8 @@ export const AppConfigs = {
     //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
     //     markAsRead: "notifications/in-app/markAsRead",
     //     getAllNotifications: "/notifications/in-app/list",
-    // registerDevice: "notifications/push/registerDevice"
+    //     registerDevice: "notifications/push/registerDevice"
     // },
-
 
 
     //Staging Urls
