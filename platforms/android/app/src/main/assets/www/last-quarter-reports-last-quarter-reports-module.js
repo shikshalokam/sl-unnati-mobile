@@ -177,9 +177,6 @@ var LastQuarterReportsPage = /** @class */ (function () {
         });
     };
     LastQuarterReportsPage.prototype.setupChart = function () {
-        // let totalTask = this.report.completed + this.report.pending;
-        // let completed: any = (this.report.completed / totalTask) * 100;
-        // completed = completed.toFixed(0);
         var totalTask;
         var completed;
         if (this.report.completed > 0 || this.report.pending > 0) {
@@ -192,50 +189,6 @@ var LastQuarterReportsPage = /** @class */ (function () {
             this.report.pending = 0;
             completed = 0;
         }
-        this.chartOptions = {
-            chart: {
-                type: 'pie'
-            },
-            title: {
-                verticalAlign: 'middle',
-                floating: true,
-                text: '<b>' + completed + ' % <br>Completed</b>'
-            },
-            // xAxis: {
-            //   categories: data
-            // },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: ''
-                }
-            },
-            legend: {
-                enabled: false
-            }, credits: {
-                enabled: false
-            },
-            plotOptions: {
-                pie: {
-                    shadow: false,
-                    center: ['50%', '50%'],
-                    colors: [
-                        '#20ba8d',
-                        '#adafad'
-                    ],
-                }
-            },
-            series: [{
-                    name: "Tasks",
-                    data: [["Pending", this.report.pending], ["Completed", this.report.completed]],
-                    size: '90%',
-                    innerSize: '70%',
-                    showInLegend: true,
-                    dataLabels: {
-                        enabled: false
-                    }
-                }]
-        };
     };
     // Display error Message
     LastQuarterReportsPage.prototype.errorToast = function (msg) {

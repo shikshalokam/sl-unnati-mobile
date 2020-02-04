@@ -17,7 +17,7 @@
        under the License.
  */
 
-package org.shikshalokam.unnati.qa;
+package org.shikshalokam.unnati;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
