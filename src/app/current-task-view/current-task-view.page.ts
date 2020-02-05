@@ -79,18 +79,27 @@ export class CurrentTaskViewPage implements OnInit {
       }
     })
   }
+
+  //  Enable the mark task complete button based on subtasks status and if there is no subtasks it will enable by default
   public enableMarkTaskComplete(task) {
+    let count = 0;
     if (task.subTasks && task.subTasks.length > 0) {
       let subTasksCompleted = 0;
       task.subTasks.forEach(subtask => {
-        if (subtask.status === 'Completed') {
-          subTasksCompleted + 1;
+        if (!subtask.isDeleted) {
+          count++;
+          if (subtask.status === 'Completed' || subtask.status === 'completed') {
+            subTasksCompleted + 1;
+          }
         }
       });
       if (subTasksCompleted === task.subTasks.length) {
         this.enableMarkButton = true;
       } else {
         this.enableMarkButton = false;
+      }
+      if (count > 0) {
+        this.enableMarkButton = true;
       }
     } else {
       this.enableMarkButton = true;
@@ -148,13 +157,23 @@ export class CurrentTaskViewPage implements OnInit {
   }
 
   public updateCurrentProject(ct) {
-    this.createProjectService.UpdateCurrentMyProject(ct).then(currentMyProject => {
+    this.createProjectService.updateCurrentMyProject(ct).then(currentMyProject => {
       //  this.getTask();
     })
   }
+  //  update the project after completing task.
+  public updateProject(ct) {
+
+    let updateProcess ="start";
+    localStorage.setItem("updateProcess",updateProcess);
+    this.createProjectService.updateCurrentMyProject(ct).then(currentMyProject => {
+      setTimeout(() => {
+        this.toastService.successToast('message.marked_as_completed');
+        this.router.navigate(['/project-view/project-detail', this.parameter]);
+      }, 300);
+    })
+  }
   public markTaskAsCompleted() {
-    // this.showpopup = true;
-    // this.updateTask();
     this.task.status = 'Completed';
     if (this.task.subTasks) {
       this.task.subTasks.forEach(subtask => {
@@ -165,19 +184,19 @@ export class CurrentTaskViewPage implements OnInit {
     let task: any = this.task;
     this.task = task;
     this.storage.set('cTask', task).then(updatedTask => {
-      this.updateCurrentProject(updatedTask);
-      this.toastService.successToast('message.marked_as_completed');
+      this.updateProject(updatedTask);
+      this.task = updatedTask;
       this.showpopup = false;
-      this.router.navigate(['/project-view/project-detail', this.parameter]);
     })
   }
-
+  // task status supdate
   public selectedStatus(event) {
     if (this.task.status != 'Completed') {
       this.task.status = event.detail.value;
       this.updateTask();
     }
   }
+  //  edit task fields
   public allowEdit(field) {
     switch (field) {
       case 'goal': {
@@ -275,16 +294,18 @@ export class CurrentTaskViewPage implements OnInit {
     if (this.task.status != 'Completed' || this.task.status != 'completed') {
       this.enableMarkTaskComplete(this.task);
       let notStarted = 0, inProgress = 0, completed = 0;
-      this.task.subTasks.forEach(subTask => {
-        subTask.status == 'Not started' ? notStarted++
-          : subTask.status == 'In Progress' ? inProgress++
-            : completed++;
-      });
-      this.task.subTasks.length === notStarted ? this.task.status = 'Not started'
-        : this.task.subTasks.length === completed ? this.task.status = 'Completed'
-          : this.task.status = 'In Progress';
-      if (this.task.status == 'Completed' || this.task.status == 'completed') {
-        this.enableMarkButton = true;
+      if (this.task.subTasks && this.task.subTasks.length > 0) {
+        this.task.subTasks.forEach(subTask => {
+          subTask.status == 'Not started' ? notStarted++
+            : subTask.status == 'In Progress' ? inProgress++
+              : completed++;
+        });
+        this.task.subTasks.length === notStarted ? this.task.status = 'Not started'
+          : this.task.subTasks.length === completed ? this.task.status = 'Completed'
+            : this.task.status = 'In Progress';
+        if (this.task.status == 'Completed' || this.task.status == 'completed') {
+          this.enableMarkButton = true;
+        }
       }
       this.storage.set('cTask', this.task).then(ct => {
         this.task = ct;

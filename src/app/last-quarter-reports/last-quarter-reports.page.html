@@ -10,8 +10,8 @@
         <ion-col class="status-card task-completed-box">
           <h3>{{ "last_quarter_report.completed" | translate }}</h3>
           <h1>
-            <span  *ngIf="report.completed <= 9"> 0{{ report.completed }} &nbsp;</span>
-            <span  *ngIf="report.completed >= 10"> {{ report.completed }} &nbsp;</span>
+            <span *ngIf="report.completed <= 9"> 0{{ report.completed }} &nbsp;</span>
+            <span *ngIf="report.completed >= 10"> {{ report.completed }} &nbsp;</span>
           </h1>
         </ion-col>
         <ion-col class="status-card task-pending-box">
@@ -30,13 +30,10 @@
     <h5>
       {{ "last_quarter_report.tasks_cmpltd_lstmnth" | translate }}
     </h5>
-    <div>{{ report.startMonth }} - {{ report.endMonth }}</div>
+    <div *ngIf="report.startMonth">{{ report.startMonth }} - {{ report.endMonth }}</div>
     <div *ngIf="chartOptions">
-      <highcharts-chart
-        [Highcharts]="highcharts"
-        [options]="chartOptions"
-        style="width: 100%; height: 400px; display: block;"
-      >
+      <highcharts-chart [Highcharts]="highcharts" [options]="chartOptions"
+        style="width: 100%; height: 400px; display: block;">
       </highcharts-chart>
     </div>
     <ion-row>
@@ -54,7 +51,9 @@
     <div class="skeleton-card-content">
       <ion-card *ngFor="let skeleton of skeletons">
         <ion-card-content class="skeleton-card-content">
-          <p><ion-skeleton-text animated></ion-skeleton-text></p>
+          <p>
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </p>
           <p>
             <ion-skeleton-text animated></ion-skeleton-text>
             <ion-skeleton-text animated></ion-skeleton-text>
