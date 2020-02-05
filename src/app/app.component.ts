@@ -496,7 +496,7 @@ export class AppComponent {
           this.toastService.successToast('message.sync_success');
           this.toastService.stopLoader();
           // get all synced projects and update in local
-          this.getSyncedProjects(syncedProjects);
+          // this.getSyncedProjects(syncedProjects);
         })
       })
     } else {
@@ -509,19 +509,12 @@ export class AppComponent {
           });
         }
         this.storage.set('projects', projects).then(myprojectsff => {
-          this.toastService.stopLoader();
           this.toastService.successToast('message.sync_success');
           this.toastService.stopLoader();
           // get all synced projects and update in local
-          this.getSyncedProjects(syncedProjects);
+          // this.getSyncedProjects(syncedProjects);
         })
       })
     }
-  }
-
-  public getSyncedProjects(syncedProjects) {
-    let localProjects;
-    this.storage.set('myprojects', syncedProjects.data[0].projects).then(myprojects => {
-    })
   }
 }
