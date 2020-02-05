@@ -4,6 +4,7 @@
   </app-header>
 </ion-header>
 
+
 <ion-content class="ion-padding task-view-container" *ngIf="task" >
   <div style="min-height:85%">
     <h3 (click)="allowEdit('title')" *ngIf="!editTitle">{{task?.title}}
