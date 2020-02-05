@@ -14,7 +14,7 @@ import { ReportsService } from '../reports/reports.service';
 import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
-import {ToastService} from '../toast.service'
+import { ToastService } from '../toast.service'
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -55,7 +55,7 @@ export class HomePage implements OnInit {
     public menuCtrl: MenuController,
     public reportsService: ReportsService,
     public mySchoolsService: MyschoolsService,
-    public toastService:ToastService) {
+    public toastService: ToastService) {
     this.menuCtrl.enable(true);
     homeService.activeProjectLoad.subscribe(data => {
       if (data == 'activeProjectLoad') {
@@ -158,6 +158,7 @@ export class HomePage implements OnInit {
                     }
                     project.programName = programs.programs.name;
                     if (project.createdType == 'by self' || project.createdType == 'by reference') {
+                      delete project.createdType;
                       myProjects.push(project);
                     } else {
                       project.toDisplay = true;
@@ -262,7 +263,7 @@ export class HomePage implements OnInit {
       this.router.navigate([url, 'yes']);
     } else if (url != '') {
       this.router.navigate([url]);
-    }else if(url == ''){
+    } else if (url == '') {
       this.toastService.errorToast('message.comingsoon');
     }
   }
