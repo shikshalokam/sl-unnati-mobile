@@ -269,6 +269,7 @@ var HomePage = /** @class */ (function () {
                                         }
                                         project.programName = programs.programs.name;
                                         if (project.createdType == 'by self' || project.createdType == 'by reference') {
+                                            delete project.createdType;
                                             myProjects.push(project);
                                         }
                                         else {

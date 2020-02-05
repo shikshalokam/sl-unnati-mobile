@@ -103,6 +103,7 @@ export class CreateTaskPage implements OnInit {
       this.task.projectId = this.currentMyProject._id;
       this.currentMyProject.lastUpdate = new Date();
       this.currentMyProject.tasks.push(this.task);
+      this.currentMyProject.isEdited = true;
       this.storage.set('newcreatedproject', this.currentMyProject).then(cp => {
         this.currentMyProject = cp;
         // if (this.currentMyProject.createdType) {

@@ -92,6 +92,50 @@ export class LastQuarterReportsPage implements OnInit {
       this.report.pending = 0;
       completed = 0;
     }
+    this.chartOptions = {
+      chart: {
+        type: 'pie'
+      },
+      title: {
+        verticalAlign: 'middle',
+        floating: true,
+        text: '<b>' + completed + ' % <br>Completed</b>'
+      },
+      // xAxis: {
+      //   categories: data
+      // },
+      yAxis: {
+        min: 0,
+        title: {
+          text: ''
+        }
+      },
+      legend: {
+        enabled: false
+      }, credits: {
+        enabled: false
+      },
+      plotOptions: {
+        pie: {
+          shadow: false,
+          center: ['50%', '50%'],
+          colors: [
+            '#20ba8d',
+            '#adafad'
+          ],
+        }
+      },
+      series: [{
+        name: "Tasks",
+        data: [["Pending", this.report.pending], ["Completed", this.report.completed]],
+        size: '90%',
+        innerSize: '70%',
+        showInLegend: true,
+        dataLabels: {
+          enabled: false
+        }
+      }]
+    };
     
   }
   // Display error Message

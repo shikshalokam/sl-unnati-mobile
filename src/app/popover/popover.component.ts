@@ -118,7 +118,7 @@ export class PopoverComponent implements OnInit {
 
   // Sync project before share
   public syncProject() {
-    if (!this.project.isSync) {
+    if (!this.project.isSync || this.project.isEdited ) {
       if (this.project.tasks && this.project.tasks.length > 0) {
         this.project.tasks.forEach(task => {
           if (task.isNew) {
@@ -169,7 +169,7 @@ export class PopoverComponent implements OnInit {
                     updatedProject.isEdited = false;
                     updatedProject.isNew = false;
                     updatedProject.lastUpdate = this.project.lastUpdate;
-                    this.getPDF(data.projectDetails.data.projects[0]._id);
+                    this.getPDF(data.data._id);
                     this.DismissClick();
                     this.syncUpdateInLocal(updatedProject, this.project, data.allProjects);
                   }

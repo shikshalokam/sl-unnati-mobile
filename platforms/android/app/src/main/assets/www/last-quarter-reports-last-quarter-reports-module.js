@@ -66,7 +66,7 @@ var LastQuarterReportsPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-content padding>\n  <div *ngIf=\"report\">\n    <h5>\n      {{ \"last_quarter_report.projects_cmpltd_lstqrtr\" | translate }}\n    </h5>\n    <div>{{ report.startMonth }} - {{ report.endMonth }}</div>\n\n    <ion-grid>\n      <ion-row>\n        <ion-col class=\"status-card task-completed-box\">\n          <h3>{{ \"last_quarter_report.completed\" | translate }}</h3>\n          <h1>\n            <span  *ngIf=\"report.completed <= 9\"> 0{{ report.completed }} &nbsp;</span>\n            <span  *ngIf=\"report.completed >= 10\"> {{ report.completed }} &nbsp;</span>\n          </h1>\n        </ion-col>\n        <ion-col class=\"status-card task-pending-box\">\n          <h3>{{ \"last_quarter_report.pending\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.pending <= 9\"> 0{{ report.pending }} &nbsp;</span>\n            <span *ngIf=\"report.pending >= 10\"> {{ report.pending }} &nbsp;</span>\n          </h1>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n    <div class=\"action-item\" (click)=\"viewFullReport('lastQuarter')\">\n      {{ \"last_quarter_report.view_full_reports\" | translate }}\n    </div>\n    <!-- <div class=\"action-item\"></div> -->\n    <h5>\n      {{ \"last_quarter_report.tasks_cmpltd_lstmnth\" | translate }}\n    </h5>\n    <div>{{ report.startMonth }} - {{ report.endMonth }}</div>\n    <div *ngIf=\"chartOptions\">\n      <highcharts-chart\n        [Highcharts]=\"highcharts\"\n        [options]=\"chartOptions\"\n        style=\"width: 100%; height: 400px; display: block;\"\n      >\n      </highcharts-chart>\n    </div>\n    <ion-row>\n      <ion-col class=\"legend-left\">\n        <span class=\"dot-pending\"> &nbsp; </span> Tasks Pending <br />\n        <span style=\"font-size:24px; \">{{ report.pending }}</span>\n      </ion-col>\n      <ion-col class=\"legend-right\">\n        <span class=\"dot-completed\"> &nbsp; </span> Tasks Completed <br />\n        <span style=\"font-size:24px; \">{{ report.completed }}</span>\n      </ion-col>\n    </ion-row>\n  </div>\n  <div *ngIf=\"showSkeleton\">\n    <div class=\"skeleton-card-content\">\n      <ion-card *ngFor=\"let skeleton of skeletons\">\n        <ion-card-content class=\"skeleton-card-content\">\n          <p><ion-skeleton-text animated></ion-skeleton-text></p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>\n"
+module.exports = "<ion-content class=\"ion-padding\">\n  <div *ngIf=\"report\">\n    <h5>\n      {{ \"last_quarter_report.projects_cmpltd_lstqrtr\" | translate }}\n    </h5>\n    <div>{{ report.startMonth }} - {{ report.endMonth }}</div>\n\n    <ion-grid>\n      <ion-row>\n        <ion-col class=\"status-card task-completed-box\">\n          <h3>{{ \"last_quarter_report.completed\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.completed <= 9\"> 0{{ report.completed }} &nbsp;</span>\n            <span *ngIf=\"report.completed >= 10\"> {{ report.completed }} &nbsp;</span>\n          </h1>\n        </ion-col>\n        <ion-col class=\"status-card task-pending-box\">\n          <h3>{{ \"last_quarter_report.pending\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.pending <= 9\"> 0{{ report.pending }} &nbsp;</span>\n            <span *ngIf=\"report.pending >= 10\"> {{ report.pending }} &nbsp;</span>\n          </h1>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n    <div class=\"action-item\" (click)=\"viewFullReport('lastQuarter')\">\n      {{ \"last_quarter_report.view_full_reports\" | translate }}\n    </div>\n    <!-- <div class=\"action-item\"></div> -->\n    <h5>\n      {{ \"last_quarter_report.tasks_cmpltd_lstmnth\" | translate }}\n    </h5>\n    <div *ngIf=\"report.startMonth \">{{ report.startMonth }} - {{ report.endMonth }}</div>\n    <div *ngIf=\"chartOptions\">\n      <highcharts-chart [Highcharts]=\"highcharts\" [options]=\"chartOptions\"\n        style=\"width: 100%; height: 400px; display: block;\">\n      </highcharts-chart>\n    </div>\n    <ion-row>\n      <ion-col class=\"legend-left\">\n        <span class=\"dot-pending\"> &nbsp; </span> Tasks Pending <br />\n        <span style=\"font-size:24px; \">{{ report.pending }}</span>\n      </ion-col>\n      <ion-col class=\"legend-right\">\n        <span class=\"dot-completed\"> &nbsp; </span> Tasks Completed <br />\n        <span style=\"font-size:24px; \">{{ report.completed }}</span>\n      </ion-col>\n    </ion-row>\n  </div>\n  <div *ngIf=\"showSkeleton\">\n    <div class=\"skeleton-card-content\">\n      <ion-card *ngFor=\"let skeleton of skeletons\">\n        <ion-card-content class=\"skeleton-card-content\">\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>"
 
 /***/ }),
 
@@ -189,6 +189,50 @@ var LastQuarterReportsPage = /** @class */ (function () {
             this.report.pending = 0;
             completed = 0;
         }
+        this.chartOptions = {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                verticalAlign: 'middle',
+                floating: true,
+                text: '<b>' + completed + ' % <br>Completed</b>'
+            },
+            // xAxis: {
+            //   categories: data
+            // },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                enabled: false
+            }, credits: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    shadow: false,
+                    center: ['50%', '50%'],
+                    colors: [
+                        '#20ba8d',
+                        '#adafad'
+                    ],
+                }
+            },
+            series: [{
+                    name: "Tasks",
+                    data: [["Pending", this.report.pending], ["Completed", this.report.completed]],
+                    size: '90%',
+                    innerSize: '70%',
+                    showInLegend: true,
+                    dataLabels: {
+                        enabled: false
+                    }
+                }]
+        };
     };
     // Display error Message
     LastQuarterReportsPage.prototype.errorToast = function (msg) {

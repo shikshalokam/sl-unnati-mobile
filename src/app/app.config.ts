@@ -51,7 +51,6 @@ export const AppConfigs = {
     //     registerDevice: "notifications/push/registerDevice"
     // },
 
-
     //Staging Urls
     // app_url: "https://dev.shikshalokam.org",
     // api_base_url: "https://staginghome.shikshalokam.org/assessment-service/api/v1",

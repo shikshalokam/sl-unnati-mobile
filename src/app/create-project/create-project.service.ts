@@ -3,10 +3,13 @@ import { Storage } from '@ionic/storage'
 @Injectable({
     providedIn: 'root'
 })
+
+
 export class CreateProjectService {
     constructor(public storage: Storage) { }
     // Update task in current Project
-    public UpdateCurrentMyProject(createdTask) {
+
+    public updateCurrentMyProject(createdTask) {
         return this.storage.get('newcreatedproject').then(cmp => {
             cmp.tasks.forEach(function (task, i) {
                 if (task._id == createdTask._id) {
@@ -33,14 +36,12 @@ export class CreateProjectService {
                     }
                 });
                 this.storage.set('myprojects', myProjects).then(project => {
-                }, error => {
                 })
             } else {
                 updatedProject._id = 1;
                 let data = [];
                 data.push(updatedProject);
-                this.storage.set('myprojects', data).then(myProjects => {
-                })
+                this.storage.set('myprojects', data).then(myProjects => { })
             }
         })
     }

@@ -257,7 +257,7 @@ export class AppComponent {
       });
     }
   }
-
+  // side menu naviagtion
   public navigate(url, title) {
     if (title == 'Sync') {
       this.prepareProjectToSync();
@@ -266,7 +266,8 @@ export class AppComponent {
       this.router.navigate([url]);
     }
   }
-  async presentAlertCheckbox() {
+
+  async languageSelection() {
     let language: string = this.translate.currentLang;
     let selectLan;
     this.translate.get('select_languages').subscribe((text: string) => {
@@ -308,6 +309,7 @@ export class AppComponent {
     });
     await alert.present();
   }
+
   public selectTab(title) {
     this.translate.get(title).subscribe((text: string) => {
       this.title = text;
@@ -496,7 +498,7 @@ export class AppComponent {
           this.toastService.successToast('message.sync_success');
           this.toastService.stopLoader();
           // get all synced projects and update in local
-          this.getSyncedProjects(syncedProjects);
+          // this.getSyncedProjects(syncedProjects);
         })
       })
     } else {
@@ -509,19 +511,34 @@ export class AppComponent {
           });
         }
         this.storage.set('projects', projects).then(myprojectsff => {
-          this.toastService.stopLoader();
           this.toastService.successToast('message.sync_success');
           this.toastService.stopLoader();
           // get all synced projects and update in local
-          this.getSyncedProjects(syncedProjects);
+          // this.getSyncedProjects(syncedProjects);
         })
       })
     }
   }
 
-  public getSyncedProjects(syncedProjects) {
-    let localProjects;
-    this.storage.set('myprojects', syncedProjects.data[0].projects).then(myprojects => {
-    })
-  }
+  // public getSyncedProjects(syncedProjects) {
+  // syncedProjects.data[0].projects.forEach(syncedProject => {
+  //   console.log(syncedProject, "syncedProject");
+  //   this.storage.get('myprojects').then(localprojects => {
+  //     console.log(localprojects, "localprojects");
+  //     localprojects.forEach(function (lp, i) {
+  //       console.log(lp._id + '===' + syncedProject._id)
+  //       if (lp._id === syncedProject._id) {
+  //         if (!lp.isEdited) {
+  //           localprojects[i] = syncedProject;
+  //           console.log(localprojects[i], "localprojects[i]");
+  //         }
+  //       }
+  //     });
+  //     console.log(localprojects,"localprojects");
+  //     // this.storage.set('myprojects', localprojects).then(myprojects => {
+  //     //   console.log(myprojects);
+  //     // })
+  //   })
+  // });
+  // }
 }

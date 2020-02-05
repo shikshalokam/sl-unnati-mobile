@@ -32,7 +32,7 @@
               <ion-menu-toggle auto-hide="false">
                 <ion-item *ngFor="let sub of p.children" class="sub-item" routerDirection="root"
                   routerLinkActive="active" style="padding-left:30px;"
-                  (click)="p.open = !p.open;presentAlertCheckbox();">
+                  (click)="p.open = !p.open;languageSelection();">
                   <ion-icon [name]="sub.icon" slot="start"></ion-icon>
                   <ion-label>
                     {{ sub.title }}
