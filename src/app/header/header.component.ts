@@ -6,6 +6,8 @@ import { Storage } from '@ionic/storage';
 import { Badge } from '@ionic-native/badge/ngx';
 import { MenuController } from '@ionic/angular';
 import { HomeService } from '../home/home.service';
+import { Platform } from '@ionic/angular';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -22,11 +24,13 @@ export class HeaderComponent implements OnInit {
   isSyncing: boolean = false;
   public connected = navigator.onLine;
   page = 1;
+  isIos;
   limit = 20;
   public notificationCount;
   constructor(public router: Router,
     public notificationCardService: NotificationCardService,
     public storage: Storage,
+    public platform: Platform,
     public menuController: MenuController,
     public badge: Badge, public api: ApiProvider,
     public homeService: HomeService) {
@@ -40,6 +44,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isIos = this.platform.is('ios') ? true : false;
     this.fetchAllNotifications();
   }
 
