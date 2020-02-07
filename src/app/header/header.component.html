@@ -2,21 +2,25 @@
   <ion-toolbar>
     <ion-icon name="menu" class="header-action-icons" *ngIf="showMenu" (click)="menuToggle()">
     </ion-icon>
-    <span *ngIf="showMenu" style="margin: 26px 10px;
-    position: absolute;
-    padding-bottom: 16px;
-    font-size: 16px; left: 0px;" (click)="menuToggle()"> MENU</span>
+    <span *ngIf="showMenu" style="margin: 20px 10px;
+    font-size: 16px;
+    left: 0px;
+    position: absolute;" (click)="menuToggle()"> MENU </span>
     <ion-icon ios="ios-arrow-back" md="md-arrow-back" color="primary" class="header-action-icons"
       *ngIf="showBack && !isGoBack">
     </ion-icon>
     <ion-icon (click)="goBack()" autoHide="false" ios="ios-arrow-back" md="md-arrow-back" color="primary"
       class="header-action-icons" *ngIf="showBack && isGoBack"></ion-icon>
-    <ion-title>
+    <ion-title [ngClass]="{  
+      'ios-header': isIos && showMenu,
+      'header-custom ': isIos && showBack,
+      'header-custom ': !isIos
+    }">
       {{ title }}
       <ion-icon name="wifi" class="network-icon ion-float-right" style="position:absolute;float:right;right: 20px;"
         [ngClass]="{
           'no-connection': !connected,
-          connected: connected
+          'connected': connected
         }"></ion-icon>
       <span (click)="navigateToNotification()">
         <ion-icon name="notifications" class="_headerIcon notificationIcon "

@@ -37,7 +37,7 @@ export class FilesPage implements OnInit {
   ngOnInit() {
     this.platform.ready().then(() => {
       this.isIos = this.platform.is('ios') ? true : false;
-      this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
+      this.appFolderPath = this.isIos ? this.file.documentsDirectory  : this.file.externalApplicationStorageDirectory;
     })
   }
   public getCurrentProject(id) {
@@ -55,12 +55,16 @@ export class FilesPage implements OnInit {
   public selectTab(type) {
     this.activeTab = type;
   }
-  downloadFile(task) {
+  downloadFile(task) {     
     fetch(task.file.url,
       {
         method: "GET"
       }).then(res => res.blob()).then(blob => {
-        this.file.writeFile(this.file.externalApplicationStorageDirectory, task.file.name, blob, { replace: true }).then(res => {
+        console.log(this.appFolderPath ,task.file.name, blob,"this.appFolderPath , task.file.name, blob")
+        this.appFolderPath = decodeURIComponent(this.appFolderPath);
+        task.file.name = decodeURIComponent(task.file.name);
+        console.log(this.appFolderPath,"this.appFolderPath")
+        this.file.writeFile(this.appFolderPath,task.file.name,blob, { replace: true }).then(res => {
           this.fileOpener.open(
             res.toInternalURL(),
             'application/pdf'
@@ -75,6 +79,5 @@ export class FilesPage implements OnInit {
       }).catch(err => {
         console.log('error');
       });
-
   }
 }
