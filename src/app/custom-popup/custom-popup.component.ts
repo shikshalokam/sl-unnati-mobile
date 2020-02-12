@@ -1,24 +1,41 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-custom-popup',
   templateUrl: './custom-popup.component.html',
   styleUrls: ['./custom-popup.component.scss'],
 })
 export class CustomPopupComponent implements OnInit {
-  showPopup: boolean = true;
+  showPopup: boolean = false;
   @Input() header;
   @Input() body;
+  @Input() button;
+  @Input() isActionable;
   constructor(
-    public router: Router
+    public router: Router,
+    public translate: TranslateService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.getTranslateKeys();
+  }
   closepopup() {
     this.showPopup = false;
   }
   public navigateToProfile() {
     this.closepopup();
-    this.router.navigate(['/project-view/update-profile']);
+    if (this.isActionable) {
+      this.router.navigate([this.isActionable]);
+    }
+  }
+  public getTranslateKeys() {
+    this.translate.get([this.header, this.body, this.button]).subscribe((text: string) => {
+      this.header = text[this.header];
+      this.body = text[this.body];
+      this.button = text[this.button];
+      this.showPopup = true;
+    });
   }
 }

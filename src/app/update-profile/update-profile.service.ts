@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { CurrentUserProvider } from '../current-user';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppConfigs } from '../app.config'
-import { URLSearchParams, Http } from '@angular/http';
+import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class UpdateProfileService {
-  constructor(public http: HttpClient, public storage: Storage) {
+  updatedUser = new Subject()
+  constructor(public http: HttpClient,
+    public storage: Storage) {
   }
 
   // get States
@@ -28,10 +29,14 @@ export class UpdateProfileService {
     //return this.http.get(AppConfigs.api_url + '/unnati/api/v1/getSubTaskDetails/5dcd367997dccf453772b8f6/5dcd367997dccf453772b8f5', { headers: httpHeaders });
   }
 
-  public saveInfo(token, data){
+  public saveInfo(token, data) {
     let httpHeaders = new HttpHeaders({
       'X-authenticated-user-token': token
     })
     return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/user-profile/update', data, { headers: httpHeaders });
   }
+  // event triggers for update popups
+  public updateProfile(status) {
+    this.updatedUser.next(status);
+  } 
 }

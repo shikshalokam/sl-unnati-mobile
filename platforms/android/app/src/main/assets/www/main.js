@@ -1398,7 +1398,6 @@ var AppComponent = /** @class */ (function () {
             // this.networkSubscriber();
             _this.statusBar.overlaysWebView(false);
             _this.statusBar.backgroundColorByHexString('#fff');
-            _this.splashScreen.hide();
             _this.platform.backButton.subscribeWithPriority(9999, function () {
                 var tree = _this.router.parseUrl(_this.router.url);
                 var g = tree.root.children[_angular_router__WEBPACK_IMPORTED_MODULE_9__["PRIMARY_OUTLET"]];
@@ -1515,6 +1514,7 @@ var AppComponent = /** @class */ (function () {
                     }
                 }
             });
+            _this.splashScreen.hide();
         });
     };
     //Langugae change
@@ -1620,22 +1620,20 @@ var AppComponent = /** @class */ (function () {
     };
     AppComponent.prototype.checkNetwork = function () {
         var _this = this;
-        this.platform.ready().then(function () {
-            _this.network.onDisconnect()
-                .subscribe(function () {
-                _this.isConnected = false;
-                _this.networkService.status(_this.isConnected);
-                localStorage.setItem("networkStatus", _this.isConnected);
-            }, function (error) {
-            });
-            _this.network.onConnect()
-                .subscribe(function () {
-                _this.isConnected = true;
-                _this.networkService.status(_this.isConnected);
-            }, function (error) {
-            });
-            // this.networkSubscriber();
+        this.network.onDisconnect()
+            .subscribe(function () {
+            _this.isConnected = false;
+            _this.networkService.status(_this.isConnected);
+            localStorage.setItem("networkStatus", _this.isConnected);
+        }, function (error) {
         });
+        this.network.onConnect()
+            .subscribe(function () {
+            _this.isConnected = true;
+            _this.networkService.status(_this.isConnected);
+        }, function (error) {
+        });
+        // this.networkSubscriber();
     };
     AppComponent.prototype.prepareProjectToSync = function () {
         var _this = this;
@@ -2443,7 +2441,7 @@ var CurrentUserProvider = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"custom-popup\" *ngIf=\"showPopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"pop-msg \">\n      <h5 class=\"bottom-border\"> {{header}}</h5>\n      <h5> {{body}}</h5>\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"navigateToProfile()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{'button.update' | translate}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>"
+module.exports = "<div class=\"custom-popup\" *ngIf=\"showPopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"pop-msg \">\n      <h5 class=\"bottom-border\"> {{header}}</h5>\n      <h5> {{body}}</h5>\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"navigateToProfile()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{button}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -2454,7 +2452,7 @@ module.exports = "<div class=\"custom-popup\" *ngIf=\"showPopup\">\n  <div class
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".custom-popup {\n  position: fixed;\n  z-index: 1;\n  left: 0;\n  top: 30%;\n  width: 100%;\n  height: 100%;\n  overflow: auto; }\n  .custom-popup .border-radius {\n    border-radius: 1em; }\n  .custom-popup .text-center {\n    text-align: center; }\n  .custom-popup .pop-container {\n    margin: auto;\n    max-width: 80%;\n    box-shadow: 0px 3px 8px 4px #e2e2e2;\n    background: #fff;\n    padding: 10px; }\n  .custom-popup .pop-container .pop-ion {\n      text-align: center; }\n  .custom-popup .pop-container .pop-ion ion-icon {\n        font-size: 60px; }\n  .custom-popup .pop-container .pop-msg {\n      margin: 0px 20px; }\n  .custom-popup .pop-container .pop-msg .bottom-border {\n        border-bottom: 1px solid #000;\n        margin-bottom: 0px;\n        padding-bottom: 5px; }\n  .custom-popup .pop-container .pop-btn {\n      margin: 0px 15px; }\n  .custom-popup .pop-container .pop-btn ion-button {\n        text-transform: capitalize;\n        font-family: 'SourceSansPro-Bold' !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvY3VzdG9tLXBvcHVwL2N1c3RvbS1wb3B1cC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUVBLGVBQWU7RUFDZixVQUFVO0VBQ1YsT0FBTztFQUNQLFFBQVE7RUFDUixXQUFXO0VBQ1gsWUFBWTtFQUNaLGNBQWMsRUFBQTtFQVJkO0lBVUksa0JBQWtCLEVBQUE7RUFWdEI7SUFhSSxrQkFBa0IsRUFBQTtFQWJ0QjtJQWlCSSxZQUFZO0lBQ1osY0FBYztJQUNkLG1DQUFtQztJQUNuQyxnQkFBZ0I7SUFDaEIsYUFBYSxFQUFBO0VBckJqQjtNQXVCUSxrQkFBa0IsRUFBQTtFQXZCMUI7UUF5QlksZUFBYyxFQUFBO0VBekIxQjtNQThCSSxnQkFBZ0IsRUFBQTtFQTlCcEI7UUFnQ1EsNkJBQTRCO1FBQzVCLGtCQUFrQjtRQUNsQixtQkFBbUIsRUFBQTtFQWxDM0I7TUFzQ1EsZ0JBQWdCLEVBQUE7RUF0Q3hCO1FBd0NZLDBCQUEwQjtRQUMxQiw0Q0FBNEMsRUFBQSIsImZpbGUiOiJzcmMvYXBwL2N1c3RvbS1wb3B1cC9jdXN0b20tcG9wdXAuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY3VzdG9tLXBvcHVwXG57XG5wb3NpdGlvbjogZml4ZWQ7XG56LWluZGV4OiAxO1xubGVmdDogMDtcbnRvcDogMzAlO1xud2lkdGg6IDEwMCU7XG5oZWlnaHQ6IDEwMCU7XG5vdmVyZmxvdzogYXV0bztcbi5ib3JkZXItcmFkaXVze1xuICAgIGJvcmRlci1yYWRpdXM6IDFlbTtcbn1cbi50ZXh0LWNlbnRlcntcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG59XG4ucG9wLWNvbnRhaW5lclxue1xuICAgIG1hcmdpbjogYXV0bztcbiAgICBtYXgtd2lkdGg6IDgwJTtcbiAgICBib3gtc2hhZG93OiAwcHggM3B4IDhweCA0cHggI2UyZTJlMjtcbiAgICBiYWNrZ3JvdW5kOiAjZmZmO1xuICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgLnBvcC1pb257XG4gICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICAgICAgaW9uLWljb257XG4gICAgICAgICAgICBmb250LXNpemU6NjBweDtcbiAgICAgICAgfVxuICAgIH1cbiAgICAucG9wLW1zZ1xuICAgIHtcbiAgICBtYXJnaW46IDBweCAyMHB4O1xuICAgIC5ib3R0b20tYm9yZGVye1xuICAgICAgICBib3JkZXItYm90dG9tOjFweCBzb2xpZCAjMDAwO1xuICAgICAgICBtYXJnaW4tYm90dG9tOiAwcHg7XG4gICAgICAgIHBhZGRpbmctYm90dG9tOiA1cHg7XG4gICAgfVxuICAgIH1cbiAgICAucG9wLWJ0bntcbiAgICAgICAgbWFyZ2luOiAwcHggMTVweDtcbiAgICAgICAgaW9uLWJ1dHRvbntcbiAgICAgICAgICAgIHRleHQtdHJhbnNmb3JtOiBjYXBpdGFsaXplO1xuICAgICAgICAgICAgZm9udC1mYW1pbHk6ICdTb3VyY2VTYW5zUHJvLUJvbGQnICFpbXBvcnRhbnQ7XG4gICAgICAgIH1cbiAgICB9XG59XG59XG4iXX0= */"
+module.exports = ".custom-popup {\n  position: fixed;\n  z-index: 3;\n  left: 0;\n  top: 30%;\n  width: 100%;\n  height: 100%;\n  overflow: auto; }\n  .custom-popup .border-radius {\n    border-radius: 1em; }\n  .custom-popup .pop-container {\n    margin: auto;\n    max-width: 80%;\n    box-shadow: 0px 3px 8px 4px #e2e2e2;\n    background: #fff;\n    padding: 10px; }\n  .custom-popup .pop-container .pop-ion {\n      text-align: center; }\n  .custom-popup .pop-container .pop-ion ion-icon {\n        font-size: 60px; }\n  .custom-popup .pop-container .pop-msg {\n      margin: 0px 20px; }\n  .custom-popup .pop-container .pop-msg .bottom-border {\n        border-bottom: 1px solid #000;\n        margin-bottom: 0px;\n        padding-bottom: 5px; }\n  .custom-popup .pop-container .pop-btn {\n      margin: 0px 15px; }\n  .custom-popup .pop-container .pop-btn ion-button {\n        text-transform: capitalize;\n        font-family: 'SourceSansPro-Bold' !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvY3VzdG9tLXBvcHVwL2N1c3RvbS1wb3B1cC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUVBLGVBQWU7RUFDZixVQUFVO0VBQ1YsT0FBTztFQUNQLFFBQVE7RUFDUixXQUFXO0VBQ1gsWUFBWTtFQUNaLGNBQWMsRUFBQTtFQVJkO0lBVUksa0JBQWtCLEVBQUE7RUFWdEI7SUFlSSxZQUFZO0lBQ1osY0FBYztJQUNkLG1DQUFtQztJQUNuQyxnQkFBZ0I7SUFDaEIsYUFBYSxFQUFBO0VBbkJqQjtNQXFCUSxrQkFBa0IsRUFBQTtFQXJCMUI7UUF1QlksZUFBYyxFQUFBO0VBdkIxQjtNQTRCSSxnQkFBZ0IsRUFBQTtFQTVCcEI7UUE4QlEsNkJBQTRCO1FBQzVCLGtCQUFrQjtRQUNsQixtQkFBbUIsRUFBQTtFQWhDM0I7TUFvQ1EsZ0JBQWdCLEVBQUE7RUFwQ3hCO1FBc0NZLDBCQUEwQjtRQUMxQiw0Q0FBNEMsRUFBQSIsImZpbGUiOiJzcmMvYXBwL2N1c3RvbS1wb3B1cC9jdXN0b20tcG9wdXAuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY3VzdG9tLXBvcHVwXG57XG5wb3NpdGlvbjogZml4ZWQ7XG56LWluZGV4OiAzO1xubGVmdDogMDtcbnRvcDogMzAlO1xud2lkdGg6IDEwMCU7XG5oZWlnaHQ6IDEwMCU7XG5vdmVyZmxvdzogYXV0bztcbi5ib3JkZXItcmFkaXVze1xuICAgIGJvcmRlci1yYWRpdXM6IDFlbTtcbn1cblxuLnBvcC1jb250YWluZXJcbntcbiAgICBtYXJnaW46IGF1dG87XG4gICAgbWF4LXdpZHRoOiA4MCU7XG4gICAgYm94LXNoYWRvdzogMHB4IDNweCA4cHggNHB4ICNlMmUyZTI7XG4gICAgYmFja2dyb3VuZDogI2ZmZjtcbiAgICBwYWRkaW5nOiAxMHB4O1xuICAgIC5wb3AtaW9ue1xuICAgICAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgICAgIGlvbi1pY29ue1xuICAgICAgICAgICAgZm9udC1zaXplOjYwcHg7XG4gICAgICAgIH1cbiAgICB9XG4gICAgLnBvcC1tc2dcbiAgICB7XG4gICAgbWFyZ2luOiAwcHggMjBweDtcbiAgICAuYm90dG9tLWJvcmRlcntcbiAgICAgICAgYm9yZGVyLWJvdHRvbToxcHggc29saWQgIzAwMDtcbiAgICAgICAgbWFyZ2luLWJvdHRvbTogMHB4O1xuICAgICAgICBwYWRkaW5nLWJvdHRvbTogNXB4O1xuICAgIH1cbiAgICB9XG4gICAgLnBvcC1idG57XG4gICAgICAgIG1hcmdpbjogMHB4IDE1cHg7XG4gICAgICAgIGlvbi1idXR0b257XG4gICAgICAgICAgICB0ZXh0LXRyYW5zZm9ybTogY2FwaXRhbGl6ZTtcbiAgICAgICAgICAgIGZvbnQtZmFtaWx5OiAnU291cmNlU2Fuc1Byby1Cb2xkJyAhaW1wb3J0YW50O1xuICAgICAgICB9XG4gICAgfVxufVxufVxuIl19 */"
 
 /***/ }),
 
@@ -2471,21 +2469,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+
 
 
 
 var CustomPopupComponent = /** @class */ (function () {
-    function CustomPopupComponent(router) {
+    function CustomPopupComponent(router, translate) {
         this.router = router;
-        this.showPopup = true;
+        this.translate = translate;
+        this.showPopup = false;
     }
-    CustomPopupComponent.prototype.ngOnInit = function () { };
+    CustomPopupComponent.prototype.ngOnInit = function () {
+        this.getTranslateKeys();
+    };
     CustomPopupComponent.prototype.closepopup = function () {
         this.showPopup = false;
     };
     CustomPopupComponent.prototype.navigateToProfile = function () {
         this.closepopup();
-        this.router.navigate(['/project-view/update-profile']);
+        if (this.isActionable) {
+            this.router.navigate([this.isActionable]);
+        }
+    };
+    CustomPopupComponent.prototype.getTranslateKeys = function () {
+        var _this = this;
+        this.translate.get([this.header, this.body, this.button]).subscribe(function (text) {
+            _this.header = text[_this.header];
+            _this.body = text[_this.body];
+            _this.button = text[_this.button];
+            _this.showPopup = true;
+        });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -2495,13 +2509,22 @@ var CustomPopupComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
     ], CustomPopupComponent.prototype, "body", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], CustomPopupComponent.prototype, "button", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], CustomPopupComponent.prototype, "isActionable", void 0);
     CustomPopupComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-custom-popup',
             template: __webpack_require__(/*! ./custom-popup.component.html */ "./src/app/custom-popup/custom-popup.component.html"),
             styles: [__webpack_require__(/*! ./custom-popup.component.scss */ "./src/app/custom-popup/custom-popup.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"]])
     ], CustomPopupComponent);
     return CustomPopupComponent;
 }());
@@ -2877,7 +2900,7 @@ var EditTaskPage = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }\">\n  <ion-toolbar>\n    <ion-icon name=\"menu\" class=\"header-action-icons\" *ngIf=\"showMenu\" (click)=\"menuToggle()\">\n    </ion-icon>\n    <span *ngIf=\"showMenu\" style=\"margin: 20px 10px;\n    font-size: 16px;\n    left: 0px;\n    position: absolute;\" (click)=\"menuToggle()\"> MENU </span>\n    <ion-icon ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\" class=\"header-action-icons\"\n      *ngIf=\"showBack && !isGoBack\">\n    </ion-icon>\n    <ion-icon (click)=\"goBack()\" autoHide=\"false\" ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\" *ngIf=\"showBack && isGoBack\"></ion-icon>\n    <ion-title [ngClass]=\"{  \n      'ios-header': isIos && showMenu,\n      'header-custom ': isIos && showBack,\n      'header-custom ': !isIos\n    }\">\n      {{ title }}\n      <ion-icon name=\"wifi\" class=\"network-icon ion-float-right\" style=\"position:absolute;float:right;right: 20px;\"\n        [ngClass]=\"{\n          'no-connection': !connected,\n          'connected': connected\n        }\"></ion-icon>\n      <span (click)=\"navigateToNotification()\">\n        <ion-icon name=\"notifications\" class=\"_headerIcon notificationIcon \"\n          style=\"position:absolute;float:right;right: 50px;\"></ion-icon>\n      </span>\n      <!-- Notification counts -->\n      <!-- <span class=\"dot _flex-box\" *ngIf=\"!notificationCount\"></span> -->\n      <span class=\"dot _flex-box\" *ngIf=\"notificationCount\"\n        (click)=\"navigateToNotification()\">{{ notificationCount }}</span>\n    </ion-title>\n  </ion-toolbar>\n  <!-- <ion-tab-bar slot=\"top\" color=\"primary\" *ngIf=\"showTabs\">\n      <ion-tab-button tab=\"last-month-reports\" class=\"activated\" [ngClass]=\"{'tab-selected' : last_month}\" (click)=\"activeTab('last_month')\">\n        <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n      </ion-tab-button>\n      <ion-tab-button tab=\"last-quarter-reports\" [ngClass]=\"{'tab-selected' : last_quarter}\" (click)=\"activeTab('last_quarter')\">\n        <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n      </ion-tab-button>\n    </ion-tab-bar>  -->\n</ion-header>\n<!-- <div *ngIf=\"isSyncing\"> Your data is syncingup please do not turn of your data and please dont close the app.\n</div> -->"
+module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }\">\n  <ion-toolbar>\n    <ion-icon name=\"menu\" class=\"header-action-icons\" *ngIf=\"showMenu\" (click)=\"menuToggle()\">\n    </ion-icon>\n    <span *ngIf=\"showMenu\" style=\"margin: 20px 10px;\n    font-size: 16px;\n    left: 0px;\n    position: absolute;\" (click)=\"menuToggle()\"> MENU </span>\n    <ion-icon ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\" class=\"header-action-icons\"\n      *ngIf=\"showBack && !isGoBack\">\n    </ion-icon>\n    <ion-icon (click)=\"goBack()\" autoHide=\"false\" ios=\"ios-arrow-back\" md=\"md-arrow-back\" color=\"primary\"\n      class=\"header-action-icons\" *ngIf=\"showBack && isGoBack\"></ion-icon>\n    <ion-title [ngClass]=\"{  \n      'ios-header': isIos && showMenu,\n      'header-custom ': isIos && showBack,\n      'header-custom ': !isIos\n    }\">\n      {{ title }}\n      <ion-icon name=\"wifi\" class=\"network-icon ion-float-right\" style=\"position:absolute;float:right;right: 20px;\"\n        [ngClass]=\"{\n          'no-connection': !connected,\n          'connected': connected\n        }\"></ion-icon>\n      <span (click)=\"navigateToNotification()\">\n        <ion-icon name=\"notifications\" class=\"_headerIcon notificationIcon \"\n          style=\"position:absolute;float:right;right: 50px;\"></ion-icon>\n      </span>\n      <span class=\"dot _flex-box\" (click)=\"navigateToNotification()\"\n        *ngIf=\"notificationCount && notificationCount < 100\">{{ notificationCount }}</span>\n      <span class=\"dot _flex-box\" *ngIf=\"notificationCount && notificationCount >= 100\"\n        (click)=\"navigateToNotification()\">100</span>\n    </ion-title>\n  </ion-toolbar>\n  <ion-tab-bar slot=\"top\" color=\"primary\" *ngIf=\"showTabs\">\n    <ion-tab-button tab=\"last-month-reports\" class=\"activated\" [ngClass]=\"{'tab-selected' : last_month}\"\n      (click)=\"activeTab('last_month')\">\n      <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n    </ion-tab-button>\n    <ion-tab-button tab=\"last-quarter-reports\" [ngClass]=\"{'tab-selected' : last_quarter}\"\n      (click)=\"activeTab('last_quarter')\">\n      <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n    </ion-tab-button>\n  </ion-tab-bar>\n</ion-header>"
 
 /***/ }),
 
@@ -2888,7 +2911,7 @@ module.exports = "<ion-header [ngStyle]=\"{'--background':bg,'border-bottom': no
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".dot {\n  width: auto;\n  min-width: 16px;\n  height: 16px;\n  background: red;\n  border-radius: 10px;\n  position: absolute;\n  right: 50px;\n  top: 5px;\n  z-index: 2;\n  -webkit-box-pack: center;\n  justify-content: center;\n  color: #fff;\n  font-size: 8px;\n  font-weight: bold;\n  text-align: center;\n  padding: 4px; }\n\n.relative {\n  position: relative; }\n\n.notificationIcon {\n  font-size: 28px;\n  margin-right: 5px; }\n\n.margin {\n  margin: 0 8px !important; }\n\n.textCapital {\n  text-transform: capitalize; }\n\n.tab-selected, .activated {\n  border-bottom: 4px solid #fff !important; }\n\nion-tab-button ion-label {\n  font-size: 16px !important; }\n\n.header-action-icons {\n  font-size: 28px;\n  padding-left: 15px;\n  float: left; }\n\n.header-md:after {\n  height: 0px !important; }\n\n.ios-header {\n  padding-bottom: 30px;\n  margin-bottom: 30px; }\n\n.header-custom {\n  padding-bottom: 0px;\n  margin-bottom: 0px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvaGVhZGVyL2hlYWRlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFdBQVc7RUFDWCxlQUFlO0VBQ2YsWUFBWTtFQUNaLGVBQWU7RUFDZixtQkFBbUI7RUFDbkIsa0JBQWtCO0VBQ2xCLFdBQVc7RUFDWCxRQUFRO0VBQ1IsVUFBVTtFQUNWLHdCQUF3QjtFQUN4Qix1QkFBdUI7RUFDdkIsV0FBVztFQUNYLGNBQWM7RUFDZCxpQkFBaUI7RUFDakIsa0JBQWtCO0VBQ2xCLFlBQVksRUFBQTs7QUFFZDtFQUNFLGtCQUFrQixFQUFBOztBQUdwQjtFQUNFLGVBQWU7RUFDZixpQkFBaUIsRUFBQTs7QUFFbkI7RUFDRSx3QkFBd0IsRUFBQTs7QUFFMUI7RUFDRSwwQkFBMEIsRUFBQTs7QUFFNUI7RUFDRSx3Q0FBd0MsRUFBQTs7QUFFMUM7RUFFSSwwQkFBMEIsRUFBQTs7QUFHOUI7RUFDRSxlQUFjO0VBQ2Qsa0JBQWlCO0VBQ2pCLFdBQVcsRUFBQTs7QUFFYjtFQUVFLHNCQUFzQixFQUFBOztBQUV4QjtFQUVFLG9CQUFvQjtFQUNwQixtQkFBbUIsRUFBQTs7QUFFckI7RUFDRSxtQkFBbUI7RUFDbEIsa0JBQWtCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9oZWFkZXIvaGVhZGVyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmRvdCB7XG4gIHdpZHRoOiBhdXRvO1xuICBtaW4td2lkdGg6IDE2cHg7XG4gIGhlaWdodDogMTZweDtcbiAgYmFja2dyb3VuZDogcmVkO1xuICBib3JkZXItcmFkaXVzOiAxMHB4O1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHJpZ2h0OiA1MHB4O1xuICB0b3A6IDVweDtcbiAgei1pbmRleDogMjtcbiAgLXdlYmtpdC1ib3gtcGFjazogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgY29sb3I6ICNmZmY7XG4gIGZvbnQtc2l6ZTogOHB4O1xuICBmb250LXdlaWdodDogYm9sZDtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBwYWRkaW5nOiA0cHg7XG59XG4ucmVsYXRpdmUge1xuICBwb3NpdGlvbjogcmVsYXRpdmU7XG59XG5cbi5ub3RpZmljYXRpb25JY29uIHtcbiAgZm9udC1zaXplOiAyOHB4O1xuICBtYXJnaW4tcmlnaHQ6IDVweDtcbn1cbi5tYXJnaW4ge1xuICBtYXJnaW46IDAgOHB4ICFpbXBvcnRhbnQ7XG59XG4udGV4dENhcGl0YWwge1xuICB0ZXh0LXRyYW5zZm9ybTogY2FwaXRhbGl6ZTtcbn1cbi50YWItc2VsZWN0ZWQsIC5hY3RpdmF0ZWQge1xuICBib3JkZXItYm90dG9tOiA0cHggc29saWQgI2ZmZiAhaW1wb3J0YW50O1xufVxuaW9uLXRhYi1idXR0b24ge1xuICBpb24tbGFiZWwge1xuICAgIGZvbnQtc2l6ZTogMTZweCAhaW1wb3J0YW50O1xuICB9XG59XG4uaGVhZGVyLWFjdGlvbi1pY29uc3tcbiAgZm9udC1zaXplOjI4cHg7XG4gIHBhZGRpbmctbGVmdDoxNXB4O1xuICBmbG9hdDogbGVmdDtcbn1cbi5oZWFkZXItbWQ6YWZ0ZXJcbntcbiAgaGVpZ2h0OiAwcHggIWltcG9ydGFudDtcbn1cbi5pb3MtaGVhZGVyXG57XG4gIHBhZGRpbmctYm90dG9tOiAzMHB4OyAgIFxuICBtYXJnaW4tYm90dG9tOiAzMHB4O1xufVxuLmhlYWRlci1jdXN0b217XG4gIHBhZGRpbmctYm90dG9tOiAwcHg7ICBcbiAgIG1hcmdpbi1ib3R0b206IDBweDtcbn0iXX0= */"
+module.exports = ".dot {\n  width: 20px;\n  min-width: 20px;\n  height: 20px;\n  background: red;\n  border-radius: 50%;\n  position: absolute;\n  right: 53px;\n  z-index: 2;\n  -webkit-box-pack: center;\n  justify-content: center;\n  color: #fff;\n  font-size: 11px;\n  font-weight: bold;\n  text-align: center;\n  padding: 3px; }\n\n.relative {\n  position: relative; }\n\n.notificationIcon {\n  font-size: 28px;\n  margin-right: 5px; }\n\n.margin {\n  margin: 0 8px !important; }\n\n.textCapital {\n  text-transform: capitalize; }\n\n.tab-selected, .activated {\n  border-bottom: 4px solid #fff !important; }\n\nion-tab-button ion-label {\n  font-size: 16px !important; }\n\n.header-action-icons {\n  font-size: 28px;\n  padding-left: 15px;\n  float: left; }\n\n.header-md:after {\n  height: 0px !important; }\n\n.ios-header {\n  padding-bottom: 30px;\n  margin-bottom: 30px; }\n\n.header-custom {\n  padding-bottom: 0px;\n  margin-bottom: 0px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvaGVhZGVyL2hlYWRlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFdBQVc7RUFDWCxlQUFlO0VBQ2YsWUFBWTtFQUNaLGVBQWU7RUFDZixrQkFBa0I7RUFDbEIsa0JBQWtCO0VBQ2xCLFdBQVc7RUFDWCxVQUFVO0VBQ1Ysd0JBQXdCO0VBQ3hCLHVCQUF1QjtFQUN2QixXQUFXO0VBQ1gsZUFBZTtFQUNmLGlCQUFpQjtFQUNqQixrQkFBa0I7RUFDbEIsWUFBWSxFQUFBOztBQUVkO0VBQ0Usa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsZUFBZTtFQUNmLGlCQUFpQixFQUFBOztBQUVuQjtFQUNFLHdCQUF3QixFQUFBOztBQUUxQjtFQUNFLDBCQUEwQixFQUFBOztBQUU1QjtFQUNFLHdDQUF3QyxFQUFBOztBQUUxQztFQUVJLDBCQUEwQixFQUFBOztBQUc5QjtFQUNFLGVBQWM7RUFDZCxrQkFBaUI7RUFDakIsV0FBVyxFQUFBOztBQUViO0VBRUUsc0JBQXNCLEVBQUE7O0FBRXhCO0VBRUUsb0JBQW9CO0VBQ3BCLG1CQUFtQixFQUFBOztBQUVyQjtFQUNFLG1CQUFtQjtFQUNsQixrQkFBa0IsRUFBQSIsImZpbGUiOiJzcmMvYXBwL2hlYWRlci9oZWFkZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZG90IHtcbiAgd2lkdGg6IDIwcHg7XG4gIG1pbi13aWR0aDogMjBweDtcbiAgaGVpZ2h0OiAyMHB4O1xuICBiYWNrZ3JvdW5kOiByZWQ7XG4gIGJvcmRlci1yYWRpdXM6IDUwJTtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICByaWdodDogNTNweDtcbiAgei1pbmRleDogMjtcbiAgLXdlYmtpdC1ib3gtcGFjazogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgY29sb3I6ICNmZmY7XG4gIGZvbnQtc2l6ZTogMTFweDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgcGFkZGluZzogM3B4O1xufVxuLnJlbGF0aXZlIHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xufVxuXG4ubm90aWZpY2F0aW9uSWNvbiB7XG4gIGZvbnQtc2l6ZTogMjhweDtcbiAgbWFyZ2luLXJpZ2h0OiA1cHg7XG59XG4ubWFyZ2luIHtcbiAgbWFyZ2luOiAwIDhweCAhaW1wb3J0YW50O1xufVxuLnRleHRDYXBpdGFsIHtcbiAgdGV4dC10cmFuc2Zvcm06IGNhcGl0YWxpemU7XG59XG4udGFiLXNlbGVjdGVkLCAuYWN0aXZhdGVkIHtcbiAgYm9yZGVyLWJvdHRvbTogNHB4IHNvbGlkICNmZmYgIWltcG9ydGFudDtcbn1cbmlvbi10YWItYnV0dG9uIHtcbiAgaW9uLWxhYmVsIHtcbiAgICBmb250LXNpemU6IDE2cHggIWltcG9ydGFudDtcbiAgfVxufVxuLmhlYWRlci1hY3Rpb24taWNvbnN7XG4gIGZvbnQtc2l6ZToyOHB4O1xuICBwYWRkaW5nLWxlZnQ6MTVweDtcbiAgZmxvYXQ6IGxlZnQ7XG59XG4uaGVhZGVyLW1kOmFmdGVyXG57XG4gIGhlaWdodDogMHB4ICFpbXBvcnRhbnQ7XG59XG4uaW9zLWhlYWRlclxue1xuICBwYWRkaW5nLWJvdHRvbTogMzBweDsgICBcbiAgbWFyZ2luLWJvdHRvbTogMzBweDtcbn1cbi5oZWFkZXItY3VzdG9te1xuICBwYWRkaW5nLWJvdHRvbTogMHB4OyAgXG4gICBtYXJnaW4tYm90dG9tOiAwcHg7XG59Il19 */"
 
 /***/ }),
 
@@ -2911,6 +2934,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
+/* harmony import */ var _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../update-profile/update-profile.service */ "./src/app/update-profile/update-profile.service.ts");
+
 
 
 
@@ -2922,7 +2947,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var HeaderComponent = /** @class */ (function () {
-    function HeaderComponent(router, notificationCardService, storage, platform, menuController, badge, api, homeService) {
+    function HeaderComponent(router, notificationCardService, storage, platform, menuController, badge, api, homeService, updateProfileService) {
         var _this = this;
         this.router = router;
         this.notificationCardService = notificationCardService;
@@ -2932,6 +2957,7 @@ var HeaderComponent = /** @class */ (function () {
         this.badge = badge;
         this.api = api;
         this.homeService = homeService;
+        this.updateProfileService = updateProfileService;
         this.showMenu = true;
         this.noBorder = true;
         this.isGoBack = false;
@@ -2959,17 +2985,26 @@ var HeaderComponent = /** @class */ (function () {
             _this.api.refershToken(data.refresh_token).subscribe(function (data) {
                 var parsedData = JSON.parse(data._body);
                 if (parsedData && parsedData.access_token) {
-                    var userTokens = {
+                    var userTokens_1 = {
                         access_token: parsedData.access_token,
                         refresh_token: parsedData.refresh_token,
                     };
-                    // this.storage.set('userTokens', userTokens).then(usertoken => {
-                    //   this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data: any) => {
-                    //     this.notificationCardService.getCount(data.result.count);
-                    //   }, error => {
-                    //   })
-                    // }, error => {
-                    // })
+                    _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
+                        _this.notificationCardService.getAllNotifications(userTokens_1.access_token, _this.page, _this.limit).subscribe(function (data) {
+                            if (data.result.data) {
+                                data.result.data.forEach(function (notification) {
+                                    if (notification.action === 'Update' && !notification.is_read) {
+                                        _this.updateProfileService.updateProfile('Update');
+                                    }
+                                });
+                            }
+                            _this.notificationCardService.getCount(data.result.data.length);
+                        }, function (error) {
+                            // intentially left blank
+                        });
+                    }, function (error) {
+                        // intentially left blank
+                    });
                 }
             });
         });
@@ -3029,7 +3064,8 @@ var HeaderComponent = /** @class */ (function () {
             _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["MenuController"],
             _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_6__["Badge"], _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"],
-            _home_home_service__WEBPACK_IMPORTED_MODULE_8__["HomeService"]])
+            _home_home_service__WEBPACK_IMPORTED_MODULE_8__["HomeService"],
+            _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_9__["UpdateProfileService"]])
     ], HeaderComponent);
     return HeaderComponent;
 }());
@@ -3447,7 +3483,7 @@ var NetworkService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-list text-wrap class=\"container\" *ngIf=\"notifications?.length\">\n  <div\n    *ngIf=\"!notifications?.length\"\n    class=\"_errorBox _flex-box errorMessage _justify-content-center vertical-align-text\"\n  >\n    {{ \"message.noUnreadNotifications\" | translate }}\n  </div>\n  <ion-card\n    no-lines\n    class=\"old-notification notificationCard custom-list\"\n    [ngClass]=\"{ 'new-notification': !notification?.is_read }\"\n    *ngFor=\"let notification of notifications; let i = index\"\n    (click)=\"onNotificationClick(notification, i)\"\n  >\n    <div class=\"notificationTitle _flex-box \">\n      <ion-row>\n        <ion-col\n          [ngClass]=\"{ 'custom-title-col': notification.created_at }\"\n          style=\"padding: 0px;\"\n        >\n          {{ notification?.title ? notification?.title : notification?.text }}\n        </ion-col>\n        <ion-col\n          class=\"_flex-box\"\n          *ngIf=\"notification.created_at\"\n          style=\"text-align: right;\n          max-width: 40%;\n          min-width: 40%; padding:0px;\"\n        >\n          <ion-icon name=\"time\" style=\"margin-bottom: -2px;\"></ion-icon>\n          {{ momentInstance(notification?.created_at).fromNow(true) }}\n        </ion-col>\n      </ion-row>\n    </div>\n    <div class=\" _flex-box\">\n      <!-- <div class=\"dot\" [ngClass]=\"{'inactiveDot' : notification?.is_read }\"></div> -->\n      <div style=\"flex:1\">\n        <div>{{ notification?.text }}</div>\n        <!-- <div class=\"time\">{{notification?.created_at| date:'medium'}}</div> -->\n      </div>\n    </div>\n  </ion-card>\n  <!-- <ion-item *ngIf=\"showViewMore \">\n      <div class=\" _flex-box\" (click)=\"goToAllNotifications()\">\n        {{'message.viewAll'| translate  }} <ion-icon name=\"arrow-forward\" margin-left></ion-icon>\n      </div>\n    </ion-item> -->\n</ion-list>\n\n<!-- <div class=\"_errorBox _flex-box errorMessage _justify-content-center\">\n    <div *ngIf=\"notifications?.length\"\n      class=\" old-notification notificationCard\">\n      {{'message.noUnreadNotifications' | translate}}\n    </div>\n  </div> -->\n\n<ion-list\n  text-wrap\n  class=\"errorContainer _flex-box\"\n  *ngIf=\"!notifications?.length\"\n>\n  <ion-item\n    no-lines\n    class=\"old-notification notificationCard childContainer custom-list vertical-align-text\"\n  >\n    {{ \"message.noUnreadNotifications\" | translate }}\n  </ion-item>\n</ion-list>\n\n<!-- Skeleton screen -->\n<div *ngIf=\"showSkeleton\">\n  <ion-card *ngFor=\"let skeleton of skeletons\">\n    <ion-card-header>\n      <ion-skeleton-text animated style=\"width: 100%\"></ion-skeleton-text>\n    </ion-card-header>\n    <ion-card-content class=\"skeleton-card-content\">\n      <ion-label>\n        <h3>\n          <ion-skeleton-text animated style=\"width: 100%\"></ion-skeleton-text>\n        </h3>\n        <p>\n          <ion-skeleton-text animated style=\"width: 100%\"></ion-skeleton-text>\n        </p>\n        <p>\n          <ion-skeleton-text animated style=\"width: 100%\"></ion-skeleton-text>\n        </p>\n      </ion-label>\n    </ion-card-content>\n  </ion-card>\n</div>\n"
+module.exports = "<ion-list text-wrap class=\"container\" *ngIf=\"notifications?.length\">\n  <div *ngIf=\"!notifications?.length\"\n    class=\"_errorBox _flex-box errorMessage _justify-content-center vertical-align-text\">\n    {{ \"message.noUnreadNotifications\" | translate }}\n  </div>\n  <ion-card no-lines class=\"old-notification notificationCard custom-list\"\n    [ngClass]=\"{ 'new-notification': !notification?.is_read }\" *ngFor=\"let notification of notifications; let i = index\"\n    (click)=\"onNotificationClick(notification, i)\">\n    <div class=\"notificationTitle _flex-box \">\n      <ion-row>\n        <ion-col [ngClass]=\"{ 'custom-title-col': notification.created_at }\" style=\"padding: 0px;\">\n          {{ notification?.title ? notification?.title : notification?.text }}\n        </ion-col>\n        <ion-col class=\"_flex-box\" *ngIf=\"notification.created_at\" style=\"text-align: right;\n          max-width: 40%;\n          min-width: 40%; padding:0px;\">\n          <ion-icon name=\"time\" style=\"margin-bottom: -2px;\"></ion-icon>\n          {{ momentInstance(notification?.created_at).fromNow(true) }}\n        </ion-col>\n      </ion-row>\n    </div>\n    <div class=\" _flex-box\">\n      <!-- <div class=\"dot\" [ngClass]=\"{'inactiveDot' : notification?.is_read }\"></div> -->\n      <div style=\"flex:1\">\n        <div>{{ notification?.text }}</div>\n        <!-- <div class=\"time\">{{notification?.created_at| date:'medium'}}</div> -->\n      </div>\n    </div>\n  </ion-card>\n  <!-- <ion-item *ngIf=\"showViewMore \">\n      <div class=\" _flex-box\" (click)=\"goToAllNotifications()\">\n        {{'message.viewAll'| translate  }} <ion-icon name=\"arrow-forward\" margin-left></ion-icon>\n      </div>\n    </ion-item> -->\n</ion-list>\n\n<!-- <div class=\"_errorBox _flex-box errorMessage _justify-content-center\">\n    <div *ngIf=\"notifications?.length\"\n      class=\" old-notification notificationCard\">\n      {{'message.noUnreadNotifications' | translate}}\n    </div>\n  </div> -->\n\n<ion-list text-wrap class=\"errorContainer _flex-box\" *ngIf=\"!notifications?.length\">\n  <ion-item no-lines class=\"old-notification notificationCard childContainer custom-list vertical-align-text\">\n    {{ \"message.noUnreadNotifications\" | translate }}\n  </ion-item>\n</ion-list>\n\n<!-- Skeleton screen -->\n<div *ngIf=\"showSkeleton\">\n  <ion-card *ngFor=\"let skeleton of skeletons\">\n    <ion-card-header>\n      <ion-skeleton-text animated style=\"width: 100%\"></ion-skeleton-text>\n    </ion-card-header>\n    <ion-card-content class=\"skeleton-card-content\">\n      <ion-label>\n        <h3>\n          <ion-skeleton-text animated style=\"width: 100%\"></ion-skeleton-text>\n        </h3>\n        <p>\n          <ion-skeleton-text animated style=\"width: 100%\"></ion-skeleton-text>\n        </p>\n        <p>\n          <ion-skeleton-text animated style=\"width: 100%\"></ion-skeleton-text>\n        </p>\n      </ion-label>\n    </ion-card-content>\n  </ion-card>\n</div>"
 
 /***/ }),
 
@@ -3511,6 +3547,7 @@ var NotificationCardComponent = /** @class */ (function () {
      * @param notificationMeta
      */
     NotificationCardComponent.prototype.onNotificationClick = function (notificationMeta) {
+        console.log(notificationMeta, "notificationMeta");
         if (!notificationMeta.is_read) {
             switch (notificationMeta.type) {
                 case 'projectAdded':
@@ -3533,7 +3570,7 @@ var NotificationCardComponent = /** @class */ (function () {
                     this.router.navigate(['subtask-view/' + notificationMeta.payload.subTaskId + '/' + notificationMeta.payload.taskId + '/' + notificationMeta.payload.projectID + '/notifications']);
                     break;
             }
-            // this.markAsRead(notificationMeta);
+            this.markAsRead(notificationMeta);
         }
     };
     /**
@@ -3547,28 +3584,28 @@ var NotificationCardComponent = /** @class */ (function () {
                 _this.api.refershToken(data.refresh_token).subscribe(function (data) {
                     var parsedData = JSON.parse(data._body);
                     if (parsedData && parsedData.access_token) {
-                        var userTokens = {
+                        var userTokens_1 = {
                             access_token: parsedData.access_token,
                             refresh_token: parsedData.refresh_token,
                         };
-                        // this.showSkeleton = true;
-                        // this.storage.set('userTokens', userTokens).then(usertoken => {
-                        //   this.notificationCardService.markAsRead(userTokens.access_token, notificationMeta.id).subscribe(data => {
-                        //     notificationMeta.is_read = true;
-                        //     this.showSkeleton = false;
-                        //     this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
-                        //       // this.fetchAllNotifications();
-                        //       this.showSkeleton = false;
-                        //       this.notificationCardService.getCount(data1.result.count);
-                        //     }, error => {
-                        //       this.showSkeleton = false;
-                        //     })
-                        //   }, error => {
-                        //     this.showSkeleton = false;
-                        //   })
-                        // }, error => {
-                        //   this.showSkeleton = false;
-                        // })
+                        _this.showSkeleton = true;
+                        _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
+                            _this.notificationCardService.markAsRead(userTokens_1.access_token, notificationMeta.id).subscribe(function (data) {
+                                notificationMeta.is_read = true;
+                                _this.showSkeleton = false;
+                                _this.notificationCardService.checkForNotificationApi(userTokens_1.access_token).subscribe(function (data1) {
+                                    // this.fetchAllNotifications();
+                                    _this.showSkeleton = false;
+                                    _this.notificationCardService.getCount(data1.result.count);
+                                }, function (error) {
+                                    _this.showSkeleton = false;
+                                });
+                            }, function (error) {
+                                _this.showSkeleton = false;
+                            });
+                        }, function (error) {
+                            _this.showSkeleton = false;
+                        });
                     }
                 });
             });
@@ -3613,8 +3650,11 @@ var NotificationCardComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./notification-card.component.html */ "./src/app/notification-card/notification-card.component.html"),
             styles: [__webpack_require__(/*! ./notification-card.component.scss */ "./src/app/notification-card/notification-card.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_notification_service__WEBPACK_IMPORTED_MODULE_2__["NotificationCardService"], _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["ToastController"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
-            _api_api__WEBPACK_IMPORTED_MODULE_3__["ApiProvider"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_notification_service__WEBPACK_IMPORTED_MODULE_2__["NotificationCardService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["ToastController"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
+            _api_api__WEBPACK_IMPORTED_MODULE_3__["ApiProvider"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"]])
     ], NotificationCardComponent);
     return NotificationCardComponent;
 }());
@@ -4736,6 +4776,73 @@ var ToastService = /** @class */ (function () {
             _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["LoadingController"]])
     ], ToastService);
     return ToastService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/update-profile/update-profile.service.ts":
+/*!**********************************************************!*\
+  !*** ./src/app/update-profile/update-profile.service.ts ***!
+  \**********************************************************/
+/*! exports provided: UpdateProfileService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UpdateProfileService", function() { return UpdateProfileService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+
+
+
+var UpdateProfileService = /** @class */ (function () {
+    function UpdateProfileService(http, storage) {
+        this.http = http;
+        this.storage = storage;
+        this.updatedUser = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
+    }
+    // get States
+    UpdateProfileService.prototype.getStates = function (token) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+            'X-authenticated-user-token': token
+        });
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/listByEntityType/state', { headers: httpHeaders });
+    };
+    // get immediate Children
+    UpdateProfileService.prototype.getImmediateChildren = function (token, id) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+            'X-authenticated-user-token': token
+        });
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/immediateEntities/' + id, { headers: httpHeaders });
+        //return this.http.get(AppConfigs.api_url + '/unnati/api/v1/getSubTaskDetails/5dcd367997dccf453772b8f6/5dcd367997dccf453772b8f5', { headers: httpHeaders });
+    };
+    UpdateProfileService.prototype.saveInfo = function (token, data) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+            'X-authenticated-user-token': token
+        });
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/user-profile/update', data, { headers: httpHeaders });
+    };
+    // event triggers for update popups
+    UpdateProfileService.prototype.updateProfile = function (status) {
+        this.updatedUser.next(status);
+    };
+    UpdateProfileService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root',
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"]])
+    ], UpdateProfileService);
+    return UpdateProfileService;
 }());
 
 

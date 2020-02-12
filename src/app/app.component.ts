@@ -139,7 +139,6 @@ export class AppComponent {
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
-      this.splashScreen.hide();
       this.platform.backButton.subscribeWithPriority(9999, () => {
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
@@ -235,6 +234,7 @@ export class AppComponent {
             }
         }
       });
+      this.splashScreen.hide();
     });
   }
   //Langugae change
@@ -323,22 +323,20 @@ export class AppComponent {
     })
   }
   checkNetwork() {
-    this.platform.ready().then(() => {
-      this.network.onDisconnect()
-        .subscribe(() => {
-          this.isConnected = false;
-          this.networkService.status(this.isConnected);
-          localStorage.setItem("networkStatus", this.isConnected);
-        }, error => {
-        });
-      this.network.onConnect()
-        .subscribe(() => {
-          this.isConnected = true;
-          this.networkService.status(this.isConnected);
-        }, error => {
-        });
-      // this.networkSubscriber();
-    });
+    this.network.onDisconnect()
+      .subscribe(() => {
+        this.isConnected = false;
+        this.networkService.status(this.isConnected);
+        localStorage.setItem("networkStatus", this.isConnected);
+      }, error => {
+      });
+    this.network.onConnect()
+      .subscribe(() => {
+        this.isConnected = true;
+        this.networkService.status(this.isConnected);
+      }, error => {
+      });
+    // this.networkSubscriber();
   }
 
   public prepareProjectToSync() {

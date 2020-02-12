@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NotificationCardService } from '../notification-card/notification.service';
 import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
@@ -7,6 +7,7 @@ import { Badge } from '@ionic-native/badge/ngx';
 import { MenuController } from '@ionic/angular';
 import { HomeService } from '../home/home.service';
 import { Platform } from '@ionic/angular';
+import { UpdateProfileService } from '../update-profile/update-profile.service';
 
 @Component({
   selector: 'app-header',
@@ -33,7 +34,8 @@ export class HeaderComponent implements OnInit {
     public platform: Platform,
     public menuController: MenuController,
     public badge: Badge, public api: ApiProvider,
-    public homeService: HomeService) {
+    public homeService: HomeService,
+    public updateProfileService: UpdateProfileService) {
     this.isIos = this.platform.is('ios') ? true : false;
     homeService.isSyncing.subscribe((data: boolean) => {
       this.isSyncing = data;
@@ -58,13 +60,22 @@ export class HeaderComponent implements OnInit {
             access_token: parsedData.access_token,
             refresh_token: parsedData.refresh_token,
           };
-          // this.storage.set('userTokens', userTokens).then(usertoken => {
-          //   this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data: any) => {
-          //     this.notificationCardService.getCount(data.result.count);
-          //   }, error => {
-          //   })
-          // }, error => {
-          // })
+          this.storage.set('userTokens', userTokens).then(usertoken => {
+            this.notificationCardService.getAllNotifications(userTokens.access_token, this.page, this.limit).subscribe((data: any) => {
+              if (data.result.data) {
+                data.result.data.forEach(notification => {
+                  if (notification.action === 'Update' && !notification.is_read) {
+                    this.updateProfileService.updateProfile('Update');
+                  }
+                });
+              }
+              this.notificationCardService.getCount(data.result.data.length);
+            }, error => {
+              // intentially left blank
+            })
+          }, error => {
+            // intentially left blank
+          })
         }
       })
     })
@@ -73,6 +84,7 @@ export class HeaderComponent implements OnInit {
   public navigateToNotification() {
     this.router.navigate(['project-view/notifications']);
   }
+
   public goBack() {
     if (this.isParam) {
       this.router.navigate([this.isGoBack, this.isParam]);

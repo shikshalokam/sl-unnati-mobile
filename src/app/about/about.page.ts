@@ -55,9 +55,6 @@ export class AboutPage implements OnInit {
     })
   }
   ngOnInit() {
-    this.storage.get('userTokens').then(data => {
-      this.userDetails = jwt_decode(data.access_token);
-    })
     if (localStorage.getItem('networkStatus') != null) {
       this.connected = localStorage.getItem('networkStatus');
     } else {

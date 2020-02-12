@@ -65,7 +65,7 @@ var UpdateProfilePageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"'profile_update.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\"> </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <div class=\"profile-card\">\n    <div class=\"profile-container\">\n      <div class=\"pop-ion\">\n        <ion-icon ios=\"ios-contact\" md=\"md-contact\" color='primary'></ion-icon>\n      </div>\n      <div style=\"text-align: center;\">\n        <span class=\"usrname\">\n          Username\n        </span>\n        <p>*******</p>\n      </div>\n    </div>\n  </div>\n  <form [formGroup]=\"profileForm\">\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\">{{'profile_update.fname' | translate}}</ion-label>\n      <ion-input formControlName=\"fname\" type=\"text\" placeholder=\"\" [(ngModel)]=\"profile.firstName\"\n        [class.invalid]=\"!profileForm.controls.fname.valid && (profileForm.controls.fname.dirty || submitAttempt)\">\n      </ion-input>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\">{{'profile_update.lname' | translate}}</ion-label>\n      <ion-input formControlName=\"lname\" type=\"text\" [(ngModel)]=\"profile.lastName\" placeholder=\"\">\n        <!-- [class.invalid]=\"!profileForm.controls.lname.valid && (profileForm.controls.lname.dirty || submitAttempt)\" -->\n      </ion-input>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\">{{'profile_update.email_id' | translate}}</ion-label>\n      <ion-input formControlName=\"emailId\" type=\"text\" [(ngModel)]=\"profile.emailId\"\n        placeholder=\"{{'profile_update.email_placeholder' | translate}}\">\n      </ion-input>\n      <!-- <ion-input formControlName=\"emailId\" type=\"text\"\n        [class.invalid]=\"!profileForm.controls.emailId.valid && (profileForm.controls.emailId.dirty || submitAttempt)\">\n      </ion-input> -->\n    </ion-item>\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\">{{'profile_update.phone_number' | translate}}</ion-label>\n      <ion-input formControlName=\"phoneNumber\" type=\"text\" [(ngModel)]=\"profile.phoneNumber\"\n        placeholder=\"{{'profile_update.phone_placeholder' | translate}}\">\n      </ion-input>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-select\" position=\"floating\">{{'profile_update.state' | translate}}</ion-label>\n      <ion-select formControlName=\"state\" class=\"custom-select-box\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.state\"\n        [class.invalid]=\"!profileForm.controls.state.valid && (profileForm.controls.state.dirty || submitAttempt)\">\n        <ion-select-option *ngFor=\"let state of states\" value=\"{{state._id}}\">{{state.name}}</ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"districts\">\n      <ion-label class=\"custom-select\" position=\"floating\">\n        {{'profile_update.district' | translate}}</ion-label>\n      <ion-select formControlName=\"district\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        [(ngModel)]=\"profile.district\" (ionChange)=\"getImmediateChildren($event)\">\n        <ion-select-option *ngFor=\"let district of districts\" value=\"{{district._id}}\">{{district.name}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"zones\">\n      <ion-label class=\"custom-label\" position=\"floating\">\n        {{'profile_update.zone' | translate}}</ion-label>\n      <ion-select formControlName=\"zone\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.zone\">\n        <ion-select-option *ngFor=\"let zone of zones\" value=\"{{zone._id}}\">{{zone.name}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"blocks\">\n      <ion-label class=\"custom-select\" position=\"floating\">\n        {{'profile_update.block' | translate}}</ion-label>\n      <ion-select formControlName=\"block\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.block\">\n        <ion-select-option *ngFor=\"let block of blocks\" value=\"{{block._id}}\">{{block.name}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"schools\">\n        <ion-label class=\"custom-select\" position=\"floating\">\n          {{'profile_update.school' | translate}}</ion-label>\n        <ion-select formControlName=\"school\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n          (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.school\">\n          <ion-select-option *ngFor=\"let school of schools\" value=\"{{school._id}}\">{{school.name}}\n          </ion-select-option>\n        </ion-select>\n      </ion-item>\n    <div class=\"profile-actions\">\n      <ion-button expand=\"block\" (click)=saveInfo()>\n        {{'button.save_info' | translate}}\n      </ion-button>\n    </div>\n    <div class=\"profile-actions\">\n      <ion-button expand=\"block\" (click)=cancel()>\n        {{'button.cancel' | translate}}\n      </ion-button>\n    </div>\n  </form>\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"'profile_update.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\"> </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <div *ngIf=\"showUpdatePop\">\n    <app-custom-popup [header]=\"header\" [body]=\"body\" [button]=\"button\" [isActionable]=\"isActionable\">\n    </app-custom-popup>\n  </div>\n  <div class=\"profile-card\">\n    <div class=\"profile-container\">\n      <div class=\"pop-ion\">\n        <ion-icon ios=\"ios-contact\" md=\"md-contact\" color='primary'></ion-icon>\n      </div>\n      <div class=\"text-center\" *ngIf=\"userDetails?.preferred_username\">\n        <span class=\"usrname\">\n          {{userDetails.preferred_username}}\n        </span>\n        <p>*******</p>\n      </div>\n    </div>\n  </div>\n  <form [formGroup]=\"profileForm\" style=\"margin-bottom: 2em;\">\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\">{{'profile_update.fname' | translate}}</ion-label>\n      <ion-input formControlName=\"fname\" type=\"text\" placeholder=\"\" [(ngModel)]=\"profile.firstName\"\n        [class.invalid]=\"!profileForm.controls.fname.valid && (profileForm.controls.fname.dirty || submitAttempt)\">\n      </ion-input>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\">{{'profile_update.lname' | translate}}</ion-label>\n      <ion-input formControlName=\"lname\" type=\"text\" [(ngModel)]=\"profile.lastName\" placeholder=\"\">\n        <!-- [class.invalid]=\"!profileForm.controls.lname.valid && (profileForm.controls.lname.dirty || submitAttempt)\" -->\n      </ion-input>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\">{{'profile_update.email_id' | translate}}</ion-label>\n      <ion-input formControlName=\"emailId\" type=\"text\" [(ngModel)]=\"profile.emailId\"\n        placeholder=\"{{'profile_update.email_placeholder' | translate}}\">\n      </ion-input>\n      <!-- <ion-input formControlName=\"emailId\" type=\"text\"\n        [class.invalid]=\"!profileForm.controls.emailId.valid && (profileForm.controls.emailId.dirty || submitAttempt)\">\n      </ion-input> -->\n    </ion-item>\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\">{{'profile_update.phone_number' | translate}}</ion-label>\n      <ion-input formControlName=\"phoneNumber\" type=\"text\" [(ngModel)]=\"profile.phoneNumber\"\n        placeholder=\"{{'profile_update.phone_placeholder' | translate}}\">\n      </ion-input>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-select\" position=\"floating\">{{'profile_update.state' | translate}}</ion-label>\n      <ion-select formControlName=\"state\" class=\"custom-select-box\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.state\"\n        [class.invalid]=\"!profileForm.controls.state.valid && (profileForm.controls.state.dirty || submitAttempt)\">\n        <ion-select-option *ngFor=\"let state of states\" value=\"{{state._id}}\">{{state.name}}</ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"districts\">\n      <ion-label class=\"custom-select\" position=\"floating\">\n        {{'profile_update.district' | translate}}</ion-label>\n      <ion-select formControlName=\"district\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        [(ngModel)]=\"profile.district\" (ionChange)=\"getImmediateChildren($event)\">\n        <ion-select-option *ngFor=\"let district of districts\" value=\"{{district._id}}\">{{district.name}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <!-- <ion-item class=\"custom-ion-item\" *ngIf=\"entities\">\n      <ion-label class=\"custom-select\" position=\"floating\">\n        {{entities.immediateEntityType}}</ion-label>\n      <ion-select formControlName=\"entity\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event,entities.immediateEntityType)\">\n        <ion-select-option *ngFor=\"let entity of entities.data\" value=\"{{entity._id}}\">{{entity.name}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item> -->\n    <ion-item class=\"custom-ion-item\" *ngIf=\"zones\">\n      <ion-label class=\"custom-label\" position=\"floating\">\n        {{'profile_update.zone' | translate}}</ion-label>\n      <ion-select formControlName=\"zone\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.zone\">\n        <ion-select-option *ngFor=\"let zone of zones\" value=\"{{zone._id}}\">{{zone.name}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"clusters\">\n      <ion-label class=\"custom-label\" position=\"floating\">\n        {{'profile_update.cluster' | translate}}</ion-label>\n      <ion-select formControlName=\"cluster\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.cluster\">\n        <ion-select-option *ngFor=\"let cluster of clusters\" value=\"{{cluster._id}}\">{{cluster.name}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"blocks\">\n      <ion-label class=\"custom-select\" position=\"floating\">\n        {{'profile_update.block' | translate}}</ion-label>\n      <ion-select formControlName=\"block\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.block\">\n        <ion-select-option *ngFor=\"let block of blocks\" value=\"{{block._id}}\">{{block.name}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"schools\">\n      <ion-label class=\"custom-select\" position=\"floating\">\n        {{'profile_update.school' | translate}}</ion-label>\n      <ion-select formControlName=\"school\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.school\">\n        <ion-select-option *ngFor=\"let school of schools\" value=\"{{school._id}}\">{{school.name}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"hubs\">\n      <ion-label class=\"custom-select\" position=\"floating\">\n        {{'profile_update.hub' | translate}}</ion-label>\n      <ion-select formControlName=\"hub\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.hub\">\n        <ion-select-option *ngFor=\"let hub of hubs\" value=\"{{hub._id}}\">{{school.hub}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <ion-item class=\"custom-ion-item\" *ngIf=\"talukas\">\n      <ion-label class=\"custom-select\" position=\"floating\">\n        {{'profile_update.taluka' | translate}}</ion-label>\n      <ion-select formControlName=\"taluka\" class=\"custom-select-box\" type=\"text\" placeholder=\"\"\n        (ionChange)=\"getImmediateChildren($event)\" [(ngModel)]=\"profile.taluka\">\n        <ion-select-option *ngFor=\"let taluka of talukas\" value=\"{{taluka._id}}\">{{taluka.hub}}\n        </ion-select-option>\n      </ion-select>\n    </ion-item>\n    <div class=\"profile-actions\">\n      <ion-button expand=\"block\" (click)=saveInfo()>\n        {{'button.save_info' | translate}}\n      </ion-button>\n    </div>\n    <div class=\"profile-actions\">\n      <ion-button expand=\"block\" (click)=cancel()>\n        {{'button.cancel' | translate}}\n      </ion-button>\n    </div>\n  </form>\n</ion-content>"
 
 /***/ }),
 
@@ -98,6 +98,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
 /* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! jwt-decode */ "./node_modules/jwt-decode/lib/index.js");
+/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(jwt_decode__WEBPACK_IMPORTED_MODULE_8__);
+
 
 
 
@@ -117,8 +120,17 @@ var UpdateProfilePage = /** @class */ (function () {
         this.submitAttempt = false;
         this.back = "project-view/home";
         this.profile = {};
+        this.body = 'message.thankyou_note';
+        this.header = 'message.thankyou';
+        this.button = 'button.continue';
+        this.isActionable = '/project-view/home';
+        this.showUpdatePop = false;
     }
     UpdateProfilePage.prototype.ngOnInit = function () {
+        var _this = this;
+        this.storage.get('userTokens').then(function (data) {
+            _this.userDetails = jwt_decode__WEBPACK_IMPORTED_MODULE_8__(data.access_token);
+        });
         this.prepareForm();
         this.getStates();
     };
@@ -127,15 +139,19 @@ var UpdateProfilePage = /** @class */ (function () {
             fname: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
             emailId: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
             state: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
-            district: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
+            district: ['', ''],
+            entity: ['', ''],
             lname: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
             phoneNumber: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
-            zone: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
-            hub: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
-            block: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
-            school: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required],
+            zone: ['', ''],
+            taluka: ['', ''],
+            cluster: ['', ''],
+            hub: ['', ''],
+            block: ['', ''],
+            school: ['', ''],
         });
     };
+    // get states
     UpdateProfilePage.prototype.getStates = function () {
         var _this = this;
         this.storage.get('userTokens').then(function (data) {
@@ -150,7 +166,6 @@ var UpdateProfilePage = /** @class */ (function () {
                         _this.toastService.startLoader('Loading, States');
                         _this.storage.set('userTokens', userTokens_1).then(function (data) {
                             _this.updateProfileService.getStates(userTokens_1.access_token).subscribe(function (states) {
-                                console.log(states, "states");
                                 _this.states = states.result;
                                 _this.toastService.stopLoader();
                             }, function (erros) {
@@ -165,58 +180,66 @@ var UpdateProfilePage = /** @class */ (function () {
     // immediate children of state
     UpdateProfilePage.prototype.getImmediateChildren = function (event) {
         var _this = this;
-        console.log(event.detail.value, "getImmediateChildren");
         var id = event.detail.value;
-        this.storage.get('userTokens').then(function (data) {
-            if (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens_2 = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.toastService.startLoader('Loading');
-                        _this.storage.set('userTokens', userTokens_2).then(function (data) {
-                            _this.updateProfileService.getImmediateChildren(userTokens_2.access_token, id).subscribe(function (entities) {
-                                console.log(entities, "entities");
-                                switch (entities.result.immediateEntityType) {
-                                    case 'district': {
-                                        _this.districts = entities.result.data;
-                                        break;
+        if (id) {
+            this.storage.get('userTokens').then(function (data) {
+                if (data) {
+                    _this.api.refershToken(data.refresh_token).subscribe(function (data) {
+                        var parsedData = JSON.parse(data._body);
+                        if (parsedData && parsedData.access_token) {
+                            var userTokens_2 = {
+                                access_token: parsedData.access_token,
+                                refresh_token: parsedData.refresh_token,
+                            };
+                            _this.toastService.startLoader('Loading');
+                            _this.storage.set('userTokens', userTokens_2).then(function (data) {
+                                _this.updateProfileService.getImmediateChildren(userTokens_2.access_token, id).subscribe(function (entities) {
+                                    switch (entities.result.immediateEntityType) {
+                                        case 'district': {
+                                            _this.districts = entities.result.data;
+                                            break;
+                                        }
+                                        case 'zone': {
+                                            _this.zones = entities.result.data;
+                                            break;
+                                        }
+                                        case 'cluster': {
+                                            _this.clusters = entities.result.data;
+                                            break;
+                                        }
+                                        case 'block': {
+                                            _this.blocks = entities.result.data;
+                                            break;
+                                        }
+                                        case 'school': {
+                                            _this.schools = entities.result.data;
+                                            break;
+                                        }
+                                        case 'hub': {
+                                            _this.hubs = entities.result.data;
+                                            break;
+                                        }
+                                        case 'taluka': {
+                                            _this.talukas = entities.result.data;
+                                            break;
+                                        }
                                     }
-                                    case 'zone': {
-                                        _this.zones = entities.result.data;
-                                        console.log(_this.zones, "Zones");
-                                        break;
-                                    }
-                                    case 'block': {
-                                        _this.blocks = entities.result.data;
-                                        console.log(_this.blocks, "this.blocks");
-                                        break;
-                                    }
-                                    case 'school': {
-                                        _this.schools = entities.result.data;
-                                        console.log(_this.blocks, "this.blocks");
-                                        break;
-                                    }
-                                }
-                                _this.toastService.stopLoader();
-                            }, function (erros) {
-                                _this.toastService.stopLoader();
+                                    _this.toastService.stopLoader();
+                                }, function (erros) {
+                                    _this.toastService.stopLoader();
+                                });
                             });
-                        });
-                    }
-                });
-            }
-        });
+                        }
+                    });
+                }
+            });
+        }
     };
     // Save user info
     UpdateProfilePage.prototype.saveInfo = function () {
         var _this = this;
         this.submitAttempt = true;
-        if (this.profile.fullName && this.profile.lastName && this.profile.state && (this.profile.emailId || this.profile.phoneNumber)) {
-            console.log('valid');
+        if (this.profile.firstName && this.profile.lastName && this.profile.state && (this.profile.emailId || this.profile.phoneNumber)) {
             this.storage.get('userTokens').then(function (data) {
                 if (data) {
                     _this.api.refershToken(data.refresh_token).subscribe(function (data) {
@@ -229,8 +252,9 @@ var UpdateProfilePage = /** @class */ (function () {
                             _this.toastService.startLoader('Loading');
                             _this.storage.set('userTokens', userTokens_3).then(function (data) {
                                 _this.updateProfileService.saveInfo(userTokens_3.access_token, _this.profile).subscribe(function (data) {
-                                    console.log(data, "data");
                                     _this.toastService.stopLoader();
+                                    _this.updateProfileService.updateProfile('done');
+                                    _this.showUpdatePop = true;
                                 }, function (error) {
                                     _this.toastService.stopLoader();
                                 });
@@ -243,17 +267,16 @@ var UpdateProfilePage = /** @class */ (function () {
             });
         }
         else {
-            if (!this.profile.fullName && !this.profile.lastName) {
+            if (!this.profile.firstName || !this.profile.lastName) {
                 this.toastService.errorToast('message.name_require');
             }
             else if (!this.profile.state) {
                 this.toastService.errorToast('message.state_require');
             }
-            else if (!this.profile.emailId || !this.profile.phoneNumber) {
+            else if (!this.profile.emailId && !this.profile.phoneNumber) {
                 this.toastService.errorToast('message.email_phonenumber_require');
             }
         }
-        console.log(this.profile, "profile");
     };
     // go back to home page
     UpdateProfilePage.prototype.cancel = function () {
@@ -273,65 +296,6 @@ var UpdateProfilePage = /** @class */ (function () {
             _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]])
     ], UpdateProfilePage);
     return UpdateProfilePage;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/update-profile/update-profile.service.ts":
-/*!**********************************************************!*\
-  !*** ./src/app/update-profile/update-profile.service.ts ***!
-  \**********************************************************/
-/*! exports provided: UpdateProfileService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UpdateProfileService", function() { return UpdateProfileService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
-
-
-
-
-
-var UpdateProfileService = /** @class */ (function () {
-    function UpdateProfileService(http, storage) {
-        this.http = http;
-        this.storage = storage;
-    }
-    // get States
-    UpdateProfileService.prototype.getStates = function (token) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-            'X-authenticated-user-token': token
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/listByEntityType/state', { headers: httpHeaders });
-    };
-    // get immediate Children
-    UpdateProfileService.prototype.getImmediateChildren = function (token, id) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-            'X-authenticated-user-token': token
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/immediateEntities/' + id, { headers: httpHeaders });
-        //return this.http.get(AppConfigs.api_url + '/unnati/api/v1/getSubTaskDetails/5dcd367997dccf453772b8f6/5dcd367997dccf453772b8f5', { headers: httpHeaders });
-    };
-    UpdateProfileService.prototype.saveInfo = function (token, data) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-            'X-authenticated-user-token': token
-        });
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/user-profile/update', data, { headers: httpHeaders });
-    };
-    UpdateProfileService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root',
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"], _ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"]])
-    ], UpdateProfileService);
-    return UpdateProfileService;
 }());
 
 
