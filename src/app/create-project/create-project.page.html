@@ -14,7 +14,7 @@
     <ion-item class="custom-ion-item">
       <ion-label class="custom-label" position="floating"
         [ngClass]="{'required-field':markLabelsAsInvalid && !project.title}">
-        {{'create_project.title_of_project' | translate}}</ion-label>
+        {{'create_project.title_of_project' | translate}} </ion-label>
       <ion-input type="text" [(ngModel)]="project.title" name="title" formControlName="title"
         placeholder="{{'create_project.placeholder_project_title'| translate}}" maxlength="280"></ion-input>
     </ion-item>

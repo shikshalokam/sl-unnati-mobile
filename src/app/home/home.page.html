@@ -21,6 +21,7 @@
   </div>
   <!-- loader ends here -->
   <div *ngIf="!showSkeleton">
+    <app-custom-popup [header]="header" [body]="body"></app-custom-popup>
     <ion-item class="search-bar-custom">
       <ion-icon name="search" item-left color="dark"></ion-icon>
       <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>

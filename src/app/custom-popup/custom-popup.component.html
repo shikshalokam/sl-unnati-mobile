@@ -1,0 +1,15 @@
+<div class="custom-popup" *ngIf="showPopup">
+  <div class="pop-container border-radius text-center">
+    <div class="pop-msg ">
+      <h5 class="bottom-border"> {{header}}</h5>
+      <h5> {{body}}</h5>
+    </div>
+    <ion-row class="pop-btn">
+      <ion-col>
+        <ion-button color="primary" (click)="navigateToProfile()" expand="block" style="margin: 0em 3em;">
+          {{'button.update' | translate}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+</div>

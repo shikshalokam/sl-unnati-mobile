@@ -130,7 +130,7 @@ var FilesPage = /** @class */ (function () {
         var _this = this;
         this.platform.ready().then(function () {
             _this.isIos = _this.platform.is('ios') ? true : false;
-            _this.appFolderPath = _this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
+            _this.appFolderPath = _this.isIos ? _this.file.documentsDirectory : _this.file.externalApplicationStorageDirectory;
         });
     };
     FilesPage.prototype.getCurrentProject = function (id) {
@@ -154,7 +154,9 @@ var FilesPage = /** @class */ (function () {
         fetch(task.file.url, {
             method: "GET"
         }).then(function (res) { return res.blob(); }).then(function (blob) {
-            _this.file.writeFile(_this.file.externalApplicationStorageDirectory, task.file.name, blob, { replace: true }).then(function (res) {
+            _this.appFolderPath = decodeURIComponent(_this.appFolderPath);
+            task.file.name = decodeURIComponent(task.file.name);
+            _this.file.writeFile(_this.appFolderPath, task.file.name, blob, { replace: true }).then(function (res) {
                 _this.fileOpener.open(res.toInternalURL(), 'application/pdf').then(function (res) {
                     console.log(res, 'sucess');
                 }).catch(function (err) {

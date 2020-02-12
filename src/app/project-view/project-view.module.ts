@@ -48,6 +48,7 @@ const routes: Routes = [
       { path: 'files/:id', loadChildren: '../files/files.module#FilesPageModule' },
       { path: 'notifications', loadChildren: '../notifications/notifications.module#NotificationsPageModule' },
       { path: 'task-board', loadChildren: '../task-board/task-board.module#TaskBoardPageModule' },
+      { path: 'update-profile', loadChildren: '../update-profile/update-profile.module#UpdateProfilePageModule' },
     ]
   }
 ]

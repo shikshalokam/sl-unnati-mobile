@@ -1,0 +1,102 @@
+<ion-header>
+  <app-header [title]="'profile_update.title' | translate" [showMenu]="false" [showBack]="true" [isGoBack]="back"
+    [noBorder]="false"> </app-header>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="profile-card">
+    <div class="profile-container">
+      <div class="pop-ion">
+        <ion-icon ios="ios-contact" md="md-contact" color='primary'></ion-icon>
+      </div>
+      <div style="text-align: center;">
+        <span class="usrname">
+          Username
+        </span>
+        <p>*******</p>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="profileForm">
+    <ion-item class="custom-ion-item">
+      <ion-label class="custom-label" position="floating">{{'profile_update.fname' | translate}}</ion-label>
+      <ion-input formControlName="fname" type="text" placeholder="" [(ngModel)]="profile.firstName"
+        [class.invalid]="!profileForm.controls.fname.valid && (profileForm.controls.fname.dirty || submitAttempt)">
+      </ion-input>
+    </ion-item>
+    <ion-item class="custom-ion-item">
+      <ion-label class="custom-label" position="floating">{{'profile_update.lname' | translate}}</ion-label>
+      <ion-input formControlName="lname" type="text" [(ngModel)]="profile.lastName" placeholder="">
+        <!-- [class.invalid]="!profileForm.controls.lname.valid && (profileForm.controls.lname.dirty || submitAttempt)" -->
+      </ion-input>
+    </ion-item>
+    <ion-item class="custom-ion-item">
+      <ion-label class="custom-label" position="floating">{{'profile_update.email_id' | translate}}</ion-label>
+      <ion-input formControlName="emailId" type="text" [(ngModel)]="profile.emailId"
+        placeholder="{{'profile_update.email_placeholder' | translate}}">
+      </ion-input>
+      <!-- <ion-input formControlName="emailId" type="text"
+        [class.invalid]="!profileForm.controls.emailId.valid && (profileForm.controls.emailId.dirty || submitAttempt)">
+      </ion-input> -->
+    </ion-item>
+    <ion-item class="custom-ion-item">
+      <ion-label class="custom-label" position="floating">{{'profile_update.phone_number' | translate}}</ion-label>
+      <ion-input formControlName="phoneNumber" type="text" [(ngModel)]="profile.phoneNumber"
+        placeholder="{{'profile_update.phone_placeholder' | translate}}">
+      </ion-input>
+    </ion-item>
+    <ion-item class="custom-ion-item">
+      <ion-label class="custom-select" position="floating">{{'profile_update.state' | translate}}</ion-label>
+      <ion-select formControlName="state" class="custom-select-box" placeholder=""
+        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.state"
+        [class.invalid]="!profileForm.controls.state.valid && (profileForm.controls.state.dirty || submitAttempt)">
+        <ion-select-option *ngFor="let state of states" value="{{state._id}}">{{state.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="custom-ion-item" *ngIf="districts">
+      <ion-label class="custom-select" position="floating">
+        {{'profile_update.district' | translate}}</ion-label>
+      <ion-select formControlName="district" class="custom-select-box" type="text" placeholder=""
+        [(ngModel)]="profile.district" (ionChange)="getImmediateChildren($event)">
+        <ion-select-option *ngFor="let district of districts" value="{{district._id}}">{{district.name}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="custom-ion-item" *ngIf="zones">
+      <ion-label class="custom-label" position="floating">
+        {{'profile_update.zone' | translate}}</ion-label>
+      <ion-select formControlName="zone" class="custom-select-box" type="text" placeholder=""
+        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.zone">
+        <ion-select-option *ngFor="let zone of zones" value="{{zone._id}}">{{zone.name}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="custom-ion-item" *ngIf="blocks">
+      <ion-label class="custom-select" position="floating">
+        {{'profile_update.block' | translate}}</ion-label>
+      <ion-select formControlName="block" class="custom-select-box" type="text" placeholder=""
+        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.block">
+        <ion-select-option *ngFor="let block of blocks" value="{{block._id}}">{{block.name}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="custom-ion-item" *ngIf="schools">
+        <ion-label class="custom-select" position="floating">
+          {{'profile_update.school' | translate}}</ion-label>
+        <ion-select formControlName="school" class="custom-select-box" type="text" placeholder=""
+          (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.school">
+          <ion-select-option *ngFor="let school of schools" value="{{school._id}}">{{school.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    <div class="profile-actions">
+      <ion-button expand="block" (click)=saveInfo()>
+        {{'button.save_info' | translate}}
+      </ion-button>
+    </div>
+    <div class="profile-actions">
+      <ion-button expand="block" (click)=cancel()>
+        {{'button.cancel' | translate}}
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

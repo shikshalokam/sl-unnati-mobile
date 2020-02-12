@@ -14,13 +14,12 @@ export const AppConfigs = {
     environment: "Development",
     //Notification urls
     notification: {
-        kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
+        kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
         getUnreadNotificationCount: "/notifications/in-app/unReadCount",
         markAsRead: "/notifications/in-app/markAsRead",
         getAllNotifications: "/notifications/in-app/list",
         registerDevice: "/notifications/push/registerDevice"
     },
-
     // QA
     // app_url: "https://qa.shikshalokam.org", 
     // api_url: "https://qahome.shikshalokam.org",

@@ -23,6 +23,8 @@ import { ToastService } from '../toast.service'
 export class HomePage implements OnInit {
   connected: any = false;
   loggedIn: boolean = false;
+  header = "'message.confirm_your_details' | translate";
+  body = "'message.update_profile' | translate";
   myProjects;
   type = 'quarter';
   count = 100;

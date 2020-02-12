@@ -22,15 +22,17 @@
         "start_project": "Start Project",
         "mark_task_complete": "Mark Task completed",
         "attach": "Attach",
-        "mark_complete": "Mark Complete"
+        "mark_complete": "Mark Complete",
+        "update": "Update",
+        "save_info": "Save info"
     },
     "message": {
         "noUnreadNotifications": "You have no new Notifications!",
         "nerwork_connection_check": "Please check your internet connection.",
         "comingsoon": "Coming Soon.",
-        "already_sync":"Already in sync",
-        "image_uploaded":"Image uploaded successfully.",
-        "file_uploaded":"File uploaded successfully.",
+        "already_sync": "Already in sync",
+        "image_uploaded": "Image uploaded successfully.",
+        "file_uploaded": "File uploaded successfully.",
         "after_prject_create": "Your project has been saved! View your project or continue to Edit.",
         "no_data_found": "No data found",
         "heading_complete_task_popup": "Would you like to add a remark or attach an image before you mark your task complete?",
@@ -51,7 +53,27 @@
         "sync_success": "Sync Completed",
         "no_projects": "No projects to sync.",
         "data_syncing": "Your data is syncing",
-        "please_syc_before_logout": "Pelase sync the projects before logout"
+        "please_syc_before_logout": "Pelase sync the projects before logout",
+        "update_profile": "Please update your details. Help us make your experience better.",
+        "confirm_your_details": "Confirm your details!",
+        "profile_updated": "User updated successfully",
+        "name_require": " Please enter your name.",
+        "email_phonenumber_require": " Please enter your Email id or Phone number.",
+        "state_require": " Please select your state."
+    },
+    "profile_update": {
+        "title": "Update Info",
+        "fname": "First Name",
+        "lname": "Last Name",
+        "email_id": "Email Id",
+        "phone_number": "Phone Number",
+        "state": "State",
+        "zone": "Zone",
+        "block": "Block",
+        "district": "District",
+        "email_placeholder": "eg: yourname@gmail.com",
+        "phone_placeholder": "eg:+91-9909900089",
+        "school": "School"
     },
     "home": {
         "title": "Home",

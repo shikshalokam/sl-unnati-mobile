@@ -34,6 +34,7 @@ export class HeaderComponent implements OnInit {
     public menuController: MenuController,
     public badge: Badge, public api: ApiProvider,
     public homeService: HomeService) {
+    this.isIos = this.platform.is('ios') ? true : false;
     homeService.isSyncing.subscribe((data: boolean) => {
       this.isSyncing = data;
     })
