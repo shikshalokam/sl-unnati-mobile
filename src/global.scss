@@ -13,7 +13,7 @@
 $base-color: #af4038;
 
 body{
-  font-family: 'Source Sans Pro' !important;
+  font-family: 'SourceSansPro' !important;
 }
 h1, h2, h3, h4, h5 {
   font-family: 'SourceSansPro-Bold' !important;
@@ -73,10 +73,6 @@ ion-label {
     margin-top: 5px;
     text-align: justify;
   }
-}
-.validator-error {
-  color: red;
-  margin-top: 10px;
 }
 .required-field{
   color: #f70606 !important;
@@ -216,4 +212,7 @@ ion-item {
 .text-notransform
 {
   text-transform: none !important;
+}
+.text-center{
+  text-align: center;
 }

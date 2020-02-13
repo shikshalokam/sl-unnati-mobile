@@ -66,7 +66,7 @@ var FullreportsPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header\n    [title]=\"'fullreports.title' | translate\"\n    [showMenu]=\"false\"\n    [showBack]=\"true\"\n    [isGoBack]=\"back\"\n    [noBorder]=\"false\"\n  >\n  </app-header>\n</ion-header>\n\n<ion-content padding>\n  <h5 *ngIf=\"state == 'latsMonth'\">\n    {{ \"fullreports.undertaken_prjcts_inmonth\" | translate }}\n  </h5>\n  <h5 *ngIf=\"state == 'lastQuarter'\">\n    {{ \"fullreports.undertaken_prjcts_inqrtr\" | translate }}\n  </h5>\n  <!-- <ion-card *ngFor=\"let report of reports; let i = index\">\n    <ion-card-header>\n      {{ report.title.text }}\n    </ion-card-header>\n  </ion-card> -->\n  <!-- <div >\n    <ion-card>\n      <ion-card-header> Project Name </ion-card-header>\n      <ion-card-content id=\"container0\"> </ion-card-content>\n    </ion-card>\n    <ion-card id=\"container1\"></ion-card>\n    <ion-card id=\"container2\"></ion-card>\n    <ion-card id=\"container3\"></ion-card>\n    <ion-card id=\"container4\"></ion-card>\n    <ion-card id=\"container5\"></ion-card>\n    <ion-card id=\"container6\"></ion-card>\n    <ion-card id=\"container7\"></ion-card>\n    <ion-card id=\"container8\"></ion-card>\n    <ion-card id=\"container9\"></ion-card>\n  </div> -->\n\n  <div>\n    <ion-card\n      *ngFor=\"let report of reports; let i = index\"\n      style=\"background: #f5f5f5b8;\n    border-radius: 10px;\"\n    >\n      <ion-card-header class=\"chart-title\">\n        {{ report.title.text }}\n      </ion-card-header>\n      <ion-card-content>\n        <div id=\"{{ idvalue }}{{ i }}\"></div>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- <div *ngIf=\"chartOptions\">\n    <highcharts-chart\n      [Highcharts]=\"highcharts\"\n      [options]=\"chartOptions\"\n      style=\"width: 100%; height: 400px; display: block;\"\n    >\n    </highcharts-chart>\n  </div> -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text\n                animated\n                style=\" width: 48%;\n                        float: left;height: 200px;\n                        margin-left: 2%;\"\n              ></ion-skeleton-text>\n              <ion-skeleton-text\n                animated\n                animated\n                style=\" width: 48%;\n                        float: left;\n                        margin-left: 2%;height: 200px;\"\n              ></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n</ion-content>\n"
+module.exports = "<ion-header>\n  <app-header\n    [title]=\"'fullreports.title' | translate\"\n    [showMenu]=\"false\"\n    [showBack]=\"true\"\n    [isGoBack]=\"back\"\n    [noBorder]=\"false\"\n  >\n  </app-header>\n</ion-header>\n\n<ion-content class=\"ion-padding\">\n  <h5 *ngIf=\"state == 'latsMonth'\">\n    {{ \"fullreports.undertaken_prjcts_inmonth\" | translate }}\n  </h5>\n  <h5 *ngIf=\"state == 'lastQuarter'\">\n    {{ \"fullreports.undertaken_prjcts_inqrtr\" | translate }}\n  </h5>\n  <!-- <ion-card *ngFor=\"let report of reports; let i = index\">\n    <ion-card-header>\n      {{ report.title.text }}\n    </ion-card-header>\n  </ion-card> -->\n  <!-- <div >\n    <ion-card>\n      <ion-card-header> Project Name </ion-card-header>\n      <ion-card-content id=\"container0\"> </ion-card-content>\n    </ion-card>\n    <ion-card id=\"container1\"></ion-card>\n    <ion-card id=\"container2\"></ion-card>\n    <ion-card id=\"container3\"></ion-card>\n    <ion-card id=\"container4\"></ion-card>\n    <ion-card id=\"container5\"></ion-card>\n    <ion-card id=\"container6\"></ion-card>\n    <ion-card id=\"container7\"></ion-card>\n    <ion-card id=\"container8\"></ion-card>\n    <ion-card id=\"container9\"></ion-card>\n  </div> -->\n\n  <div>\n    <ion-card\n      *ngFor=\"let report of reports; let i = index\"\n      style=\"background: #f5f5f5b8;\n    border-radius: 10px;\"\n    >\n      <ion-card-header class=\"chart-title\">\n        {{ report.title.text }}\n      </ion-card-header>\n      <ion-card-content>\n        <div id=\"{{ idvalue }}{{ i }}\"></div>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- <div *ngIf=\"chartOptions\">\n    <highcharts-chart\n      [Highcharts]=\"highcharts\"\n      [options]=\"chartOptions\"\n      style=\"width: 100%; height: 400px; display: block;\"\n    >\n    </highcharts-chart>\n  </div> -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text\n                animated\n                style=\" width: 48%;\n                        float: left;height: 200px;\n                        margin-left: 2%;\"\n              ></ion-skeleton-text>\n              <ion-skeleton-text\n                animated\n                animated\n                style=\" width: 48%;\n                        float: left;\n                        margin-left: 2%;height: 200px;\"\n              ></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n</ion-content>\n"
 
 /***/ }),
 
@@ -160,47 +160,6 @@ var FullreportsPage = /** @class */ (function () {
                             else {
                                 _this.showSkeleton = false;
                             }
-                            // this.chartOptions = {
-                            //   // title: this.reports[0].title,
-                            //   // series:  this.reports[0].series[0],
-                            //   // xAxis:  this.reports[0].xAxis
-                            //   chart:{
-                            //     type:'gantt'
-                            //   },
-                            //   title: {
-                            //     text: 'Gantt Chart with Progress Indicators'
-                            // },
-                            // xAxis: {
-                            //     min: Date.UTC(2014, 10, 17),
-                            //     max: Date.UTC(2014, 10, 30)
-                            // },
-                            // series: [{
-                            //     name: 'Project 1',
-                            //     type:'gantt',
-                            //     data: [{
-                            //         name: 'Start prototype',
-                            //         start: Date.UTC(2014, 10, 18),
-                            //         end: Date.UTC(2014, 10, 25),
-                            //         completed: 0.25
-                            //     }, {
-                            //         name: 'Test prototype',
-                            //         start: Date.UTC(2014, 10, 27),
-                            //         end: Date.UTC(2014, 10, 29)
-                            //     }, {
-                            //         name: 'Develop',
-                            //         start: Date.UTC(2014, 10, 20),
-                            //         end: Date.UTC(2014, 10, 25),
-                            //         completed: {
-                            //             amount: 0.12,
-                            //             fill: '#fa0'
-                            //         }
-                            //     }, {
-                            //         name: 'Run acceptance tests',
-                            //         start: Date.UTC(2014, 10, 23),
-                            //         end: Date.UTC(2014, 10, 26)
-                            //     }]
-                            // }]
-                            // }
                         }, function (error) {
                             _this.showSkeleton = false;
                         });
@@ -217,24 +176,20 @@ var FullreportsPage = /** @class */ (function () {
             var minDate = new Date(this.reports[i].xAxis.min);
             var maxDate = new Date(this.reports[i].xAxis.max);
             var sdate = minDate.getDate();
-            var smonth = minDate.getMonth();
+            var smonth = minDate.getMonth() + 1;
             var syear = minDate.getFullYear();
             var edate = maxDate.getDate();
-            var emonth = maxDate.getMonth();
+            var emonth = maxDate.getMonth() + 1;
             var eyear = maxDate.getFullYear();
+            var minDate1 = Date.UTC(syear, smonth, sdate);
+            var maxDate1 = Date.UTC(eyear, emonth, edate);
             highcharts_highcharts_gantt__WEBPACK_IMPORTED_MODULE_6__["ganttChart"]('container' + i, {
-                // chart: {
-                //   scrollablePlotArea: {
-                //     minWidth: 300,
-                //     scrollPositionX: 1
-                //   }
-                // },
                 title: {
                     text: ''
                 },
                 xAxis: {
-                    min: Date.UTC(syear, smonth, sdate),
-                    max: Date.UTC(eyear, emonth, edate)
+                    min: minDate1,
+                    max: maxDate1
                 },
                 legend: {
                     enabled: false
@@ -253,11 +208,10 @@ var FullreportsPage = /** @class */ (function () {
         this.router.navigate(['/project-view/my-reports/last-' + this.state + '-reports']);
     };
     FullreportsPage.prototype.ngOnDestroy = function () {
-        try {
-            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-        }
-        catch (error) {
-        }
+        // try {
+        //   this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+        // } catch (error) {
+        // }
     };
     FullreportsPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({

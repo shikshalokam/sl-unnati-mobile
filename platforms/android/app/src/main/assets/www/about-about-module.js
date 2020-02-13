@@ -64,7 +64,7 @@ var AboutPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"'about.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <ion-list>\n    <h3>{{ \"about.app_info\" | translate }}</h3>\n  </ion-list>\n  <div style=\"text-align:center;\">\n    <img src=\"../assets/icon/unnati-prod.png\" style=\"width: 100px;\" />\n  </div>\n  <ion-list>\n    {{ \"about.app_name\" | translate }} : {{ infoData.app_name }}\n  </ion-list>\n  <ion-list>\n    {{ \"about.app_version\" | translate }} : {{ infoData.app_version }}\n  </ion-list>\n  <ion-list *ngIf=\"userDetails\">\n    {{ \"about.user\" | translate }} : {{ userDetails.preferred_username }}\n  </ion-list>\n  <ion-button expand=\"block\" color=\"danger\" (click)=\"showConfirmAlert()\">\n    <ion-icon name=\"trash\"></ion-icon>{{ \"button.erase_data\" | translate }}\n  </ion-button>\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"'about.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <ion-list>\n    <h3>{{ \"about.app_info\" | translate }}</h3>\n  </ion-list>\n  <div class=\"text-center\">\n    <img src=\"../assets/icon/unnati-prod.png\" style=\"width: 100px;\" />\n  </div>\n  <ion-list>\n    {{ \"about.app_name\" | translate }} : {{ infoData.app_name }}\n  </ion-list>\n  <ion-list>\n    {{ \"about.app_version\" | translate }} : {{ infoData.app_version }}\n  </ion-list>\n  <ion-list *ngIf=\"userDetails\">\n    {{ \"about.user\" | translate }} : {{ userDetails.preferred_username }}\n  </ion-list>\n  <ion-button expand=\"block\" color=\"danger\" (click)=\"showConfirmAlert()\">\n    <ion-icon name=\"trash\"></ion-icon>{{ \"button.erase_data\" | translate }}\n  </ion-button>\n</ion-content>"
 
 /***/ }),
 
@@ -159,10 +159,6 @@ var AboutPage = /** @class */ (function () {
         });
     };
     AboutPage.prototype.ngOnInit = function () {
-        var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.userDetails = jwt_decode__WEBPACK_IMPORTED_MODULE_9__(data.access_token);
-        });
         if (localStorage.getItem('networkStatus') != null) {
             this.connected = localStorage.getItem('networkStatus');
         }
@@ -207,17 +203,16 @@ var AboutPage = /** @class */ (function () {
                                 message: alertTexts['message.want_sync_before_erase'],
                                 buttons: [
                                     {
-                                        text: 'Logout',
+                                        text: 'Okay',
                                         role: 'cancel',
                                         cssClass: 'secondary',
                                         handler: function (blah) {
-                                            _this.logout();
                                         }
                                     },
                                     {
-                                        text: 'Okay',
+                                        text: 'Logout',
                                         handler: function () {
-                                            // this.homeService.syncProjects();
+                                            _this.logout();
                                         }
                                     }
                                 ]

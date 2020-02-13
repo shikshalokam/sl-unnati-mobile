@@ -58,7 +58,7 @@
           {{'current_task.add_subtask' | translate}}
         </ion-button>
         <img src="assets/images/timetable.png"
-          style="margin-top: 5px;margin-right: 10px; float: right; max-width: 30px;" (click)="setDate('subtask')">
+          style="margin-top: 5px;margin-right: 10px; float: right; max-width: 30px;" (click)="subtaskDate()">
       </ion-col>
     </ion-row>
     <div class="subtask-box" *ngFor="let subtask of task?.subTasks">

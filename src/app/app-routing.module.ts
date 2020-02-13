@@ -50,6 +50,7 @@ const routes: Routes = [
   { path: 'files/:id', loadChildren: './files/files.module#FilesPageModule' },
   { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
   { path: 'kclg', loadChildren: './kclg/kclg.module#KclgPageModule' },
+  { path: 'update-profile', loadChildren: './update-profile/update-profile.module#UpdateProfilePageModule' },
 ];
 
 @NgModule({

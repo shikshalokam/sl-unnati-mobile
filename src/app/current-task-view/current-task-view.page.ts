@@ -82,24 +82,18 @@ export class CurrentTaskViewPage implements OnInit {
 
   //  Enable the mark task complete button based on subtasks status and if there is no subtasks it will enable by default
   public enableMarkTaskComplete(task) {
-    let count = 0;
     if (task.subTasks && task.subTasks.length > 0) {
       let subTasksCompleted = 0;
+      let count = 0;
       task.subTasks.forEach(subtask => {
-        if (!subtask.isDeleted) {
-          count++;
           if (subtask.status === 'Completed' || subtask.status === 'completed') {
             subTasksCompleted + 1;
           }
-        }
       });
       if (subTasksCompleted === task.subTasks.length) {
         this.enableMarkButton = true;
       } else {
         this.enableMarkButton = false;
-      }
-      if (count > 0) {
-        this.enableMarkButton = true;
       }
     } else {
       this.enableMarkButton = true;
@@ -156,6 +150,18 @@ export class CurrentTaskViewPage implements OnInit {
     }
   }
 
+  public subtaskDate() {
+    this.datePicker.show({
+      date: new Date(),
+      mode: 'date',
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    }).then(
+      date => {
+        this.subtask.endDate = this.datepipe.transform(new Date(date));
+      },
+      err => console.log('Error occurred while getting date: ', err)
+    );
+  }
   public updateCurrentProject(ct) {
     this.createProjectService.updateCurrentMyProject(ct).then(currentMyProject => {
       //  this.getTask();
@@ -164,8 +170,8 @@ export class CurrentTaskViewPage implements OnInit {
   //  update the project after completing task.
   public updateProject(ct) {
 
-    let updateProcess ="start";
-    localStorage.setItem("updateProcess",updateProcess);
+    let updateProcess = "start";
+    localStorage.setItem("updateProcess", updateProcess);
     this.createProjectService.updateCurrentMyProject(ct).then(currentMyProject => {
       setTimeout(() => {
         this.toastService.successToast('message.marked_as_completed');
@@ -265,6 +271,7 @@ export class CurrentTaskViewPage implements OnInit {
   // Delete subtask
   public delete(subtask) {
     subtask.isDeleted = true;
+    subtask.status = 'Completed'
     this.upDateSubTask(subtask, 'delete');
   }
   public updateTask() {
@@ -290,15 +297,15 @@ export class CurrentTaskViewPage implements OnInit {
     }
   }
 
-  public updateStatus() {
+  public updateStatus() { 
     if (this.task.status != 'Completed' || this.task.status != 'completed') {
       this.enableMarkTaskComplete(this.task);
       let notStarted = 0, inProgress = 0, completed = 0;
       if (this.task.subTasks && this.task.subTasks.length > 0) {
         this.task.subTasks.forEach(subTask => {
-          subTask.status == 'Not started' ? notStarted++
-            : subTask.status == 'In Progress' ? inProgress++
-              : completed++;
+            subTask.status == 'Not started' ? notStarted++
+              : subTask.status == 'In Progress' ? inProgress++
+                : completed++;
         });
         this.task.subTasks.length === notStarted ? this.task.status = 'Not started'
           : this.task.subTasks.length === completed ? this.task.status = 'Completed'

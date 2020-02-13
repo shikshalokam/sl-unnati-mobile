@@ -3,6 +3,7 @@ import { NotificationCardService } from '../notification-card/notification.servi
 import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
 import * as jwt_decode from "jwt-decode";
+import { UpdateProfileService } from '../update-profile/update-profile.service';
 
 @Component({
   selector: 'app-notifications',
@@ -17,7 +18,10 @@ export class NotificationsPage implements OnInit {
   public showSkeleton: boolean = false;
   back = "/project-view/home";
   public skeletons = [{}, {}, {}, {}, {}, {}];
-  constructor(public notificationCardService: NotificationCardService, public api: ApiProvider, public storage: Storage) { }
+  constructor(public notificationCardService: NotificationCardService,
+    public api: ApiProvider,
+    public storage: Storage,
+    public updateProfileService: UpdateProfileService) { }
   ngOnInit() {
     //this.fetchAllNotifications();
   }
