@@ -1,1 +1,4 @@
 node_modules
+www
+google-services.json
+src/app/app.config.ts

@@ -62,7 +62,7 @@
               <ion-card-title>{{ projects?.programs.name}}</ion-card-title>
             </ion-card-header>
             <div *ngFor="let project of projects.projects | searchProjects: searchInput">
-              <ion-card-content *ngIf="project.createdType !='by self' && project.createdType !='by reference'"
+              <ion-card-content *ngIf="project.createdType !='by self' && project.createdType !='by reference' && !project.isDeleted"
               (click)=" projectView(project)"  style="border-bottom: 1px solid #f4f5f8;">
                 <ion-grid>
                   <ion-row>

@@ -14,7 +14,8 @@ import { ReportsService } from '../reports/reports.service';
 import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
-import { ToastService } from '../toast.service'
+import { ToastService } from '../toast.service';
+import { UpdateProfileService } from '../update-profile/update-profile.service'
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -23,7 +24,12 @@ import { ToastService } from '../toast.service'
 export class HomePage implements OnInit {
   connected: any = false;
   loggedIn: boolean = false;
+  header;
+  body;
+  button;
+  isActionable;
   myProjects;
+  showUpdatePop: boolean = false;
   type = 'quarter';
   count = 100;
   page = 1;
@@ -55,8 +61,23 @@ export class HomePage implements OnInit {
     public menuCtrl: MenuController,
     public reportsService: ReportsService,
     public mySchoolsService: MyschoolsService,
-    public toastService: ToastService) {
+    public toastService: ToastService,
+    public updateProfile: UpdateProfileService) {
     this.menuCtrl.enable(true);
+    // update Matching
+    updateProfile.updatedUser.subscribe((status) => {
+      if (status == 'Update') {
+        this.body = 'message.update_profile';
+        this.header = 'message.confirm_your_details';
+        this.button = 'button.update';
+        this.isActionable = '/project-view/update-profile';
+        this.showUpdatePop = true;
+      } else if (status == 'done') {
+        this.showUpdatePop = false;
+      } else {
+        this.showUpdatePop = false;
+      }
+    })
     homeService.activeProjectLoad.subscribe(data => {
       if (data == 'activeProjectLoad') {
         this.getActiveProjects();
@@ -92,6 +113,7 @@ export class HomePage implements OnInit {
     }
   }
   ngOnInit() {
+
     this.login.loggedIn('true');
     this.checkUser();
     this.storage.get('projects').then(projects => {
@@ -118,7 +140,6 @@ export class HomePage implements OnInit {
   public setTitle(title) {
     this.projectService.setTitle(title);
   }
-
   //navigate to project Details page
   public navigateToDetails(project) {
     localStorage.setItem("id", project._id);

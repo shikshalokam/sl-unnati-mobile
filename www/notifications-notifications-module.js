@@ -93,16 +93,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../notification-card/notification.service */ "./src/app/notification-card/notification.service.ts");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../update-profile/update-profile.service */ "./src/app/update-profile/update-profile.service.ts");
+
 
 
 
 
 
 var NotificationsPage = /** @class */ (function () {
-    function NotificationsPage(notificationCardService, api, storage) {
+    function NotificationsPage(notificationCardService, api, storage, updateProfileService) {
         this.notificationCardService = notificationCardService;
         this.api = api;
         this.storage = storage;
+        this.updateProfileService = updateProfileService;
         this.notifications = [];
         this.page = 1;
         this.limit = 20;
@@ -161,7 +164,10 @@ var NotificationsPage = /** @class */ (function () {
             template: __webpack_require__(/*! ./notifications.page.html */ "./src/app/notifications/notifications.page.html"),
             styles: [__webpack_require__(/*! ./notifications.page.scss */ "./src/app/notifications/notifications.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_notification_card_notification_service__WEBPACK_IMPORTED_MODULE_2__["NotificationCardService"], _api_api__WEBPACK_IMPORTED_MODULE_3__["ApiProvider"], _ionic_storage__WEBPACK_IMPORTED_MODULE_4__["Storage"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_notification_card_notification_service__WEBPACK_IMPORTED_MODULE_2__["NotificationCardService"],
+            _api_api__WEBPACK_IMPORTED_MODULE_3__["ApiProvider"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_4__["Storage"],
+            _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_5__["UpdateProfileService"]])
     ], NotificationsPage);
     return NotificationsPage;
 }());

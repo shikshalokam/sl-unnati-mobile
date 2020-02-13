@@ -60,10 +60,8 @@ export class FilesPage implements OnInit {
       {
         method: "GET"
       }).then(res => res.blob()).then(blob => {
-        console.log(this.appFolderPath ,task.file.name, blob,"this.appFolderPath , task.file.name, blob")
         this.appFolderPath = decodeURIComponent(this.appFolderPath);
         task.file.name = decodeURIComponent(task.file.name);
-        console.log(this.appFolderPath,"this.appFolderPath")
         this.file.writeFile(this.appFolderPath,task.file.name,blob, { replace: true }).then(res => {
           this.fileOpener.open(
             res.toInternalURL(),

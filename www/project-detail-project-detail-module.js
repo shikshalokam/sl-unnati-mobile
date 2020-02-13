@@ -151,11 +151,26 @@ var ProjectDetailPage = /** @class */ (function () {
     };
     ProjectDetailPage.prototype.getProject = function () {
         var _this = this;
+        var myProjects;
+        var projectFound;
+        this.storage.get('myprojects').then(function (myprojects) {
+            myProjects = myprojects;
+        });
         this.storage.get('projectToBeView').then(function (project) {
             var completed = 0;
             var notStarted = 0;
             _this.tasksLength = 0;
             var inProgress = 0;
+            if (myProjects) {
+                myProjects.forEach(function (myProject) {
+                    if (myProject._id === project._id) {
+                        projectFound = myProject;
+                    }
+                });
+                if (projectFound) {
+                    project = projectFound;
+                }
+            }
             project.tasks.forEach(function (task) {
                 if (!task.isDeleted) {
                     _this.tasksLength = _this.tasksLength + 1;

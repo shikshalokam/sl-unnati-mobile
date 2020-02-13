@@ -160,47 +160,6 @@ var FullreportsPage = /** @class */ (function () {
                             else {
                                 _this.showSkeleton = false;
                             }
-                            // this.chartOptions = {
-                            //   // title: this.reports[0].title,
-                            //   // series:  this.reports[0].series[0],
-                            //   // xAxis:  this.reports[0].xAxis
-                            //   chart:{
-                            //     type:'gantt'
-                            //   },
-                            //   title: {
-                            //     text: 'Gantt Chart with Progress Indicators'
-                            // },
-                            // xAxis: {
-                            //     min: Date.UTC(2014, 10, 17),
-                            //     max: Date.UTC(2014, 10, 30)
-                            // },
-                            // series: [{
-                            //     name: 'Project 1',
-                            //     type:'gantt',
-                            //     data: [{
-                            //         name: 'Start prototype',
-                            //         start: Date.UTC(2014, 10, 18),
-                            //         end: Date.UTC(2014, 10, 25),
-                            //         completed: 0.25
-                            //     }, {
-                            //         name: 'Test prototype',
-                            //         start: Date.UTC(2014, 10, 27),
-                            //         end: Date.UTC(2014, 10, 29)
-                            //     }, {
-                            //         name: 'Develop',
-                            //         start: Date.UTC(2014, 10, 20),
-                            //         end: Date.UTC(2014, 10, 25),
-                            //         completed: {
-                            //             amount: 0.12,
-                            //             fill: '#fa0'
-                            //         }
-                            //     }, {
-                            //         name: 'Run acceptance tests',
-                            //         start: Date.UTC(2014, 10, 23),
-                            //         end: Date.UTC(2014, 10, 26)
-                            //     }]
-                            // }]
-                            // }
                         }, function (error) {
                             _this.showSkeleton = false;
                         });
@@ -217,24 +176,20 @@ var FullreportsPage = /** @class */ (function () {
             var minDate = new Date(this.reports[i].xAxis.min);
             var maxDate = new Date(this.reports[i].xAxis.max);
             var sdate = minDate.getDate();
-            var smonth = minDate.getMonth();
+            var smonth = minDate.getMonth() + 1;
             var syear = minDate.getFullYear();
             var edate = maxDate.getDate();
-            var emonth = maxDate.getMonth();
+            var emonth = maxDate.getMonth() + 1;
             var eyear = maxDate.getFullYear();
+            var minDate1 = Date.UTC(syear, smonth, sdate);
+            var maxDate1 = Date.UTC(eyear, emonth, edate);
             highcharts_highcharts_gantt__WEBPACK_IMPORTED_MODULE_6__["ganttChart"]('container' + i, {
-                // chart: {
-                //   scrollablePlotArea: {
-                //     minWidth: 300,
-                //     scrollPositionX: 1
-                //   }
-                // },
                 title: {
                     text: ''
                 },
                 xAxis: {
-                    min: Date.UTC(syear, smonth, sdate),
-                    max: Date.UTC(eyear, emonth, edate)
+                    min: minDate1,
+                    max: maxDate1
                 },
                 legend: {
                     enabled: false
@@ -253,11 +208,10 @@ var FullreportsPage = /** @class */ (function () {
         this.router.navigate(['/project-view/my-reports/last-' + this.state + '-reports']);
     };
     FullreportsPage.prototype.ngOnDestroy = function () {
-        try {
-            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-        }
-        catch (error) {
-        }
+        // try {
+        //   this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+        // } catch (error) {
+        // }
     };
     FullreportsPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({

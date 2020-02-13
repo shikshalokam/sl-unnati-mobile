@@ -19,7 +19,7 @@ import { HomeService } from './home/home.service';
 import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
 
-// import { FcmProvider } from './fcm';
+import { FcmProvider } from './fcm';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -43,7 +43,7 @@ export class AppComponent {
   public loggedInUser;
   constructor(
     public storage: Storage,
-    // public fcm: FcmProvider,
+    public fcm: FcmProvider,
     public alertController: AlertController,
     public router: Router, public menuCtrl: MenuController,
     public platform: Platform,
@@ -120,9 +120,9 @@ export class AppComponent {
       this.networkService.networkErrorToast();
     }
     this.platform.ready().then(() => {
-      //connectSubscription.unsubscribe();
-      // this.fcm.subscribeToPushNotifications();
-      // this.fcm.localNotificationClickHandler();
+      // this.fcm.connectSubscription.unsubscribe();
+      this.fcm.subscribeToPushNotifications();
+      this.fcm.localNotificationClickHandler();
       this.network.onDisconnect()
         .subscribe(() => {
           this.isConnected = false;
@@ -139,7 +139,6 @@ export class AppComponent {
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
-      this.splashScreen.hide();
       this.platform.backButton.subscribeWithPriority(9999, () => {
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
@@ -235,6 +234,7 @@ export class AppComponent {
             }
         }
       });
+      this.splashScreen.hide();
     });
   }
   //Langugae change
@@ -323,22 +323,20 @@ export class AppComponent {
     })
   }
   checkNetwork() {
-    this.platform.ready().then(() => {
-      this.network.onDisconnect()
-        .subscribe(() => {
-          this.isConnected = false;
-          this.networkService.status(this.isConnected);
-          localStorage.setItem("networkStatus", this.isConnected);
-        }, error => {
-        });
-      this.network.onConnect()
-        .subscribe(() => {
-          this.isConnected = true;
-          this.networkService.status(this.isConnected);
-        }, error => {
-        });
-      // this.networkSubscriber();
-    });
+    this.network.onDisconnect()
+      .subscribe(() => {
+        this.isConnected = false;
+        this.networkService.status(this.isConnected);
+        localStorage.setItem("networkStatus", this.isConnected);
+      }, error => {
+      });
+    this.network.onConnect()
+      .subscribe(() => {
+        this.isConnected = true;
+        this.networkService.status(this.isConnected);
+      }, error => {
+      });
+    // this.networkSubscriber();
   }
 
   public prepareProjectToSync() {

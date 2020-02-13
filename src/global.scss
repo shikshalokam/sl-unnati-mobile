@@ -74,10 +74,6 @@ ion-label {
     text-align: justify;
   }
 }
-.validator-error {
-  color: red;
-  margin-top: 10px;
-}
 .required-field{
   color: #f70606 !important;
 }
@@ -216,4 +212,7 @@ ion-item {
 .text-notransform
 {
   text-transform: none !important;
+}
+.text-center{
+  text-align: center;
 }

@@ -36,9 +36,17 @@ export class EditTaskPage implements OnInit {
   @Input() back: any;
   @Input() taskId: any;
   public language: string = this.translateService.currentLang;
-  constructor(public ctrl: ModalController, public datePicker: DatePicker, public subTasksService: SubTasksService, public datePipe: DatePipe, public storage: Storage,
-    public tasksService: TasksService, public translateService: TranslateService, public toastController: ToastController,
-    public formBuilder: FormBuilder, public route: ActivatedRoute, public apiProvider: ApiProvider, ) {
+  constructor(public ctrl: ModalController, 
+    public datePicker: DatePicker, 
+    public subTasksService: SubTasksService,
+    public datePipe: DatePipe, 
+    public storage: Storage,
+    public tasksService: TasksService, 
+    public translateService: TranslateService, 
+    public toastController: ToastController,
+    public formBuilder: FormBuilder, 
+    public route: ActivatedRoute, 
+    public apiProvider: ApiProvider, ) {
     this.route.params.subscribe(params => {
     });
   }
