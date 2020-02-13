@@ -82,6 +82,7 @@ export class CurrentTaskViewPage implements OnInit {
 
   //  Enable the mark task complete button based on subtasks status and if there is no subtasks it will enable by default
   public enableMarkTaskComplete(task) {
+    let count = 0;
     if (task.subTasks && task.subTasks.length > 0) {
       let subTasksCompleted = 0;
       let count = 0;
@@ -94,6 +95,9 @@ export class CurrentTaskViewPage implements OnInit {
         this.enableMarkButton = true;
       } else {
         this.enableMarkButton = false;
+      }
+      if (count > 0) {
+        this.enableMarkButton = true;
       }
     } else {
       this.enableMarkButton = true;
