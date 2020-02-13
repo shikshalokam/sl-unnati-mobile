@@ -1264,6 +1264,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../app/project-view/project.service */ "./src/app/project-view/project.service.ts");
 /* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./home/home.service */ "./src/app/home/home.service.ts");
 /* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./toast.service */ "./src/app/toast.service.ts");
+/* harmony import */ var _fcm__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./fcm */ "./src/app/fcm.ts");
 
 
 
@@ -1285,13 +1286,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import { FcmProvider } from './fcm';
+
 var AppComponent = /** @class */ (function () {
-    function AppComponent(storage, 
-    // public fcm: FcmProvider,
-    alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api, homeService, loadingController, toastService) {
+    function AppComponent(storage, fcm, alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, tasksService, translate, network, networkService, modalController, zone, route, projectService, api, homeService, loadingController, toastService) {
         var _this = this;
         this.storage = storage;
+        this.fcm = fcm;
         this.alertController = alertController;
         this.router = router;
         this.menuCtrl = menuCtrl;
@@ -1379,9 +1379,9 @@ var AppComponent = /** @class */ (function () {
             this.networkService.networkErrorToast();
         }
         this.platform.ready().then(function () {
-            //connectSubscription.unsubscribe();
-            // this.fcm.subscribeToPushNotifications();
-            // this.fcm.localNotificationClickHandler();
+            // this.fcm.connectSubscription.unsubscribe();
+            _this.fcm.subscribeToPushNotifications();
+            _this.fcm.localNotificationClickHandler();
             _this.network.onDisconnect()
                 .subscribe(function () {
                 _this.isConnected = false;
@@ -1837,6 +1837,7 @@ var AppComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./app.component.html */ "./src/app/app.component.html")
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_10__["Storage"],
+            _fcm__WEBPACK_IMPORTED_MODULE_17__["FcmProvider"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["AlertController"],
             _angular_router__WEBPACK_IMPORTED_MODULE_9__["Router"], _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["MenuController"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["Platform"],
@@ -1877,34 +1878,34 @@ var AppConfigs = {
     appVersion: "1.1.12",
     appName: "Unnati",
     // Dev urls
-    app_url: "https://dev.shikshalokam.org",
-    api_url: "https://devhome.shikshalokam.org",
-    api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
-    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
-    clientId: "sl-ionic-connect",
-    environment: "Development",
-    //Notification urls
-    notification: {
-        kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
-        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
-        markAsRead: "/notifications/in-app/markAsRead",
-        getAllNotifications: "/notifications/in-app/list",
-        registerDevice: "/notifications/push/registerDevice"
-    },
-    // QA
-    // app_url: "https://qa.shikshalokam.org", 
-    // api_url: "https://qahome.shikshalokam.org",
-    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    // app_url: "https://dev.shikshalokam.org",
+    // api_url: "https://devhome.shikshalokam.org",
+    // api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
+    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
     // clientId: "sl-ionic-connect",
-    // environment: "qa",
+    // environment: "Development",
+    // //Notification urls
     // notification: {
-    //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
-    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
-    //     markAsRead: "/notifications/in-app/markItRead",
+    //     kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
+    //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+    //     markAsRead: "/notifications/in-app/markAsRead/",
     //     getAllNotifications: "/notifications/in-app/list",
     //     registerDevice: "/notifications/push/registerDevice"
     // },
+    // QA
+    app_url: "https://qa.shikshalokam.org",
+    api_url: "https://qahome.shikshalokam.org",
+    api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    clientId: "sl-ionic-connect",
+    environment: "qa",
+    notification: {
+        kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+        markAsRead: "/notifications/in-app/markAsRead/",
+        getAllNotifications: "/notifications/in-app/list",
+        registerDevice: "/notifications/push/registerDevice"
+    },
     //AWS Prod Urls
     // app_url: "https://bodh.shikshalokam.org",
     // api_url: "https://api.shikshalokam.org",
@@ -2025,14 +2026,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _ionic_native_camera_ngx__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @ionic-native/camera/ngx */ "./node_modules/@ionic-native/camera/ngx/index.js");
 /* harmony import */ var _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @ionic-native/file-opener/ngx */ "./node_modules/@ionic-native/file-opener/ngx/index.js");
-/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
-/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
-/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
-/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
-/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
-/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
-/* harmony import */ var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @ionic-native/file-path/ngx */ "./node_modules/@ionic-native/file-path/ngx/index.js");
-/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
+/* harmony import */ var _ionic_native_fcm_ngx__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @ionic-native/fcm/ngx */ "./node_modules/@ionic-native/fcm/ngx/index.js");
+/* harmony import */ var _fcm__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./fcm */ "./src/app/fcm.ts");
+/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
+/* harmony import */ var _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @ionic-native/badge/ngx */ "./node_modules/@ionic-native/badge/ngx/index.js");
+/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
+/* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
+/* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
+/* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
+/* harmony import */ var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! @ionic-native/file-path/ngx */ "./node_modules/@ionic-native/file-path/ngx/index.js");
+/* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
 
 
 
@@ -2063,8 +2066,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 //Google charts
-// import { FCM } from '@ionic-native/fcm/ngx';
-// import { FcmProvider } from './fcm';
+
+
 
 
 
@@ -2115,20 +2118,20 @@ var AppModule = /** @class */ (function () {
                 _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_22__["Market"],
                 _ionic_native_date_picker_ngx__WEBPACK_IMPORTED_MODULE_25__["DatePicker"],
                 _angular_common__WEBPACK_IMPORTED_MODULE_26__["DatePipe"],
-                _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_31__["SocialSharing"],
+                _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_33__["SocialSharing"],
                 _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_6__["SplashScreen"],
-                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_32__["FileTransfer"],
-                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_32__["FileTransferObject"],
-                _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_33__["File"],
-                _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_34__["FileChooser"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_34__["FileTransfer"],
+                _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_34__["FileTransferObject"],
+                _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_35__["File"],
+                _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_36__["FileChooser"],
                 _ionic_native_camera_ngx__WEBPACK_IMPORTED_MODULE_27__["Camera"],
-                _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_35__["FilePath"],
+                _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_37__["FilePath"],
                 _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_28__["FileOpener"],
-                _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_36__["Base64"],
+                _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_38__["Base64"],
                 { provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"], useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicRouteStrategy"] },
-                // FCM,
-                // FcmProvider,
-                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_29__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_30__["Badge"]
+                _ionic_native_fcm_ngx__WEBPACK_IMPORTED_MODULE_29__["FCM"],
+                _fcm__WEBPACK_IMPORTED_MODULE_30__["FcmProvider"],
+                _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_31__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_32__["Badge"]
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_12__["AppComponent"]]
         }),
@@ -2491,6 +2494,7 @@ var CustomPopupComponent = /** @class */ (function () {
         if (this.isActionable) {
             this.router.navigate([this.isActionable]);
         }
+        this.showPopup = false;
     };
     CustomPopupComponent.prototype.getTranslateKeys = function () {
         var _this = this;
@@ -2893,6 +2897,238 @@ var EditTaskPage = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/fcm.ts":
+/*!************************!*\
+  !*** ./src/app/fcm.ts ***!
+  \************************/
+/*! exports provided: FcmProvider */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FcmProvider", function() { return FcmProvider; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_native_fcm_ngx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic-native/fcm/ngx */ "./node_modules/@ionic-native/fcm/ngx/index.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./api/api */ "./src/app/api/api.ts");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "./node_modules/@ionic-native/local-notifications/ngx/index.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./app.config */ "./src/app/app.config.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./notification-card/notification.service */ "./src/app/notification-card/notification.service.ts");
+
+
+// import { FCM } from '@ionic-native/fcm/ngx';
+// import { FCM } from '@ionic-native/fcm';
+
+
+
+
+// import { LocalNotifications } from '@ionic-native/local-notifications';
+
+
+
+
+
+var FcmProvider = /** @class */ (function () {
+    function FcmProvider(http, router, fcm, api, localNotification, notificationCardService, localStorage, 
+    //   public currentUser: CurrentUserProvider,
+    platform) {
+        this.http = http;
+        this.router = router;
+        this.fcm = fcm;
+        this.api = api;
+        this.localNotification = localNotification;
+        this.notificationCardService = notificationCardService;
+        this.localStorage = localStorage;
+        this.platform = platform;
+    }
+    FcmProvider.prototype.initializeFCM = function () {
+        if (this.platform.is('android')) {
+            this.initializeFirebaseAndroid();
+        }
+        else {
+            this.initializeFirebaseIOS();
+        }
+    };
+    FcmProvider.prototype.initializeFirebaseAndroid = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                this.subscribeToPushNotifications();
+                this.localNotificationClickHandler();
+                this.localStorage.get('deviceId').then(function (token) {
+                    if (token) {
+                        _this.fcmDeviceId = token;
+                    }
+                    else {
+                        _this.fcm.getToken().then(function (token) {
+                            _this.fcmDeviceId = token;
+                            _this.localStorage.set('deviceId', token).then(function (token) {
+                                // this.subscribeToChannels('allUsers');
+                                _this.registerDeviceID();
+                            });
+                        });
+                    }
+                });
+                this.fcm.onTokenRefresh().subscribe(function (token) {
+                    _this.fcmDeviceId = token;
+                    _this.localStorage.set('deviceId', token);
+                    _this.registerDeviceID();
+                });
+                return [2 /*return*/];
+            });
+        });
+    };
+    FcmProvider.prototype.subscribeToPushNotifications = function () {
+        var _this = this;
+        this.fcm.onNotification().subscribe(function (notificationData) {
+            //Will be triggered if the user clicks on the notification and come to the app
+            if (notificationData.wasTapped) {
+                _this.onNotificationClick(notificationData);
+            }
+            else {
+                //Will be triggered if the user is using the app(foreground);
+                _this.triggerLocalNotification(notificationData);
+            }
+            ;
+        }, function (error) {
+        });
+    };
+    FcmProvider.prototype.localNotificationClickHandler = function () {
+        var _this = this;
+        this.localNotification.on('click').subscribe(function (success) {
+            _this.onNotificationClick(success);
+        });
+    };
+    FcmProvider.prototype.triggerLocalNotification = function (notificationData) {
+        delete notificationData.body;
+        delete notificationData.wasTapped;
+        this.localNotification.schedule(notificationData);
+    };
+    FcmProvider.prototype.registerDeviceID = function (token) {
+        var _this = this;
+        this.localStorage.get('userTokens').then(function (data) {
+            _this.api.refershToken(data.refresh_token).subscribe(function (data) {
+                var parsedData = JSON.parse(data._body);
+                if (parsedData && parsedData.access_token) {
+                    var userTokens_1 = {
+                        access_token: parsedData.access_token,
+                        refresh_token: parsedData.refresh_token,
+                    };
+                    _this.localStorage.set('userTokens', userTokens_1).then(function (usertoken) {
+                        var url = _app_config__WEBPACK_IMPORTED_MODULE_8__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_8__["AppConfigs"].notification.registerDevice;
+                        var payload = {
+                            deviceId: _this.fcmDeviceId,
+                            os: _this.platform.is('android') ? 'android' : 'ios',
+                            'app': 'unnati',
+                            'apptype': 'improvement-project',
+                        };
+                        var httpOptions = {
+                            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+                                'x-authenticated-user-token': userTokens_1.access_token,
+                                'app': 'unnati',
+                                'apptype': 'improvement-project',
+                                'os': _this.platform.is('android') ? 'android' : 'ios'
+                            })
+                        };
+                        _this.http.post(url, payload, httpOptions).subscribe(function (success) {
+                        }, function (error) {
+                        });
+                    }, function (error) {
+                    });
+                }
+            });
+        });
+    };
+    FcmProvider.prototype.initializeFirebaseIOS = function () {
+    };
+    FcmProvider.prototype.subscribeToChannels = function (topic) {
+        var _this = this;
+        this.fcm.subscribeToTopic(topic).then(function (success) {
+            _this.subscribeToPushNotifications();
+        }).catch(function (error) { });
+    };
+    FcmProvider.prototype.notificationClickActions = function (notificationMeta) {
+    };
+    // nagivation after clicking on push notifications
+    FcmProvider.prototype.onNotificationClick = function (notificationMeta) {
+        if (typeof notificationMeta.payload == 'string') {
+            notificationMeta.payload = JSON.parse(notificationMeta.payload);
+        }
+        switch (notificationMeta.type) {
+            case 'project assigned':
+                localStorage.setItem('from', 'notifications');
+                this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications']);
+                break;
+            case 'taskPending':
+                this.router.navigate(['project-view/task-view/' + notificationMeta.payload.projectId + '/' + notificationMeta.payload.taskId + '/notifications']);
+                break;
+            case 'projectPending':
+                this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications']);
+                break;
+            case 'subTaskPending':
+                this.router.navigate(['project-view/subtask-view/' + notificationMeta.payload.subTaskId + '/' + notificationMeta.payload.taskId + '/' + notificationMeta.payload.projectID + '/notifications']);
+                break;
+        }
+        this.markAsRead(notificationMeta);
+        // this.markAsRead(notificationMeta);
+        // } else {
+        // }
+    };
+    /**
+   * Mark notification as read if user clicks on it.
+   * @param notificationMeta
+   */
+    FcmProvider.prototype.markAsRead = function (notificationMeta) {
+        var _this = this;
+        if (navigator.onLine) {
+            this.localStorage.get('userTokens').then(function (data) {
+                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
+                    var parsedData = JSON.parse(data._body);
+                    if (parsedData && parsedData.access_token) {
+                        var userTokens_2 = {
+                            access_token: parsedData.access_token,
+                            refresh_token: parsedData.refresh_token,
+                        };
+                        _this.localStorage.set('userTokens', userTokens_2).then(function (usertoken) {
+                            _this.notificationCardService.markAsRead(userTokens_2.access_token, notificationMeta.id).subscribe(function (data) {
+                                notificationMeta.is_read = true;
+                                // this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
+                                //     // this.fetchAllNotifications();
+                                //     this.notificationCardService.getCount(data1.result.count);
+                                // }, error => {
+                                // })
+                            }, function (error) {
+                            });
+                        }, function (error) {
+                        });
+                    }
+                });
+            });
+        }
+        else {
+            //this.errorToast('Please check your internet connection.');
+        }
+    };
+    FcmProvider = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"], _angular_router__WEBPACK_IMPORTED_MODULE_9__["Router"],
+            _ionic_native_fcm_ngx__WEBPACK_IMPORTED_MODULE_2__["FCM"],
+            _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"],
+            _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_6__["LocalNotifications"], _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_10__["NotificationCardService"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["Platform"]])
+    ], FcmProvider);
+    return FcmProvider;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/header/header.component.html":
 /*!**********************************************!*\
   !*** ./src/app/header/header.component.html ***!
@@ -2992,13 +3228,15 @@ var HeaderComponent = /** @class */ (function () {
                     _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
                         _this.notificationCardService.getAllNotifications(userTokens_1.access_token, _this.page, _this.limit).subscribe(function (data) {
                             if (data.result.data) {
+                                var update_1 = false;
                                 data.result.data.forEach(function (notification) {
-                                    if (notification.action === 'Update' && !notification.is_read) {
+                                    if (notification.action === 'Update' && !notification.is_read && !update_1) {
+                                        update_1 = true;
                                         _this.updateProfileService.updateProfile('Update');
                                     }
                                 });
+                                _this.notificationCardService.getCount(data.result.data.length);
                             }
-                            _this.notificationCardService.getCount(data.result.data.length);
                         }, function (error) {
                             // intentially left blank
                         });
@@ -3547,28 +3785,27 @@ var NotificationCardComponent = /** @class */ (function () {
      * @param notificationMeta
      */
     NotificationCardComponent.prototype.onNotificationClick = function (notificationMeta) {
-        console.log(notificationMeta, "notificationMeta");
         if (!notificationMeta.is_read) {
             switch (notificationMeta.type) {
-                case 'projectAdded':
-                    localStorage.setItem('from', 'notifications');
-                    this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications']);
-                    break;
-                case 'projectCompleted':
-                    localStorage.setItem('from', 'notifications');
-                    this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications']);
-                    break;
-                case 'taskPending':
-                    localStorage.setItem('gobackis', 'notifications');
-                    this.router.navigate(['project-view/task-view/' + notificationMeta.payload.projectId + '/' + notificationMeta.payload.taskId + '/notifications']);
-                    break;
-                case 'projectPending':
-                    localStorage.setItem('from', 'notifications');
-                    this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications']);
-                    break;
-                case 'subTaskPending':
-                    this.router.navigate(['subtask-view/' + notificationMeta.payload.subTaskId + '/' + notificationMeta.payload.taskId + '/' + notificationMeta.payload.projectID + '/notifications']);
-                    break;
+                // case 'projectAdded':
+                //   localStorage.setItem('from', 'notifications');
+                //   this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
+                //   break
+                // case 'projectCompleted':
+                //   localStorage.setItem('from', 'notifications');
+                //   this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
+                //   break
+                // case 'taskPending':
+                //   localStorage.setItem('gobackis', 'notifications')
+                //   this.router.navigate(['project-view/task-view/' + notificationMeta.payload.projectId + '/' + notificationMeta.payload.taskId + '/notifications'])
+                //   break
+                // case 'projectPending':
+                //   localStorage.setItem('from', 'notifications');
+                //   this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
+                //   break
+                // case 'subTaskPending':
+                //   this.router.navigate(['subtask-view/' + notificationMeta.payload.subTaskId + '/' + notificationMeta.payload.taskId + '/' + notificationMeta.payload.projectID + '/notifications'])
+                //   break
             }
             this.markAsRead(notificationMeta);
         }
@@ -3679,6 +3916,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
 /* harmony import */ var rxjs_Subject__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/Subject */ "./node_modules/rxjs-compat/_esm5/Subject.js");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+
 
 
 
@@ -3686,27 +3925,37 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var NotificationCardService = /** @class */ (function () {
-    function NotificationCardService(http, storage) {
+    function NotificationCardService(http, storage, platform) {
         this.http = http;
         this.storage = storage;
+        this.platform = platform;
         this.notificationCount = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
         //  this.startNotificationPooling();
     }
     NotificationCardService.prototype.getAllNotifications = function (token, pageCount, limit) {
         var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-authenticated-user-token': token
+            'x-authenticated-user-token': token,
+            'app': 'unnati',
+            'apptype': 'improvement-project',
+            'os': this.platform.is('android') ? 'android' : 'ios'
         });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit + '&appName=unnati', { headers: httpHeaders });
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit, { headers: httpHeaders });
     };
     NotificationCardService.prototype.markAsRead = function (token, id) {
         var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-authenticated-user-token': token
+            'x-authenticated-user-token': token,
+            'app': 'unnati',
+            'apptype': 'improvement-project',
+            'os': this.platform.is('android') ? 'android' : 'ios'
         });
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.markAsRead + id + '?appName=unnati', { headers: httpHeaders });
     };
     NotificationCardService.prototype.checkForNotificationApi = function (token) {
         var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-authenticated-user-token': token
+            'x-authenticated-user-token': token,
+            'app': 'unnati',
+            'apptype': 'improvement-project',
+            'os': this.platform.is('android') ? 'android' : 'ios'
         });
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getUnreadNotificationCount + '?appName=unnati', { headers: httpHeaders });
     };
@@ -3745,7 +3994,9 @@ var NotificationCardService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root',
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["Platform"]])
     ], NotificationCardService);
     return NotificationCardService;
 }());

@@ -63,13 +63,15 @@ export class HeaderComponent implements OnInit {
           this.storage.set('userTokens', userTokens).then(usertoken => {
             this.notificationCardService.getAllNotifications(userTokens.access_token, this.page, this.limit).subscribe((data: any) => {
               if (data.result.data) {
+                let update: boolean = false;
                 data.result.data.forEach(notification => {
-                  if (notification.action === 'Update' && !notification.is_read) {
+                  if (notification.action === 'Update' && !notification.is_read && !update) {
+                    update = true;
                     this.updateProfileService.updateProfile('Update');
                   }
                 });
+                this.notificationCardService.getCount(data.result.data.length);
               }
-              this.notificationCardService.getCount(data.result.data.length);
             }, error => {
               // intentially left blank
             })

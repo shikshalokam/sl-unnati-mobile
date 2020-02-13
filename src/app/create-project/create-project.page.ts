@@ -98,6 +98,7 @@ export class CreateProjectPage implements OnInit {
         if (type == 'sd') {
           this.project.startDate = this.datepipe.transform(new Date(date));
           // this.startDate = date;
+          this.isValidDate = true;
           this.startDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
           if (this.project.endDate) {
             this.checkDate();
@@ -105,6 +106,7 @@ export class CreateProjectPage implements OnInit {
         } else if (type == "ed") {
           this.project.endDate = this.datepipe.transform(new Date(date));
           // this.endDate = date;
+          this.isValidDate = true;
           this.endDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
           if (this.project.startDate) {
             this.checkDate();
@@ -142,7 +144,6 @@ export class CreateProjectPage implements OnInit {
       }
     } else {
       this.isValidDate = false;
-
     }
   }
   // Create project

@@ -199,7 +199,10 @@
     "myreports": {
         "title": "My Reports",
         "last_month": "Last Month",
-        "last_quarter": "Last Quarter"
+        "last_quarter": "Last Quarter",
+        "tasks_completed":"Tasks Completed",
+        "tasks_pending":"Tasks Pending"
+
     },
     "fullreports": {
         "title": "My Reports",

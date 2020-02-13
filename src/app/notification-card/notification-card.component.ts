@@ -26,10 +26,10 @@ export class NotificationCardComponent implements OnInit {
   momentInstance = moment;
 
   constructor(public notificationCardService: NotificationCardService,
-     public toastController: ToastController, 
-     public router: Router,
+    public toastController: ToastController,
+    public router: Router,
     public api: ApiProvider,
-     public storage: Storage) {
+    public storage: Storage) {
   }
 
   goToAllNotifications() {
@@ -41,30 +41,29 @@ export class NotificationCardComponent implements OnInit {
    * @param notificationMeta 
    */
   onNotificationClick(notificationMeta) {
-    console.log(notificationMeta, "notificationMeta");
     if (!notificationMeta.is_read) {
       switch (notificationMeta.type) {
-        case 'projectAdded':
-          localStorage.setItem('from', 'notifications');
-          this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
-          break
-        case 'projectCompleted':
-          localStorage.setItem('from', 'notifications');
-          this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
-          break
-        case 'taskPending':
-          localStorage.setItem('gobackis', 'notifications')
-          this.router.navigate(['project-view/task-view/' + notificationMeta.payload.projectId + '/' + notificationMeta.payload.taskId + '/notifications'])
-          break
-        case 'projectPending':
-          localStorage.setItem('from', 'notifications');
-          this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
-          break
-        case 'subTaskPending':
-          this.router.navigate(['subtask-view/' + notificationMeta.payload.subTaskId + '/' + notificationMeta.payload.taskId + '/' + notificationMeta.payload.projectID + '/notifications'])
-          break
+        // case 'projectAdded':
+        //   localStorage.setItem('from', 'notifications');
+        //   this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
+        //   break
+        // case 'projectCompleted':
+        //   localStorage.setItem('from', 'notifications');
+        //   this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
+        //   break
+        // case 'taskPending':
+        //   localStorage.setItem('gobackis', 'notifications')
+        //   this.router.navigate(['project-view/task-view/' + notificationMeta.payload.projectId + '/' + notificationMeta.payload.taskId + '/notifications'])
+        //   break
+        // case 'projectPending':
+        //   localStorage.setItem('from', 'notifications');
+        //   this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
+        //   break
+        // case 'subTaskPending':
+        //   this.router.navigate(['subtask-view/' + notificationMeta.payload.subTaskId + '/' + notificationMeta.payload.taskId + '/' + notificationMeta.payload.projectID + '/notifications'])
+        //   break
       }
-       this.markAsRead(notificationMeta);
+      this.markAsRead(notificationMeta);
     }
   }
   /**

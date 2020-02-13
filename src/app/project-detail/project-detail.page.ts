@@ -58,11 +58,26 @@ export class ProjectDetailPage {
     this.getProject();
   }
   getProject() {
+    let myProjects: any;
+    let projectFound;
+    this.storage.get('myprojects').then(myprojects => {
+      myProjects = myprojects;
+    })
     this.storage.get('projectToBeView').then(project => {
       let completed = 0;
       let notStarted = 0;
       this.tasksLength = 0;
       let inProgress = 0;
+      if (myProjects) {
+        myProjects.forEach(myProject => {
+          if (myProject._id === project._id) {
+            projectFound = myProject;
+          }
+        });
+        if (projectFound) {
+          project = projectFound;
+        }
+      }
       project.tasks.forEach(task => {
         if (!task.isDeleted) {
           this.tasksLength = this.tasksLength + 1;

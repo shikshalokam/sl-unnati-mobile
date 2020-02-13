@@ -29,6 +29,7 @@ export class CustomPopupComponent implements OnInit {
     if (this.isActionable) {
       this.router.navigate([this.isActionable]);
     }
+    this.showPopup = false;
   }
   public getTranslateKeys() {
     this.translate.get([this.header, this.body, this.button]).subscribe((text: string) => {

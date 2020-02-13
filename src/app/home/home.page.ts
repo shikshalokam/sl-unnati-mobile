@@ -74,6 +74,8 @@ export class HomePage implements OnInit {
         this.showUpdatePop = true;
       } else if (status == 'done') {
         this.showUpdatePop = false;
+      } else {
+        this.showUpdatePop = false;
       }
     })
     homeService.activeProjectLoad.subscribe(data => {

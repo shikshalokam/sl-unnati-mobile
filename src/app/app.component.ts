@@ -19,7 +19,7 @@ import { HomeService } from './home/home.service';
 import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
 
-// import { FcmProvider } from './fcm';
+import { FcmProvider } from './fcm';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -43,7 +43,7 @@ export class AppComponent {
   public loggedInUser;
   constructor(
     public storage: Storage,
-    // public fcm: FcmProvider,
+    public fcm: FcmProvider,
     public alertController: AlertController,
     public router: Router, public menuCtrl: MenuController,
     public platform: Platform,
@@ -120,9 +120,9 @@ export class AppComponent {
       this.networkService.networkErrorToast();
     }
     this.platform.ready().then(() => {
-      //connectSubscription.unsubscribe();
-      // this.fcm.subscribeToPushNotifications();
-      // this.fcm.localNotificationClickHandler();
+      // this.fcm.connectSubscription.unsubscribe();
+      this.fcm.subscribeToPushNotifications();
+      this.fcm.localNotificationClickHandler();
       this.network.onDisconnect()
         .subscribe(() => {
           this.isConnected = false;

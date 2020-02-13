@@ -93,17 +93,16 @@ export class AboutPage implements OnInit {
       message: alertTexts['message.want_sync_before_erase'],
       buttons: [
         {
-          text: 'Logout',
+          text: 'Okay',
           role: 'cancel',
           cssClass: 'secondary',
           handler: (blah) => {
-            this.logout();
           }
         },
         {
-          text: 'Okay',
+          text: 'Logout',
           handler: () => {
-            // this.homeService.syncProjects();
+            this.logout();
           }
         }
       ]

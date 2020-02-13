@@ -45,6 +45,7 @@ export class UpdateProfilePage implements OnInit {
     this.storage.get('userTokens').then(data => {
       this.userDetails = jwt_decode(data.access_token);
     })
+    this.updateProfileService.updateProfile('close');
     this.prepareForm();
     this.getStates();
   }
@@ -168,9 +169,10 @@ export class UpdateProfilePage implements OnInit {
               this.toastService.startLoader('Loading');
               this.storage.set('userTokens', userTokens).then(data => {
                 this.updateProfileService.saveInfo(userTokens.access_token, this.profile).subscribe((data: any) => {
-                  this.toastService.stopLoader();
-                  this.updateProfileService.updateProfile('done')
+                  this.updateProfileService.updateProfile('done');
                   this.showUpdatePop = true;
+                  this.submitAttempt = false;
+                  this.toastService.stopLoader();
                 }, error => {
                   this.toastService.stopLoader();
                 })
@@ -181,15 +183,16 @@ export class UpdateProfilePage implements OnInit {
           })
         }
       })
-    } else {
-      if (!this.profile.firstName || !this.profile.lastName) {
-        this.toastService.errorToast('message.name_require');
-      } else if (!this.profile.state) {
-        this.toastService.errorToast('message.state_require');
-      } else if (!this.profile.emailId && !this.profile.phoneNumber) {
-        this.toastService.errorToast('message.email_phonenumber_require');
-      }
     }
+    // else {
+    //   if (!this.profile.firstName || !this.profile.lastName) {
+    //     this.toastService.errorToast('message.name_require');
+    //   } else if (!this.profile.state) {
+    //     this.toastService.errorToast('message.state_require');
+    //   } else if (!this.profile.emailId && !this.profile.phoneNumber) {
+    //     this.toastService.errorToast('message.email_phonenumber_require');
+    //   }
+    // }
   }
   // go back to home page
   public cancel() {

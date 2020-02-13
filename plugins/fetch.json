@@ -184,5 +184,13 @@
     },
     "is_top_level": true,
     "variables": {}
+  },
+  "cordova-plugin-fcm-with-dependecy-updated": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-fcm-with-dependecy-updated@^4.1.1"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

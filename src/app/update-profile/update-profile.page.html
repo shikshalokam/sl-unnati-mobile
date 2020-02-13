@@ -16,25 +16,33 @@
         <span class="usrname">
           {{userDetails.preferred_username}}
         </span>
-        <p>*******</p>
+        <h4>*********</h4>
       </div>
     </div>
   </div>
+  <h5 class="required-field" *ngIf="submitAttempt" style="padding-left:15px;">
+    {{'create_project.fileds_mandatory' | translate}}</h5>
   <form [formGroup]="profileForm" style="margin-bottom: 2em;">
     <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating">{{'profile_update.fname' | translate}}</ion-label>
-      <ion-input formControlName="fname" type="text" placeholder="" [(ngModel)]="profile.firstName"
-        [class.invalid]="!profileForm.controls.fname.valid && (profileForm.controls.fname.dirty || submitAttempt)">
+      <ion-label class="custom-label" position="floating"
+        [ngClass]="{'required-field':submitAttempt && !profile.firstName}">{{'profile_update.fname' | translate}}
+      </ion-label>
+      <ion-input formControlName="fname" type="text" placeholder="" [(ngModel)]="profile.firstName">
       </ion-input>
     </ion-item>
     <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating">{{'profile_update.lname' | translate}}</ion-label>
+      <ion-label class="custom-label" position="floating"
+        [ngClass]="{'required-field':submitAttempt && !profile.lastName}">{{'profile_update.lname' | translate}}
+      </ion-label>
       <ion-input formControlName="lname" type="text" [(ngModel)]="profile.lastName" placeholder="">
         <!-- [class.invalid]="!profileForm.controls.lname.valid && (profileForm.controls.lname.dirty || submitAttempt)" -->
       </ion-input>
     </ion-item>
     <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating">{{'profile_update.email_id' | translate}}</ion-label>
+      <ion-label class="custom-label" position="floating"
+        [ngClass]="{'required-field':submitAttempt && !profile.emailId && !profile.phoneNumber}">
+        {{'profile_update.email_id' | translate}}
+      </ion-label>
       <ion-input formControlName="emailId" type="text" [(ngModel)]="profile.emailId"
         placeholder="{{'profile_update.email_placeholder' | translate}}">
       </ion-input>
@@ -43,13 +51,17 @@
       </ion-input> -->
     </ion-item>
     <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating">{{'profile_update.phone_number' | translate}}</ion-label>
+      <ion-label class="custom-label" position="floating"
+        [ngClass]="{'required-field':submitAttempt && !profile.emailId && !profile.phoneNumber}">
+        {{'profile_update.phone_number' | translate}}</ion-label>
       <ion-input formControlName="phoneNumber" type="text" [(ngModel)]="profile.phoneNumber"
         placeholder="{{'profile_update.phone_placeholder' | translate}}">
       </ion-input>
     </ion-item>
     <ion-item class="custom-ion-item">
-      <ion-label class="custom-select" position="floating">{{'profile_update.state' | translate}}</ion-label>
+      <ion-label class="custom-select" position="floating"
+        [ngClass]="{'required-field':submitAttempt && !profile.state}">{{'profile_update.state' | translate}}
+      </ion-label>
       <ion-select formControlName="state" class="custom-select-box" placeholder=""
         (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.state"
         [class.invalid]="!profileForm.controls.state.valid && (profileForm.controls.state.dirty || submitAttempt)">
@@ -134,7 +146,7 @@
       </ion-button>
     </div>
     <div class="profile-actions">
-      <ion-button expand="block" (click)=cancel()>
+      <ion-button expand="block"  (click)=cancel()>
         {{'button.cancel' | translate}}
       </ion-button>
     </div>

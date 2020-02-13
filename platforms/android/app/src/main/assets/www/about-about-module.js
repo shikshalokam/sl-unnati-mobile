@@ -203,17 +203,16 @@ var AboutPage = /** @class */ (function () {
                                 message: alertTexts['message.want_sync_before_erase'],
                                 buttons: [
                                     {
-                                        text: 'Logout',
+                                        text: 'Okay',
                                         role: 'cancel',
                                         cssClass: 'secondary',
                                         handler: function (blah) {
-                                            _this.logout();
                                         }
                                     },
                                     {
-                                        text: 'Okay',
+                                        text: 'Logout',
                                         handler: function () {
-                                            // this.homeService.syncProjects();
+                                            _this.logout();
                                         }
                                     }
                                 ]

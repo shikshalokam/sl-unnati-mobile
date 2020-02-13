@@ -178,6 +178,9 @@ var HomePage = /** @class */ (function () {
             else if (status == 'done') {
                 _this.showUpdatePop = false;
             }
+            else {
+                _this.showUpdatePop = false;
+            }
         });
         homeService.activeProjectLoad.subscribe(function (data) {
             if (data == 'activeProjectLoad') {
