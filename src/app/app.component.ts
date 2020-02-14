@@ -23,7 +23,7 @@ import { FcmProvider } from './fcm';
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent {
 
   @ViewChild(NavController) nav: NavController;
   @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
