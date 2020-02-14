@@ -22,7 +22,8 @@
   <!-- loader ends here -->
   <div *ngIf="!showSkeleton">
     <div *ngIf="showUpdatePop">
-      <app-custom-popup [header]="header" [body]="body" [button]="button" [isActionable]="isActionable">
+      <app-custom-popup [header]="header" [body]="body" [button]="button" [showPopup]="true"
+        [isActionable]="isActionable">
       </app-custom-popup>
     </div>
     <ion-item class="search-bar-custom">
@@ -71,37 +72,39 @@
       <div class="welcome-card custom-card" *ngFor="let projects of projectList;" style="margin:10px;">
         <div *ngIf="(projects.projects | searchProjects: searchInput).length == 0" style="text-align:center;">
         </div>
-        <ion-card class="inner-card search-results"
-          *ngFor="let project of projects.projects | searchProjects: searchInput" (click)="navigateToDetails(project)">
-          <ion-grid>
-            <ion-row>
-              <ion-col style="min-width: 85%; margin: auto;
+        <div *ngFor="let project of projects.projects | searchProjects: searchInput">
+          <ion-card class="inner-card search-results" *ngIf="!project.isDeleted" (click)="navigateToDetails(project)">
+            <ion-grid>
+              <ion-row>
+                <ion-col style="min-width: 85%; margin: auto;
               font-weight: 500;">
-                {{ project.title }}
-              </ion-col>
-              <ion-col class="arrow-mark">
-                <ion-icon name="ios-arrow-forward"> </ion-icon>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card>
+                  {{ project.title }}
+                </ion-col>
+                <ion-col class="arrow-mark">
+                  <ion-icon name="ios-arrow-forward"> </ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </div>
       </div>
       <!-- Search my projects -->
       <div class="welcome-card custom-card" style="margin:10px;">
-        <ion-card class="inner-card search-results" *ngFor="let project of myProjects | searchProjects: searchInput"
-          (click)="navigateToDetails(project)">
-          <ion-grid>
-            <ion-row>
-              <ion-col style="min-width: 85%; margin: auto;
+        <div *ngFor="let project of myProjects | searchProjects: searchInput">
+          <ion-card class="inner-card search-results" (click)="navigateToDetails(project)" *ngIf="!project.isDeleted">
+            <ion-grid>
+              <ion-row>
+                <ion-col style="min-width: 85%; margin: auto;
                 font-weight: 500;">
-                {{ project.title }}
-              </ion-col>
-              <ion-col class="arrow-mark">
-                <ion-icon name="ios-arrow-forward"> </ion-icon>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card>
+                  {{ project.title }}
+                </ion-col>
+                <ion-col class="arrow-mark">
+                  <ion-icon name="ios-arrow-forward"> </ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </div>
       </div>
       <!-- Schools  -->
       <ion-card class="welcome-card custom-card" *ngIf="( mySchools | searchSchool: searchInput).length == 0">
@@ -116,6 +119,26 @@
             <ion-col style="min-width: 85%; margin: auto;
             font-weight: 500;">
               {{school.name}}
+            </ion-col>
+            <ion-col class="arrow-mark">
+              <ion-icon name="ios-arrow-forward"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+      <!-- search library -->
+      <ion-card class="welcome-card custom-card" *ngIf="( libraries | searchSchool: searchInput).length == 0">
+        <div class="no-results">
+          No Data available.
+        </div>
+      </ion-card>
+      <ion-card class="inner-card search-results" *ngFor="let library of libraries | searchSchool: searchInput"
+        style="margin:10px;" (click)="navigateToLibrary(library.key)">
+        <ion-grid>
+          <ion-row>
+            <ion-col style="min-width: 85%; margin: auto;
+            font-weight: 500;">
+              {{library.name}}
             </ion-col>
             <ion-col class="arrow-mark">
               <ion-icon name="ios-arrow-forward"></ion-icon>

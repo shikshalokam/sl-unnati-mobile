@@ -255,6 +255,7 @@ var LoginPage = /** @class */ (function () {
                 _this.storage.set('userDetails', userDetails).then(function (userData) {
                 });
                 _this.storage.set('userTokens', success1).then(function (data) {
+                    localStorage.setItem('isPopUpShowen', null);
                     _this.router.navigateByUrl('/project-view/home');
                     _this.fcm.initializeFCM();
                     _this.login.loggedIn('true');

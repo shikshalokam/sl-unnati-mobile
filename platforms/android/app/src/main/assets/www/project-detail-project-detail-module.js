@@ -133,12 +133,16 @@ var ProjectDetailPage = /** @class */ (function () {
         route.params.subscribe(function (param) {
             if (param.cat) {
                 _this.category = param.cat;
+                console.log(_this.category, "this.category");
                 if (_this.category == 'my-projects' || _this.category == 'active-projects' || _this.category == 'all-projects' || _this.category == 'projectsList') {
                     _this.back = 'project-view/projects';
                 }
                 else if (_this.category == 'schools') {
                     localStorage.setItem('entityKey', _this.project.entityId);
                     _this.back = 'project-view/school-task-report/' + _this.project.entityId + '/school';
+                }
+                else if (_this.category == 'home') {
+                    _this.back = 'project-view/home';
                 }
                 else {
                     _this.back = 'project-view/category/' + _this.category;

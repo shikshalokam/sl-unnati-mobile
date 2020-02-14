@@ -116,6 +116,7 @@ export class LoginPage implements OnInit {
         this.storage.set('userDetails', userDetails).then(userData => {
         })
         this.storage.set('userTokens', success1).then(data => {
+          localStorage.setItem('isPopUpShowen', null);
           this.router.navigateByUrl('/project-view/home');
           this.fcm.initializeFCM();
           this.login.loggedIn('true');

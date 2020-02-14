@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class UpdateProfileService {
-  updatedUser = new Subject()
+  updatedUser = new Subject();
   constructor(public http: HttpClient,
     public storage: Storage) {
   }
@@ -38,5 +38,5 @@ export class UpdateProfileService {
   // event triggers for update popups
   public updateProfile(status) {
     this.updatedUser.next(status);
-  } 
+  }
 }

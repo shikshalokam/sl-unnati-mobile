@@ -226,6 +226,7 @@ var routes = [
             { path: 'current-task/:id/:from', loadChildren: '../current-task-view/current-task-view.module#CurrentTaskViewPageModule' },
             { path: 'library', loadChildren: '../library/library.module#LibraryPageModule' },
             { path: 'category/:cat', loadChildren: '../category-view/category-view.module#CategoryViewPageModule' },
+            { path: 'category/:cat/:from', loadChildren: '../category-view/category-view.module#CategoryViewPageModule' },
             { path: 'project-detail/:cat', loadChildren: '../project-detail/project-detail.module#ProjectDetailPageModule' },
             { path: 'project-detail', loadChildren: '../project-detail/project-detail.module#ProjectDetailPageModule' },
             { path: 'newsfeed', loadChildren: '../newsfeed/newsfeed.module#NewsfeedPageModule' },

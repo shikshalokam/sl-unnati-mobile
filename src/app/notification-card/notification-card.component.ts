@@ -3,7 +3,7 @@ import { NotificationCardService } from './notification.service';
 import { ApiProvider } from '../api/api';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-import { ToastController, ModalController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 
 import * as moment from 'moment';
 @Component({
@@ -30,6 +30,7 @@ export class NotificationCardComponent implements OnInit {
     public router: Router,
     public api: ApiProvider,
     public storage: Storage) {
+   
   }
 
   goToAllNotifications() {

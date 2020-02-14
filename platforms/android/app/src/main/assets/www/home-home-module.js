@@ -66,7 +66,7 @@ var HomePageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"\" [noBorder]=\"true\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <!-- loader -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- loader ends here -->\n  <div *ngIf=\"!showSkeleton\">\n    <div *ngIf=\"showUpdatePop\">\n      <app-custom-popup [header]=\"header\" [body]=\"body\" [button]=\"button\" [isActionable]=\"isActionable\">\n      </app-custom-popup>\n    </div>\n    <ion-item class=\"search-bar-custom\">\n      <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n      <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\"></ion-input>\n      <!-- (keyup)=\"searchSchool(searchInput)\" -->\n    </ion-item>\n    <div *ngIf=\"!searchInput\">\n      <ion-grid class=\"tiles-container\">\n        <ion-row>\n          <ion-col *ngFor=\"let tile of tiles\" class=\"tiles\" size=\"6\">\n            <ion-card (click)=\"navigate(tile.url)\">\n              <img src=\"{{tile.icon}}\">\n              <p>{{tile.title}}</p>\n            </ion-card>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n      <div class=\"activeprojects-container\" *ngIf=\"activeProjects\">\n        <h4>{{'home.active_projects' | translate}} </h4>\n        <div *ngFor=\"let ap of activeProjects; let i = index\">\n          <ion-card>\n            <ion-card-header style=\"padding: 0px;\">\n              <div class=\"collection-label\">{{ap.category}}</div>\n            </ion-card-header>\n            <ion-card-content style=\"padding:0px;\">\n              <ion-row>\n                <ion-col class=\"date-col\">\n                  <h3> {{ap.endDate | date : 'MMM dd'}} </h3>\n                </ion-col>\n                <ion-col class=\"title-col\">\n                  {{ap.title}}\n                </ion-col>\n              </ion-row>\n            </ion-card-content>\n          </ion-card>\n        </div>\n        <ion-button class=\"activeproject-btn\" expand=\"block\" color=\"secondary\" *ngIf=\"activeProjects?.length > 0\"\n          (click)=\"viewMore()\">\n          {{'button.view_more' | translate}}\n        </ion-button>\n      </div>\n    </div>\n    <!-- Search Results -->\n    <div *ngIf=\"searchInput\">\n      <div class=\"welcome-card custom-card\" *ngFor=\"let projects of projectList;\" style=\"margin:10px;\">\n        <div *ngIf=\"(projects.projects | searchProjects: searchInput).length == 0\" style=\"text-align:center;\">\n        </div>\n        <ion-card class=\"inner-card search-results\"\n          *ngFor=\"let project of projects.projects | searchProjects: searchInput\" (click)=\"navigateToDetails(project)\">\n          <ion-grid>\n            <ion-row>\n              <ion-col style=\"min-width: 85%; margin: auto;\n              font-weight: 500;\">\n                {{ project.title }}\n              </ion-col>\n              <ion-col class=\"arrow-mark\">\n                <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n              </ion-col>\n            </ion-row>\n          </ion-grid>\n        </ion-card>\n      </div>\n      <!-- Search my projects -->\n      <div class=\"welcome-card custom-card\" style=\"margin:10px;\">\n        <ion-card class=\"inner-card search-results\" *ngFor=\"let project of myProjects | searchProjects: searchInput\"\n          (click)=\"navigateToDetails(project)\">\n          <ion-grid>\n            <ion-row>\n              <ion-col style=\"min-width: 85%; margin: auto;\n                font-weight: 500;\">\n                {{ project.title }}\n              </ion-col>\n              <ion-col class=\"arrow-mark\">\n                <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n              </ion-col>\n            </ion-row>\n          </ion-grid>\n        </ion-card>\n      </div>\n      <!-- Schools  -->\n      <ion-card class=\"welcome-card custom-card\" *ngIf=\"( mySchools | searchSchool: searchInput).length == 0\">\n        <div class=\"no-results\">\n          No Data available.\n        </div>\n      </ion-card>\n      <ion-card class=\"inner-card search-results\" *ngFor=\"let school of mySchools | searchSchool: searchInput\"\n        style=\"margin:10px;\" (click)=\"navigateToSchool(school)\">\n        <ion-grid>\n          <ion-row>\n            <ion-col style=\"min-width: 85%; margin: auto;\n            font-weight: 500;\">\n              {{school.name}}\n            </ion-col>\n            <ion-col class=\"arrow-mark\">\n              <ion-icon name=\"ios-arrow-forward\"></ion-icon>\n            </ion-col>\n          </ion-row>\n        </ion-grid>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"\" [noBorder]=\"true\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <!-- loader -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- loader ends here -->\n  <div *ngIf=\"!showSkeleton\">\n    <div *ngIf=\"showUpdatePop\">\n      <app-custom-popup [header]=\"header\" [body]=\"body\" [button]=\"button\" [showPopup]=\"true\"\n        [isActionable]=\"isActionable\">\n      </app-custom-popup>\n    </div>\n    <ion-item class=\"search-bar-custom\">\n      <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n      <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\"></ion-input>\n      <!-- (keyup)=\"searchSchool(searchInput)\" -->\n    </ion-item>\n    <div *ngIf=\"!searchInput\">\n      <ion-grid class=\"tiles-container\">\n        <ion-row>\n          <ion-col *ngFor=\"let tile of tiles\" class=\"tiles\" size=\"6\">\n            <ion-card (click)=\"navigate(tile.url)\">\n              <img src=\"{{tile.icon}}\">\n              <p>{{tile.title}}</p>\n            </ion-card>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n      <div class=\"activeprojects-container\" *ngIf=\"activeProjects\">\n        <h4>{{'home.active_projects' | translate}} </h4>\n        <div *ngFor=\"let ap of activeProjects; let i = index\">\n          <ion-card>\n            <ion-card-header style=\"padding: 0px;\">\n              <div class=\"collection-label\">{{ap.category}}</div>\n            </ion-card-header>\n            <ion-card-content style=\"padding:0px;\">\n              <ion-row>\n                <ion-col class=\"date-col\">\n                  <h3> {{ap.endDate | date : 'MMM dd'}} </h3>\n                </ion-col>\n                <ion-col class=\"title-col\">\n                  {{ap.title}}\n                </ion-col>\n              </ion-row>\n            </ion-card-content>\n          </ion-card>\n        </div>\n        <ion-button class=\"activeproject-btn\" expand=\"block\" color=\"secondary\" *ngIf=\"activeProjects?.length > 0\"\n          (click)=\"viewMore()\">\n          {{'button.view_more' | translate}}\n        </ion-button>\n      </div>\n    </div>\n    <!-- Search Results -->\n    <div *ngIf=\"searchInput\">\n      <div class=\"welcome-card custom-card\" *ngFor=\"let projects of projectList;\" style=\"margin:10px;\">\n        <div *ngIf=\"(projects.projects | searchProjects: searchInput).length == 0\" style=\"text-align:center;\">\n        </div>\n        <div *ngFor=\"let project of projects.projects | searchProjects: searchInput\">\n          <ion-card class=\"inner-card search-results\" *ngIf=\"!project.isDeleted\" (click)=\"navigateToDetails(project)\">\n            <ion-grid>\n              <ion-row>\n                <ion-col style=\"min-width: 85%; margin: auto;\n              font-weight: 500;\">\n                  {{ project.title }}\n                </ion-col>\n                <ion-col class=\"arrow-mark\">\n                  <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n                </ion-col>\n              </ion-row>\n            </ion-grid>\n          </ion-card>\n        </div>\n      </div>\n      <!-- Search my projects -->\n      <div class=\"welcome-card custom-card\" style=\"margin:10px;\">\n        <div *ngFor=\"let project of myProjects | searchProjects: searchInput\">\n          <ion-card class=\"inner-card search-results\" (click)=\"navigateToDetails(project)\" *ngIf=\"!project.isDeleted\">\n            <ion-grid>\n              <ion-row>\n                <ion-col style=\"min-width: 85%; margin: auto;\n                font-weight: 500;\">\n                  {{ project.title }}\n                </ion-col>\n                <ion-col class=\"arrow-mark\">\n                  <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n                </ion-col>\n              </ion-row>\n            </ion-grid>\n          </ion-card>\n        </div>\n      </div>\n      <!-- Schools  -->\n      <ion-card class=\"welcome-card custom-card\" *ngIf=\"( mySchools | searchSchool: searchInput).length == 0\">\n        <div class=\"no-results\">\n          No Data available.\n        </div>\n      </ion-card>\n      <ion-card class=\"inner-card search-results\" *ngFor=\"let school of mySchools | searchSchool: searchInput\"\n        style=\"margin:10px;\" (click)=\"navigateToSchool(school)\">\n        <ion-grid>\n          <ion-row>\n            <ion-col style=\"min-width: 85%; margin: auto;\n            font-weight: 500;\">\n              {{school.name}}\n            </ion-col>\n            <ion-col class=\"arrow-mark\">\n              <ion-icon name=\"ios-arrow-forward\"></ion-icon>\n            </ion-col>\n          </ion-row>\n        </ion-grid>\n      </ion-card>\n      <!-- search library -->\n      <ion-card class=\"welcome-card custom-card\" *ngIf=\"( libraries | searchSchool: searchInput).length == 0\">\n        <div class=\"no-results\">\n          No Data available.\n        </div>\n      </ion-card>\n      <ion-card class=\"inner-card search-results\" *ngFor=\"let library of libraries | searchSchool: searchInput\"\n        style=\"margin:10px;\" (click)=\"navigateToLibrary(library.key)\">\n        <ion-grid>\n          <ion-row>\n            <ion-col style=\"min-width: 85%; margin: auto;\n            font-weight: 500;\">\n              {{library.name}}\n            </ion-col>\n            <ion-col class=\"arrow-mark\">\n              <ion-icon name=\"ios-arrow-forward\"></ion-icon>\n            </ion-col>\n          </ion-row>\n        </ion-grid>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>"
 
 /***/ }),
 
@@ -155,6 +155,32 @@ var HomePage = /** @class */ (function () {
         this.type = 'quarter';
         this.count = 100;
         this.page = 1;
+        this.libraries = [{
+                name: 'others',
+                key: 'other'
+            },
+            {
+                name: 'education leader',
+                key: 'education_leader'
+            }, {
+                name: 'infrastructure',
+                key: 'infrastructure'
+            }, {
+                name: 'school process',
+                key: 'school_process'
+            }, {
+                name: 'community',
+                key: 'community'
+            }, {
+                name: 'students',
+                key: 'students'
+            }, {
+                name: 'teacher',
+                key: 'teacher'
+            }, {
+                name: 'my projects',
+                key: 'my_projects'
+            }];
         this.tiles = [
             { title: "create project", icon: 'assets/images/homeTiles/createproject.png', url: '/project-view/create-project' },
             { title: "library", icon: 'assets/images/homeTiles/library.png', url: '/project-view/library' },
@@ -166,17 +192,23 @@ var HomePage = /** @class */ (function () {
         this.skeletons = [{}, {}, {}, {}, {}, {}];
         this.showNoProjects = '';
         this.menuCtrl.enable(true);
-        // update Matching
+        // update profile pop handler
         updateProfile.updatedUser.subscribe(function (status) {
-            if (status == 'Update') {
+            console.log(status, "status");
+            var isPopUpShowen = localStorage.getItem('isPopUpShowen');
+            console.log(isPopUpShowen, "isPopUpShowen");
+            if (isPopUpShowen == "null") {
+                isPopUpShowen = false;
+            }
+            console.log(!isPopUpShowen, status == 'Update', "isPopUpShowen", "status", status == 'Update' && !isPopUpShowen);
+            if (status == "Update" && !isPopUpShowen) {
                 _this.body = 'message.update_profile';
                 _this.header = 'message.confirm_your_details';
                 _this.button = 'button.update';
                 _this.isActionable = '/project-view/update-profile';
                 _this.showUpdatePop = true;
-            }
-            else if (status == 'done') {
-                _this.showUpdatePop = false;
+                var isPopUpShowen_1 = localStorage.getItem('isPopUpShowen');
+                console.log(isPopUpShowen_1, "isPopUpShowen in function");
             }
             else {
                 _this.showUpdatePop = false;
@@ -251,16 +283,22 @@ var HomePage = /** @class */ (function () {
     //navigate to project Details page
     HomePage.prototype.navigateToDetails = function (project) {
         var _this = this;
-        localStorage.setItem("id", project._id);
-        this.storage.set('currentProject', project).then(function (data) {
-            localStorage.setItem("from", 'home');
-            _this.router.navigate(['/project-view/detail', project._id, 'home']);
-            _this.projectService.setTitle(data.title);
+        // localStorage.setItem("id", project._id);
+        // this.storage.set('currentProject', project).then(data => {
+        //   localStorage.setItem("from", 'home');
+        //   this.router.navigate(['/project-view/detail', project._id, 'home']);
+        //   this.projectService.setTitle(data.title);
+        // })
+        this.storage.set('projectToBeView', project).then(function (project) {
+            _this.router.navigate(['/project-view/project-detail', 'home']);
         });
     };
     HomePage.prototype.navigateToSchool = function (school) {
         localStorage.setItem('from1', 'home');
         this.router.navigate(['/project-view/school-task-report', school.entityId, school.name]);
+    };
+    HomePage.prototype.navigateToLibrary = function (category) {
+        this.router.navigate(['/project-view/category', category, 'home']);
     };
     // get Projects
     HomePage.prototype.getProjects = function () {

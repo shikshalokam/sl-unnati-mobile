@@ -6,6 +6,7 @@ import { Storage } from '@ionic/storage';
 import { ApiProvider } from '../api/api';
 import { ToastService } from '../toast.service';
 import * as jwt_decode from "jwt-decode";
+import { NotificationCardService } from '../notification-card/notification.service';
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.page.html',
@@ -37,7 +38,8 @@ export class UpdateProfilePage implements OnInit {
     public storage: Storage,
     public api: ApiProvider,
     public toastService: ToastService,
-    public router: Router
+    public router: Router,
+    public notificationCardService: NotificationCardService
   ) {
   }
 
@@ -46,6 +48,7 @@ export class UpdateProfilePage implements OnInit {
       this.userDetails = jwt_decode(data.access_token);
     })
     this.updateProfileService.updateProfile('close');
+    localStorage.setItem('isPopUpShowen', 'true');
     this.prepareForm();
     this.getStates();
   }
@@ -157,6 +160,7 @@ export class UpdateProfilePage implements OnInit {
   public saveInfo() {
     this.submitAttempt = true;
     if (this.profile.firstName && this.profile.lastName && this.profile.state && (this.profile.emailId || this.profile.phoneNumber)) {
+      this.submitAttempt = false;
       this.storage.get('userTokens').then(data => {
         if (data) {
           this.api.refershToken(data.refresh_token).subscribe((data: any) => {
@@ -169,10 +173,13 @@ export class UpdateProfilePage implements OnInit {
               this.toastService.startLoader('Loading');
               this.storage.set('userTokens', userTokens).then(data => {
                 this.updateProfileService.saveInfo(userTokens.access_token, this.profile).subscribe((data: any) => {
+                  this.storage.get('clearNotification').then((data) => {
+                    this.markAsRead(data);
+                  });
+                  this.toastService.stopLoader();
                   this.updateProfileService.updateProfile('done');
                   this.showUpdatePop = true;
                   this.submitAttempt = false;
-                  this.toastService.stopLoader();
                 }, error => {
                   this.toastService.stopLoader();
                 })
@@ -197,5 +204,35 @@ export class UpdateProfilePage implements OnInit {
   // go back to home page
   public cancel() {
     this.router.navigate(['/project-view/home'])
+  }
+
+  public markAsRead(notificationMeta) {
+    this.storage.get('userTokens').then(data => {
+      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+        let parsedData = JSON.parse(data._body);
+        if (parsedData && parsedData.access_token) {
+          let userTokens = {
+            access_token: parsedData.access_token,
+            refresh_token: parsedData.refresh_token,
+          };
+          this.storage.set('userTokens', userTokens).then(usertoken => {
+            this.notificationCardService.markAsRead(userTokens.access_token, notificationMeta.id).subscribe(data => {
+              notificationMeta.is_read = true;
+              this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
+                // this.fetchAllNotifications();
+                this.notificationCardService.getCount(data1.result.count);
+              }, error => {
+                // this.showSkeleton = false;
+              })
+            }, error => {
+
+              // this.showSkeleton = false;
+            })
+          }, error => {
+            // this.showSkeleton = false;
+          })
+        }
+      })
+    })
   }
 }

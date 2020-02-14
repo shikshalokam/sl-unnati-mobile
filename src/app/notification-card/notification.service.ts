@@ -65,13 +65,13 @@ export class NotificationCardService {
      */
 
     startNotificationPooling() {
-        // this.timeInterval = setInterval(() => {
-        //     if (navigator.onLine) {
-        //         this.storage.get('userTokens').then(token => {
-        //             this.checkForNotificationApi(token.access_token);
-        //         })
-        //     }
-        // }, 12000);
+        this.timeInterval = setInterval(() => {
+            if (navigator.onLine) {
+                this.storage.get('userTokens').then(token => {   
+                    this.checkForNotificationApi(token.access_token);
+                })
+            }
+        }, 12000);
         this.storage.get('userTokens').then(token => {
             this.checkForNotificationApi(token.access_token);
         })

@@ -67,13 +67,18 @@ export class HeaderComponent implements OnInit {
                 data.result.data.forEach(notification => {
                   if (notification.action === 'Update' && !notification.is_read && !update) {
                     update = true;
-                    this.updateProfileService.updateProfile('Update');
+                    this.storage.set('clearNotification', notification).then((data) => {
+                      this.updateProfileService.updateProfile('Update');
+                    });
                   }
                 });
-                this.notificationCardService.getCount(data.result.data.length);
               }
             }, error => {
               // intentially left blank
+            })
+            this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data: any) => {
+              this.notificationCardService.getCount(data.result.count);
+            }, error => {
             })
           }, error => {
             // intentially left blank

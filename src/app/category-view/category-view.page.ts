@@ -16,6 +16,7 @@ export class CategoryViewPage {
   projects;
   searchInput;
   templates;
+  from;
   categoryHead;
   catType;
   showSkeleton: boolean = false;
@@ -43,6 +44,12 @@ export class CategoryViewPage {
     })
     rout.params.subscribe(param => {
       this.catType = param.cat;
+      if (param.from) {
+        this.from = param.from;
+        if (this.from == 'home') {
+          this.back = 'project-view/home'
+        }
+      }
       switch (param.cat) {
         case 'my_projects': {
           this.categoryHead = {

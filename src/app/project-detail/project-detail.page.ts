@@ -48,6 +48,8 @@ export class ProjectDetailPage {
         } else if (this.category == 'schools') {
           localStorage.setItem('entityKey', this.project.entityId);
           this.back = 'project-view/school-task-report/' + this.project.entityId + '/school';
+        } else if (this.category == 'home') {
+          this.back = 'project-view/home';
         } else {
           this.back = 'project-view/category/' + this.category;
         }

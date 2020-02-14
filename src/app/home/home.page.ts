@@ -33,6 +33,32 @@ export class HomePage implements OnInit {
   type = 'quarter';
   count = 100;
   page = 1;
+  libraries = [{
+    name: 'others',
+    key: 'other'
+  },
+  {
+    name: 'education leader',
+    key: 'education_leader'
+  }, {
+    name: 'infrastructure',
+    key: 'infrastructure'
+  }, {
+    name: 'school process',
+    key: 'school_process'
+  }, {
+    name: 'community',
+    key: 'community'
+  }, {
+    name: 'students',
+    key: 'students'
+  }, {
+    name: 'teacher',
+    key: 'teacher'
+  }, {
+    name: 'my projects',
+    key: 'my_projects'
+  }]
   tiles = [
     { title: "create project", icon: 'assets/images/homeTiles/createproject.png', url: '/project-view/create-project' },
     { title: "library", icon: 'assets/images/homeTiles/library.png', url: '/project-view/library' },
@@ -64,16 +90,19 @@ export class HomePage implements OnInit {
     public toastService: ToastService,
     public updateProfile: UpdateProfileService) {
     this.menuCtrl.enable(true);
-    // update Matching
+    // update profile pop handler
     updateProfile.updatedUser.subscribe((status) => {
-      if (status == 'Update') {
+      let isPopUpShowen:any = localStorage.getItem('isPopUpShowen');
+      if(isPopUpShowen == "null"){
+        isPopUpShowen = false;
+      }
+      if (status == "Update" && !isPopUpShowen) {
         this.body = 'message.update_profile';
         this.header = 'message.confirm_your_details';
         this.button = 'button.update';
         this.isActionable = '/project-view/update-profile';
         this.showUpdatePop = true;
-      } else if (status == 'done') {
-        this.showUpdatePop = false;
+        let isPopUpShowen = localStorage.getItem('isPopUpShowen');
       } else {
         this.showUpdatePop = false;
       }
@@ -142,16 +171,22 @@ export class HomePage implements OnInit {
   }
   //navigate to project Details page
   public navigateToDetails(project) {
-    localStorage.setItem("id", project._id);
-    this.storage.set('currentProject', project).then(data => {
-      localStorage.setItem("from", 'home');
-      this.router.navigate(['/project-view/detail', project._id, 'home']);
-      this.projectService.setTitle(data.title);
+    // localStorage.setItem("id", project._id);
+    // this.storage.set('currentProject', project).then(data => {
+    //   localStorage.setItem("from", 'home');
+    //   this.router.navigate(['/project-view/detail', project._id, 'home']);
+    //   this.projectService.setTitle(data.title);
+    // })
+    this.storage.set('projectToBeView', project).then(project => {
+      this.router.navigate(['/project-view/project-detail', 'home'])
     })
   }
   public navigateToSchool(school) {
     localStorage.setItem('from1', 'home');
     this.router.navigate(['/project-view/school-task-report', school.entityId, school.name]);
+  }
+  public navigateToLibrary(category) {
+    this.router.navigate(['/project-view/category', category, 'home'])
   }
   // get Projects
   public getProjects() {

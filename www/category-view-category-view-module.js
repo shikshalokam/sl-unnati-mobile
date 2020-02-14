@@ -134,6 +134,12 @@ var CategoryViewPage = /** @class */ (function () {
         });
         rout.params.subscribe(function (param) {
             _this.catType = param.cat;
+            if (param.from) {
+                _this.from = param.from;
+                if (_this.from == 'home') {
+                    _this.back = 'project-view/home';
+                }
+            }
             switch (param.cat) {
                 case 'my_projects': {
                     _this.categoryHead = {

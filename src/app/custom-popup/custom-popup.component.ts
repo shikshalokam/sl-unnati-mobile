@@ -8,11 +8,11 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./custom-popup.component.scss'],
 })
 export class CustomPopupComponent implements OnInit {
-  showPopup: boolean = false;
   @Input() header;
   @Input() body;
   @Input() button;
   @Input() isActionable;
+  @Input() showPopup:boolean;
   constructor(
     public router: Router,
     public translate: TranslateService

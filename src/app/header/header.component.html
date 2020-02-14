@@ -29,7 +29,7 @@
       <span class="dot _flex-box" (click)="navigateToNotification()"
         *ngIf="notificationCount && notificationCount < 100">{{ notificationCount }}</span>
       <span class="dot _flex-box" *ngIf="notificationCount && notificationCount >= 100"
-        (click)="navigateToNotification()">100</span>
+        (click)="navigateToNotification()">99+</span>
     </ion-title>
   </ion-toolbar>
   <ion-tab-bar slot="top" color="primary" *ngIf="showTabs">
