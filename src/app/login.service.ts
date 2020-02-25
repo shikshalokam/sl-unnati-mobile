@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppConfigs } from "./app.config";
 import { URLSearchParams, Http } from '@angular/http';
-import { ApiProvider } from './api/api';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { CurrentUserProvider } from './current-user'
 import { Subject } from 'rxjs';
@@ -32,7 +31,6 @@ export class Login {
       let closeCallback = function (event) {
         reject("The Sunbird sign in flow was canceled");
       };
-
       let browserRef = (<any>window).cordova.InAppBrowser.open(that.auth_url, "_blank", "zoom=no");
       browserRef.addEventListener('loadstart', function (event) {
         if (event.url && ((event.url).indexOf(that.redirect_url) === 0)) {

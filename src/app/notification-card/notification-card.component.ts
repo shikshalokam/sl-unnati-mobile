@@ -3,7 +3,7 @@ import { NotificationCardService } from './notification.service';
 import { ApiProvider } from '../api/api';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-import { ToastController, ModalController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 
 import * as moment from 'moment';
 @Component({
@@ -25,8 +25,12 @@ export class NotificationCardComponent implements OnInit {
   time = Date.now()
   momentInstance = moment;
 
-  constructor(public notificationCardService: NotificationCardService, public toastController: ToastController, public router: Router,
-    public api: ApiProvider, public storage: Storage) {
+  constructor(public notificationCardService: NotificationCardService,
+    public toastController: ToastController,
+    public router: Router,
+    public api: ApiProvider,
+    public storage: Storage) {
+
   }
 
   goToAllNotifications() {
@@ -38,29 +42,32 @@ export class NotificationCardComponent implements OnInit {
    * @param notificationMeta 
    */
   onNotificationClick(notificationMeta) {
+    if (notificationMeta.action == 'Update') {
+      this.router.navigate(['project-view/update-profile']);
+    }
     if (!notificationMeta.is_read) {
       switch (notificationMeta.type) {
-        case 'projectAdded':
-          localStorage.setItem('from', 'notifications');
-          this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
-          break
-        case 'projectCompleted':
-          localStorage.setItem('from', 'notifications');
-          this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
-          break
-        case 'taskPending':
-          localStorage.setItem('gobackis', 'notifications')
-          this.router.navigate(['project-view/task-view/' + notificationMeta.payload.projectId + '/' + notificationMeta.payload.taskId + '/notifications'])
-          break
-        case 'projectPending':
-          localStorage.setItem('from', 'notifications');
-          this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
-          break
-        case 'subTaskPending':
-          this.router.navigate(['subtask-view/' + notificationMeta.payload.subTaskId + '/' + notificationMeta.payload.taskId + '/' + notificationMeta.payload.projectID + '/notifications'])
-          break
+        // case 'projectAdded':
+        //   localStorage.setItem('from', 'notifications');
+        //   this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
+        //   break
+        // case 'projectCompleted':
+        //   localStorage.setItem('from', 'notifications');
+        //   this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
+        //   break
+        // case 'taskPending':
+        //   localStorage.setItem('gobackis', 'notifications')
+        //   this.router.navigate(['project-view/task-view/' + notificationMeta.payload.projectId + '/' + notificationMeta.payload.taskId + '/notifications'])
+        //   break
+        // case 'projectPending':
+        //   localStorage.setItem('from', 'notifications');
+        //   this.router.navigate(['project-view/detail/' + notificationMeta.payload.projectID + '/notifications'])
+        //   break
+        // case 'subTaskPending':
+        //   this.router.navigate(['subtask-view/' + notificationMeta.payload.subTaskId + '/' + notificationMeta.payload.taskId + '/' + notificationMeta.payload.projectID + '/notifications'])
+        //   break
       }
-     // this.markAsRead(notificationMeta);
+      this.markAsRead(notificationMeta);
     }
   }
   /**
@@ -77,25 +84,25 @@ export class NotificationCardComponent implements OnInit {
               access_token: parsedData.access_token,
               refresh_token: parsedData.refresh_token,
             };
-            // this.showSkeleton = true;
-            // this.storage.set('userTokens', userTokens).then(usertoken => {
-            //   this.notificationCardService.markAsRead(userTokens.access_token, notificationMeta.id).subscribe(data => {
-            //     notificationMeta.is_read = true;
-            //     this.showSkeleton = false;
-            //     this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
-            //       // this.fetchAllNotifications();
-            //       this.showSkeleton = false;
-            //       this.notificationCardService.getCount(data1.result.count);
-            //     }, error => {
-            //       this.showSkeleton = false;
-            //     })
-            //   }, error => {
+            this.showSkeleton = true;
+            this.storage.set('userTokens', userTokens).then(usertoken => {
+              this.notificationCardService.markAsRead(userTokens.access_token, notificationMeta.id).subscribe(data => {
+                notificationMeta.is_read = true;
+                this.showSkeleton = false;
+                this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
+                  // this.fetchAllNotifications();
+                  this.showSkeleton = false;
+                  this.notificationCardService.getCount(data1.result.count);
+                }, error => {
+                  this.showSkeleton = false;
+                })
+              }, error => {
 
-            //     this.showSkeleton = false;
-            //   })
-            // }, error => {
-            //   this.showSkeleton = false;
-            // })
+                this.showSkeleton = false;
+              })
+            }, error => {
+              this.showSkeleton = false;
+            })
           }
         })
       })
@@ -103,7 +110,7 @@ export class NotificationCardComponent implements OnInit {
       this.errorToast('Please check your internet connection.');
     }
   }
- 
+
   // Display error Message
   async errorToast(msg) {
     const toast = await this.toastController.create({
@@ -114,9 +121,7 @@ export class NotificationCardComponent implements OnInit {
     toast.present();
   }
 
-
   public naviage() {
     this.router.navigate(['subtask-view/2/3/4/notifications'])
-
   }
 }

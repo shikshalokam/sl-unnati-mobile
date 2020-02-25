@@ -27,7 +27,15 @@ export class ToastService {
         });
         toast.present();
     }
-
+    async errorToast1(msg) {
+        const toast = await this.toastController.create({
+            message: msg,
+            color: 'danger',
+            duration: 2000,
+            position: 'top'
+        });
+        toast.present();
+    }
     // sucess toast
     async successToast(msg) {
         this.translateService.get(msg).subscribe((text: string) => {

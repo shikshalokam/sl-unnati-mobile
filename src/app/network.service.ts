@@ -9,7 +9,7 @@ export class NetworkService {
     public online$: Observable<boolean> = undefined;
     public emit = new Subject();
     public langEmit = new Subject();
-    constructor(public network: Network, public platform: Platform,public toastController: ToastController,) {
+    constructor(public network: Network, public platform: Platform, public toastController: ToastController, ) {
         this.online$ = Observable.create(observer => {
             observer.next(true);
         }).pipe(mapTo(true));
@@ -38,26 +38,24 @@ export class NetworkService {
         return this.online$;
     }
 
-    public status(status)
-    {
+    public status(status) {
         this.emit.next(status);
     }
-    public setLang(lang)
-    {
+    public setLang(lang) {
         this.langEmit.next(lang);
     }
-    
 
-  // Success message
-  async networkErrorToast() {
-    // this.translate.get('task_is_created').subscribe((text:string) => {
-    //   msg = text;
-    //  });
-    const toast = await this.toastController.create({
-      message: 'Please check your internet connection.',
-      color:'danger',
-      duration: 2000
-    });
-    toast.present();
-  }
+
+    // Success message
+    async networkErrorToast() {
+        // this.translate.get('task_is_created').subscribe((text:string) => {
+        //   msg = text;
+        //  });
+        const toast = await this.toastController.create({
+            message: 'Please check your internet connection.',
+            color: 'danger',
+            duration: 2000
+        });
+        toast.present();
+    }
 }

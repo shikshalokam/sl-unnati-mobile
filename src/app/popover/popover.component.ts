@@ -28,6 +28,7 @@ export class PopoverComponent implements OnInit {
   deleteConfirm;
   @Input() project;
   isIos;
+  projectToSync: any = [];
   appFolderPath;
   constructor(
     public translateService: TranslateService,
@@ -49,6 +50,7 @@ export class PopoverComponent implements OnInit {
 
   ngOnInit() {
     this.platform.ready().then(() => {
+      this.projectToSync.push(this.project);
       this.isIos = this.platform.is('ios') ? true : false;
       this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
       this.translateService.get('button.share').subscribe((text: string) => {
@@ -89,15 +91,15 @@ export class PopoverComponent implements OnInit {
   public deleteProject() {
     this.project.isDeleted = true;
     let projectData = this.project;
-    this.storage.get('myprojects').then(myProjects => {
-      if (myProjects) {
-        myProjects.forEach(function (myProject, i) {
-          if (myProject._id == projectData._id) {
+    this.storage.get('projects').then(myProjects => {
+      if (myProjects[0].projects) {
+        myProjects[0].projects.forEach(function (project, i) {
+          if (project._id == projectData._id) {
             projectData.isEdited = true;
-            myProjects[i] = projectData;
+            myProjects[0].projects[i] = projectData;
           }
         });
-        this.storage.set('myprojects', myProjects).then(project => {
+        this.storage.set('projects', myProjects).then(project => {
           this.toastService.successToast('message.project_deleted_success');
           this.categoryViewService.deleteProject('deleted');
           this.DismissClick();
@@ -118,9 +120,13 @@ export class PopoverComponent implements OnInit {
 
   // Sync project before share
   public syncProject() {
-    if (!this.project.isSync) {
-      if (this.project.tasks && this.project.tasks.length > 0) {
-        this.project.tasks.forEach(task => {
+
+    if (this.projectToSync[0].isEdited || this.projectToSync[0].isNew) {
+      if (this.projectToSync[0].isNew) {
+        delete this.projectToSync[0]._id;
+      }
+      if (this.projectToSync[0].tasks && this.projectToSync[0].tasks.length > 0) {
+        this.projectToSync[0].tasks.forEach(task => {
           if (task.isNew) {
             delete task._id;
           }
@@ -143,41 +149,32 @@ export class PopoverComponent implements OnInit {
             };
             this.storage.set('userTokens', userTokens).then(data => {
               this.toastService.startLoader('Loading, please wait');
-              this.projectService.sync(this.project, data.access_token).subscribe((data: any) => {
+              let metaData: any = [];
+              metaData.push(this.projectToSync);
+              let projects = {
+                projects: this.projectToSync
+              }
+              this.projectService.sync(projects, data.access_token).subscribe((data: any) => {
                 if (data.status == "success" || data.status == "succes") {
-                  let updatedProject;
-                  if (data.projectDetails) {
-                    this.project.isNew = false;
-                    this.project.isSync = true;
-                    this.project.isEdited = false;
-                    data.projectDetails.data.projects[0].isStarted = this.project.isStarted;
-                    updatedProject = data.projectDetails.data.projects[0];
-                    updatedProject.isSync = true;
-                    updatedProject.isEdited = false;
-                    updatedProject.isNew = false;
-                    updatedProject.lastUpdate = this.project.lastUpdate;
-                    this.getPDF(data.projectDetails.data.projects[0]._id);
-                    this.DismissClick();
-                    this.syncUpdateInLocal(updatedProject, this.project, data.allProjects);
-                  } else {
-                    this.project.isNew = false;
-                    this.project.isSync = true;
-                    this.project.isEdited = false;
-                    data.data.isStarted = this.project.isStarted;
-                    updatedProject = data.data;
-                    updatedProject.isSync = true;
-                    updatedProject.isEdited = false;
-                    updatedProject.isNew = false;
-                    updatedProject.lastUpdate = this.project.lastUpdate;
-                    this.getPDF(data.data._id);
-                    this.DismissClick();
-                    this.syncUpdateInLocal(updatedProject, this.project, data.allProjects);
-                  }
+                  // if (data.allProjects.data) {
+                  data.allProjects.data.forEach(projects => {
+                    projects.projects.forEach(sproject => {
+                      if (sproject.share) {
+                        this.getPDF(sproject._id);
+                      }
+                      // sproject.share = false;
+                    })
+                  });
+                  this.DismissClick();
+                  this.syncUpdateInLocal(data.allProjects.data);
+                } else {
+                  this.DismissClick();
+                  this.toastService.errorToast1(data.message);
                 }
+                this.toastService.stopLoader();
               }, error => {
                 // intentially left blank
                 this.toastService.stopLoader();
-                this.toastService.errorToast(data.message)
               })
             })
           }
@@ -186,40 +183,22 @@ export class PopoverComponent implements OnInit {
         })
       })
     } else {
-      this.toastService.startLoader('Loading, please wait');
       this.getPDF(this.project._id);
       this.DismissClick();
     }
   }
-
-  syncUpdateInLocal(project, oldProject, syncedProjects) {
-    if (project.createdType == 'by self' || project.createdType == 'by reference') {
-      this.storage.get('myprojects').then(myprojects => {
-        if (myprojects) {
-          myprojects.forEach(function (prj, i) {
-            if (prj._id == oldProject._id) {
-              myprojects[i] = project;
-            }
-          });
-        }
-        this.storage.set('myprojects', myprojects).then(myprojectsff => {
-          // get all synced projects and update in local
-        })
+  syncUpdateInLocal(syncedProjects) {
+    syncedProjects.forEach(projects => {
+      projects.projects.forEach(sproject => {
+        sproject.isNew = false;
+        sproject.isSync = true;
+        sproject.createdType = 'by self';
+        sproject.isEdited = false;
+        sproject.share = false;
       })
-    } else {
-      this.storage.get('projects').then(projects => {
-        if (projects) {
-          projects.forEach(function (prj, i) {
-            if (prj._id == oldProject._id) {
-              projects[i] = project;
-            }
-          });
-        }
-        this.storage.set('projects', projects).then(myprojectsff => {
-          // get all synced projects and update in local
-        })
-      })
-    }
+    });
+    this.storage.set('projects', syncedProjects).then(myprojectsff => {
+    })
   }
   // geting pdf file report of project and share the project
   public getPDF(id) {
@@ -235,6 +214,7 @@ export class PopoverComponent implements OnInit {
             let projectData = {
               "projectId": id
             }
+            this.toastService.startLoader('Loading, please wait');
             this.categoryViewService.getPDF(projectData, userTokens.access_token).subscribe((data: any) => {
               const fileName = this.project.title.replace(/\s/g, "");
               const fileTransfer: FileTransferObject = this.transfer.create();
@@ -265,18 +245,4 @@ export class PopoverComponent implements OnInit {
       })
     })
   }
-
-  // updateInLocal(project, oldProject) {
-  //   this.storage.get('myprojects').then(myprojects => {
-  //     if (myprojects) {
-  //       myprojects.forEach(function (prj, i) {
-  //         if (prj._id == oldProject._id) {
-  //           myprojects[i] = project;
-  //         }
-  //       });
-  //     }
-  //     this.storage.set('myprojects', myprojects).then(myprojects => {
-  //     })
-  //   })
-  // }
 }
