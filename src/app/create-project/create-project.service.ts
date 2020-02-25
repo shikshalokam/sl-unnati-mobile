@@ -24,39 +24,52 @@ export class CreateProjectService {
     }
     //  Update project in my projects list.
     public updateByProjects(updatedProject) {
-        this.storage.get('myprojects').then(myProjects => {
-            if (myProjects) {
-                myProjects.forEach(function (project, i) {
-                    if (project._id == updatedProject._id) {
-                        updatedProject.isEdited = true;
-                        myProjects[i] = updatedProject;
-                    }
-                });
-                this.storage.set('myprojects', myProjects).then(project => {
-                })
-            } else {
-                updatedProject._id = 1;
-                let data = [];
-                data.push(updatedProject);
-                this.storage.set('myprojects', data).then(myProjects => { })
-            }
+        return this.storage.get('projects').then(projectList => {
+            // projectList.forEach(projectsPrograms => {
+            projectList[0].projects.forEach(function (project, i) {
+                if (project._id == updatedProject._id) {
+                    updatedProject.isEdited = true;
+                    projectList[0].projects[i] = updatedProject;
+                }
+            });
+            this.storage.set('projects', projectList).then(project => {
+            })
+            // });
         })
     }
     // add new project into my projects.
     public insertIntoMyProjects(project) {
-        return this.storage.get('myprojects').then(myProjects => {
-            if (myProjects) {
-                project.isEdited = true;
-                myProjects.push(project);
-                this.storage.set('myprojects', myProjects).then(projects => {
-                })
-            } else {
-                project.isEdited = true;
-                let data = [];
-                data.push(project);
-                this.storage.set('myprojects', data).then(projects => {
+        return this.storage.get('projects').then(projectList => {
+            if (projectList) {
+                projectList.forEach(projectsPrograms => {
+                    if (projectsPrograms) {
+                        projectsPrograms.projects.push(project);
+                        this.storage.set('projects', projectList).then(projects => {
+                        })
+                    } else {
+                        let pro1 = [{
+                            projects: [
+                            ]
+                        }]
+                        pro1[0].projects.push(project);
+                        projectList = pro1;
+                        this.storage.set('projects', projectList).then(projects => {
+                        })
+                    }
+                });
+            } else {  
+                let projects: any;
+                project._id = 1;
+                let pro1 = [{
+                    projects: [{
+                    }]
+                }]
+                pro1[0].projects = project;
+                projectList = pro1;
+                this.storage.set('projects', projectList).then(projects => {
                 })
             }
+
         })
     }
     // update task in project after marking as delete. 

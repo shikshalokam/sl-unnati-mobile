@@ -15,7 +15,7 @@
             <ion-menu-toggle auto-hide="false" *ngIf="p.title != 'Settings'">
               <ion-item [routerDirection]="'root'" (click)="navigate(p.url,p.title)">
                 <ion-icon slot="start" [name]="p.icon"></ion-icon>
-                <ion-label >
+                <ion-label>
                   {{p.title}}
                 </ion-label>
               </ion-item>

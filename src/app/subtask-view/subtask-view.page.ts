@@ -6,7 +6,6 @@ import { TasksService } from '../tasks/tasks.service';
 import { SubTasksService } from '../subtasks/subtasks.service';
 import { Location } from '@angular/common';
 import { ModalController } from '@ionic/angular';
-import { EditTaskPage } from '../edit-task/edit-task.page';
 import { ApiProvider } from '../api/api';
 import { ActivatedRoute } from '@angular/router';
 @Component({
@@ -154,25 +153,25 @@ export class SubtaskViewPage implements OnInit {
 
   //edit Task
   async editTask() {
-    const modal = await this.modalController.create({
-      component: EditTaskPage,
-      componentProps: {
-        editTask: this.task,
-        back: this.back,
-        taskId: this.taskId,
-        title: "Edit sub task",
-      }
+    // const modal = await this.modalController.create({
+    //   component: EditTaskPage,
+    //   componentProps: {
+    //     editTask: this.task,
+    //     back: this.back,
+    //     taskId: this.taskId,
+    //     title: "Edit sub task",
+    //   }
 
-    });
-    modal.onDidDismiss()
-      .then((data) => {
-        if (data.data != undefined && data.data.name != null) {
-          this.storage.get('currentProject').then(data => {
-          })
-        }
-      });
-    this.tasksService.modalActive('true');
-    return await modal.present();
+    // });
+    // modal.onDidDismiss()
+    //   .then((data) => {
+    //     if (data.data != undefined && data.data.name != null) {
+    //       this.storage.get('currentProject').then(data => {
+    //       })
+    //     }
+    //   });
+    // this.tasksService.modalActive('true');
+    // return await modal.present();
   }
 
   async openDelete() {

@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditSubtaskPage } from './edit-subtask.page';
+import { TutorialVideosPage } from './tutorial-videos.page';
 
-describe('EditSubtaskPage', () => {
-  let component: EditSubtaskPage;
-  let fixture: ComponentFixture<EditSubtaskPage>;
+describe('TutorialVideosPage', () => {
+  let component: TutorialVideosPage;
+  let fixture: ComponentFixture<TutorialVideosPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditSubtaskPage ],
+      declarations: [ TutorialVideosPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditSubtaskPage);
+    fixture = TestBed.createComponent(TutorialVideosPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

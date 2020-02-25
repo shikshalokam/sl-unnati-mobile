@@ -56,8 +56,8 @@ export class CreateProjectPage implements OnInit {
       } else {
         this.createNewProject = false;
         this.storage.get('newcreatedproject').then(data => {
-          this.storage.get('myprojects').then(projects => {
-            projects.forEach(project => {
+          this.storage.get('projects').then(projectsList => {
+            projectsList[0].projects.forEach(project => {
               if (project._id == data._id) {
                 this.project = project;
                 if (this.project.startDate && this.project.endDate) {
@@ -98,6 +98,7 @@ export class CreateProjectPage implements OnInit {
         if (type == 'sd') {
           this.project.startDate = this.datepipe.transform(new Date(date));
           // this.startDate = date;
+          this.isValidDate = true;
           this.startDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
           if (this.project.endDate) {
             this.checkDate();
@@ -105,6 +106,7 @@ export class CreateProjectPage implements OnInit {
         } else if (type == "ed") {
           this.project.endDate = this.datepipe.transform(new Date(date));
           // this.endDate = date;
+          this.isValidDate = true;
           this.endDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
           if (this.project.startDate) {
             this.checkDate();
@@ -142,7 +144,6 @@ export class CreateProjectPage implements OnInit {
       }
     } else {
       this.isValidDate = false;
-
     }
   }
   // Create project
@@ -164,13 +165,13 @@ export class CreateProjectPage implements OnInit {
       }
       this.project.createdType = 'by self';
       // this.project.createdType ='by referance';
-      this.storage.get('myprojects').then(myProjects => {
-        if (myProjects) {
+      this.storage.get('projects').then((projectsList: any) => {
+        if (projectsList) {
           // Create new project
           if (this.createNewProject) {
-            this.project._id = myProjects.length + 1;
-            myProjects.push(this.project);
-            this.storage.set('myprojects', myProjects).then(myProjects => {
+            this.project._id = projectsList[0].projects.length + 1;
+            projectsList[0].projects.push(this.project);
+            this.storage.set('projects', projectsList).then(myProjects => {
               this.storage.set('newcreatedproject', this.project).then(cmp => {
                 this.toastService.successToast('message.project_is_created');
                 this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
@@ -178,15 +179,15 @@ export class CreateProjectPage implements OnInit {
             })
           } else {
             // insert edited fields into project, preventing create another project.
-            this.storage.get('myprojects').then(myProjectsList => {
-              myProjectsList.forEach(project => {
+            this.storage.get('projects').then(myProjectsList => {
+              myProjectsList[0].projects.forEach(project => {
                 if (project._id == this.project._id) {
                   project.category = this.project.category;
                   project.title = this.project.title;
                   project.goal = this.project.goal;
                   project.endDate = this.project.endDate;
                   project.startDate = this.project.startDate;
-                  this.storage.set('myprojects', myProjectsList).then(myProjects => {
+                  this.storage.set('projects', myProjectsList).then(myProjects => {
                     this.storage.set('newcreatedproject', this.project).then(cmp => {
                       this.toastService.successToast('message.project_is_created');
                       this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
@@ -198,9 +199,13 @@ export class CreateProjectPage implements OnInit {
           }
         } else {
           this.project._id = 1;
-          let data = [];
-          data.push(this.project);
-          this.storage.set('myprojects', data).then(myProjects => {
+          let pro1 = [{
+            projects: [
+            ]
+          }]
+          pro1[0].projects.push(this.project);
+          projectsList = pro1;
+          this.storage.set('projects', projectsList).then(myProjects => {
             this.storage.set('newcreatedproject', this.project).then(cmp => {
               this.toastService.successToast('message.project_is_created');
               this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);

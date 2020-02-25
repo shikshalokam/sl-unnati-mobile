@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // import { FCM } from '@ionic-native/fcm/ngx';
 // import { FCM } from '@ionic-native/fcm';
-// import { FCM } from '@ionic-native/fcm/ngx';
+import { FCM } from '@ionic-native/fcm/ngx';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ApiProvider } from './api/api';
@@ -19,7 +19,7 @@ export class FcmProvider {
 
     constructor(
         public http: HttpClient, public router: Router,
-        // public fcm: FCM, 
+        public fcm: FCM,
         public api: ApiProvider,
         public localNotification: LocalNotifications, public notificationCardService: NotificationCardService,
         public localStorage: Storage,
@@ -29,9 +29,9 @@ export class FcmProvider {
 
     initializeFCM() {
         if (this.platform.is('android')) {
-           // this.initializeFirebaseAndroid()
+            this.initializeFirebaseAndroid()
         } else {
-           // this.initializeFirebaseIOS()
+            this.initializeFirebaseIOS()
         }
     }
 
@@ -42,33 +42,33 @@ export class FcmProvider {
             if (token) {
                 this.fcmDeviceId = token;
             } else {
-                // this.fcm.getToken().then(token => {
-                //     this.fcmDeviceId = token;
-                //     this.localStorage.set('deviceId', token).then(token => {
-                //         // this.subscribeToChannels('allUsers');
-                //         this.registerDeviceID();
-                //     });
-                // })
+                this.fcm.getToken().then(token => {
+                    this.fcmDeviceId = token;
+                    this.localStorage.set('deviceId', token).then(token => {
+                        // this.subscribeToChannels('allUsers');
+                        this.registerDeviceID();
+                    });
+                })
             }
         })
-        // this.fcm.onTokenRefresh().subscribe(token => {
-        //     this.fcmDeviceId = token;
-        //     this.localStorage.set('deviceId', token);
-        //     this.registerDeviceID();
-        // })
+        this.fcm.onTokenRefresh().subscribe(token => {
+            this.fcmDeviceId = token;
+            this.localStorage.set('deviceId', token);
+            this.registerDeviceID();
+        })
     }
 
     subscribeToPushNotifications() {
-        // this.fcm.onNotification().subscribe(notificationData => {
-        //     //Will be triggered if the user clicks on the notification and come to the app
-        //     if (notificationData.wasTapped) {
-        //         this.onNotificationClick(notificationData);
-        //     } else {
-        //         //Will be triggered if the user is using the app(foreground);
-        //         this.triggerLocalNotification(notificationData);
-        //     };
-        // }, error => {
-        // });
+        this.fcm.onNotification().subscribe(notificationData => {
+            //Will be triggered if the user clicks on the notification and come to the app
+            if (notificationData.wasTapped) {
+                this.onNotificationClick(notificationData);
+            } else {
+                //Will be triggered if the user is using the app(foreground);
+                this.triggerLocalNotification(notificationData);
+            };
+        }, error => {
+        });
     }
 
     localNotificationClickHandler() {
@@ -93,14 +93,18 @@ export class FcmProvider {
                         refresh_token: parsedData.refresh_token,
                     };
                     this.localStorage.set('userTokens', userTokens).then(usertoken => {
-                        const url = AppConfigs.notification.kendra_base_url + AppConfigs.notification.registerDevice;
+                        const url = AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.registerDevice;
                         const payload = {
-                            deviceId: this.fcmDeviceId
+                            deviceId: this.fcmDeviceId,
+                            os: this.platform.is('android') ? 'android' : 'ios',
+                            'app': 'unnati',
+                            'apptype': 'improvement-project',
                         }
                         const httpOptions = {
                             headers: new HttpHeaders({
                                 'x-authenticated-user-token': userTokens.access_token,
                                 'app': 'unnati',
+                                'apptype': 'improvement-project',
                                 'os': this.platform.is('android') ? 'android' : 'ios'
                             })
                         };
@@ -117,11 +121,11 @@ export class FcmProvider {
     initializeFirebaseIOS() {
     }
 
-    // subscribeToChannels(topic: string) {
-    //   this.fcm.subscribeToTopic(topic).then(success => {
-    //     this.subscribeToPushNotifications();
-    //   }).catch(error => { })
-    // }
+    subscribeToChannels(topic: string) {
+        this.fcm.subscribeToTopic(topic).then(success => {
+            this.subscribeToPushNotifications();
+        }).catch(error => { })
+    }
 
     notificationClickActions(notificationMeta) {
     }

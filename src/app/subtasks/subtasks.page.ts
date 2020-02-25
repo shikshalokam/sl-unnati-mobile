@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { EditTaskPage } from '../edit-task/edit-task.page';
 import { NetworkService } from '../network.service';
 import { Network } from '@ionic-native/network/ngx';
 import { TranslateService } from '@ngx-translate/core';
@@ -74,22 +73,22 @@ export class SubtasksPage implements OnInit {
 
   // Create task
   async createTask() {
-    const modal = await this.modalController.create({
-      component: EditTaskPage,
-      componentProps: {
-        title: "Create Sub task",
-      }
-    });
-    modal.onDidDismiss()
-      .then((data) => {
-        this.getTasks();
-        if (data.data != undefined) {
-          data.data.completionDate = new Date(data.data.completionDate);
-          this.tasks.push(data.data);
-          //this.successToast('Task is created.');
-        }
-      });
-    return await modal.present();
+    // const modal = await this.modalController.create({
+    //   component: EditTaskPage,
+    //   componentProps: {
+    //     title: "Create Sub task",
+    //   }
+    // });
+    // modal.onDidDismiss()
+    //   .then((data) => {
+    //     this.getTasks();
+    //     if (data.data != undefined) {
+    //       data.data.completionDate = new Date(data.data.completionDate);
+    //       this.tasks.push(data.data);
+    //       //this.successToast('Task is created.');
+    //     }
+    //   });
+    // return await modal.present();
   }
 
   //Change status of task
@@ -103,28 +102,28 @@ export class SubtasksPage implements OnInit {
 
   //edit Task
   async editTask(id) {
-    let taskToBeEdit;
-    this.tasks.forEach(task => {
-      if (task.id == id) {
-        taskToBeEdit = task;
-      }
-    });
-    const modal = await this.modalController.create({
-      component: EditTaskPage,
-      componentProps: {
-        editTask: taskToBeEdit,
-        title: "Edit Task",
-      }
-    });
-    modal.onDidDismiss()
-      .then((data) => {
-        this.getTasks();
-        if (data.data != undefined && data.data.name != null) {
-          data.data.completionDate = new Date(data.data.completionDate);
-          //this.successToast('Task is edited.');
-        }
-      });
-    return await modal.present();
+    // let taskToBeEdit;
+    // this.tasks.forEach(task => {
+    //   if (task.id == id) {
+    //     taskToBeEdit = task;
+    //   }
+    // });
+    // const modal = await this.modalController.create({
+    //   component: EditTaskPage,
+    //   componentProps: {
+    //     editTask: taskToBeEdit,
+    //     title: "Edit Task",
+    //   }
+    // });
+    // modal.onDidDismiss()
+    //   .then((data) => {
+    //     this.getTasks();
+    //     if (data.data != undefined && data.data.name != null) {
+    //       data.data.completionDate = new Date(data.data.completionDate);
+    //       //this.successToast('Task is edited.');
+    //     }
+    //   });
+    // return await modal.present();
   }
 
   // get Sub tasks

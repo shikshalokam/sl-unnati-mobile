@@ -13,10 +13,10 @@
       placeholder="{{'create_project.placeholder_project_title'| translate}}" maxlength="280"></ion-input>
   </ion-item>
   <form [formGroup]="addTask" class="create-project">
+      <ion-label class="custom-label" position="floating" style="text-transform: none;padding-left: 15px; font-size: 20px;"
+      [ngClass]="{'required-field':markLabelsAsInvalid}">{{'add_task.add_a_task'| translate}}
+    </ion-label>
     <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating" style="text-transform: none; font-size: 20px;"
-        [ngClass]="{'required-field':markLabelsAsInvalid}">{{'add_task.add_a_task'| translate}}
-      </ion-label>
       <ion-input type="text" [(ngModel)]="task.title" name="title" formControlName="title"
         placeholder="{{'add_task.placeholder_task_title'| translate}}" style="border-top-right-radius: 0px;
       border-bottom-right-radius: 0px;"></ion-input>
