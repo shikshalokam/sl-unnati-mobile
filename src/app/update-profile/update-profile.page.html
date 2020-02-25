@@ -60,7 +60,7 @@
         [ngClass]="{'required-field':submitAttempt && !profile.state}">{{'profile_update.state' | translate}}
       </ion-label>
       <ion-select formControlName="state" class="custom-select-box" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.state"
+        (ionChange)="getImmediateChildren($event,'form')" [(ngModel)]="profile.state"
         [class.invalid]="!profileForm.controls.state.valid && (profileForm.controls.state.dirty || submitAttempt)">
         <ion-select-option *ngFor="let state of states" value="{{state._id}}">{{state.name}}</ion-select-option>
       </ion-select>
@@ -69,7 +69,7 @@
       <ion-label class="custom-select" position="floating">
         {{'profile_update.district' | translate}}</ion-label>
       <ion-select formControlName="district" class="custom-select-box" type="text" placeholder=""
-        [(ngModel)]="profile.district" (ionChange)="getImmediateChildren($event)">
+        [(ngModel)]="profile.district" (ionChange)="getImmediateChildren($event,'form')">
         <ion-select-option *ngFor="let district of districts" value="{{district._id}}">{{district.name}}
         </ion-select-option>
       </ion-select>
@@ -78,7 +78,7 @@
       <ion-label class="custom-label" position="floating">
         {{'profile_update.zone' | translate}}</ion-label>
       <ion-select formControlName="zone" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.zone">
+        (ionChange)="getImmediateChildren($event,'form')" [(ngModel)]="profile.zone">
         <ion-select-option *ngFor="let zone of zones" value="{{zone._id}}">{{zone.name}}
         </ion-select-option>
       </ion-select>
@@ -87,7 +87,7 @@
       <ion-label class="custom-select" position="floating">
         {{'profile_update.block' | translate}}</ion-label>
       <ion-select formControlName="block" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.block">
+        (ionChange)="getImmediateChildren($event,'form')" [(ngModel)]="profile.block">
         <ion-select-option *ngFor="let block of blocks" value="{{block._id}}">{{block.name}}
         </ion-select-option>
       </ion-select>
@@ -96,7 +96,7 @@
       <ion-label class="custom-label" position="floating">
         {{'profile_update.cluster' | translate}}</ion-label>
       <ion-select formControlName="cluster" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.cluster">
+        (ionChange)="getImmediateChildren($event,'form')" [(ngModel)]="profile.cluster">
         <ion-select-option *ngFor="let cluster of clusters" value="{{cluster._id}}">{{cluster.name}}
         </ion-select-option>
       </ion-select>
@@ -105,7 +105,7 @@
       <ion-label class="custom-select" position="floating">
         {{'profile_update.taluka' | translate}}</ion-label>
       <ion-select formControlName="taluka" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.taluka">
+        (ionChange)="getImmediateChildren($event,'form')" [(ngModel)]="profile.taluka">
         <ion-select-option *ngFor="let taluka of talukas" value="{{taluka._id}}">{{taluka.hub}}
         </ion-select-option>
       </ion-select>
@@ -114,7 +114,7 @@
       <ion-label class="custom-select" position="floating">
         {{'profile_update.hub' | translate}}</ion-label>
       <ion-select formControlName="hub" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.hub">
+        (ionChange)="getImmediateChildren($event,'form')" [(ngModel)]="profile.hub">
         <ion-select-option *ngFor="let hub of hubs" value="{{hub._id}}">{{school.hub}}
         </ion-select-option>
       </ion-select>
@@ -123,7 +123,7 @@
       <ion-label class="custom-select" position="floating">
         {{'profile_update.school' | translate}}</ion-label>
       <ion-select formControlName="school" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.school">
+        (ionChange)="getImmediateChildren($event,'form')" [(ngModel)]="profile.school">
         <ion-select-option *ngFor="let school of schools" value="{{school._id}}">{{school.name}}
         </ion-select-option>
       </ion-select>
