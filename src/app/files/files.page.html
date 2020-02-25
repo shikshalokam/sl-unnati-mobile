@@ -4,7 +4,7 @@
   </app-header>
 </ion-header>
 <ion-content>
-  <div class="tabs-list" *ngIf="!showSkeleton">
+  <div class="tabs-list">
     <div class="custom-tab" (click)="selectTab('images')" [ngClass]="{'active-tab': activeTab == 'images'}">
       {{ "file.images" | translate }}</div>
     <div class="custom-tab" (click)="selectTab('files')" [ngClass]="{'active-tab':  activeTab == 'files'}">

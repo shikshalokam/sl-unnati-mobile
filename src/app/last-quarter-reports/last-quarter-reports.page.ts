@@ -83,13 +83,13 @@ export class LastQuarterReportsPage implements OnInit {
 
     let totalTask;
     let completed: any;
-    if (this.report.completed > 0 || this.report.pending > 0) {
-      totalTask = this.report.completed + this.report.pending;
-      completed = (this.report.completed / totalTask) * 100;
+    if (this.report.tasksCompleted > 0 || this.report.tasksPending > 0) {
+      totalTask = this.report.tasksCompleted + this.report.tasksPending;
+      completed = (this.report.tasksCompleted / totalTask) * 100;
       completed = completed.toFixed(0);
     } else {
-      this.report.completed = 0;
-      this.report.pending = 0;
+      this.report.tasksCompleted = 0;
+      this.report.tasksPending = 0;
       completed = 0;
     }
     this.chartOptions = {
@@ -120,14 +120,14 @@ export class LastQuarterReportsPage implements OnInit {
           shadow: false,
           center: ['50%', '50%'],
           colors: [
-            '#20ba8d',
-            '#adafad'
+            '#adafad',
+            '#20ba8d'
           ],
         }
       },
       series: [{
         name: "Tasks",
-        data: [["Pending", this.report.pending], ["Completed", this.report.completed]],
+        data: [["Pending", this.report.tasksPending], ["Completed", this.report.tasksCompleted]],
         size: '90%',
         innerSize: '70%',
         showInLegend: true,

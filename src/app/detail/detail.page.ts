@@ -10,7 +10,6 @@ import { TasksService } from '../tasks/tasks.service';
 import { ProjectsService } from '../projects/projects.service';
 import { ApiProvider } from '../api/api';
 import { Location } from '@angular/common';
-import { EditTaskPage } from '../edit-task/edit-task.page';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { HomeService } from '../home/home.service';
 
@@ -276,29 +275,29 @@ export class DetailPage implements OnInit {
   }
   // Create task
   async createTask() {
-    const modal = await this.modalController.create({
-      component: EditTaskPage,
-      componentProps: {
-        title: "Create Task",
-      }
-    });
-    modal.onDidDismiss()
-      .then((data) => {
-        if (data.data != undefined) {
-          data.data.completionDate = new Date(data.data.completionDate);
-          this.storage.get('currentProject').then(data => {
-            this.storage.set('currentProject', data).then(response => {
-              this.project.tasks = response.tasks;
-              this.storage.get('projects').then((data: any) => {
-                this.tasksService.loadProject();
-              })
-            })
-          })
-          this.successToast('task_is_created');
-        }
-      });
-    this.tasksService.modalActive('true');
-    return await modal.present();
+    // const modal = await this.modalController.create({
+    //   component: EditTaskPage,
+    //   componentProps: {
+    //     title: "Create Task",
+    //   }
+    // });
+    // modal.onDidDismiss()
+    //   .then((data) => {
+    //     if (data.data != undefined) {
+    //       data.data.completionDate = new Date(data.data.completionDate);
+    //       this.storage.get('currentProject').then(data => {
+    //         this.storage.set('currentProject', data).then(response => {
+    //           this.project.tasks = response.tasks;
+    //           this.storage.get('projects').then((data: any) => {
+    //             this.tasksService.loadProject();
+    //           })
+    //         })
+    //       })
+    //       this.successToast('task_is_created');
+    //     }
+    //   });
+    // this.tasksService.modalActive('true');
+    // return await modal.present();
   }
   // Success message 
   async successToast(msg) {

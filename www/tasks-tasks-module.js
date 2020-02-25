@@ -149,7 +149,7 @@ module.exports = "<ion-header>\n  <ion-toolbar color=\"$base-color\">\n    <ion-
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".can-go-back header-component ion-back-button {\n  display: block; }\n\nion-col div {\n  color: #000; }\n\nion-col div ion-label {\n    font-weight: 600; }\n\nion-col p {\n  text-align: justify; }\n\n.accordion-style {\n  -webkit-transition: 0.09s all linear;\n  transition: 0.09s all linear;\n  border-left: 2px solid #397efa; }\n\n.task-title {\n  min-width: 80%;\n  font-size: 15px; }\n\n.task-title ion-col {\n    font-size: 20px; }\n\n.task-title ion-col ion-icon {\n      float: right;\n      vertical-align: middle; }\n\n.status-indicator {\n  min-width: 20px;\n  font-size: 20px;\n  max-width: 30px;\n  margin-top: -4px; }\n\n.status-indicator ion-icon {\n    vertical-align: middle; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvdGFza3MvdGFza3MucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksY0FBYyxFQUFBOztBQUVoQjtFQUVFLFdBQVUsRUFBQTs7QUFGWjtJQUlFLGdCQUFnQixFQUFBOztBQUlwQjtFQUdJLG1CQUFtQixFQUFBOztBQUd2QjtFQUNDLG9DQUE0QjtFQUE1Qiw0QkFBNEI7RUFDNUIsOEJBQThCLEVBQUE7O0FBRS9CO0VBRUUsY0FBYztFQUNkLGVBQWMsRUFBQTs7QUFIaEI7SUFLSSxlQUFlLEVBQUE7O0FBTG5CO01BT00sWUFBVztNQUNYLHNCQUFzQixFQUFBOztBQUk1QjtFQUVFLGVBQWU7RUFDZixlQUFlO0VBQ2YsZUFBZTtFQUNmLGdCQUFlLEVBQUE7O0FBTGpCO0lBT0ksc0JBQXNCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC90YXNrcy90YXNrcy5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY2FuLWdvLWJhY2sgaGVhZGVyLWNvbXBvbmVudCBpb24tYmFjay1idXR0b24ge1xuICAgIGRpc3BsYXk6IGJsb2NrO1xuICB9XG4gIGlvbi1jb2wgZGl2IFxue1xuICAgIGNvbG9yOiMwMDA7XG4gICAgaW9uLWxhYmVse1xuICAgIGZvbnQtd2VpZ2h0OiA2MDA7XG5cbiAgfVxufVxuaW9uLWNvbFxue1xuICBwe1xuICAgIHRleHQtYWxpZ246IGp1c3RpZnk7XG4gIH1cbn1cbi5hY2NvcmRpb24tc3R5bGUge1xuIHRyYW5zaXRpb246IDAuMDlzIGFsbCBsaW5lYXI7XG4gYm9yZGVyLWxlZnQ6IDJweCBzb2xpZCAjMzk3ZWZhO1xufVxuLnRhc2stdGl0bGVcbntcbiAgbWluLXdpZHRoOiA4MCU7IFxuICBmb250LXNpemU6MTVweDtcbiAgaW9uLWNvbHtcbiAgICBmb250LXNpemU6IDIwcHg7XG4gICAgaW9uLWljb257XG4gICAgICBmbG9hdDpyaWdodDsgXG4gICAgICB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlO1xuICAgIH1cbiAgfVxufVxuLnN0YXR1cy1pbmRpY2F0b3JcbntcbiAgbWluLXdpZHRoOiAyMHB4O1xuICBmb250LXNpemU6IDIwcHg7XG4gIG1heC13aWR0aDogMzBweDtcbiAgbWFyZ2luLXRvcDotNHB4O1xuICBpb24taWNvbntcbiAgICB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlO1xuICB9XG59XG5cblxuIl19 */"
+module.exports = ".can-go-back header-component ion-back-button {\n  display: block; }\n\nion-col div {\n  color: #000; }\n\nion-col div ion-label {\n    font-weight: 600; }\n\nion-col p {\n  text-align: justify; }\n\n.accordion-style {\n  -webkit-transition: 0.09s all linear;\n  transition: 0.09s all linear;\n  border-left: 2px solid #397efa; }\n\n.task-title {\n  min-width: 80%;\n  font-size: 15px; }\n\n.task-title ion-col {\n    font-size: 20px; }\n\n.task-title ion-col ion-icon {\n      float: right;\n      vertical-align: middle; }\n\n.status-indicator {\n  min-width: 20px;\n  font-size: 20px;\n  max-width: 30px;\n  margin-top: -4px; }\n\n.status-indicator ion-icon {\n    vertical-align: middle; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC90YXNrcy90YXNrcy5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxjQUFjLEVBQUE7O0FBRWhCO0VBRUUsV0FBVSxFQUFBOztBQUZaO0lBSUUsZ0JBQWdCLEVBQUE7O0FBSXBCO0VBR0ksbUJBQW1CLEVBQUE7O0FBR3ZCO0VBQ0Msb0NBQTRCO0VBQTVCLDRCQUE0QjtFQUM1Qiw4QkFBOEIsRUFBQTs7QUFFL0I7RUFFRSxjQUFjO0VBQ2QsZUFBYyxFQUFBOztBQUhoQjtJQUtJLGVBQWUsRUFBQTs7QUFMbkI7TUFPTSxZQUFXO01BQ1gsc0JBQXNCLEVBQUE7O0FBSTVCO0VBRUUsZUFBZTtFQUNmLGVBQWU7RUFDZixlQUFlO0VBQ2YsZ0JBQWUsRUFBQTs7QUFMakI7SUFPSSxzQkFBc0IsRUFBQSIsImZpbGUiOiJzcmMvYXBwL3Rhc2tzL3Rhc2tzLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5jYW4tZ28tYmFjayBoZWFkZXItY29tcG9uZW50IGlvbi1iYWNrLWJ1dHRvbiB7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gIH1cbiAgaW9uLWNvbCBkaXYgXG57XG4gICAgY29sb3I6IzAwMDtcbiAgICBpb24tbGFiZWx7XG4gICAgZm9udC13ZWlnaHQ6IDYwMDtcblxuICB9XG59XG5pb24tY29sXG57XG4gIHB7XG4gICAgdGV4dC1hbGlnbjoganVzdGlmeTtcbiAgfVxufVxuLmFjY29yZGlvbi1zdHlsZSB7XG4gdHJhbnNpdGlvbjogMC4wOXMgYWxsIGxpbmVhcjtcbiBib3JkZXItbGVmdDogMnB4IHNvbGlkICMzOTdlZmE7XG59XG4udGFzay10aXRsZVxue1xuICBtaW4td2lkdGg6IDgwJTsgXG4gIGZvbnQtc2l6ZToxNXB4O1xuICBpb24tY29se1xuICAgIGZvbnQtc2l6ZTogMjBweDtcbiAgICBpb24taWNvbntcbiAgICAgIGZsb2F0OnJpZ2h0OyBcbiAgICAgIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7XG4gICAgfVxuICB9XG59XG4uc3RhdHVzLWluZGljYXRvclxue1xuICBtaW4td2lkdGg6IDIwcHg7XG4gIGZvbnQtc2l6ZTogMjBweDtcbiAgbWF4LXdpZHRoOiAzMHB4O1xuICBtYXJnaW4tdG9wOi00cHg7XG4gIGlvbi1pY29ue1xuICAgIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7XG4gIH1cbn1cblxuXG4iXX0= */"
 
 /***/ }),
 
@@ -166,14 +166,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _edit_task_edit_task_page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../edit-task/edit-task.page */ "./src/app/edit-task/edit-task.page.ts");
-/* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../network.service */ "./src/app/network.service.ts");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
-/* harmony import */ var _tasks_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./tasks.service */ "./src/app/tasks/tasks.service.ts");
-/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "./node_modules/@ionic-native/screen-orientation/ngx/index.js");
-
+/* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../network.service */ "./src/app/network.service.ts");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+/* harmony import */ var _tasks_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tasks.service */ "./src/app/tasks/tasks.service.ts");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "./node_modules/@ionic-native/screen-orientation/ngx/index.js");
 
 
 
@@ -240,36 +238,8 @@ var TasksPage = /** @class */ (function () {
     // Create task
     TasksPage.prototype.createTask = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var modal;
-            var _this = this;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.modalController.create({
-                            component: _edit_task_edit_task_page__WEBPACK_IMPORTED_MODULE_3__["EditTaskPage"],
-                            componentProps: {
-                                title: "Create Task",
-                            }
-                        })];
-                    case 1:
-                        modal = _a.sent();
-                        modal.onDidDismiss()
-                            .then(function (data) {
-                            if (data.data != undefined) {
-                                data.data.completionDate = new Date(data.data.completionDate);
-                                _this.storage.get('currentProject').then(function (data) {
-                                    _this.storage.set('currentProject', data).then(function (response) {
-                                        _this.tasks = response.tasks;
-                                        _this.storage.get('projects').then(function (data) {
-                                            _this.tasksService.loadProject();
-                                        });
-                                    });
-                                });
-                                _this.successToast('task_is_created');
-                            }
-                        });
-                        return [4 /*yield*/, modal.present()];
-                    case 2: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/];
             });
         });
     };
@@ -325,14 +295,14 @@ var TasksPage = /** @class */ (function () {
             template: __webpack_require__(/*! ./tasks.page.html */ "./src/app/tasks/tasks.page.html"),
             styles: [__webpack_require__(/*! ./tasks.page.scss */ "./src/app/tasks/tasks.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_8__["Router"],
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_6__["Storage"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ModalController"],
-            _tasks_service__WEBPACK_IMPORTED_MODULE_6__["TasksService"],
-            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_5__["TranslateService"],
+            _tasks_service__WEBPACK_IMPORTED_MODULE_5__["TasksService"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_4__["TranslateService"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ToastController"],
-            _network_service__WEBPACK_IMPORTED_MODULE_4__["NetworkService"],
-            _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_9__["ScreenOrientation"]])
+            _network_service__WEBPACK_IMPORTED_MODULE_3__["NetworkService"],
+            _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_8__["ScreenOrientation"]])
     ], TasksPage);
     return TasksPage;
 }());

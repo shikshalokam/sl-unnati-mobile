@@ -1,11 +1,10 @@
 export const AppConfigs = {
     //Dev Urls
 
-    appVersion: "1.1.12",
+    appVersion: "1.1.14",
     appName: "Unnati",
 
     // Dev urls
-
     app_url: "https://dev.shikshalokam.org",
     api_url: "https://devhome.shikshalokam.org",
     api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
@@ -14,15 +13,15 @@ export const AppConfigs = {
     environment: "Development",
     //Notification urls
     notification: {
-        kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
+        kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
         getUnreadNotificationCount: "/notifications/in-app/unReadCount",
-        markAsRead: "/notifications/in-app/markAsRead",
+        markAsRead: "/notifications/in-app/markAsRead/",
         getAllNotifications: "/notifications/in-app/list",
         registerDevice: "/notifications/push/registerDevice"
     },
 
     // QA
-    // app_url: "https://qa.shikshalokam.org", 
+    // app_url: "https://qa.shikshalokam.org",
     // api_url: "https://qahome.shikshalokam.org",
     // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
     // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
@@ -30,8 +29,8 @@ export const AppConfigs = {
     // environment: "qa",
     // notification: {
     //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
-    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
-    //     markAsRead: "/notifications/in-app/markItRead",
+    //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+    //     markAsRead: "/notifications/in-app/markAsRead/",
     //     getAllNotifications: "/notifications/in-app/list",
     //     registerDevice: "/notifications/push/registerDevice"
     // },

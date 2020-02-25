@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { EditTaskPage } from '../edit-task/edit-task.page';
 import { ToastController } from '@ionic/angular';
 import { NetworkService } from '../network.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -72,28 +71,28 @@ export class TasksPage implements OnInit {
 
   // Create task
   async createTask() {
-    const modal = await this.modalController.create({
-      component: EditTaskPage,
-      componentProps: {
-        title: "Create Task",
-      }
-    });
-    modal.onDidDismiss()
-      .then((data) => {
-        if (data.data != undefined) {
-          data.data.completionDate = new Date(data.data.completionDate);
-          this.storage.get('currentProject').then(data => {
-            this.storage.set('currentProject', data).then(response => {
-              this.tasks = response.tasks;
-              this.storage.get('projects').then((data: any) => {
-                this.tasksService.loadProject();
-              })
-            })
-          })
-          this.successToast('task_is_created');
-        }
-      });
-    return await modal.present();
+    // const modal = await this.modalController.create({
+    //   component: EditTaskPage,
+    //   componentProps: {
+    //     title: "Create Task",
+    //   }
+    // });
+    // modal.onDidDismiss()
+    //   .then((data) => {
+    //     if (data.data != undefined) {
+    //       data.data.completionDate = new Date(data.data.completionDate);
+    //       this.storage.get('currentProject').then(data => {
+    //         this.storage.set('currentProject', data).then(response => {
+    //           this.tasks = response.tasks;
+    //           this.storage.get('projects').then((data: any) => {
+    //             this.tasksService.loadProject();
+    //           })
+    //         })
+    //       })
+    //       this.successToast('task_is_created');
+    //     }
+    //   });
+    // return await modal.present();
   }
 
   // Success message

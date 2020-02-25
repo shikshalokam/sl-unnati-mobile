@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchSchool } from './myschools/search.filter';
 import { FilterPipe } from './home/search.filter';
 import { TaskBoardPipe } from './task-board/task-board.filter';
+import {CustomPopupComponent} from './custom-popup/custom-popup.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -18,10 +19,10 @@ import { TaskBoardPipe } from './task-board/task-board.filter';
     TranslateModule.forChild()
   ],
   declarations: [
-    HeaderComponent, NotificationCardComponent, SearchSchool, FilterPipe, TaskBoardPipe
+    HeaderComponent, NotificationCardComponent, SearchSchool, FilterPipe,CustomPopupComponent, TaskBoardPipe
   ],
   exports: [
-    HighchartsChartModule, HeaderComponent, NotificationCardComponent, SearchSchool, FilterPipe,TaskBoardPipe
+    HighchartsChartModule, HeaderComponent, NotificationCardComponent, SearchSchool, FilterPipe,CustomPopupComponent,TaskBoardPipe
   ]
 })
 export class SharedModule { }
