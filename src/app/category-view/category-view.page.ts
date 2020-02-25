@@ -16,6 +16,7 @@ export class CategoryViewPage {
   projects;
   searchInput;
   templates;
+  from;
   categoryHead;
   catType;
   showSkeleton: boolean = false;
@@ -43,6 +44,12 @@ export class CategoryViewPage {
     })
     rout.params.subscribe(param => {
       this.catType = param.cat;
+      if (param.from) {
+        this.from = param.from;
+        if (this.from == 'home') {
+          this.back = 'project-view/home'
+        }
+      }
       switch (param.cat) {
         case 'my_projects': {
           this.categoryHead = {
@@ -117,10 +124,12 @@ export class CategoryViewPage {
   bgcolor = '#f7f7f7';
   public getMyProjects() {
     this.showSkeleton = true;
-    this.categaryService.getMyProjects().then((myProjects: any) => {
-      if (myProjects) {
-        myProjects = this.getSortData(myProjects);
-        this.projects = myProjects;
+    this.storage.get('projects').then(projects => {
+      if (projects) {
+        // projects = projects[0].projects.sort((a, b) => {
+        //   <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+        // });
+        this.projects = projects;
         this.showSkeleton = false;
       }
       this.showSkeleton = false;
@@ -142,7 +151,7 @@ export class CategoryViewPage {
     this.showSkeleton = true;
     this.categaryService.getTemplates(type).then(templates => {
       if (templates) {
-        this.projects = templates;
+        this.templates = templates;
       }
       this.showSkeleton = false;
     }, error => {
@@ -151,9 +160,11 @@ export class CategoryViewPage {
   }
 
   async showMenu(ev: any, project) {
+    let pro = project;
+    pro.share = true;
     const popover = await this.popoverController.create({
       component: PopoverComponent,
-      componentProps: { project: project },
+      componentProps: { project: pro },
       event: ev,
       translucent: true
     });

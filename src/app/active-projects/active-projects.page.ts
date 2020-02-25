@@ -17,11 +17,11 @@ export class ActiveProjectsPage implements OnInit {
 
   ngOnInit() {
   }
-  public getActiveProjects() {
-    this.storage.get('myprojects').then(activeProjects => {
-      this.myProjects = activeProjects;
-    });
-  }
+  // public getActiveProjects() {
+  //   this.storage.get('myprojects').then(activeProjects => {
+  //     this.myProjects = activeProjects;
+  //   });
+  // }
   public getProjects() {
     this.storage.get('projects').then(projects => {
       this.projectList = projects;

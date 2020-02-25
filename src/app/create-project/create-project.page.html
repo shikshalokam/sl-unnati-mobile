@@ -14,7 +14,7 @@
     <ion-item class="custom-ion-item">
       <ion-label class="custom-label" position="floating"
         [ngClass]="{'required-field':markLabelsAsInvalid && !project.title}">
-        {{'create_project.title_of_project' | translate}}</ion-label>
+        {{'create_project.title_of_project' | translate}} </ion-label>
       <ion-input type="text" [(ngModel)]="project.title" name="title" formControlName="title"
         placeholder="{{'create_project.placeholder_project_title'| translate}}" maxlength="280"></ion-input>
     </ion-item>
@@ -31,7 +31,7 @@
     <!-- Project start and end date start here -->
     <ion-row>
       <ion-col size="6">
-        <ion-label class="custom-label" position="floating" style=" margin-left: 15px; font-size: 18px !important;">
+        <ion-label class="custom-label " position="floating" style=" margin-left: 15px; font-size: 18px !important;">
           {{'create_project.start_date' | translate}}</ion-label>
         <ion-item class="custom-ion-item" (click)="setDate('sd')">
           <ion-input type="text" [(ngModel)]="startDate" name="title" formControlName="startDate"
@@ -41,7 +41,7 @@
       </ion-col>
       <ion-col size="6">
         <ion-label class="custom-label" position="floating" style=" margin-left: 15px; font-size: 18px !important;"
-          [ngClass]="{'required-field':markLabelsAsInvalid && !validate}">
+          [ngClass]="{'required-field':markLabelsAsInvalid && !isValidDate}">
           {{'create_project.end_date' | translate}}</ion-label>
         <ion-item class="custom-ion-item" (click)="setDate('ed')">
           <ion-input type="text" [(ngModel)]="endDate" name="title" formControlName="endDate" placeholder="{{today}}"

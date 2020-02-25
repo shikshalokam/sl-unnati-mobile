@@ -203,18 +203,18 @@ var routes = [
             { path: 'my-schools', loadChildren: '../myschools/myschools.module#MyschoolsPageModule' },
             { path: 'fullreports/:state', loadChildren: '../fullreports/fullreports.module#FullreportsPageModule' },
             { path: 'about', loadChildren: '../about/about.module#AboutPageModule' },
-            { path: 'detail', loadChildren: '../detail/detail.module#DetailPageModule' },
-            { path: 'detail/:id/:from', loadChildren: '../detail/detail.module#DetailPageModule' },
+            // { path: 'detail', loadChildren: '../detail/detail.module#DetailPageModule' },
+            // { path: 'detail/:id/:from', loadChildren: '../detail/detail.module#DetailPageModule' },
             { path: 'school-project-detail/:id', loadChildren: '../school-project-detail/school-project-detail.module#SchoolProjectDetailPageModule' },
             { path: 'projects', loadChildren: '../projects/projects.module#ProjectsPageModule' },
             { path: 'projects/:type', loadChildren: '../projects/projects.module#ProjectsPageModule' },
             { path: 'reports', loadChildren: '../reports/reports.module#ReportsPageModule' },
             { path: 'my-schools', loadChildren: '../myschools/myschools.module#MyschoolsPageModule' },
             { path: 'school-task-report/:id/:name', loadChildren: '../school-task-report/school-task-report.module#SchoolTaskReportPageModule' },
-            { path: 'task-view', loadChildren: '../task-view/task-view.module#TaskViewPageModule' },
-            { path: 'task-view/:projectId/:taskId/:from', loadChildren: '../task-view/task-view.module#TaskViewPageModule' },
-            { path: 'subtasks', loadChildren: '../subtasks/subtasks.module#SubtasksPageModule' },
-            { path: 'subtasks', loadChildren: '../subtasks/subtasks.module#SubtasksPageModule' },
+            // { path: 'task-view', loadChildren: '../task-view/task-view.module#TaskViewPageModule' },
+            // { path: 'task-view/:projectId/:taskId/:from', loadChildren: '../task-view/task-view.module#TaskViewPageModule' },
+            // { path: 'subtasks', loadChildren: '../subtasks/subtasks.module#SubtasksPageModule' },
+            // { path: 'subtasks', loadChildren: '../subtasks/subtasks.module#SubtasksPageModule' },
             { path: 'subtask-status', loadChildren: '../subtask-status/subtask-status.module#SubtaskStatusPageModule' },
             { path: 'courses', loadChildren: '../courses/courses.module#CoursesPageModule' },
             { path: 'courses/:cat', loadChildren: '../courses/courses.module#CoursesPageModule' },
@@ -226,6 +226,7 @@ var routes = [
             { path: 'current-task/:id/:from', loadChildren: '../current-task-view/current-task-view.module#CurrentTaskViewPageModule' },
             { path: 'library', loadChildren: '../library/library.module#LibraryPageModule' },
             { path: 'category/:cat', loadChildren: '../category-view/category-view.module#CategoryViewPageModule' },
+            { path: 'category/:cat/:from', loadChildren: '../category-view/category-view.module#CategoryViewPageModule' },
             { path: 'project-detail/:cat', loadChildren: '../project-detail/project-detail.module#ProjectDetailPageModule' },
             { path: 'project-detail', loadChildren: '../project-detail/project-detail.module#ProjectDetailPageModule' },
             { path: 'newsfeed', loadChildren: '../newsfeed/newsfeed.module#NewsfeedPageModule' },
@@ -233,6 +234,8 @@ var routes = [
             { path: 'files/:id', loadChildren: '../files/files.module#FilesPageModule' },
             { path: 'notifications', loadChildren: '../notifications/notifications.module#NotificationsPageModule' },
             { path: 'task-board', loadChildren: '../task-board/task-board.module#TaskBoardPageModule' },
+            { path: 'update-profile', loadChildren: '../update-profile/update-profile.module#UpdateProfilePageModule' },
+            { path: 'tutorial-videos', loadChildren: '../tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
         ]
     }
 ];
@@ -266,7 +269,7 @@ var ProjectViewPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-tabs color=\"primary\" selected-tab=\"tasks\" *ngIf=\"!loggedIn\">\n  <div class=\"bottom-tab-img-container\" *ngIf=\"!isKeyBoardUp\"><img src=\"assets/images/bottom-tab/newsfeed.png\" class=\"nf-tab-img\" (click)=\"navigateToNewsFeed()\"> </div>\n  <ion-tab-bar slot=\"bottom\" color=\"primary\">\n    <ion-tab-button tab=\"home\" selected=\"true\" (click)=\"selectTab('home_tab')\">\n      <img src=\"assets/images/bottom-tab/home.png\" class=\"btm-tab-img\">\n      <ion-label>{{ \"landing_page\" | translate }}</ion-label>\n    </ion-tab-button>\n    <ion-tab-button tab=\"projects\" (click)=\"selectTab('projects_tab')\">\n      <img src=\"assets/images/bottom-tab/projects.png\" class=\"btm-tab-img\">\n      <ion-label>{{ \"Projects\" | translate }}</ion-label>\n    </ion-tab-button>\n    <ion-tab-button  (click)=\"navigateToNewsFeed()\">\n    </ion-tab-button>\n    <ion-tab-button tab=\"my-schools\" (click)=\"selectTab('schools_tab')\">\n      <img src=\"assets/images/bottom-tab/baseline-domain.svg\" class=\"btm-tab-img\">\n      <ion-label>{{ \"schools_tab\" | translate }}</ion-label>\n    </ion-tab-button>\n    <ion-tab-button routerLink=\"/project-view/my-reports/last-month-reports\"  (click)=\"selectTab('reports_tab')\">\n      <img src=\"assets/images/bottom-tab/insert_chart.svg\" class=\"btm-tab-img\">\n      <ion-label>{{ \"reports_tab\" | translate }}</ion-label>\n    </ion-tab-button>\n  </ion-tab-bar>\n</ion-tabs>"
+module.exports = "<ion-tabs color=\"primary\" selected-tab=\"tasks\">\n  <div class=\"bottom-tab-img-container\" *ngIf=\"!isKeyBoardUp\"><img src=\"assets/images/bottom-tab/newsfeed.png\" class=\"nf-tab-img\" (click)=\"navigateToNewsFeed()\"> </div>\n  <ion-tab-bar slot=\"bottom\" color=\"primary\">\n    <ion-tab-button tab=\"home\" selected=\"true\" (click)=\"selectTab('home_tab')\">\n      <img src=\"assets/images/bottom-tab/home.png\" class=\"btm-tab-img\">\n      <ion-label>{{ \"landing_page\" | translate }}</ion-label>\n    </ion-tab-button>\n    <ion-tab-button tab=\"projects\" (click)=\"selectTab('projects_tab')\">\n      <img src=\"assets/images/bottom-tab/projects.png\" class=\"btm-tab-img\">\n      <ion-label>{{ \"Projects\" | translate }}</ion-label>\n    </ion-tab-button>\n    <ion-tab-button  (click)=\"navigateToNewsFeed()\">\n    </ion-tab-button>\n    <ion-tab-button tab=\"my-schools\" (click)=\"selectTab('schools_tab')\">\n      <img src=\"assets/images/bottom-tab/baseline-domain.svg\" class=\"btm-tab-img\">\n      <ion-label>{{ \"schools_tab\" | translate }}</ion-label>\n    </ion-tab-button>\n    <ion-tab-button routerLink=\"/project-view/my-reports/last-month-reports\"  (click)=\"selectTab('reports_tab')\">\n      <img src=\"assets/images/bottom-tab/insert_chart.svg\" class=\"btm-tab-img\">\n      <ion-label>{{ \"reports_tab\" | translate }}</ion-label>\n    </ion-tab-button>\n  </ion-tab-bar>\n</ion-tabs>"
 
 /***/ }),
 
@@ -277,7 +280,7 @@ module.exports = "<ion-tabs color=\"primary\" selected-tab=\"tasks\" *ngIf=\"!lo
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".no-connection {\n  color: red; }\n\n:host(.show-back-button) {\n  display: block; }\n\n.bottom-tab-img-container {\n  margin: auto;\n  margin-bottom: -32px; }\n\n.bottom-tab-img-container .nf-tab-img {\n    margin-top: -100px;\n    z-index: 99999999;\n    position: relative;\n    width: 60px;\n    border: 2px solid #fff;\n    border-radius: 50%; }\n\n.btm-tab-img {\n  width: 35px;\n  max-width: 35px;\n  max-height: 35px;\n  min-height: 35px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvcHJvamVjdC12aWV3L3Byb2plY3Qtdmlldy5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxVQUFTLEVBQUE7O0FBRWI7RUFDRSxjQUFjLEVBQUE7O0FBR2hCO0VBQ0UsWUFBWTtFQUNaLG9CQUFvQixFQUFBOztBQUZ0QjtJQUtFLGtCQUFrQjtJQUNsQixpQkFBaUI7SUFDakIsa0JBQWtCO0lBQ2xCLFdBQVc7SUFDWCxzQkFBc0I7SUFDdEIsa0JBQWtCLEVBQUE7O0FBR3BCO0VBQ0UsV0FBVztFQUNYLGVBQWU7RUFDZixnQkFBZ0I7RUFDaEIsZ0JBQWdCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9wcm9qZWN0LXZpZXcvcHJvamVjdC12aWV3LnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5uby1jb25uZWN0aW9ue1xuICAgIGNvbG9yOnJlZDtcbn1cbjpob3N0KC5zaG93LWJhY2stYnV0dG9uKSB7XG4gIGRpc3BsYXk6IGJsb2NrO1xufVxuXG4uYm90dG9tLXRhYi1pbWctY29udGFpbmVye1xuICBtYXJnaW46IGF1dG87XG4gIG1hcmdpbi1ib3R0b206IC0zMnB4O1xuICAubmYtdGFiLWltZ1xue1xuICBtYXJnaW4tdG9wOiAtMTAwcHg7XG4gIHotaW5kZXg6IDk5OTk5OTk5O1xuICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gIHdpZHRoOiA2MHB4O1xuICBib3JkZXI6IDJweCBzb2xpZCAjZmZmO1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG59XG59XG4uYnRtLXRhYi1pbWd7XG4gIHdpZHRoOiAzNXB4O1xuICBtYXgtd2lkdGg6IDM1cHg7XG4gIG1heC1oZWlnaHQ6IDM1cHg7XG4gIG1pbi1oZWlnaHQ6IDM1cHg7XG59XG4iXX0= */"
+module.exports = ".no-connection {\n  color: red; }\n\n:host(.show-back-button) {\n  display: block; }\n\n.bottom-tab-img-container {\n  margin: auto;\n  margin-bottom: -32px; }\n\n.bottom-tab-img-container .nf-tab-img {\n    margin-top: -100px;\n    z-index: 99999999;\n    position: relative;\n    width: 60px;\n    border: 2px solid #fff;\n    border-radius: 50%; }\n\n.btm-tab-img {\n  width: 35px;\n  max-width: 35px;\n  max-height: 35px;\n  min-height: 35px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9wcm9qZWN0LXZpZXcvcHJvamVjdC12aWV3LnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFVBQVMsRUFBQTs7QUFFYjtFQUNFLGNBQWMsRUFBQTs7QUFHaEI7RUFDRSxZQUFZO0VBQ1osb0JBQW9CLEVBQUE7O0FBRnRCO0lBS0Usa0JBQWtCO0lBQ2xCLGlCQUFpQjtJQUNqQixrQkFBa0I7SUFDbEIsV0FBVztJQUNYLHNCQUFzQjtJQUN0QixrQkFBa0IsRUFBQTs7QUFHcEI7RUFDRSxXQUFXO0VBQ1gsZUFBZTtFQUNmLGdCQUFnQjtFQUNoQixnQkFBZ0IsRUFBQSIsImZpbGUiOiJzcmMvYXBwL3Byb2plY3Qtdmlldy9wcm9qZWN0LXZpZXcucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm5vLWNvbm5lY3Rpb257XG4gICAgY29sb3I6cmVkO1xufVxuOmhvc3QoLnNob3ctYmFjay1idXR0b24pIHtcbiAgZGlzcGxheTogYmxvY2s7XG59XG5cbi5ib3R0b20tdGFiLWltZy1jb250YWluZXJ7XG4gIG1hcmdpbjogYXV0bztcbiAgbWFyZ2luLWJvdHRvbTogLTMycHg7XG4gIC5uZi10YWItaW1nXG57XG4gIG1hcmdpbi10b3A6IC0xMDBweDtcbiAgei1pbmRleDogOTk5OTk5OTk7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgd2lkdGg6IDYwcHg7XG4gIGJvcmRlcjogMnB4IHNvbGlkICNmZmY7XG4gIGJvcmRlci1yYWRpdXM6IDUwJTtcbn1cbn1cbi5idG0tdGFiLWltZ3tcbiAgd2lkdGg6IDM1cHg7XG4gIG1heC13aWR0aDogMzVweDtcbiAgbWF4LWhlaWdodDogMzVweDtcbiAgbWluLWhlaWdodDogMzVweDtcbn1cbiJdfQ== */"
 
 /***/ }),
 

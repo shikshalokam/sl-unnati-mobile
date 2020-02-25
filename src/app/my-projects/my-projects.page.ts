@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-my-projects',
   templateUrl: './my-projects.page.html',
@@ -10,7 +10,7 @@ export class MyProjectsPage implements OnInit {
   projects;
   constructor(
     public storage: Storage,
-    public router:Router
+    public router: Router
   ) { }
   ionViewDidEnter() {
     this.getMyProjects();
@@ -18,14 +18,13 @@ export class MyProjectsPage implements OnInit {
   ngOnInit() {
   }
   public getMyProjects() {
-    this.storage.get('myprojects').then(myprojects => {
+    this.storage.get('projects').then(myprojects => {
       this.projects = myprojects;
     });
   }
-  public projectView(project)
-  {
-    this.storage.set('projectToBeView',project).then(project =>{
-      this.router.navigate(['/project-view/project-detail','my-projects'])
+  public projectView(project) {
+    this.storage.set('projectToBeView', project).then(project => {
+      this.router.navigate(['/project-view/project-detail', 'my-projects'])
     })
   }
 }

@@ -7,7 +7,6 @@ import { Storage } from '@ionic/storage';
 import { HomeService } from '../home/home.service';
 import { CreateTaskService } from './create-task.service';
 import { ToastService } from '../toast.service';
-import { projection } from '@angular/core/src/render3';
 @Component({
   selector: 'app-create-task',
   templateUrl: './create-task.page.html',
@@ -64,8 +63,12 @@ export class CreateTaskPage implements OnInit {
     })
   }
   public getCurrentProject(id) {
-    this.createTaskService.getProjectById(id).then(project => {
-      this.currentMyProject = project;
+    this.storage.get('projects').then(projectList => {
+      projectList[0].projects.forEach(project => {
+        if (project._id == id) {
+          this.currentMyProject = project;
+        }
+      });
     })
   }
   // set date
@@ -108,22 +111,19 @@ export class CreateTaskPage implements OnInit {
       this.storage.set('newcreatedproject', this.currentMyProject).then(cp => {
         this.currentMyProject = cp;
         // if (this.currentMyProject.createdType) {
-        this.storage.get('myprojects').then(myProjects => {
+        this.storage.get('projects').then(myProjects => {
           if (myProjects) {
-            myProjects.forEach(myProject => {
+            myProjects[0].projects.forEach(function (myProject, i) {
               if (myProject._id == cp._id) {
-                myProject.tasks = cp.tasks;
-                this.storage.set('myprojects', myProjects).then(success => {
-                  this.toastService.successToast('message.task_is_created');
-                  this.homeService.loadActiveProjects();
-                })
+                myProjects[0].projects[i] = cp;
               }
             });
+            this.storage.set('projects', myProjects).then(success => {
+              this.toastService.successToast('message.task_is_created');
+              this.homeService.loadActiveProjects();
+            })
           }
         })
-        // } else {
-        //   //  project list update  
-        // }
       })
       this.task = {};
       this.prepareForm();
@@ -184,13 +184,13 @@ export class CreateTaskPage implements OnInit {
     this.currentMyProject.lastUpdate = new Date();
     this.storage.set('newcreatedproject', this.currentMyProject).then(cp => {
       this.currentMyProject = cp;
-      this.storage.get('myprojects').then(myProjects => {
+      this.storage.get('projects').then(myProjects => {
         if (myProjects) {
-          myProjects.forEach(myProject => {
+          myProjects[0].projects.forEach(myProject => {
             if (myProject._id == cp._id) {
               myProject.title = cp.title;
               myProject.tasks = cp.tasks;
-              this.storage.set('myprojects', myProjects).then(success => {
+              this.storage.set('projects', myProjects).then(success => {
                 this.homeService.loadActiveProjects();
               })
             }

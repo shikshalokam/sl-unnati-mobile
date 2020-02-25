@@ -425,40 +425,22 @@ var CreateTaskService = /** @class */ (function () {
     }
     CreateTaskService.prototype.getProjectById = function (projectId) {
         var _this = this;
-        return this.storage.get('myprojects').then(function (myprojects) {
-            if (myprojects) {
-                myprojects.forEach(function (project) {
-                    if (project._id == projectId) {
-                        return _this.project = project;
-                    }
-                });
-                if (!_this.project) {
-                    return _this.storage.get('projects').then(function (projectList) {
-                        projectList[0].projects.forEach(function (project) {
-                            if (project._id == projectId) {
-                                return _this.project = project;
-                            }
-                        });
-                    });
+        return this.storage.get('projects').then(function (projectList) {
+            projectList[0].projects.forEach(function (project) {
+                if (project._id == projectId) {
+                    return _this.project = project;
                 }
-                return _this.project;
-            }
-            else {
-                return _this.storage.get('projects').then(function (projectList) {
-                    projectList[0].projects.forEach(function (project) {
-                        if (project._id == projectId) {
-                            return _this.project = project;
-                        }
-                    });
-                });
-            }
+            });
         });
     };
     CreateTaskService.prototype.updateByProjects = function (updatedProject) {
-        this.storage.get('myprojects').then(function (myProjects) {
-            myProjects.forEach(function (project) {
+        var _this = this;
+        this.storage.get('projects').then(function (projectList) {
+            projectList[0].projects.forEach(function (project) {
                 if (project._id == updatedProject._id) {
-                    project = updatedProject;
+                    projectList[0].projects = updatedProject;
+                    _this.storage.set('projects', projectList).then(function (projects) {
+                    });
                 }
             });
         });
@@ -466,16 +448,15 @@ var CreateTaskService = /** @class */ (function () {
     // add project into my projects
     CreateTaskService.prototype.insertIntoMyProjects = function (project) {
         var _this = this;
-        return this.storage.get('myprojects').then(function (myProjects) {
-            if (myProjects) {
-                myProjects.push(project);
-                _this.storage.set('myprojects', myProjects).then(function (projects) {
+        return this.storage.get('projects').then(function (projectList) {
+            if (projectList[0].projects) {
+                projectList[0].projects.push(project);
+                _this.storage.set('projects', projectList).then(function (projects) {
                 });
             }
             else {
-                var data = [];
-                data.push(project);
-                _this.storage.set('myprojects', data).then(function (projects) {
+                projectList[0].projects.push(project);
+                _this.storage.set('projects', projectList).then(function (projects) {
                 });
             }
         });
@@ -487,54 +468,6 @@ var CreateTaskService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"]])
     ], CreateTaskService);
     return CreateTaskService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/myschools/myschools.service.ts":
-/*!************************************************!*\
-  !*** ./src/app/myschools/myschools.service.ts ***!
-  \************************************************/
-/*! exports provided: MyschoolsService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MyschoolsService", function() { return MyschoolsService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
-
-
-
-
-var MyschoolsService = /** @class */ (function () {
-    function MyschoolsService(http) {
-        this.http = http;
-    }
-    MyschoolsService.prototype.getSchools = function (token, count, page) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-auth-token': token
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].api_url + '/unnati/api/v1/schoolList?limit=' + count + '&page=' + page, { headers: httpHeaders });
-    };
-    // Search school by name.
-    MyschoolsService.prototype.searchScool = function (token, keyword) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-auth-token': token
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].api_url + '/unnati/api/v1/schoolList?limit=100&page=0&search=' + keyword, { headers: httpHeaders });
-    };
-    MyschoolsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root',
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
-    ], MyschoolsService);
-    return MyschoolsService;
 }());
 
 

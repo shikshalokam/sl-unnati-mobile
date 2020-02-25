@@ -9,14 +9,13 @@ export class SearchSchool implements PipeTransform {
             return items;
         }
         searchText = searchText.toLowerCase();
-        debugger
         return items.filter(item => {
-                if (item.name.toLowerCase().includes(searchText)) {
-                    return item.name.toLowerCase().includes(searchText);
-                }
-                if (item.title.toLowerCase().includes(searchText)) {
-                    return item.title.toLowerCase().includes(searchText);
-                }
+            if (item.name && item.name.toLowerCase().includes(searchText)) {
+                return item.name.toLowerCase().includes(searchText);
+            }
+            if (item.title && item.title.toLowerCase().includes(searchText)) {
+                return item.title.toLowerCase().includes(searchText);
+            }
         });
     }
 }

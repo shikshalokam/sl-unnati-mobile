@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: '/login',
-    pathMatch: 'full'
-  },
+  // {
+  //   path: '',
+  //   redirectTo: '/project-view/home',
+  //   pathMatch: 'full'
+  // },
   {
     path: 'home',
     loadChildren: './home/home.module#HomePageModule'
@@ -18,15 +18,12 @@ const routes: Routes = [
   { path: 'tasks', loadChildren: './tasks/tasks.module#TasksPageModule' },
   { path: 'detail', loadChildren: './detail/detail.module#DetailPageModule' },
   { path: 'resources', loadChildren: './charts/charts.module#ChartsPageModule' },
-  { path: 'edit-task/:id', loadChildren: './edit-task/edit-task.module#EditTaskPageModule' },
-  { path: 'edit-task', loadChildren: './edit-task/edit-task.module#EditTaskPageModule' },
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
   { path: 'task-view/:projectId/:taskId/:from', loadChildren: './task-view/task-view.module#TaskViewPageModule' },
   { path: 'courses', loadChildren: './courses/courses.module#CoursesPageModule' },
   { path: 'subtasks', loadChildren: './subtasks/subtasks.module#SubtasksPageModule' },
   { path: 'subtask-view', loadChildren: './subtask-view/subtask-view.module#SubtaskViewPageModule' },
   { path: 'subtask-view/:subtaskId/:taskId/:projectId/:from', loadChildren: './subtask-view/subtask-view.module#SubtaskViewPageModule' },
-  { path: 'edit-subtask', loadChildren: './edit-subtask/edit-subtask.module#EditSubtaskPageModule' },
   { path: 'my-schools', loadChildren: './myschools/myschools.module#MyschoolsPageModule' },
   { path: 'school-task-report/:id', loadChildren: './school-task-report/school-task-report.module#SchoolTaskReportPageModule' },
   { path: 'reports', loadChildren: './reports/reports.module#ReportsPageModule' },
@@ -50,6 +47,8 @@ const routes: Routes = [
   { path: 'files/:id', loadChildren: './files/files.module#FilesPageModule' },
   { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
   { path: 'kclg', loadChildren: './kclg/kclg.module#KclgPageModule' },
+  { path: 'update-profile', loadChildren: './update-profile/update-profile.module#UpdateProfilePageModule' },
+  { path: 'tutorial-videos', loadChildren: './tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
 ];
 
 @NgModule({
