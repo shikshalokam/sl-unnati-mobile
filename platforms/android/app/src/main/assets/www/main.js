@@ -1477,48 +1477,53 @@ var AppComponent = /** @class */ (function () {
     // auto sync
     AppComponent.prototype.autoSync = function () {
         var _this = this;
-        if (this.projectsToSync.length > 0) {
-            this.storage.get('userTokens').then(function (data) {
-                if (data) {
-                    _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                        var parsedData = JSON.parse(data._body);
-                        if (parsedData && parsedData.access_token) {
-                            var userTokens = {
-                                access_token: parsedData.access_token,
-                                refresh_token: parsedData.refresh_token,
-                            };
-                            _this.storage.set('userTokens', userTokens).then(function (data) {
-                                var projects = {
-                                    projects: _this.projectsToSync
+        if (this.isConnected) {
+            if (this.projectsToSync.length > 0) {
+                this.storage.get('userTokens').then(function (data) {
+                    if (data) {
+                        _this.api.refershToken(data.refresh_token).subscribe(function (data) {
+                            var parsedData = JSON.parse(data._body);
+                            if (parsedData && parsedData.access_token) {
+                                var userTokens = {
+                                    access_token: parsedData.access_token,
+                                    refresh_token: parsedData.refresh_token,
                                 };
-                                _this.toastService.startLoader('Your data is syncing');
-                                _this.projectService.sync(projects, data.access_token).subscribe(function (data) {
-                                    if (data.status === "failed") {
-                                        _this.toastService.errorToast(data.message);
-                                    }
-                                    else if (data.status == "success" || data.status == "succes") {
-                                        _this.syncUpdateInLocal(data.allProjects.data);
-                                    }
-                                    _this.toastService.stopLoader();
-                                }, function (error) {
-                                    _this.toastService.stopLoader();
+                                _this.storage.set('userTokens', userTokens).then(function (data) {
+                                    var projects = {
+                                        projects: _this.projectsToSync
+                                    };
+                                    _this.toastService.startLoader('Your data is syncing');
+                                    _this.projectService.sync(projects, data.access_token).subscribe(function (data) {
+                                        _this.toastService.stopLoader();
+                                        if (data.status === "failed") {
+                                            _this.toastService.errorToast(data.message);
+                                        }
+                                        else if (data.status == "success" || data.status == "succes") {
+                                            _this.syncUpdateInLocal(data.allProjects.data);
+                                        }
+                                    }, function (error) {
+                                        _this.toastService.stopLoader();
+                                    });
                                 });
-                            });
-                        }
-                    }, function (error) {
-                        if (error.status === 0) {
-                            _this.router.navigateByUrl('/login');
-                            _this.toastService.stopLoader();
-                        }
-                    });
-                }
-                else {
-                    _this.router.navigateByUrl('/login');
+                            }
+                        }, function (error) {
+                            if (error.status === 0) {
+                                _this.router.navigateByUrl('/login');
+                                _this.toastService.stopLoader();
+                            }
+                        });
+                    }
+                    else {
+                        _this.router.navigateByUrl('/login');
+                        _this.toastService.stopLoader();
+                    }
+                }, function (error) {
                     _this.toastService.stopLoader();
-                }
-            }, function (error) {
-                _this.toastService.stopLoader();
-            });
+                });
+            }
+        }
+        else {
+            this.toastService.errorToast('message.nerwork_connection_check');
         }
     };
     AppComponent.prototype.syncUpdateInLocal = function (syncedProjects) {
@@ -1589,38 +1594,37 @@ var AppComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppConfigs", function() { return AppConfigs; });
 var AppConfigs = {
-    //Dev Urls
-    appVersion: "1.1.14",
+    appVersion: "2.0.0",
     appName: "Unnati",
     // Dev urls
-    app_url: "https://dev.shikshalokam.org",
-    api_url: "https://devhome.shikshalokam.org",
-    api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
-    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
-    clientId: "sl-ionic-connect",
-    environment: "Development",
-    //Notification urls
-    notification: {
-        kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
-        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
-        markAsRead: "/notifications/in-app/markAsRead/",
-        getAllNotifications: "/notifications/in-app/list",
-        registerDevice: "/notifications/push/registerDevice"
-    },
-    // QA
-    // app_url: "https://qa.shikshalokam.org",
-    // api_url: "https://qahome.shikshalokam.org",
-    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    // app_url: "https://dev.shikshalokam.org",
+    // api_url: "https://devhome.shikshalokam.org",
+    // api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
+    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
     // clientId: "sl-ionic-connect",
-    // environment: "qa",
+    // environment: "Development",
+    // //Notification urls
     // notification: {
-    //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+    //     kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
     //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
     //     markAsRead: "/notifications/in-app/markAsRead/",
     //     getAllNotifications: "/notifications/in-app/list",
     //     registerDevice: "/notifications/push/registerDevice"
     // },
+    // QA
+    app_url: "https://qa.shikshalokam.org",
+    api_url: "https://qahome.shikshalokam.org",
+    api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    clientId: "sl-ionic-connect",
+    environment: "qa",
+    notification: {
+        kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+        markAsRead: "/notifications/in-app/markAsRead/",
+        getAllNotifications: "/notifications/in-app/list",
+        registerDevice: "/notifications/push/registerDevice"
+    },
     //AWS Prod Urls
     // app_url: "https://bodh.shikshalokam.org",
     // api_url: "https://api.shikshalokam.org",
