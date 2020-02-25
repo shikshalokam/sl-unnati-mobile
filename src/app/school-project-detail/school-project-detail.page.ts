@@ -6,9 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ProjectService } from '../project-view/project.service';
 import { ToastController, ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
-import { TasksService } from '../tasks/tasks.service';
 import { ApiProvider } from '../api/api';
-import { EditTaskPage } from '../edit-task/edit-task.page';
 @Component({
   selector: 'app-school-project-detail',
   templateUrl: './school-project-detail.page.html',
@@ -18,13 +16,12 @@ export class SchoolProjectDetailPage implements OnInit {
   public showSkeleton: boolean = false;
   public project: any = [];
   public skeletons = [{}, {}, {}, {}, {}, {}]
-
+  back = 'project-view/my-schools';
   constructor(public parameter: ActivatedRoute,
     public router: Router,
     public storage: Storage,
     public api: ApiProvider,
     public projectService: ProjectService,
-    public tasksService: TasksService,
     public alertController: AlertController,
     public toastController: ToastController,
     public translateService: TranslateService,
@@ -57,7 +54,6 @@ export class SchoolProjectDetailPage implements OnInit {
               this.project = [];
               this.showSkeleton = false;
               if (resp.status != 'failed') {
-                //  this.tasksService.loadProject();
                 if (resp.data) {
                   this.project = resp.data;
                 } else {
@@ -118,31 +114,9 @@ export class SchoolProjectDetailPage implements OnInit {
   }
   // Create task
   async createTask() {
-    const modal = await this.modalController.create({
-      component: EditTaskPage,
-      componentProps: {
-        title: "Create Task",
-      }
-    });
-    modal.onDidDismiss()
-      .then((data) => {
-        if (data.data != undefined) {
-          data.data.completionDate = new Date(data.data.completionDate);
-          this.storage.get('currentProject').then(data => {
-            this.storage.set('currentProject', data).then(response => {
-              this.project.tasks = response.tasks;
-              this.storage.get('projects').then((data: any) => {
-                this.tasksService.loadProject();
-              })
-            })
-          })
-          this.successToast('task_is_created');
-        }
-      });
-    this.tasksService.modalActive('true');
-    return await modal.present();
+    
   }
-  
+
   // Success message 
   async successToast(msg) {
     this.translateService.get('task_is_created').subscribe((text: string) => {

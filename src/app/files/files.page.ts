@@ -7,6 +7,8 @@ import { Base64 } from '@ionic-native/base64/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { Storage } from '@ionic/storage';
+
 declare var cordova: any;
 
 @Component({
@@ -27,7 +29,8 @@ export class FilesPage implements OnInit {
     public base64: Base64,
     public fileChooser: FileChooser,
     public file: File,
-    public fileOpener: FileOpener
+    public fileOpener: FileOpener,
+    public storage: Storage
   ) {
     route.params.subscribe(params => {
       this.getCurrentProject(params.id);
@@ -37,19 +40,23 @@ export class FilesPage implements OnInit {
   ngOnInit() {
     this.platform.ready().then(() => {
       this.isIos = this.platform.is('ios') ? true : false;
-      this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
+      this.appFolderPath = this.isIos ? this.file.documentsDirectory : this.file.externalApplicationStorageDirectory;
     })
   }
   public getCurrentProject(id) {
-    this.createTaskService.getProjectById(id).then(project => {
-      if (project.tasks && project.tasks.length > 0) {
-        project.tasks.forEach(task => {
-          if (task.imageUrl) {
-            task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
-          }
-        });
-      }
-      this.currentMyProject = project;
+    this.storage.get('projects').then(projectList => {
+      projectList[0].projects.forEach(project => {
+        if (project.tasks && project.tasks.length > 0) {
+          project.tasks.forEach(task => {
+            if (task.imageUrl) {
+              task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
+            }
+          });
+        }
+        if (project._id == id) {
+          this.currentMyProject = project;
+        }
+      });
     })
   }
   public selectTab(type) {
@@ -60,7 +67,9 @@ export class FilesPage implements OnInit {
       {
         method: "GET"
       }).then(res => res.blob()).then(blob => {
-        this.file.writeFile(this.file.externalApplicationStorageDirectory, task.file.name, blob, { replace: true }).then(res => {
+        this.appFolderPath = decodeURIComponent(this.appFolderPath);
+        task.file.name = decodeURIComponent(task.file.name);
+        this.file.writeFile(this.appFolderPath, task.file.name, blob, { replace: true }).then(res => {
           this.fileOpener.open(
             res.toInternalURL(),
             'application/pdf'
@@ -75,6 +84,5 @@ export class FilesPage implements OnInit {
       }).catch(err => {
         console.log('error');
       });
-
   }
 }

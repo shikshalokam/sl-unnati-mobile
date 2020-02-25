@@ -74,7 +74,7 @@ module.exports = "<ion-header>\n  <app-header [title]=\"'task_detail' | translat
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".subtasksBtn {\n  padding: 2px;\n  height: 20px;\n  width: 20px;\n  color: #fff;\n  background: #af4038;\n  border-radius: 15px;\n  margin-right: 5px; }\n\n.label-divider {\n  font-size: 16px; }\n\n.label-divider ion-label {\n    font-size: 16px;\n    color: #000000; }\n\n.label-divider ion-label img {\n      width: 22px;\n      float: left;\n      margin-right: 10px; }\n\n.ion-color-light {\n  --ion-color-base: #ffffff !important;\n  --ion-color-base-rgb: var(--ion-color-light-rgb, 244,245,248) !important;\n  --ion-color-contrast: var(--ion-color-light-contrast, #000) !important;\n  --ion-color-contrast-rgb: var(--ion-color-light-contrast-rgb, 0,0,0) !important;\n  --ion-color-shade: #ffffff !important;\n  --ion-color-tint: #ffffff !important;\n  --box-shadow: none;\n  text-transform: none; }\n\n.ion-color-dark {\n  --ion-color-base: #5b514f !important;\n  --ion-color-base-rgb: var(--ion-color-dark-rgb, 34,36,40) !important;\n  --ion-color-contrast: var(--ion-color-dark-contrast, #fff) !important;\n  --ion-color-contrast-rgb: var(--ion-color-dark-contrast-rgb, 255,255,255) !important;\n  --ion-color-shade: #5b514f !important;\n  --ion-color-tint: #5b514f !important; }\n\n.action-list {\n  list-style: none;\n  display: -webkit-inline-box;\n  display: inline-flex;\n  -webkit-padding-start: 0px;\n          padding-inline-start: 0px;\n  width: 100%; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvdGFzay12aWV3L3Rhc2stdmlldy5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFFSSxZQUFZO0VBQ1osWUFBWTtFQUNaLFdBQVc7RUFDWCxXQUFXO0VBQ1gsbUJBQW1CO0VBQ25CLG1CQUFtQjtFQUNuQixpQkFBaUIsRUFBQTs7QUFFckI7RUFDSSxlQUFjLEVBQUE7O0FBRGxCO0lBR1EsZUFBYztJQUNkLGNBQWMsRUFBQTs7QUFKdEI7TUFNWSxXQUFXO01BQ1gsV0FBVztNQUNYLGtCQUFrQixFQUFBOztBQUk5QjtFQUNJLG9DQUFpQjtFQUNqQix3RUFBcUI7RUFDckIsc0VBQXFCO0VBQ3JCLCtFQUF5QjtFQUN6QixxQ0FBa0I7RUFDbEIsb0NBQWlCO0VBQ2pCLGtCQUFhO0VBQ2Isb0JBQW9CLEVBQUE7O0FBRXhCO0VBQ0ksb0NBQWlCO0VBQ2pCLG9FQUFxQjtFQUNyQixxRUFBcUI7RUFDckIsb0ZBQXlCO0VBQ3pCLHFDQUFrQjtFQUNsQixvQ0FBaUIsRUFBQTs7QUFFckI7RUFFSSxnQkFBZTtFQUNmLDJCQUFtQjtFQUFuQixvQkFBbUI7RUFDbkIsMEJBQXlCO1VBQXpCLHlCQUF5QjtFQUN6QixXQUFXLEVBQUEiLCJmaWxlIjoic3JjL2FwcC90YXNrLXZpZXcvdGFzay12aWV3LnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5zdWJ0YXNrc0J0blxue1xuICAgIHBhZGRpbmc6IDJweDtcbiAgICBoZWlnaHQ6IDIwcHg7XG4gICAgd2lkdGg6IDIwcHg7XG4gICAgY29sb3I6ICNmZmY7XG4gICAgYmFja2dyb3VuZDogI2FmNDAzODtcbiAgICBib3JkZXItcmFkaXVzOiAxNXB4O1xuICAgIG1hcmdpbi1yaWdodDogNXB4O1xufVxuLmxhYmVsLWRpdmlkZXJ7XG4gICAgZm9udC1zaXplOjE2cHg7XG4gICAgaW9uLWxhYmVse1xuICAgICAgICBmb250LXNpemU6MTZweDtcbiAgICAgICAgY29sb3I6ICMwMDAwMDA7XG4gICAgICAgIGltZyB7XG4gICAgICAgICAgICB3aWR0aDogMjJweDtcbiAgICAgICAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgICAgICAgbWFyZ2luLXJpZ2h0OiAxMHB4O1xuICAgICAgICB9XG4gICAgfVxufVxuLmlvbi1jb2xvci1saWdodCB7XG4gICAgLS1pb24tY29sb3ItYmFzZTogI2ZmZmZmZiAhaW1wb3J0YW50O1xuICAgIC0taW9uLWNvbG9yLWJhc2UtcmdiOiB2YXIoLS1pb24tY29sb3ItbGlnaHQtcmdiLCAyNDQsMjQ1LDI0OCkgIWltcG9ydGFudDtcbiAgICAtLWlvbi1jb2xvci1jb250cmFzdDogdmFyKC0taW9uLWNvbG9yLWxpZ2h0LWNvbnRyYXN0LCAjMDAwKSAhaW1wb3J0YW50O1xuICAgIC0taW9uLWNvbG9yLWNvbnRyYXN0LXJnYjogdmFyKC0taW9uLWNvbG9yLWxpZ2h0LWNvbnRyYXN0LXJnYiwgMCwwLDApICFpbXBvcnRhbnQ7XG4gICAgLS1pb24tY29sb3Itc2hhZGU6ICNmZmZmZmYgIWltcG9ydGFudDtcbiAgICAtLWlvbi1jb2xvci10aW50OiAjZmZmZmZmICFpbXBvcnRhbnQ7XG4gICAgLS1ib3gtc2hhZG93OiBub25lO1xuICAgIHRleHQtdHJhbnNmb3JtOiBub25lO1xufVxuLmlvbi1jb2xvci1kYXJrIHtcbiAgICAtLWlvbi1jb2xvci1iYXNlOiAjNWI1MTRmICFpbXBvcnRhbnQ7XG4gICAgLS1pb24tY29sb3ItYmFzZS1yZ2I6IHZhcigtLWlvbi1jb2xvci1kYXJrLXJnYiwgMzQsMzYsNDApICFpbXBvcnRhbnQ7XG4gICAgLS1pb24tY29sb3ItY29udHJhc3Q6IHZhcigtLWlvbi1jb2xvci1kYXJrLWNvbnRyYXN0LCAjZmZmKSAhaW1wb3J0YW50O1xuICAgIC0taW9uLWNvbG9yLWNvbnRyYXN0LXJnYjogdmFyKC0taW9uLWNvbG9yLWRhcmstY29udHJhc3QtcmdiLCAyNTUsMjU1LDI1NSkgIWltcG9ydGFudDtcbiAgICAtLWlvbi1jb2xvci1zaGFkZTogIzViNTE0ZiAhaW1wb3J0YW50O1xuICAgIC0taW9uLWNvbG9yLXRpbnQ6ICM1YjUxNGYgIWltcG9ydGFudDtcbn1cbi5hY3Rpb24tbGlzdFxue1xuICAgIGxpc3Qtc3R5bGU6bm9uZTsgXG4gICAgZGlzcGxheTppbmxpbmUtZmxleDtcbiAgICBwYWRkaW5nLWlubGluZS1zdGFydDogMHB4O1xuICAgIHdpZHRoOiAxMDAlO1xufSJdfQ== */"
+module.exports = ".subtasksBtn {\n  padding: 2px;\n  height: 20px;\n  width: 20px;\n  color: #fff;\n  background: #af4038;\n  border-radius: 15px;\n  margin-right: 5px; }\n\n.label-divider {\n  font-size: 16px; }\n\n.label-divider ion-label {\n    font-size: 16px;\n    color: #000000; }\n\n.label-divider ion-label img {\n      width: 22px;\n      float: left;\n      margin-right: 10px; }\n\n.ion-color-light {\n  --ion-color-base: #ffffff !important;\n  --ion-color-base-rgb: var(--ion-color-light-rgb, 244,245,248) !important;\n  --ion-color-contrast: var(--ion-color-light-contrast, #000) !important;\n  --ion-color-contrast-rgb: var(--ion-color-light-contrast-rgb, 0,0,0) !important;\n  --ion-color-shade: #ffffff !important;\n  --ion-color-tint: #ffffff !important;\n  --box-shadow: none;\n  text-transform: none; }\n\n.ion-color-dark {\n  --ion-color-base: #5b514f !important;\n  --ion-color-base-rgb: var(--ion-color-dark-rgb, 34,36,40) !important;\n  --ion-color-contrast: var(--ion-color-dark-contrast, #fff) !important;\n  --ion-color-contrast-rgb: var(--ion-color-dark-contrast-rgb, 255,255,255) !important;\n  --ion-color-shade: #5b514f !important;\n  --ion-color-tint: #5b514f !important; }\n\n.action-list {\n  list-style: none;\n  display: -webkit-inline-box;\n  display: inline-flex;\n  -webkit-padding-start: 0px;\n          padding-inline-start: 0px;\n  width: 100%; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC90YXNrLXZpZXcvdGFzay12aWV3LnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUVJLFlBQVk7RUFDWixZQUFZO0VBQ1osV0FBVztFQUNYLFdBQVc7RUFDWCxtQkFBbUI7RUFDbkIsbUJBQW1CO0VBQ25CLGlCQUFpQixFQUFBOztBQUVyQjtFQUNJLGVBQWMsRUFBQTs7QUFEbEI7SUFHUSxlQUFjO0lBQ2QsY0FBYyxFQUFBOztBQUp0QjtNQU1ZLFdBQVc7TUFDWCxXQUFXO01BQ1gsa0JBQWtCLEVBQUE7O0FBSTlCO0VBQ0ksb0NBQWlCO0VBQ2pCLHdFQUFxQjtFQUNyQixzRUFBcUI7RUFDckIsK0VBQXlCO0VBQ3pCLHFDQUFrQjtFQUNsQixvQ0FBaUI7RUFDakIsa0JBQWE7RUFDYixvQkFBb0IsRUFBQTs7QUFFeEI7RUFDSSxvQ0FBaUI7RUFDakIsb0VBQXFCO0VBQ3JCLHFFQUFxQjtFQUNyQixvRkFBeUI7RUFDekIscUNBQWtCO0VBQ2xCLG9DQUFpQixFQUFBOztBQUVyQjtFQUVJLGdCQUFlO0VBQ2YsMkJBQW1CO0VBQW5CLG9CQUFtQjtFQUNuQiwwQkFBeUI7VUFBekIseUJBQXlCO0VBQ3pCLFdBQVcsRUFBQSIsImZpbGUiOiJzcmMvYXBwL3Rhc2stdmlldy90YXNrLXZpZXcucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnN1YnRhc2tzQnRuXG57XG4gICAgcGFkZGluZzogMnB4O1xuICAgIGhlaWdodDogMjBweDtcbiAgICB3aWR0aDogMjBweDtcbiAgICBjb2xvcjogI2ZmZjtcbiAgICBiYWNrZ3JvdW5kOiAjYWY0MDM4O1xuICAgIGJvcmRlci1yYWRpdXM6IDE1cHg7XG4gICAgbWFyZ2luLXJpZ2h0OiA1cHg7XG59XG4ubGFiZWwtZGl2aWRlcntcbiAgICBmb250LXNpemU6MTZweDtcbiAgICBpb24tbGFiZWx7XG4gICAgICAgIGZvbnQtc2l6ZToxNnB4O1xuICAgICAgICBjb2xvcjogIzAwMDAwMDtcbiAgICAgICAgaW1nIHtcbiAgICAgICAgICAgIHdpZHRoOiAyMnB4O1xuICAgICAgICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICAgICAgICBtYXJnaW4tcmlnaHQ6IDEwcHg7XG4gICAgICAgIH1cbiAgICB9XG59XG4uaW9uLWNvbG9yLWxpZ2h0IHtcbiAgICAtLWlvbi1jb2xvci1iYXNlOiAjZmZmZmZmICFpbXBvcnRhbnQ7XG4gICAgLS1pb24tY29sb3ItYmFzZS1yZ2I6IHZhcigtLWlvbi1jb2xvci1saWdodC1yZ2IsIDI0NCwyNDUsMjQ4KSAhaW1wb3J0YW50O1xuICAgIC0taW9uLWNvbG9yLWNvbnRyYXN0OiB2YXIoLS1pb24tY29sb3ItbGlnaHQtY29udHJhc3QsICMwMDApICFpbXBvcnRhbnQ7XG4gICAgLS1pb24tY29sb3ItY29udHJhc3QtcmdiOiB2YXIoLS1pb24tY29sb3ItbGlnaHQtY29udHJhc3QtcmdiLCAwLDAsMCkgIWltcG9ydGFudDtcbiAgICAtLWlvbi1jb2xvci1zaGFkZTogI2ZmZmZmZiAhaW1wb3J0YW50O1xuICAgIC0taW9uLWNvbG9yLXRpbnQ6ICNmZmZmZmYgIWltcG9ydGFudDtcbiAgICAtLWJveC1zaGFkb3c6IG5vbmU7XG4gICAgdGV4dC10cmFuc2Zvcm06IG5vbmU7XG59XG4uaW9uLWNvbG9yLWRhcmsge1xuICAgIC0taW9uLWNvbG9yLWJhc2U6ICM1YjUxNGYgIWltcG9ydGFudDtcbiAgICAtLWlvbi1jb2xvci1iYXNlLXJnYjogdmFyKC0taW9uLWNvbG9yLWRhcmstcmdiLCAzNCwzNiw0MCkgIWltcG9ydGFudDtcbiAgICAtLWlvbi1jb2xvci1jb250cmFzdDogdmFyKC0taW9uLWNvbG9yLWRhcmstY29udHJhc3QsICNmZmYpICFpbXBvcnRhbnQ7XG4gICAgLS1pb24tY29sb3ItY29udHJhc3QtcmdiOiB2YXIoLS1pb24tY29sb3ItZGFyay1jb250cmFzdC1yZ2IsIDI1NSwyNTUsMjU1KSAhaW1wb3J0YW50O1xuICAgIC0taW9uLWNvbG9yLXNoYWRlOiAjNWI1MTRmICFpbXBvcnRhbnQ7XG4gICAgLS1pb24tY29sb3ItdGludDogIzViNTE0ZiAhaW1wb3J0YW50O1xufVxuLmFjdGlvbi1saXN0XG57XG4gICAgbGlzdC1zdHlsZTpub25lOyBcbiAgICBkaXNwbGF5OmlubGluZS1mbGV4O1xuICAgIHBhZGRpbmctaW5saW5lLXN0YXJ0OiAwcHg7XG4gICAgd2lkdGg6IDEwMCU7XG59Il19 */"
 
 /***/ }),
 
@@ -93,13 +93,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../network.service */ "./src/app/network.service.ts");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _edit_task_edit_task_page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../edit-task/edit-task.page */ "./src/app/edit-task/edit-task.page.ts");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
-/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-/* harmony import */ var _tasks_tasks_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../tasks/tasks.service */ "./src/app/tasks/tasks.service.ts");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
-
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _tasks_tasks_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../tasks/tasks.service */ "./src/app/tasks/tasks.service.ts");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
 
 
 
@@ -247,18 +245,8 @@ var TaskViewPage = /** @class */ (function () {
     //Sub Task View
     TaskViewPage.prototype.showSubTasks = function (id) {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var modal;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.modalController.create({
-                            component: _edit_task_edit_task_page__WEBPACK_IMPORTED_MODULE_5__["EditTaskPage"],
-                            componentProps: {}
-                        })];
-                    case 1:
-                        modal = _a.sent();
-                        return [4 /*yield*/, modal.present()];
-                    case 2: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/];
             });
         });
     };
@@ -269,59 +257,16 @@ var TaskViewPage = /** @class */ (function () {
     //edit Task
     TaskViewPage.prototype.editTask = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var modal;
-            var _this = this;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.modalController.create({
-                            component: _edit_task_edit_task_page__WEBPACK_IMPORTED_MODULE_5__["EditTaskPage"],
-                            componentProps: {
-                                editTask: this.task,
-                                back: this.back,
-                                title: "Edit Task",
-                            }
-                        })];
-                    case 1:
-                        modal = _a.sent();
-                        modal.onDidDismiss()
-                            .then(function (data) {
-                            if (data.data != undefined && data.data.name != null) {
-                                _this.storage.get('currentProject').then(function (data) {
-                                    _this.taskService.loadProject();
-                                });
-                            }
-                        });
-                        this.taskService.modalActive('true');
-                        return [4 /*yield*/, modal.present()];
-                    case 2: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/];
             });
         });
     };
     //  create task
     TaskViewPage.prototype.create = function (id) {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var modal;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.modalController.create({
-                            component: _edit_task_edit_task_page__WEBPACK_IMPORTED_MODULE_5__["EditTaskPage"],
-                            componentProps: {
-                                editTask: this.task,
-                                title: "Create Task",
-                            }
-                        })];
-                    case 1:
-                        modal = _a.sent();
-                        modal.onDidDismiss()
-                            .then(function (data) {
-                            if (data.data != undefined && data.data.name != null) {
-                                // code
-                            }
-                        });
-                        return [4 /*yield*/, modal.present()];
-                    case 2: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/];
             });
         });
     };
@@ -434,12 +379,12 @@ var TaskViewPage = /** @class */ (function () {
             template: __webpack_require__(/*! ./task-view.page.html */ "./src/app/task-view/task-view.page.html"),
             styles: [__webpack_require__(/*! ./task-view.page.scss */ "./src/app/task-view/task-view.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"],
-            _tasks_tasks_service__WEBPACK_IMPORTED_MODULE_9__["TasksService"],
-            _api_api__WEBPACK_IMPORTED_MODULE_10__["ApiProvider"],
-            _angular_common__WEBPACK_IMPORTED_MODULE_8__["Location"],
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_6__["Storage"],
+            _tasks_tasks_service__WEBPACK_IMPORTED_MODULE_8__["TasksService"],
+            _api_api__WEBPACK_IMPORTED_MODULE_9__["ApiProvider"],
+            _angular_common__WEBPACK_IMPORTED_MODULE_7__["Location"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["AlertController"],
-            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_6__["TranslateService"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_5__["TranslateService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"],
             _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
             _network_service__WEBPACK_IMPORTED_MODULE_2__["NetworkService"],

@@ -25,6 +25,7 @@ export class ProjectDetailPage {
   markLabelsAsInvalid: boolean = false;
   editGoal: boolean = false;
   editTitle: boolean = false;
+  show: boolean = false;
   statuses = [
     { title: 'Not started' },
     { title: 'In Progress' },
@@ -41,6 +42,8 @@ export class ProjectDetailPage {
     public toastService: ToastService
   ) {
     route.params.subscribe(param => {
+      this.editTitle = false;
+      this.editGoal = false;
       if (param.cat) {
         this.category = param.cat;
         if (this.category == 'my-projects' || this.category == 'active-projects' || this.category == 'all-projects' || this.category == 'projectsList') {
@@ -48,9 +51,13 @@ export class ProjectDetailPage {
         } else if (this.category == 'schools') {
           localStorage.setItem('entityKey', this.project.entityId);
           this.back = 'project-view/school-task-report/' + this.project.entityId + '/school';
+        } else if (this.category == 'home') {
+          this.back = 'project-view/home';
         } else {
           this.back = 'project-view/category/' + this.category;
         }
+      } else {
+        this.back = 'project-view/category/my_projects';
       }
     })
   }
@@ -94,7 +101,11 @@ export class ProjectDetailPage {
       if (project.status == 'not yet started') {
         project.status = 'Not started';
       }
+      if (!project.isStarted) {
+        project.isStarted = false;
+      }
       this.project = project;
+      this.show = true;
       this.sortTasks();
     })
   }
@@ -104,7 +115,7 @@ export class ProjectDetailPage {
     this.project.isStarted = true;
     this.project.status = 'In Progress';
     this.project.startDate = new Date();
-    if (this.category != 'my_projects') {
+    if (this.category != 'my_projects' && this.category != 'projectsList') {
       this.project.createdType = "by reference";
       this.project.lastUpdate = new Date();
       this.project.isNew = true;
@@ -223,10 +234,12 @@ export class ProjectDetailPage {
     switch (field) {
       case 'goal': {
         this.editGoal = true;
+        this.editTitle = false;
         break;
       }
       case 'title': {
         this.editTitle = true;
+        this.editGoal = false;
         break;
       }
     }
@@ -257,8 +270,20 @@ export class ProjectDetailPage {
     this.updateTask();
   }
 
+  blockEditAll() {
+    if (this.project.goal) {
+      this.editGoal = false;
+      this.markLabelsAsInvalid = false;
+    }
+    if (this.project.title) {
+      this.editTitle = false;
+      this.markLabelsAsInvalid = false;
+    }
+    this.updateTask();
+  }
   // update the task
   public updateTask() {
+    this.project.isEdited = true;
     this.project.lastUpdate = new Date();
     this.createProjectService.updateByProjects(this.project);
   }
@@ -278,6 +303,8 @@ export class ProjectDetailPage {
   // mark the task as deleted
   public delete(task) {
     task.isDeleted = true;
+    task.status = 'Completed';
+    this.tasksLength = this.tasksLength - 1;
     this.storage.set('cTask', task).then(ct => {
       this.updateCurrentProject(ct);
       this.toastService.successToast('message.task_is_deleted');
@@ -286,6 +313,7 @@ export class ProjectDetailPage {
   // update project with all changes made.
   public updateCurrentProject(ct) {
     this.project.lastUpdate = new Date();
+    this.project.isEdited = true;
     this.createProjectService.updateByProjects(this.project);
   }
   public sortTasks() {

@@ -74,7 +74,7 @@ module.exports = "<ion-header>\n  <app-header [title]=\"'subtasks' | translate\"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "ion-col div {\n  color: #000; }\n  ion-col div ion-label {\n    font-weight: 600; }\n  ion-col p {\n  text-align: justify; }\n  .st-completed {\n  color: green; }\n  .st-notstarted {\n  color: #000; }\n  .st-inprogress {\n  color: orange; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvc3VidGFza3Mvc3VidGFza3MucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNFO0VBRUksV0FBVSxFQUFBO0VBRmQ7SUFJSSxnQkFBZ0IsRUFBQTtFQUlwQjtFQUdJLG1CQUFtQixFQUFBO0VBR3ZCO0VBRUUsWUFBVyxFQUFBO0VBRWI7RUFFRSxXQUFVLEVBQUE7RUFFWjtFQUVFLGFBQVksRUFBQSIsImZpbGUiOiJzcmMvYXBwL3N1YnRhc2tzL3N1YnRhc2tzLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuICBpb24tY29sIGRpdiBcbiAge1xuICAgICAgY29sb3I6IzAwMDtcbiAgICAgIGlvbi1sYWJlbHtcbiAgICAgIGZvbnQtd2VpZ2h0OiA2MDA7XG4gIFxuICAgIH1cbiAgfVxuICBpb24tY29sXG4gIHtcbiAgICBwe1xuICAgICAgdGV4dC1hbGlnbjoganVzdGlmeTtcbiAgICB9XG4gIH1cbiAgLnN0LWNvbXBsZXRlZFxuICB7XG4gICAgY29sb3I6Z3JlZW47XG4gIH1cbiAgLnN0LW5vdHN0YXJ0ZWRcbiAge1xuICAgIGNvbG9yOiMwMDA7XG4gIH1cbiAgLnN0LWlucHJvZ3Jlc3NcbiAge1xuICAgIGNvbG9yOm9yYW5nZTtcbiAgfVxuICJdfQ== */"
+module.exports = "ion-col div {\n  color: #000; }\n  ion-col div ion-label {\n    font-weight: 600; }\n  ion-col p {\n  text-align: justify; }\n  .st-completed {\n  color: green; }\n  .st-notstarted {\n  color: #000; }\n  .st-inprogress {\n  color: orange; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9zdWJ0YXNrcy9zdWJ0YXNrcy5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0U7RUFFSSxXQUFVLEVBQUE7RUFGZDtJQUlJLGdCQUFnQixFQUFBO0VBSXBCO0VBR0ksbUJBQW1CLEVBQUE7RUFHdkI7RUFFRSxZQUFXLEVBQUE7RUFFYjtFQUVFLFdBQVUsRUFBQTtFQUVaO0VBRUUsYUFBWSxFQUFBIiwiZmlsZSI6InNyYy9hcHAvc3VidGFza3Mvc3VidGFza3MucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXG4gIGlvbi1jb2wgZGl2IFxuICB7XG4gICAgICBjb2xvcjojMDAwO1xuICAgICAgaW9uLWxhYmVse1xuICAgICAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgXG4gICAgfVxuICB9XG4gIGlvbi1jb2xcbiAge1xuICAgIHB7XG4gICAgICB0ZXh0LWFsaWduOiBqdXN0aWZ5O1xuICAgIH1cbiAgfVxuICAuc3QtY29tcGxldGVkXG4gIHtcbiAgICBjb2xvcjpncmVlbjtcbiAgfVxuICAuc3Qtbm90c3RhcnRlZFxuICB7XG4gICAgY29sb3I6IzAwMDtcbiAgfVxuICAuc3QtaW5wcm9ncmVzc1xuICB7XG4gICAgY29sb3I6b3JhbmdlO1xuICB9XG4gIl19 */"
 
 /***/ }),
 
@@ -92,13 +92,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _edit_task_edit_task_page__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../edit-task/edit-task.page */ "./src/app/edit-task/edit-task.page.ts");
-/* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../network.service */ "./src/app/network.service.ts");
-/* harmony import */ var _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/network/ngx */ "./node_modules/@ionic-native/network/ngx/index.js");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
-/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
-/* harmony import */ var _tasks_tasks_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../tasks/tasks.service */ "./src/app/tasks/tasks.service.ts");
-
+/* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../network.service */ "./src/app/network.service.ts");
+/* harmony import */ var _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic-native/network/ngx */ "./node_modules/@ionic-native/network/ngx/index.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _tasks_tasks_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../tasks/tasks.service */ "./src/app/tasks/tasks.service.ts");
 
 
 
@@ -168,30 +166,8 @@ var SubtasksPage = /** @class */ (function () {
     // Create task
     SubtasksPage.prototype.createTask = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var modal;
-            var _this = this;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.modalController.create({
-                            component: _edit_task_edit_task_page__WEBPACK_IMPORTED_MODULE_4__["EditTaskPage"],
-                            componentProps: {
-                                title: "Create Sub task",
-                            }
-                        })];
-                    case 1:
-                        modal = _a.sent();
-                        modal.onDidDismiss()
-                            .then(function (data) {
-                            _this.getTasks();
-                            if (data.data != undefined) {
-                                data.data.completionDate = new Date(data.data.completionDate);
-                                _this.tasks.push(data.data);
-                                //this.successToast('Task is created.');
-                            }
-                        });
-                        return [4 /*yield*/, modal.present()];
-                    case 2: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/];
             });
         });
     };
@@ -206,36 +182,8 @@ var SubtasksPage = /** @class */ (function () {
     //edit Task
     SubtasksPage.prototype.editTask = function (id) {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var taskToBeEdit, modal;
-            var _this = this;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.tasks.forEach(function (task) {
-                            if (task.id == id) {
-                                taskToBeEdit = task;
-                            }
-                        });
-                        return [4 /*yield*/, this.modalController.create({
-                                component: _edit_task_edit_task_page__WEBPACK_IMPORTED_MODULE_4__["EditTaskPage"],
-                                componentProps: {
-                                    editTask: taskToBeEdit,
-                                    title: "Edit Task",
-                                }
-                            })];
-                    case 1:
-                        modal = _a.sent();
-                        modal.onDidDismiss()
-                            .then(function (data) {
-                            _this.getTasks();
-                            if (data.data != undefined && data.data.name != null) {
-                                data.data.completionDate = new Date(data.data.completionDate);
-                                //this.successToast('Task is edited.');
-                            }
-                        });
-                        return [4 /*yield*/, modal.present()];
-                    case 2: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/];
             });
         });
     };
@@ -259,14 +207,14 @@ var SubtasksPage = /** @class */ (function () {
             template: __webpack_require__(/*! ./subtasks.page.html */ "./src/app/subtasks/subtasks.page.html"),
             styles: [__webpack_require__(/*! ./subtasks.page.scss */ "./src/app/subtasks/subtasks.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_tasks_tasks_service__WEBPACK_IMPORTED_MODULE_9__["TasksService"],
-            _ionic_storage__WEBPACK_IMPORTED_MODULE_8__["Storage"],
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_tasks_tasks_service__WEBPACK_IMPORTED_MODULE_8__["TasksService"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"],
-            _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_6__["Network"],
-            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_7__["TranslateService"],
+            _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_5__["Network"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_6__["TranslateService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
-            _network_service__WEBPACK_IMPORTED_MODULE_5__["NetworkService"]])
+            _network_service__WEBPACK_IMPORTED_MODULE_4__["NetworkService"]])
     ], SubtasksPage);
     return SubtasksPage;
 }());

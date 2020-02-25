@@ -74,7 +74,7 @@ module.exports = "<ion-header>\n  <app-header\n    [title]=\"'notifications.titl
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".noPadding {\n  padding-left: 0;\n  padding-top: 10px; }\n\n.loadMore {\n  max-width: 300px;\n  --border-radius: 20px;\n  margin: auto;\n  margin-bottom: 50px;\n  margin-top: 25px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvbm90aWZpY2F0aW9ucy9ub3RpZmljYXRpb25zLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLGVBQWU7RUFDZixpQkFBaUIsRUFBQTs7QUFFbkI7RUFDRSxnQkFBZ0I7RUFDaEIscUJBQWdCO0VBQ2hCLFlBQVk7RUFDWixtQkFBbUI7RUFDbkIsZ0JBQWdCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9ub3RpZmljYXRpb25zL25vdGlmaWNhdGlvbnMucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm5vUGFkZGluZyB7XG4gIHBhZGRpbmctbGVmdDogMDtcbiAgcGFkZGluZy10b3A6IDEwcHg7XG59XG4ubG9hZE1vcmUge1xuICBtYXgtd2lkdGg6IDMwMHB4O1xuICAtLWJvcmRlci1yYWRpdXM6IDIwcHg7XG4gIG1hcmdpbjogYXV0bztcbiAgbWFyZ2luLWJvdHRvbTogNTBweDtcbiAgbWFyZ2luLXRvcDogMjVweDtcbn0iXX0= */"
+module.exports = ".noPadding {\n  padding-left: 0;\n  padding-top: 10px; }\n\n.loadMore {\n  max-width: 300px;\n  --border-radius: 20px;\n  margin: auto;\n  margin-bottom: 50px;\n  margin-top: 25px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9ub3RpZmljYXRpb25zL25vdGlmaWNhdGlvbnMucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsZUFBZTtFQUNmLGlCQUFpQixFQUFBOztBQUVuQjtFQUNFLGdCQUFnQjtFQUNoQixxQkFBZ0I7RUFDaEIsWUFBWTtFQUNaLG1CQUFtQjtFQUNuQixnQkFBZ0IsRUFBQSIsImZpbGUiOiJzcmMvYXBwL25vdGlmaWNhdGlvbnMvbm90aWZpY2F0aW9ucy5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubm9QYWRkaW5nIHtcbiAgcGFkZGluZy1sZWZ0OiAwO1xuICBwYWRkaW5nLXRvcDogMTBweDtcbn1cbi5sb2FkTW9yZSB7XG4gIG1heC13aWR0aDogMzAwcHg7XG4gIC0tYm9yZGVyLXJhZGl1czogMjBweDtcbiAgbWFyZ2luOiBhdXRvO1xuICBtYXJnaW4tYm90dG9tOiA1MHB4O1xuICBtYXJnaW4tdG9wOiAyNXB4O1xufSJdfQ== */"
 
 /***/ }),
 
@@ -93,16 +93,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../notification-card/notification.service */ "./src/app/notification-card/notification.service.ts");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../update-profile/update-profile.service */ "./src/app/update-profile/update-profile.service.ts");
+
 
 
 
 
 
 var NotificationsPage = /** @class */ (function () {
-    function NotificationsPage(notificationCardService, api, storage) {
+    function NotificationsPage(notificationCardService, api, storage, updateProfileService) {
         this.notificationCardService = notificationCardService;
         this.api = api;
         this.storage = storage;
+        this.updateProfileService = updateProfileService;
         this.notifications = [];
         this.page = 1;
         this.limit = 20;
@@ -161,7 +164,10 @@ var NotificationsPage = /** @class */ (function () {
             template: __webpack_require__(/*! ./notifications.page.html */ "./src/app/notifications/notifications.page.html"),
             styles: [__webpack_require__(/*! ./notifications.page.scss */ "./src/app/notifications/notifications.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_notification_card_notification_service__WEBPACK_IMPORTED_MODULE_2__["NotificationCardService"], _api_api__WEBPACK_IMPORTED_MODULE_3__["ApiProvider"], _ionic_storage__WEBPACK_IMPORTED_MODULE_4__["Storage"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_notification_card_notification_service__WEBPACK_IMPORTED_MODULE_2__["NotificationCardService"],
+            _api_api__WEBPACK_IMPORTED_MODULE_3__["ApiProvider"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_4__["Storage"],
+            _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_5__["UpdateProfileService"]])
     ], NotificationsPage);
     return NotificationsPage;
 }());

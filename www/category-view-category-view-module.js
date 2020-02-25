@@ -64,7 +64,7 @@ var CategoryViewPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"'library.title'| translate\" [bg]=\"bgcolor\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\" style=\"--background: rgb(247, 247, 247);\">\n  <div *ngIf=\"!showSkeleton\">\n    <ion-item class=\"search-bar-custom\" style=\"margin:19px 5px 15px 5px;\">\n      <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n      <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\"></ion-input>\n    </ion-item>\n    <ion-grid>\n      <ion-row class=\"category-box\">\n        <ion-col size=\"3\">\n          <img src=\"{{categoryHead?.icon}}\" class=\"cat-icon\">\n        </ion-col>\n        <ion-col size=\"9\">\n          <h4> {{categoryHead?.title}}</h4>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n    <div *ngFor=\"let project of projects | searchProjects: searchInput\">\n      <ion-card class=\"category-projects\" *ngIf=\"!project.isDeleted\">\n        <ion-card-header>\n          <ion-row>\n            <ion-col size=\"4\" class=\"label-box\" (click)=\"projectView(project)\">\n              {{'library_view.project_name'| translate}}\n            </ion-col>\n            <ion-col size=\"7\" class=\"val-box\" (click)=\"projectView(project)\" style=\"padding-left:0px;\">\n              {{project.title}}\n            </ion-col>\n            <ion-col size=\"1\">\n              <ion-icon *ngIf=\"catType === 'my_projects'\" name=\"more\" class=\"popover-menu\"\n                (click)=\"showMenu($event, project)\">\n              </ion-icon>\n            </ion-col>\n          </ion-row>\n        </ion-card-header>\n        <ion-card-content (click)=\"projectView(project)\">\n          <ion-row>\n            <ion-col size=\"4\" class=\"label-box\">\n              {{'library_view.goal'| translate}}\n            </ion-col>\n            <ion-col size=\"8\" class=\"val-box\">\n              {{project.goal}}\n            </ion-col>\n          </ion-row>\n        </ion-card-content>\n      </ion-card>\n    </div>\n    <ion-card class=\"category-projects\" *ngIf=\"( projects | searchProjects: searchInput).length == 0\">\n      <div class=\"no-results\">\n        No Projects available.\n      </div>\n    </ion-card>\n    <div style=\"height: 30px;\"> </div>\n  </div>\n  <!-- loader -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- loader ends here -->\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"'library.title'| translate\" [bg]=\"bgcolor\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\" style=\"--background: rgb(247, 247, 247);\">\n  <div *ngIf=\"!showSkeleton\">\n    <ion-item class=\"search-bar-custom\" style=\"margin:19px 5px 15px 5px;\">\n      <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n      <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\"></ion-input>\n    </ion-item>\n    <ion-grid>\n      <ion-row class=\"category-box\">\n        <ion-col size=\"3\">\n          <img src=\"{{categoryHead?.icon}}\" class=\"cat-icon\">\n        </ion-col>\n        <ion-col size=\"9\">\n          <h4> {{categoryHead?.title}}</h4>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n    <div *ngIf=\"catType === 'my_projects'\">\n      <div *ngFor=\"let projects of projects\">\n        <div *ngFor=\"let project of projects.projects | searchProjects: searchInput\">\n          <ion-card class=\"category-projects\"\n            *ngIf=\"(project.createdType == 'by self' || project.createdType == 'by reference') && !project.isDeleted\">\n            <ion-card-header>\n              <ion-row>\n                <ion-col size=\"4\" class=\"label-box\" (click)=\"projectView(project)\">\n                  {{'library_view.project_name'| translate}}\n                </ion-col>\n                <ion-col size=\"7\" class=\"val-box\" (click)=\"projectView(project)\" style=\"padding-left:0px;\">\n                  {{project.title}}\n                </ion-col>\n                <ion-col size=\"1\">\n                  <ion-icon *ngIf=\"catType === 'my_projects'\" name=\"more\" class=\"popover-menu\"\n                    (click)=\"showMenu($event, project)\">\n                  </ion-icon>\n                </ion-col>\n              </ion-row>\n            </ion-card-header>\n            <ion-card-content (click)=\"projectView(project)\">\n              <ion-row>\n                <ion-col size=\"4\" class=\"label-box\">\n                  {{'library_view.goal'| translate}}\n                </ion-col>\n                <ion-col size=\"8\" class=\"val-box\">\n                  {{project.goal}}\n                </ion-col>\n              </ion-row>\n            </ion-card-content>\n          </ion-card>\n          <ion-card class=\"category-projects\" *ngIf=\"( projects.projects | searchProjects: searchInput).length == 0\">\n            <div class=\"no-results\">\n              No Projects available.\n            </div>\n          </ion-card>\n        </div>\n      </div>\n    </div>\n    <div *ngIf=\"catType != 'my_projects'\">\n      <ion-card class=\"category-projects\" *ngFor=\"let template of templates | searchProjects: searchInput\"\n        (click)=\"projectView(template)\">\n        <ion-card-header>\n          <ion-row>\n            <ion-col size=\"4\" class=\"label-box\">\n              {{'library_view.project_name'| translate}}\n            </ion-col>\n            <ion-col size=\"8\" class=\"val-box\" style=\"padding-left:0px;\">\n              {{template?.title}}\n            </ion-col>\n          </ion-row>\n        </ion-card-header>\n        <ion-card-content>\n          <ion-row>\n            <ion-col size=\"4\" class=\"label-box\">\n              {{'library_view.goal'| translate}}\n            </ion-col>\n            <ion-col size=\"8\" class=\"val-box\">\n              {{template?.goal}}\n            </ion-col>\n          </ion-row>\n        </ion-card-content>\n      </ion-card>\n      <ion-card class=\"category-projects\" *ngIf=\"( templates | searchProjects: searchInput).length == 0\">\n        <div class=\"no-results\">\n          No Projects available.\n        </div>\n      </ion-card>\n    </div>\n\n    <div style=\"height: 30px;\"> </div>\n  </div>\n  <!-- loader -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- loader ends here -->\n</ion-content>"
 
 /***/ }),
 
@@ -75,7 +75,7 @@ module.exports = "<ion-header>\n  <app-header [title]=\"'library.title'| transla
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".category-box h4 {\n  text-transform: uppercase; }\n\n.category-box .cat-icon {\n  max-width: 60%; }\n\n.category-projects {\n  background: #fff; }\n\n.category-projects ion-card-header {\n    border-bottom: 2px solid #b23e33;\n    padding-bottom: 0px;\n    padding-top: 5px;\n    padding-right: 0px; }\n\n.category-projects .popover-menu {\n    margin-top: 0px;\n    float: right;\n    font-size: 26px;\n    z-index: 999;\n    color: #b23e33; }\n\n.category-projects .val-box {\n    font-family: 'SourceSansPro';\n    font-weight: 600;\n    font-size: 12px;\n    color: #000;\n    margin: auto; }\n\n.category-projects .label-box {\n    margin: auto;\n    font-family: 'SourceSansPro-Bold';\n    font-weight: 600;\n    color: #5a6779; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvY2F0ZWdvcnktdmlldy9jYXRlZ29yeS12aWV3LnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUVRLHlCQUF5QixFQUFBOztBQUZqQztFQUtRLGNBQWMsRUFBQTs7QUFHdEI7RUFDSSxnQkFBZ0IsRUFBQTs7QUFEcEI7SUFHUSxnQ0FBZ0M7SUFDaEMsbUJBQWtCO0lBQ2xCLGdCQUFnQjtJQUNoQixrQkFBa0IsRUFBQTs7QUFOMUI7SUFTUSxlQUFlO0lBQ2YsWUFBWTtJQUNaLGVBQWU7SUFDZixZQUFZO0lBQ1osY0FBYyxFQUFBOztBQWJ0QjtJQWdCUSw0QkFBNEI7SUFDNUIsZ0JBQWdCO0lBQ2hCLGVBQWU7SUFDZixXQUFVO0lBQ1YsWUFBWSxFQUFBOztBQXBCcEI7SUF1QlEsWUFBWTtJQUNaLGlDQUFpQztJQUNqQyxnQkFBZ0I7SUFDaEIsY0FBYSxFQUFBIiwiZmlsZSI6InNyYy9hcHAvY2F0ZWdvcnktdmlldy9jYXRlZ29yeS12aWV3LnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5jYXRlZ29yeS1ib3h7XG4gICAgaDR7XG4gICAgICAgIHRleHQtdHJhbnNmb3JtOiB1cHBlcmNhc2U7XG4gICAgfVxuICAgIC5jYXQtaWNvbntcbiAgICAgICAgbWF4LXdpZHRoOiA2MCU7XG4gICAgfVxufVxuLmNhdGVnb3J5LXByb2plY3Rze1xuICAgIGJhY2tncm91bmQ6ICNmZmY7XG4gICAgaW9uLWNhcmQtaGVhZGVye1xuICAgICAgICBib3JkZXItYm90dG9tOiAycHggc29saWQgI2IyM2UzMzsgXG4gICAgICAgIHBhZGRpbmctYm90dG9tOjBweDsgXG4gICAgICAgIHBhZGRpbmctdG9wOiA1cHg7XG4gICAgICAgIHBhZGRpbmctcmlnaHQ6IDBweDtcbiAgICB9XG4gICAgLnBvcG92ZXItbWVudXtcbiAgICAgICAgbWFyZ2luLXRvcDogMHB4O1xuICAgICAgICBmbG9hdDogcmlnaHQ7XG4gICAgICAgIGZvbnQtc2l6ZTogMjZweDsgXG4gICAgICAgIHotaW5kZXg6IDk5OTtcbiAgICAgICAgY29sb3I6ICNiMjNlMzM7XG4gICAgfVxuICAgIC52YWwtYm94e1xuICAgICAgICBmb250LWZhbWlseTogJ1NvdXJjZVNhbnNQcm8nO1xuICAgICAgICBmb250LXdlaWdodDogNjAwO1xuICAgICAgICBmb250LXNpemU6IDEycHg7XG4gICAgICAgIGNvbG9yOiMwMDA7XG4gICAgICAgIG1hcmdpbjogYXV0bztcbiAgICB9XG4gICAgLmxhYmVsLWJveHtcbiAgICAgICAgbWFyZ2luOiBhdXRvO1xuICAgICAgICBmb250LWZhbWlseTogJ1NvdXJjZVNhbnNQcm8tQm9sZCc7XG4gICAgICAgIGZvbnQtd2VpZ2h0OiA2MDA7XG4gICAgICAgIGNvbG9yOiM1YTY3Nzk7XG4gICAgfVxufSJdfQ== */"
+module.exports = ".category-box h4 {\n  text-transform: uppercase; }\n\n.category-box .cat-icon {\n  max-width: 60%; }\n\n.category-projects {\n  background: #fff; }\n\n.category-projects ion-card-header {\n    border-bottom: 2px solid #b23e33;\n    padding-bottom: 0px;\n    padding-top: 5px;\n    padding-right: 0px; }\n\n.category-projects .popover-menu {\n    margin-top: 0px;\n    float: right;\n    font-size: 26px;\n    z-index: 999;\n    color: #b23e33; }\n\n.category-projects .val-box {\n    font-family: 'SourceSansPro';\n    font-weight: 600;\n    font-size: 12px;\n    color: #000;\n    margin: auto; }\n\n.category-projects .label-box {\n    margin: auto;\n    font-family: 'SourceSansPro-Bold';\n    font-weight: 600;\n    color: #5a6779; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9jYXRlZ29yeS12aWV3L2NhdGVnb3J5LXZpZXcucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBRVEseUJBQXlCLEVBQUE7O0FBRmpDO0VBS1EsY0FBYyxFQUFBOztBQUd0QjtFQUNJLGdCQUFnQixFQUFBOztBQURwQjtJQUdRLGdDQUFnQztJQUNoQyxtQkFBa0I7SUFDbEIsZ0JBQWdCO0lBQ2hCLGtCQUFrQixFQUFBOztBQU4xQjtJQVNRLGVBQWU7SUFDZixZQUFZO0lBQ1osZUFBZTtJQUNmLFlBQVk7SUFDWixjQUFjLEVBQUE7O0FBYnRCO0lBZ0JRLDRCQUE0QjtJQUM1QixnQkFBZ0I7SUFDaEIsZUFBZTtJQUNmLFdBQVU7SUFDVixZQUFZLEVBQUE7O0FBcEJwQjtJQXVCUSxZQUFZO0lBQ1osaUNBQWlDO0lBQ2pDLGdCQUFnQjtJQUNoQixjQUFhLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9jYXRlZ29yeS12aWV3L2NhdGVnb3J5LXZpZXcucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmNhdGVnb3J5LWJveHtcbiAgICBoNHtcbiAgICAgICAgdGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcbiAgICB9XG4gICAgLmNhdC1pY29ue1xuICAgICAgICBtYXgtd2lkdGg6IDYwJTtcbiAgICB9XG59XG4uY2F0ZWdvcnktcHJvamVjdHN7XG4gICAgYmFja2dyb3VuZDogI2ZmZjtcbiAgICBpb24tY2FyZC1oZWFkZXJ7XG4gICAgICAgIGJvcmRlci1ib3R0b206IDJweCBzb2xpZCAjYjIzZTMzOyBcbiAgICAgICAgcGFkZGluZy1ib3R0b206MHB4OyBcbiAgICAgICAgcGFkZGluZy10b3A6IDVweDtcbiAgICAgICAgcGFkZGluZy1yaWdodDogMHB4O1xuICAgIH1cbiAgICAucG9wb3Zlci1tZW51e1xuICAgICAgICBtYXJnaW4tdG9wOiAwcHg7XG4gICAgICAgIGZsb2F0OiByaWdodDtcbiAgICAgICAgZm9udC1zaXplOiAyNnB4OyBcbiAgICAgICAgei1pbmRleDogOTk5O1xuICAgICAgICBjb2xvcjogI2IyM2UzMztcbiAgICB9XG4gICAgLnZhbC1ib3h7XG4gICAgICAgIGZvbnQtZmFtaWx5OiAnU291cmNlU2Fuc1Bybyc7XG4gICAgICAgIGZvbnQtd2VpZ2h0OiA2MDA7XG4gICAgICAgIGZvbnQtc2l6ZTogMTJweDtcbiAgICAgICAgY29sb3I6IzAwMDtcbiAgICAgICAgbWFyZ2luOiBhdXRvO1xuICAgIH1cbiAgICAubGFiZWwtYm94e1xuICAgICAgICBtYXJnaW46IGF1dG87XG4gICAgICAgIGZvbnQtZmFtaWx5OiAnU291cmNlU2Fuc1Byby1Cb2xkJztcbiAgICAgICAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgICAgICAgY29sb3I6IzVhNjc3OTtcbiAgICB9XG59Il19 */"
 
 /***/ }),
 
@@ -134,6 +134,12 @@ var CategoryViewPage = /** @class */ (function () {
         });
         rout.params.subscribe(function (param) {
             _this.catType = param.cat;
+            if (param.from) {
+                _this.from = param.from;
+                if (_this.from == 'home') {
+                    _this.back = 'project-view/home';
+                }
+            }
             switch (param.cat) {
                 case 'my_projects': {
                     _this.categoryHead = {
@@ -208,10 +214,12 @@ var CategoryViewPage = /** @class */ (function () {
     CategoryViewPage.prototype.getMyProjects = function () {
         var _this = this;
         this.showSkeleton = true;
-        this.categaryService.getMyProjects().then(function (myProjects) {
-            if (myProjects) {
-                myProjects = _this.getSortData(myProjects);
-                _this.projects = myProjects;
+        this.storage.get('projects').then(function (projects) {
+            if (projects) {
+                // projects = projects[0].projects.sort((a, b) => {
+                //   <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+                // });
+                _this.projects = projects;
                 _this.showSkeleton = false;
             }
             _this.showSkeleton = false;
@@ -235,7 +243,7 @@ var CategoryViewPage = /** @class */ (function () {
         this.showSkeleton = true;
         this.categaryService.getTemplates(type).then(function (templates) {
             if (templates) {
-                _this.projects = templates;
+                _this.templates = templates;
             }
             _this.showSkeleton = false;
         }, function (error) {
@@ -244,15 +252,18 @@ var CategoryViewPage = /** @class */ (function () {
     };
     CategoryViewPage.prototype.showMenu = function (ev, project) {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var popover;
+            var pro, popover;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.popoverController.create({
-                            component: _popover_popover_component__WEBPACK_IMPORTED_MODULE_7__["PopoverComponent"],
-                            componentProps: { project: project },
-                            event: ev,
-                            translucent: true
-                        })];
+                    case 0:
+                        pro = project;
+                        pro.share = true;
+                        return [4 /*yield*/, this.popoverController.create({
+                                component: _popover_popover_component__WEBPACK_IMPORTED_MODULE_7__["PopoverComponent"],
+                                componentProps: { project: pro },
+                                event: ev,
+                                translucent: true
+                            })];
                     case 1:
                         popover = _a.sent();
                         return [4 /*yield*/, popover.present()];
