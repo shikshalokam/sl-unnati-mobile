@@ -22,7 +22,7 @@ export class UpdateProfilePage implements OnInit {
   entities;
   clusters;
   talukas;
-  connected;
+  connected: any = navigator.onLine;
   userDetails;
   hubs;
   back = "project-view/home"
@@ -58,8 +58,10 @@ export class UpdateProfilePage implements OnInit {
     this.updateProfileService.updateProfile('close');
     localStorage.setItem('isPopUpShowen', 'true');
     this.prepareForm();
-    this.getStates();
-    this.getProfileData();
+    if (this.connected) {
+      this.getStates();
+      this.getProfileData();
+    }
   }
   //  Prepare the form
   public prepareForm() {
@@ -106,62 +108,69 @@ export class UpdateProfilePage implements OnInit {
     })
   }
   // immediate children of state
-  public getImmediateChildren(event) {
-    let id = event.detail.value;
-    if (id && this.noData) {
-      this.storage.get('userTokens').then(data => {
-        if (data) {
-          this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-            let parsedData = JSON.parse(data._body);
-            if (parsedData && parsedData.access_token) {
-              let userTokens = {
-                access_token: parsedData.access_token,
-                refresh_token: parsedData.refresh_token,
-              };
-              this.toastService.startLoader('Loading Please Wait');
-              this.storage.set('userTokens', userTokens).then(data => {
-                this.updateProfileService.getImmediateChildren(userTokens.access_token, id).subscribe((entities: any) => {
-                  switch (entities.result.immediateEntityType) {
-                    case 'district': {
-                      this.districts = entities.result.data;
-                      break;
+  public getImmediateChildren(event, type) {
+    if (this.connected) {
+      let id;
+      if (type == "form") {
+        id = event.detail.value;
+      } else if (type == "backend") {
+        id = event;
+      }
+      if (id && this.noData) {
+        this.storage.get('userTokens').then(data => {
+          if (data) {
+            this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+              let parsedData = JSON.parse(data._body);
+              if (parsedData && parsedData.access_token) {
+                let userTokens = {
+                  access_token: parsedData.access_token,
+                  refresh_token: parsedData.refresh_token,
+                };
+                this.toastService.startLoader('Loading Please Wait');
+                this.storage.set('userTokens', userTokens).then(data => {
+                  this.updateProfileService.getImmediateChildren(userTokens.access_token, id).subscribe((entities: any) => {
+                    switch (entities.result.immediateEntityType) {
+                      case 'district': {
+                        this.districts = entities.result.data;
+                        break;
+                      }
+                      case 'zone': {
+                        this.zones = entities.result.data;
+                        break;
+                      }
+                      case 'cluster': {
+                        this.clusters = entities.result.data;
+                        break;
+                      }
+                      case 'block': {
+                        this.blocks = entities.result.data;
+                        break;
+                      }
+                      case 'school': {
+                        this.schools = entities.result.data;
+                        break;
+                      }
+                      case 'hub': {
+                        this.hubs = entities.result.data;
+                        break;
+                      }
+                      case 'taluka': {
+                        this.talukas = entities.result.data;
+                        break;
+                      }
                     }
-                    case 'zone': {
-                      this.zones = entities.result.data;
-                      break;
-                    }
-                    case 'cluster': {
-                      this.clusters = entities.result.data;
-                      break;
-                    }
-                    case 'block': {
-                      this.blocks = entities.result.data;
-                      break;
-                    }
-                    case 'school': {
-                      this.schools = entities.result.data;
-                      break;
-                    }
-                    case 'hub': {
-                      this.hubs = entities.result.data;
-                      break;
-                    }
-                    case 'taluka': {
-                      this.talukas = entities.result.data;
-                      break;
-                    }
-                  }
-                  this.toastService.stopLoader();
-                }, erros => {
-                  this.toastService.stopLoader();
+                    this.toastService.stopLoader();
+                  }, erros => {
+                    this.toastService.stopLoader();
+                  })
                 })
-              })
-            }
-          })
-        }
-      })
-    } else {
-      this.noData = true;
+              }
+            })
+          }
+        })
+      } else {
+        this.noData = true;
+      }
     }
   }
 
@@ -180,6 +189,18 @@ export class UpdateProfilePage implements OnInit {
       }
       if (!this.profile.block) {
         delete this.profile.block;
+      }
+      if (!this.profile.district) {
+        delete this.profile.district;
+      }
+      if (!this.profile.zone) {
+        delete this.profile.zone;
+      }
+      if (!this.profile.school) {
+        delete this.profile.school;
+      }
+      if (!this.profile.updatedBy) {
+        delete this.profile.updatedBy;
       }
       if (!this.profile.emailId) {
         delete this.profile.emailId;
@@ -267,6 +288,27 @@ export class UpdateProfilePage implements OnInit {
               this.updateProfileService.getProfileData(userTokens.access_token).subscribe((data: any) => {
                 delete data.result.createdAt;
                 delete data.result.createdBy;
+                if (data.result.state) {
+                  this.getImmediateChildren(data.result.state, 'backend');
+                }
+                if (data.result.district) {
+                  this.getImmediateChildren(data.result.district, 'backend');
+                }
+                if (data.result.hub) {
+                  this.getImmediateChildren(data.result.hub, 'backend');
+                }
+                if (data.result.zone) {
+                  this.getImmediateChildren(data.result.zone, 'backend');
+                }
+                if (data.result.cluster) {
+                  this.getImmediateChildren(data.result.cluster, 'backend');
+                }
+                if (data.result.block) {
+                  this.getImmediateChildren(data.result.block, 'backend');
+                }
+                if (data.result.school) {
+                  this.getImmediateChildren(data.result.school, 'backend');
+                }
                 this.profile = data.result;
                 if (this.profile.firstName) {
                   this.noData = false;
