@@ -3,7 +3,6 @@ import { NetworkService } from '../network.service';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { EditTaskPage } from '../edit-task/edit-task.page';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { Location } from '@angular/common';
@@ -136,11 +135,11 @@ export class TaskViewPage implements OnInit {
 
   //Sub Task View
   async showSubTasks(id) {
-    const modal = await this.modalController.create({
-      component: EditTaskPage,
-      componentProps: {}
-    });
-    return await modal.present();
+    // const modal = await this.modalController.create({
+    //   component: EditTaskPage,
+    //   componentProps: {}
+    // });
+    // return await modal.present();
   }
 
   // navigate To subtask
@@ -150,41 +149,41 @@ export class TaskViewPage implements OnInit {
 
   //edit Task
   async editTask() {
-    const modal = await this.modalController.create({
-      component: EditTaskPage,
-      componentProps: {
-        editTask: this.task,
-        back: this.back,
-        title: "Edit Task",
-      }
-    });
-    modal.onDidDismiss()
-      .then((data) => {
-        if (data.data != undefined && data.data.name != null) {
-          this.storage.get('currentProject').then(data => {
-            this.taskService.loadProject();
-          })
-        }
-      });
-    this.taskService.modalActive('true');
-    return await modal.present();
+    // const modal = await this.modalController.create({
+    //   component: EditTaskPage,
+    //   componentProps: {
+    //     editTask: this.task,
+    //     back: this.back,
+    //     title: "Edit Task",
+    //   }
+    // });
+    // modal.onDidDismiss()
+    //   .then((data) => {
+    //     if (data.data != undefined && data.data.name != null) {
+    //       this.storage.get('currentProject').then(data => {
+    //         this.taskService.loadProject();
+    //       })
+    //     }
+    //   });
+    // this.taskService.modalActive('true');
+    // return await modal.present();
   }
   //  create task
   async create(id) {
-    const modal = await this.modalController.create({
-      component: EditTaskPage,
-      componentProps: {
-        editTask: this.task,
-        title: "Create Task",
-      }
-    });
-    modal.onDidDismiss()
-      .then((data) => {
-        if (data.data != undefined && data.data.name != null) {
-          // code
-        }
-      });
-    return await modal.present();
+    // const modal = await this.modalController.create({
+    //   component: EditTaskPage,
+    //   componentProps: {
+    //     editTask: this.task,
+    //     title: "Create Task",
+    //   }
+    // });
+    // modal.onDidDismiss()
+    //   .then((data) => {
+    //     if (data.data != undefined && data.data.name != null) {
+    //       // code
+    //     }
+    //   });
+    // return await modal.present();
   }
   // open delete confirm alert
   async openDelete() {

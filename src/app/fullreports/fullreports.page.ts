@@ -5,7 +5,6 @@ import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
 import * as Highcharts from 'highcharts/highcharts-gantt';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import $ from 'jquery'
 @Component({
   selector: 'app-fullreports',
   templateUrl: './fullreports.page.html',
@@ -21,7 +20,7 @@ export class FullreportsPage implements OnInit {
   public chartOptions;
   public showSkeleton: boolean = false;
   public skeleton = [{}];
-  public back="/project-view/my-reports/last-month-reports"
+  public back = "/project-view/my-reports/last-month-reports"
   constructor(public activatedRoute: ActivatedRoute, public screenOrientation: ScreenOrientation, public router: Router, public myReportsService: MyReportsService, public api: ApiProvider, public storage: Storage) {
     activatedRoute.params.subscribe((params: any) => {
       this.state = params.state;
@@ -58,49 +57,6 @@ export class FullreportsPage implements OnInit {
               } else {
                 this.showSkeleton = false;
               }
-
-              // this.chartOptions = {
-              //   // title: this.reports[0].title,
-              //   // series:  this.reports[0].series[0],
-              //   // xAxis:  this.reports[0].xAxis
-              //   chart:{
-              //     type:'gantt'
-              //   },
-              //   title: {
-              //     text: 'Gantt Chart with Progress Indicators'
-              // },
-              // xAxis: {
-              //     min: Date.UTC(2014, 10, 17),
-              //     max: Date.UTC(2014, 10, 30)
-              // },
-
-              // series: [{
-              //     name: 'Project 1',
-              //     type:'gantt',
-              //     data: [{
-              //         name: 'Start prototype',
-              //         start: Date.UTC(2014, 10, 18),
-              //         end: Date.UTC(2014, 10, 25),
-              //         completed: 0.25
-              //     }, {
-              //         name: 'Test prototype',
-              //         start: Date.UTC(2014, 10, 27),
-              //         end: Date.UTC(2014, 10, 29)
-              //     }, {
-              //         name: 'Develop',
-              //         start: Date.UTC(2014, 10, 20),
-              //         end: Date.UTC(2014, 10, 25),
-              //         completed: {
-              //             amount: 0.12,
-              //             fill: '#fa0'
-              //         }
-              //     }, {
-              //         name: 'Run acceptance tests',
-              //         start: Date.UTC(2014, 10, 23),
-              //         end: Date.UTC(2014, 10, 26)
-              //     }]
-              // }]
-              // }
             }, error => {
               this.showSkeleton = false;
             })
@@ -117,24 +73,20 @@ export class FullreportsPage implements OnInit {
       let minDate = new Date(this.reports[i].xAxis.min);
       let maxDate = new Date(this.reports[i].xAxis.max);
       let sdate = minDate.getDate();
-      let smonth = minDate.getMonth();
+      let smonth = minDate.getMonth() + 1;
       let syear = minDate.getFullYear();
       let edate = maxDate.getDate();
-      let emonth = maxDate.getMonth();
+      let emonth = maxDate.getMonth() + 1;
       let eyear = maxDate.getFullYear();
+      let minDate1 = Date.UTC(syear, smonth, sdate);
+      let maxDate1 = Date.UTC(eyear, emonth, edate);
       Highcharts.ganttChart('container' + i, {
-        // chart: {
-        //   scrollablePlotArea: {
-        //     minWidth: 300,
-        //     scrollPositionX: 1
-        //   }
-        // },
         title: {
           text: ''
         },
         xAxis: {
-          min: Date.UTC(syear, smonth, sdate),
-          max: Date.UTC(eyear, emonth, edate)
+          min: minDate1,
+          max: maxDate1
         },
         legend: {
           enabled: false
@@ -154,9 +106,9 @@ export class FullreportsPage implements OnInit {
   }
 
   ngOnDestroy() {
-    try {
-      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-    } catch (error) {
-    }
+    // try {
+    //   this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+    // } catch (error) {
+    // }
   }
 }

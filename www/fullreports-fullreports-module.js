@@ -77,7 +77,7 @@ module.exports = "<ion-header>\n  <app-header\n    [title]=\"'fullreports.title'
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".chart-title {\n  color: #4d4f5c;\n  margin-bottom: 20px;\n  font-family: Source Code Pro-Bold; }\n\n.highcharts-yaxis .highcharts-axis-line {\n  stroke-width: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy9zbC11bm5hdGkvdW5uYXRpLWZlYi9zbC11bm5hdGktbW9iaWxlL3NyYy9hcHAvZnVsbHJlcG9ydHMvZnVsbHJlcG9ydHMucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsY0FBYztFQUNkLG1CQUFtQjtFQUNuQixpQ0FBaUMsRUFBQTs7QUE2Qm5DO0VBQ0UsNEJBQTRCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9mdWxscmVwb3J0cy9mdWxscmVwb3J0cy5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY2hhcnQtdGl0bGUge1xuICBjb2xvcjogIzRkNGY1YztcbiAgbWFyZ2luLWJvdHRvbTogMjBweDtcbiAgZm9udC1mYW1pbHk6IFNvdXJjZSBDb2RlIFByby1Cb2xkO1xufVxuXG4vLyAjY29udGFpbmVyMCxcbi8vICNjb250YWluZXIxLFxuLy8gI2NvbnRhaW5lcjIsXG4vLyAjY29udGFpbmVyMyxcbi8vICNjb250YWluZXI0LFxuLy8gI2NvbnRhaW5lcjUsXG4vLyAjY29udGFpbmVyNixcbi8vICNjb250YWluZXI3LFxuLy8gI2NvbnRhaW5lcjgsXG4vLyAjY29udGFpbmVyOSxcbi8vICNjb250YWluZXIxMCxcbi8vICNjb250YWluZXIxMSxcbi8vICNjb250YWluZXIxMixcbi8vICNjb250YWluZXIxMyxcbi8vICNjb250YWluZXIxNCxcbi8vICNjb250YWluZXIxNSxcbi8vICNjb250YWluZXIxNixcbi8vICNjb250YWluZXIxNyxcbi8vICNjb250YWluZXIxOCxcbi8vICNjb250YWluZXIxOSxcbi8vICNjb250YWluZXIyMCB7XG4vLyAgIG1heC13aWR0aDogMzUwcHg7XG4vLyAgIG1pbi13aWR0aDogMzUwcHg7XG4vLyAgIGhlaWdodDogNDAwcHg7XG4vLyAgIHdpZHRoOiA0MDBweDtcbi8vIH1cbi5oaWdoY2hhcnRzLXlheGlzIC5oaWdoY2hhcnRzLWF4aXMtbGluZSB7XG4gIHN0cm9rZS13aWR0aDogMHB4ICFpbXBvcnRhbnQ7XG59XG4iXX0= */"
+module.exports = ".chart-title {\n  color: #4d4f5c;\n  margin-bottom: 20px;\n  font-family: Source Code Pro-Bold; }\n\n.highcharts-yaxis .highcharts-axis-line {\n  stroke-width: 0px !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9mdWxscmVwb3J0cy9mdWxscmVwb3J0cy5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxjQUFjO0VBQ2QsbUJBQW1CO0VBQ25CLGlDQUFpQyxFQUFBOztBQTZCbkM7RUFDRSw0QkFBNEIsRUFBQSIsImZpbGUiOiJzcmMvYXBwL2Z1bGxyZXBvcnRzL2Z1bGxyZXBvcnRzLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5jaGFydC10aXRsZSB7XG4gIGNvbG9yOiAjNGQ0ZjVjO1xuICBtYXJnaW4tYm90dG9tOiAyMHB4O1xuICBmb250LWZhbWlseTogU291cmNlIENvZGUgUHJvLUJvbGQ7XG59XG5cbi8vICNjb250YWluZXIwLFxuLy8gI2NvbnRhaW5lcjEsXG4vLyAjY29udGFpbmVyMixcbi8vICNjb250YWluZXIzLFxuLy8gI2NvbnRhaW5lcjQsXG4vLyAjY29udGFpbmVyNSxcbi8vICNjb250YWluZXI2LFxuLy8gI2NvbnRhaW5lcjcsXG4vLyAjY29udGFpbmVyOCxcbi8vICNjb250YWluZXI5LFxuLy8gI2NvbnRhaW5lcjEwLFxuLy8gI2NvbnRhaW5lcjExLFxuLy8gI2NvbnRhaW5lcjEyLFxuLy8gI2NvbnRhaW5lcjEzLFxuLy8gI2NvbnRhaW5lcjE0LFxuLy8gI2NvbnRhaW5lcjE1LFxuLy8gI2NvbnRhaW5lcjE2LFxuLy8gI2NvbnRhaW5lcjE3LFxuLy8gI2NvbnRhaW5lcjE4LFxuLy8gI2NvbnRhaW5lcjE5LFxuLy8gI2NvbnRhaW5lcjIwIHtcbi8vICAgbWF4LXdpZHRoOiAzNTBweDtcbi8vICAgbWluLXdpZHRoOiAzNTBweDtcbi8vICAgaGVpZ2h0OiA0MDBweDtcbi8vICAgd2lkdGg6IDQwMHB4O1xuLy8gfVxuLmhpZ2hjaGFydHMteWF4aXMgLmhpZ2hjaGFydHMtYXhpcy1saW5lIHtcbiAgc3Ryb2tlLXdpZHRoOiAwcHggIWltcG9ydGFudDtcbn1cbiJdfQ== */"
 
 /***/ }),
 
@@ -160,47 +160,6 @@ var FullreportsPage = /** @class */ (function () {
                             else {
                                 _this.showSkeleton = false;
                             }
-                            // this.chartOptions = {
-                            //   // title: this.reports[0].title,
-                            //   // series:  this.reports[0].series[0],
-                            //   // xAxis:  this.reports[0].xAxis
-                            //   chart:{
-                            //     type:'gantt'
-                            //   },
-                            //   title: {
-                            //     text: 'Gantt Chart with Progress Indicators'
-                            // },
-                            // xAxis: {
-                            //     min: Date.UTC(2014, 10, 17),
-                            //     max: Date.UTC(2014, 10, 30)
-                            // },
-                            // series: [{
-                            //     name: 'Project 1',
-                            //     type:'gantt',
-                            //     data: [{
-                            //         name: 'Start prototype',
-                            //         start: Date.UTC(2014, 10, 18),
-                            //         end: Date.UTC(2014, 10, 25),
-                            //         completed: 0.25
-                            //     }, {
-                            //         name: 'Test prototype',
-                            //         start: Date.UTC(2014, 10, 27),
-                            //         end: Date.UTC(2014, 10, 29)
-                            //     }, {
-                            //         name: 'Develop',
-                            //         start: Date.UTC(2014, 10, 20),
-                            //         end: Date.UTC(2014, 10, 25),
-                            //         completed: {
-                            //             amount: 0.12,
-                            //             fill: '#fa0'
-                            //         }
-                            //     }, {
-                            //         name: 'Run acceptance tests',
-                            //         start: Date.UTC(2014, 10, 23),
-                            //         end: Date.UTC(2014, 10, 26)
-                            //     }]
-                            // }]
-                            // }
                         }, function (error) {
                             _this.showSkeleton = false;
                         });
@@ -217,24 +176,20 @@ var FullreportsPage = /** @class */ (function () {
             var minDate = new Date(this.reports[i].xAxis.min);
             var maxDate = new Date(this.reports[i].xAxis.max);
             var sdate = minDate.getDate();
-            var smonth = minDate.getMonth();
+            var smonth = minDate.getMonth() + 1;
             var syear = minDate.getFullYear();
             var edate = maxDate.getDate();
-            var emonth = maxDate.getMonth();
+            var emonth = maxDate.getMonth() + 1;
             var eyear = maxDate.getFullYear();
+            var minDate1 = Date.UTC(syear, smonth, sdate);
+            var maxDate1 = Date.UTC(eyear, emonth, edate);
             highcharts_highcharts_gantt__WEBPACK_IMPORTED_MODULE_6__["ganttChart"]('container' + i, {
-                // chart: {
-                //   scrollablePlotArea: {
-                //     minWidth: 300,
-                //     scrollPositionX: 1
-                //   }
-                // },
                 title: {
                     text: ''
                 },
                 xAxis: {
-                    min: Date.UTC(syear, smonth, sdate),
-                    max: Date.UTC(eyear, emonth, edate)
+                    min: minDate1,
+                    max: maxDate1
                 },
                 legend: {
                     enabled: false
@@ -253,11 +208,10 @@ var FullreportsPage = /** @class */ (function () {
         this.router.navigate(['/project-view/my-reports/last-' + this.state + '-reports']);
     };
     FullreportsPage.prototype.ngOnDestroy = function () {
-        try {
-            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-        }
-        catch (error) {
-        }
+        // try {
+        //   this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+        // } catch (error) {
+        // }
     };
     FullreportsPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({

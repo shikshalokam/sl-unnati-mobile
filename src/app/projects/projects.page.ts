@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { ProjectsService } from './projects.service';
-import { TasksService } from '../tasks/tasks.service';
 import { ApiProvider } from '../api/api';
 import { AlertController } from '@ionic/angular';
 import { CurrentUserProvider } from '../current-user';
@@ -36,7 +35,6 @@ export class ProjectsPage {
     public projectService: ProjectService,
     public platform: Platform,
     public alertController: AlertController,
-    public tasksService: TasksService,
     public apiProvider: ApiProvider,
     public toastController: ToastController,
     public storage: Storage,
@@ -63,33 +61,23 @@ export class ProjectsPage {
     } catch (error) {
     }
     this.getActiveProjects();
-    // this.getProjectsList();
   }
-
 
   public getActiveProjects() {
     this.showSkeleton = true;
-    this.storage.get('myprojects').then(activeProjects => {
-      if (activeProjects) {
-        this.myProjects = activeProjects;
-      } this.showSkeleton = false;
-    });
     this.storage.get('projects').then(projects => {
       if (projects) {
-        this.projectList = this.getSortData(projects);
-        // this.projectList = projects;
+        projects[0].projects.sort((a, b) => {
+          return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+        });
+        this.projectList = projects;
+        this.showSkeleton = false;
+      }else {
+        this.showSkeleton = false;
       }
     });
   }
-  public getProjectsList() {
-    this.showSkeleton = true;
-    this.storage.get('projects').then(projects => {
-      if (projects) {
-        this.projectList = this.getSortData(projects);
-      }
-      this.showSkeleton = false;
-    });
-  }
+
   public projectView(project) {
     this.storage.set('projectToBeView', project).then(project => {
       this.router.navigate(['/project-view/project-detail', 'projectsList'])
@@ -99,10 +87,5 @@ export class ProjectsPage {
     this.showSkeleton = true;
     this.activeTab = tab;
     this.showSkeleton = false;
-  }
-  getSortData(myProjects) {
-    return myProjects.sort((a, b) => {
-      return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
-    });
   }
 }

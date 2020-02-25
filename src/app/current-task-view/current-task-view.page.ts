@@ -60,17 +60,6 @@ export class CurrentTaskViewPage implements OnInit {
     this.storage.get('cTask').then(task => {
       this.enableMarkTaskComplete(task);
       this.task = task;
-      this.storage.get('myprojects').then(myProjects => {
-        if (myProjects) {
-          myProjects.forEach(project => {
-            project.tasks.forEach(tasks => {
-              if (tasks._id == task._id) {
-                // this.task = tasks;
-              }
-            });
-          });
-        }
-      })
       if (this.from == 'pd') {
         this.back = "project-view/project-detail";
         this.parameter = 'my_projects';
@@ -82,24 +71,18 @@ export class CurrentTaskViewPage implements OnInit {
 
   //  Enable the mark task complete button based on subtasks status and if there is no subtasks it will enable by default
   public enableMarkTaskComplete(task) {
-    let count = 0;
     if (task.subTasks && task.subTasks.length > 0) {
       let subTasksCompleted = 0;
+      let count = 0;
       task.subTasks.forEach(subtask => {
-        if (!subtask.isDeleted) {
-          count++;
-          if (subtask.status === 'Completed' || subtask.status === 'completed') {
-            subTasksCompleted + 1;
-          }
+        if (!subtask.isDeleted && (subtask.status === 'Completed' || subtask.status === 'completed')) {
+          subTasksCompleted + 1;
         }
       });
       if (subTasksCompleted === task.subTasks.length) {
         this.enableMarkButton = true;
       } else {
         this.enableMarkButton = false;
-      }
-      if (count > 0) {
-        this.enableMarkButton = true;
       }
     } else {
       this.enableMarkButton = true;
@@ -156,6 +139,18 @@ export class CurrentTaskViewPage implements OnInit {
     }
   }
 
+  public subtaskDate() {
+    this.datePicker.show({
+      date: new Date(),
+      mode: 'date',
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    }).then(
+      date => {
+        this.subtask.endDate = this.datepipe.transform(new Date(date));
+      },
+      err => console.log('Error occurred while getting date: ', err)
+    );
+  }
   public updateCurrentProject(ct) {
     this.createProjectService.updateCurrentMyProject(ct).then(currentMyProject => {
       //  this.getTask();
@@ -164,8 +159,8 @@ export class CurrentTaskViewPage implements OnInit {
   //  update the project after completing task.
   public updateProject(ct) {
 
-    let updateProcess ="start";
-    localStorage.setItem("updateProcess",updateProcess);
+    let updateProcess = "start";
+    localStorage.setItem("updateProcess", updateProcess);
     this.createProjectService.updateCurrentMyProject(ct).then(currentMyProject => {
       setTimeout(() => {
         this.toastService.successToast('message.marked_as_completed');
@@ -207,10 +202,6 @@ export class CurrentTaskViewPage implements OnInit {
         this.editTitle = true;
         break;
       }
-      case 'subTaskTitle': {
-        this.subTaskTitle = true;
-        break;
-      }
     }
   }
   public blockEdit(field) {
@@ -233,15 +224,21 @@ export class CurrentTaskViewPage implements OnInit {
         }
         break;
       }
-      case 'subTaskTitle': {
-        if (this)
-          this.subTaskTitle = false;
-        break;
-      }
     }
     this.updateTask();
   }
 
+  blockEditAll() {
+    if (this.task.title) {
+      this.editTitle = false;
+      this.markLabelsAsInvalid = false;
+    } 
+    if (this.task.goal) {
+      this.editGoal = false;
+      this.markLabelsAsInvalid = false;
+    }
+    this.updateTask();
+  }
   subTaskEditBlock(subtask) {
     this.task.subTasks.forEach(subTask => {
       subTask.allowEdit = false;
@@ -265,6 +262,7 @@ export class CurrentTaskViewPage implements OnInit {
   // Delete subtask
   public delete(subtask) {
     subtask.isDeleted = true;
+    subtask.status = 'Completed'
     this.upDateSubTask(subtask, 'delete');
   }
   public updateTask() {
