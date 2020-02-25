@@ -403,46 +403,50 @@ export class AppComponent {
   }
   // auto sync
   public autoSync() {
-    if (this.projectsToSync.length > 0) {
-      this.storage.get('userTokens').then(data => {
-        if (data) {
-          this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-            let parsedData = JSON.parse(data._body);
-            if (parsedData && parsedData.access_token) {
-              let userTokens = {
-                access_token: parsedData.access_token,
-                refresh_token: parsedData.refresh_token,
-              };
-              this.storage.set('userTokens', userTokens).then(data => {
-                let projects = {
-                  projects: this.projectsToSync
-                }
-                this.toastService.startLoader('Your data is syncing');
-                this.projectService.sync(projects, data.access_token).subscribe((data: any) => {
-                  if (data.status === "failed") {
-                    this.toastService.errorToast(data.message);
-                  } else if (data.status == "success" || data.status == "succes") {
-                    this.syncUpdateInLocal(data.allProjects.data);
+    if (this.isConnected) {
+      if (this.projectsToSync.length > 0) {
+        this.storage.get('userTokens').then(data => {
+          if (data) {
+            this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+              let parsedData = JSON.parse(data._body);
+              if (parsedData && parsedData.access_token) {
+                let userTokens = {
+                  access_token: parsedData.access_token,
+                  refresh_token: parsedData.refresh_token,
+                };
+                this.storage.set('userTokens', userTokens).then(data => {
+                  let projects = {
+                    projects: this.projectsToSync
                   }
-                  this.toastService.stopLoader();
-                }, error => {
-                  this.toastService.stopLoader();
+                  this.toastService.startLoader('Your data is syncing');
+                  this.projectService.sync(projects, data.access_token).subscribe((data: any) => {
+                    this.toastService.stopLoader();
+                    if (data.status === "failed") {
+                      this.toastService.errorToast(data.message);
+                    } else if (data.status == "success" || data.status == "succes") {
+                      this.syncUpdateInLocal(data.allProjects.data);
+                    }
+                  }, error => {
+                    this.toastService.stopLoader();
+                  })
                 })
-              })
-            }
-          }, error => {
-            if (error.status === 0) {
-              this.router.navigateByUrl('/login');
-              this.toastService.stopLoader();
-            }
-          })
-        } else {
-          this.router.navigateByUrl('/login');
+              }
+            }, error => {
+              if (error.status === 0) {
+                this.router.navigateByUrl('/login');
+                this.toastService.stopLoader();
+              }
+            })
+          } else {
+            this.router.navigateByUrl('/login');
+            this.toastService.stopLoader();
+          }
+        }, error => {
           this.toastService.stopLoader();
-        }
-      }, error => {
-        this.toastService.stopLoader();
-      })
+        })
+      }
+    }else {
+      this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
   syncUpdateInLocal(syncedProjects) {
