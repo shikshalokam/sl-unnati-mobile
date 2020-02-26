@@ -269,6 +269,9 @@ var HomePage = /** @class */ (function () {
         this.skeletons = [{}, {}, {}, {}, {}, {}];
         this.menuCtrl.enable(true);
         // update profile pop handler
+        homeService.localDataUpdated.subscribe(function (data) {
+            _this.getActiveProjects();
+        });
         updateProfile.updatedUser.subscribe(function (status) {
             var isPopUpShowen = localStorage.getItem('isPopUpShowen');
             if (isPopUpShowen == "null") {
