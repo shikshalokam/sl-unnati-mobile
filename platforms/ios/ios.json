@@ -111,6 +111,10 @@
             {
               "xml": "<feature name=\"FileOpener2\"><param name=\"ios-package\" value=\"FileOpener2\" /></feature>",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"FCMPlugin\"><param name=\"ios-package\" value=\"FCMPlugin\" /></feature>",
+              "count": 1
             }
           ]
         }
@@ -126,6 +130,26 @@
           "NSPhotoLibraryUsageDescription": [
             {
               "xml": "<string>This app requires photo library access to function properly.</string>",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "*/Entitlements-Debug.plist": {
+        "parents": {
+          "aps-environment": [
+            {
+              "xml": "<string>development</string>",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "*/Entitlements-Release.plist": {
+        "parents": {
+          "aps-environment": [
+            {
+              "xml": "<string>production</string>",
               "count": 1
             }
           ]
@@ -203,6 +227,9 @@
       "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },
     "cordova-plugin-file-opener2": {
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+    },
+    "cordova-plugin-fcm-with-dependecy-updated": {
       "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     }
   },
@@ -606,6 +633,14 @@
       "clobbers": [
         "cordova.plugins.fileOpener2"
       ]
+    },
+    {
+      "id": "cordova-plugin-fcm-with-dependecy-updated.FCMPlugin",
+      "file": "plugins/cordova-plugin-fcm-with-dependecy-updated/www/FCMPlugin.js",
+      "pluginId": "cordova-plugin-fcm-with-dependecy-updated",
+      "clobbers": [
+        "FCMPlugin"
+      ]
     }
   ],
   "plugin_metadata": {
@@ -631,6 +666,7 @@
     "cordova-plugin-filepath": "1.5.7",
     "com-badrit-base64": "0.2.0",
     "cordova-plugin-camera": "4.1.0",
-    "cordova-plugin-file-opener2": "3.0.0"
+    "cordova-plugin-file-opener2": "3.0.0",
+    "cordova-plugin-fcm-with-dependecy-updated": "4.2.0"
   }
 }

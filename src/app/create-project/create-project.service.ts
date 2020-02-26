@@ -57,7 +57,7 @@ export class CreateProjectService {
                         })
                     }
                 });
-            } else {  
+            } else {
                 let projects: any;
                 project._id = 1;
                 let pro1 = [{

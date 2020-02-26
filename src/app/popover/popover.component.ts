@@ -120,7 +120,6 @@ export class PopoverComponent implements OnInit {
 
   // Sync project before share
   public syncProject() {
-
     if (this.projectToSync[0].isEdited || this.projectToSync[0].isNew) {
       if (this.projectToSync[0].isNew) {
         delete this.projectToSync[0]._id;
@@ -195,6 +194,11 @@ export class PopoverComponent implements OnInit {
         sproject.createdType = 'by self';
         sproject.isEdited = false;
         sproject.share = false;
+        if (sproject.tasks && sproject.tasks.length >0) {
+          sproject.tasks.forEach(task => {
+            task.isSync = true;
+          });
+        }
       })
     });
     this.storage.set('projects', syncedProjects).then(myprojectsff => {
