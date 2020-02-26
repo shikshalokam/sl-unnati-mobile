@@ -173,7 +173,7 @@ export class AppComponent {
         } else if (this.router.url == '/project-view/notifications' || this.router.url == '/project-view/newsfeed' || this.router.url == '/project-view/about' ||
           this.router.url == '/project-view/reports' || this.router.url == '/project-view/my-schools' ||
           this.router.url == '/project-view/projects' || this.router.url == '/project-view/update-profile' ||
-          this.router.url == '/project-view/library' || this.router.url == '/project-view/project-detail/home' || s[1].path == 'create-project' || this.router.url == '/project-view/task-board') {
+          this.router.url == '/project-view/library' || this.router.url == '/project-view/project-detail/home' || this.router.url == '/project-view/tutorial-videos' || s[1].path == 'create-project' || this.router.url == '/project-view/task-board') {
           this.router.navigateByUrl('project-view/home');
         } else if (this.router.url == '/project-view/task-view') {
           this.router.navigateByUrl('project-view/detail');
@@ -372,6 +372,9 @@ export class AppComponent {
                   if (task.isNew && task._id) {
                     delete task._id;
                   }
+                  if (task.isSync) {
+                    task.isNew = false;
+                  }
                   if (task.subTasks && task.subTasks.length > 0) {
                     task.subTasks.forEach(subtasks => {
                       if (subtasks.isNew && subtasks._id) {
@@ -445,7 +448,7 @@ export class AppComponent {
           this.toastService.stopLoader();
         })
       }
-    }else {
+    } else {
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
@@ -455,10 +458,16 @@ export class AppComponent {
         sproject.isNew = false;
         sproject.isSync = true;
         sproject.isEdited = false;
+        if (sproject.tasks && sproject.tasks.length > 0) {
+          sproject.tasks.forEach(task => {
+            task.isSync = true;
+          });
+        }
       })
     });
     this.storage.set('projects', syncedProjects).then(myprojectsff => {
       this.toastService.successToast('message.sync_success');
+      this.homeService.syncUpdated();
     })
   }
 }
