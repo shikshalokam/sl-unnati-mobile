@@ -108,14 +108,10 @@ export class UpdateProfilePage implements OnInit {
     })
   }
   // immediate children of state
-  public getImmediateChildren(event, type) {
+  public getImmediateChildren(event) {
     if (this.connected) {
       let id;
-      if (type == "form") {
-        id = event.detail.value;
-      } else if (type == "backend") {
-        id = event;
-      }
+      id = event.detail.value;
       if (id && this.noData) {
         this.storage.get('userTokens').then(data => {
           if (data) {
@@ -162,6 +158,62 @@ export class UpdateProfilePage implements OnInit {
                     this.toastService.stopLoader();
                   }, erros => {
                     this.toastService.stopLoader();
+                  })
+                })
+              }
+            })
+          }
+        })
+      } else {
+        this.noData = true;
+      }
+    }
+  }
+  public getImmediateChildren1(id) {
+    if (this.connected) {
+      if (id && this.noData) {
+        this.storage.get('userTokens').then(data => {
+          if (data) {
+            this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+              let parsedData = JSON.parse(data._body);
+              if (parsedData && parsedData.access_token) {
+                let userTokens = {
+                  access_token: parsedData.access_token,
+                  refresh_token: parsedData.refresh_token,
+                };
+                this.storage.set('userTokens', userTokens).then(data => {
+                  this.updateProfileService.getImmediateChildren(userTokens.access_token, id).subscribe((entities: any) => {
+                    switch (entities.result.immediateEntityType) {
+                      case 'district': {
+                        this.districts = entities.result.data;
+                        break;
+                      }
+                      case 'zone': {
+                        this.zones = entities.result.data;
+                        break;
+                      }
+                      case 'cluster': {
+                        this.clusters = entities.result.data;
+                        break;
+                      }
+                      case 'block': {
+                        this.blocks = entities.result.data;
+                        break;
+                      }
+                      case 'school': {
+                        this.schools = entities.result.data;
+                        break;
+                      }
+                      case 'hub': {
+                        this.hubs = entities.result.data;
+                        break;
+                      }
+                      case 'taluka': {
+                        this.talukas = entities.result.data;
+                        break;
+                      }
+                    }
+                  }, erros => {
                   })
                 })
               }
@@ -223,7 +275,7 @@ export class UpdateProfilePage implements OnInit {
                 this.storage.set('userTokens', userTokens).then(data => {
                   this.updateProfileService.saveInfo(userTokens.access_token, this.profile).subscribe((data: any) => {
                     this.storage.get('clearNotification').then((data) => {
-                      this.markAsRead(data);
+                      // this.markAsRead(data);
                     });
                     this.toastService.stopLoader();
                     this.updateProfileService.updateProfile('done');
@@ -289,25 +341,25 @@ export class UpdateProfilePage implements OnInit {
                 delete data.result.createdAt;
                 delete data.result.createdBy;
                 if (data.result.state) {
-                  this.getImmediateChildren(data.result.state, 'backend');
+                  this.getImmediateChildren1(data.result.state);
                 }
                 if (data.result.district) {
-                  this.getImmediateChildren(data.result.district, 'backend');
+                  this.getImmediateChildren1(data.result.district);
                 }
                 if (data.result.hub) {
-                  this.getImmediateChildren(data.result.hub, 'backend');
+                  this.getImmediateChildren1(data.result.hub);
                 }
                 if (data.result.zone) {
-                  this.getImmediateChildren(data.result.zone, 'backend');
+                  this.getImmediateChildren1(data.result.zone);
                 }
                 if (data.result.cluster) {
-                  this.getImmediateChildren(data.result.cluster, 'backend');
+                  this.getImmediateChildren1(data.result.cluster);
                 }
                 if (data.result.block) {
-                  this.getImmediateChildren(data.result.block, 'backend');
+                  this.getImmediateChildren1(data.result.block);
                 }
                 if (data.result.school) {
-                  this.getImmediateChildren(data.result.school, 'backend');
+                  this.getImmediateChildren1(data.result.school);
                 }
                 this.profile = data.result;
                 if (this.profile.firstName) {

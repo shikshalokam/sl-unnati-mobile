@@ -1212,7 +1212,7 @@ var AppComponent = /** @class */ (function () {
                 else if (_this.router.url == '/project-view/notifications' || _this.router.url == '/project-view/newsfeed' || _this.router.url == '/project-view/about' ||
                     _this.router.url == '/project-view/reports' || _this.router.url == '/project-view/my-schools' ||
                     _this.router.url == '/project-view/projects' || _this.router.url == '/project-view/update-profile' ||
-                    _this.router.url == '/project-view/library' || _this.router.url == '/project-view/project-detail/home' || s[1].path == 'create-project' || _this.router.url == '/project-view/task-board') {
+                    _this.router.url == '/project-view/library' || _this.router.url == '/project-view/project-detail/home' || _this.router.url == '/project-view/tutorial-videos' || s[1].path == 'create-project' || _this.router.url == '/project-view/task-board') {
                     _this.router.navigateByUrl('project-view/home');
                 }
                 else if (_this.router.url == '/project-view/task-view') {
@@ -1442,6 +1442,9 @@ var AppComponent = /** @class */ (function () {
                                     if (task.isNew && task._id) {
                                         delete task._id;
                                     }
+                                    if (task.isSync) {
+                                        task.isNew = false;
+                                    }
                                     if (task.subTasks && task.subTasks.length > 0) {
                                         task.subTasks.forEach(function (subtasks) {
                                             if (subtasks.isNew && subtasks._id) {
@@ -1533,10 +1536,16 @@ var AppComponent = /** @class */ (function () {
                 sproject.isNew = false;
                 sproject.isSync = true;
                 sproject.isEdited = false;
+                if (sproject.tasks && sproject.tasks.length > 0) {
+                    sproject.tasks.forEach(function (task) {
+                        task.isSync = true;
+                    });
+                }
             });
         });
         this.storage.set('projects', syncedProjects).then(function (myprojectsff) {
             _this.toastService.successToast('message.sync_success');
+            _this.homeService.syncUpdated();
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -1594,7 +1603,7 @@ var AppComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppConfigs", function() { return AppConfigs; });
 var AppConfigs = {
-    appVersion: "2.0.0",
+    appVersion: "2.0.1",
     appName: "Unnati",
     // Dev urls
     // app_url: "https://dev.shikshalokam.org",
@@ -1612,33 +1621,33 @@ var AppConfigs = {
     //     registerDevice: "/notifications/push/registerDevice"
     // },
     // QA
-    app_url: "https://qa.shikshalokam.org",
-    api_url: "https://qahome.shikshalokam.org",
-    api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
-    clientId: "sl-ionic-connect",
-    environment: "qa",
-    notification: {
-        kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
-        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
-        markAsRead: "/notifications/in-app/markAsRead/",
-        getAllNotifications: "/notifications/in-app/list",
-        registerDevice: "/notifications/push/registerDevice"
-    },
-    //AWS Prod Urls
-    // app_url: "https://bodh.shikshalokam.org",
-    // api_url: "https://api.shikshalokam.org",
+    // app_url: "https://qa.shikshalokam.org",
+    // api_url: "https://qahome.shikshalokam.org",
     // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
     // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
     // clientId: "sl-ionic-connect",
-    // environment: "Production",
+    // environment: "qa",
     // notification: {
-    //     kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
-    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
-    //     markAsRead: "notifications/in-app/markAsRead",
+    //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+    //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+    //     markAsRead: "/notifications/in-app/markAsRead/",
     //     getAllNotifications: "/notifications/in-app/list",
-    //     registerDevice: "notifications/push/registerDevice"
+    //     registerDevice: "/notifications/push/registerDevice"
     // },
+    //AWS Prod Urls
+    app_url: "https://bodh.shikshalokam.org",
+    api_url: "https://api.shikshalokam.org",
+    api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    clientId: "sl-ionic-connect",
+    environment: "Production",
+    notification: {
+        kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
+        getUnreadNotificationCount: "notifications/in-app/unReadCount",
+        markAsRead: "notifications/in-app/markAsRead",
+        getAllNotifications: "/notifications/in-app/list",
+        registerDevice: "notifications/push/registerDevice"
+    },
     //Staging Urls
     // app_url: "https://dev.shikshalokam.org",
     // api_base_url: "https://staginghome.shikshalokam.org/assessment-service/api/v1",
@@ -1976,10 +1985,12 @@ var CreateProjectService = /** @class */ (function () {
         var _this = this;
         return this.storage.get('projects').then(function (projectList) {
             // projectList.forEach(projectsPrograms => {
+            console.log(updatedProject, "updatedProject");
             projectList[0].projects.forEach(function (project, i) {
                 if (project._id == updatedProject._id) {
                     updatedProject.isEdited = true;
                     projectList[0].projects[i] = updatedProject;
+                    console.log(projectList[0].projects[i], "projectList[0].projects[i]");
                 }
             });
             _this.storage.set('projects', projectList).then(function (project) {
@@ -2413,6 +2424,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var HomeService = /** @class */ (function () {
     function HomeService() {
+        this.localDataUpdated = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.myProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.clearMyProject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.tobeSync = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
@@ -2422,6 +2434,9 @@ var HomeService = /** @class */ (function () {
     }
     HomeService.prototype.loadMyProjects = function () {
         this.myProject.next();
+    };
+    HomeService.prototype.syncUpdated = function () {
+        this.localDataUpdated.next(true);
     };
     HomeService.prototype.setCount = function (count) {
         if (count == true) {
@@ -3095,6 +3110,11 @@ var PopoverComponent = /** @class */ (function () {
                 sproject.createdType = 'by self';
                 sproject.isEdited = false;
                 sproject.share = false;
+                if (sproject.tasks && sproject.tasks.length > 0) {
+                    sproject.tasks.forEach(function (task) {
+                        task.isSync = true;
+                    });
+                }
             });
         });
         this.storage.set('projects', syncedProjects).then(function (myprojectsff) {
