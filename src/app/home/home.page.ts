@@ -90,6 +90,9 @@ export class HomePage implements OnInit {
     public updateProfile: UpdateProfileService) {
     this.menuCtrl.enable(true);
     // update profile pop handler
+    homeService.localDataUpdated.subscribe(data =>{
+      this.getActiveProjects();
+    })
     updateProfile.updatedUser.subscribe((status) => {
       let isPopUpShowen: any = localStorage.getItem('isPopUpShowen');
       if (isPopUpShowen == "null") {

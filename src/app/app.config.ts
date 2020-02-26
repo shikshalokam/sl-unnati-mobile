@@ -1,6 +1,6 @@
 export const AppConfigs = {
 
-    appVersion: "2.0.0",
+    appVersion: "2.0.1",
     appName: "Unnati",
 
     // Dev urls
@@ -20,35 +20,34 @@ export const AppConfigs = {
     // },
 
     // QA
-    app_url: "https://qa.shikshalokam.org",
-    api_url: "https://qahome.shikshalokam.org",
-    api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
-    clientId: "sl-ionic-connect",
-    environment: "qa",
-    notification: {
-        kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
-        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
-        markAsRead: "/notifications/in-app/markAsRead/",
-        getAllNotifications: "/notifications/in-app/list",
-        registerDevice: "/notifications/push/registerDevice"
-    },
-
-    //AWS Prod Urls
-    // app_url: "https://bodh.shikshalokam.org",
-    // api_url: "https://api.shikshalokam.org",
+    // app_url: "https://qa.shikshalokam.org",
+    // api_url: "https://qahome.shikshalokam.org",
     // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
     // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
     // clientId: "sl-ionic-connect",
-    // environment: "Production",
+    // environment: "qa",
     // notification: {
-    //     kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
-    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
-    //     markAsRead: "notifications/in-app/markAsRead",
+    //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+    //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+    //     markAsRead: "/notifications/in-app/markAsRead/",
     //     getAllNotifications: "/notifications/in-app/list",
-    //     registerDevice: "notifications/push/registerDevice"
+    //     registerDevice: "/notifications/push/registerDevice"
     // },
 
+    //AWS Prod Urls
+    app_url: "https://bodh.shikshalokam.org",
+    api_url: "https://api.shikshalokam.org",
+    api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    clientId: "sl-ionic-connect",
+    environment: "Production",
+    notification: {
+        kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
+        getUnreadNotificationCount: "notifications/in-app/unReadCount",
+        markAsRead: "notifications/in-app/markAsRead",
+        getAllNotifications: "/notifications/in-app/list",
+        registerDevice: "notifications/push/registerDevice"
+    },
 
     //Staging Urls
     // app_url: "https://dev.shikshalokam.org",
