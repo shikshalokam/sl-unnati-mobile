@@ -479,7 +479,7 @@ var map = {
 	"../fullreports/fullreports.module": [
 		"./src/app/fullreports/fullreports.module.ts",
 		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
-		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~dba1dd56",
+		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
 		"default~charts-charts-module~fullreports-fullreports-module",
 		"common",
 		"fullreports-fullreports-module"
@@ -493,14 +493,14 @@ var map = {
 	"../last-month-reports/last-month-reports.module": [
 		"./src/app/last-month-reports/last-month-reports.module.ts",
 		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
-		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~dba1dd56",
+		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
 		"common",
 		"last-month-reports-last-month-reports-module"
 	],
 	"../last-quarter-reports/last-quarter-reports.module": [
 		"./src/app/last-quarter-reports/last-quarter-reports.module.ts",
 		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
-		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~dba1dd56",
+		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
 		"common",
 		"last-quarter-reports-last-quarter-reports-module"
 	],
@@ -513,6 +513,7 @@ var map = {
 	"../my-reports/my-reports.module": [
 		"./src/app/my-reports/my-reports.module.ts",
 		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
+		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
 		"common",
 		"my-reports-my-reports-module"
 	],
@@ -657,7 +658,7 @@ var map = {
 	"./fullreports/fullreports.module": [
 		"./src/app/fullreports/fullreports.module.ts",
 		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
-		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~dba1dd56",
+		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
 		"default~charts-charts-module~fullreports-fullreports-module",
 		"common",
 		"fullreports-fullreports-module"
@@ -675,14 +676,14 @@ var map = {
 	"./last-month-reports/last-month-reports.module": [
 		"./src/app/last-month-reports/last-month-reports.module.ts",
 		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
-		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~dba1dd56",
+		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
 		"common",
 		"last-month-reports-last-month-reports-module"
 	],
 	"./last-quarter-reports/last-quarter-reports.module": [
 		"./src/app/last-quarter-reports/last-quarter-reports.module.ts",
 		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
-		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~dba1dd56",
+		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
 		"common",
 		"last-quarter-reports-last-quarter-reports-module"
 	],
@@ -705,6 +706,7 @@ var map = {
 	"./my-reports/my-reports.module": [
 		"./src/app/my-reports/my-reports.module.ts",
 		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
+		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
 		"common",
 		"my-reports-my-reports-module"
 	],
@@ -1102,8 +1104,6 @@ var AppComponent = /** @class */ (function () {
         this.loadingController = loadingController;
         this.toastService = toastService;
         this.categoryViewService = categoryViewService;
-        this.lastTimeBackPress = 0;
-        this.timePeriodToExit = 2000;
         this.projectsToSync = [];
         this.type = 'quarter';
         this.count = 100;
@@ -1122,6 +1122,7 @@ var AppComponent = /** @class */ (function () {
                 _this.loggedInUser = value;
                 if (_this.loggedInUser) {
                     _this.subscription = _this.interval.subscribe(function (val) {
+                        console.log('auto syncing');
                         _this.prepareMappedProjectToSync();
                     });
                     _this.menuCtrl.enable(true, 'unnati');
@@ -1169,6 +1170,39 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.initializeApp = function () {
         var _this = this;
         this.platform.ready().then(function () {
+            _this.storage.get('myprojects').then(function (myProjects) {
+                console.log(myProjects, "myProjects");
+                if (myProjects) {
+                    myProjects.forEach(function (element) {
+                        alert(element + "myProjects");
+                        alert(JSON.stringify(element) + "JSON.stringify(element)");
+                        alert(element._id + "element._id");
+                        alert(element._id.length + "element._id.length");
+                        alert(element.isNew + 'element.isNew');
+                        if (element._id.length > 4) {
+                            element.isNew = true;
+                            element.isEdited = true;
+                        }
+                        if (element.tasks && element.tasks.length > 0) {
+                            element.tasks.forEach(function (task) {
+                                if (task.isNew && task._id) {
+                                    delete task._id;
+                                }
+                                if (task.subTasks && task.subTasks.length > 0) {
+                                    task.subTasks.forEach(function (subtasks) {
+                                        if (subtasks.isNew && subtasks._id) {
+                                            delete subtasks._id;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    _this.projectsToSync = myProjects;
+                    // this.autoSync();
+                    _this.prepareMappedProjectToSync();
+                }
+            });
             if (!_this.isConnected && !navigator.onLine) {
                 _this.networkService.networkErrorToast();
             }
@@ -1427,6 +1461,40 @@ var AppComponent = /** @class */ (function () {
         var _this = this;
         this.mappedProjectsToSync = false;
         this.projectsToSync = [];
+        // this.storage.get('myprojects').then(myProjects => {
+        //   if (myProjects) {
+        //     this.mappedProjectsToSync = true;
+        //     myProjects.forEach(project => {
+        //       if (project._id.length > 4) {
+        //         project.isNew = true;
+        //       }
+        //       if (project.isNew) {
+        //         delete project._id;
+        //       }
+        //       if (project.tasks && project.tasks.length > 0) {
+        //         project.tasks.forEach(task => {
+        //           if (task._id.length > 4) {
+        //             project.isNew = true;
+        //           }
+        //           if (task.isNew && task._id) {
+        //             delete task._id;
+        //           }
+        //           if (task.subTasks && task.subTasks.length > 0) {
+        //             task.subTasks.forEach(subtasks => {
+        //               if (subtasks.isNew && subtasks._id) {
+        //                 delete subtasks._id;
+        //               }
+        //               if (subtasks.isNew && subtasks._id) {
+        //                 delete subtasks._id;
+        //               }
+        //             })
+        //           }
+        //         });
+        //       }
+        //       this.projectsToSync.push(project);
+        //     });
+        //   }
+        // })
         this.storage.get('projects').then(function (myProjects) {
             if (myProjects) {
                 myProjects.forEach(function (projectList) {
@@ -1436,6 +1504,7 @@ var AppComponent = /** @class */ (function () {
                             if (project.isNew) {
                                 delete project._id;
                             }
+                            console.log(project._id, "project._id project._id", project._id.length);
                             _this.mappedProjectsToSync = true;
                             if (project.tasks && project.tasks.length > 0) {
                                 project.tasks.forEach(function (task) {
@@ -1503,6 +1572,12 @@ var AppComponent = /** @class */ (function () {
                                         }
                                         else if (data.status == "success" || data.status == "succes") {
                                             _this.syncUpdateInLocal(data.allProjects.data);
+                                            _this.storage.get('myprojects').then(function (myProjects) {
+                                                console.log(myProjects, "myProjects");
+                                                if (myProjects) {
+                                                    _this.storage.set('myprojects', '').then(function (myprojects) { });
+                                                }
+                                            });
                                         }
                                     }, function (error) {
                                         _this.toastService.stopLoader();
@@ -1985,12 +2060,10 @@ var CreateProjectService = /** @class */ (function () {
         var _this = this;
         return this.storage.get('projects').then(function (projectList) {
             // projectList.forEach(projectsPrograms => {
-            console.log(updatedProject, "updatedProject");
             projectList[0].projects.forEach(function (project, i) {
                 if (project._id == updatedProject._id) {
                     updatedProject.isEdited = true;
                     projectList[0].projects[i] = updatedProject;
-                    console.log(projectList[0].projects[i], "projectList[0].projects[i]");
                 }
             });
             _this.storage.set('projects', projectList).then(function (project) {
@@ -2896,13 +2969,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
-/* harmony import */ var _category_view_category_view_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../category-view/category.view.service */ "./src/app/category-view/category.view.service.ts");
-/* harmony import */ var _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../create-project/create-project.service */ "./src/app/create-project/create-project.service.ts");
-/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
-/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
-/* harmony import */ var _project_view_project_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../project-view/project.service */ "./src/app/project-view/project.service.ts");
+/* harmony import */ var _category_view_category_view_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../category-view/category.view.service */ "./src/app/category-view/category.view.service.ts");
+/* harmony import */ var _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../create-project/create-project.service */ "./src/app/create-project/create-project.service.ts");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
+/* harmony import */ var _project_view_project_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../project-view/project.service */ "./src/app/project-view/project.service.ts");
+/* harmony import */ var _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ionic-native/social-sharing/ngx */ "./node_modules/@ionic-native/social-sharing/ngx/index.js");
 /* harmony import */ var _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @ionic-native/file-transfer/ngx */ "./node_modules/@ionic-native/file-transfer/ngx/index.js");
 /* harmony import */ var _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @ionic-native/file/ngx */ "./node_modules/@ionic-native/file/ngx/index.js");
 /* harmony import */ var _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @ionic-native/file-chooser/ngx */ "./node_modules/@ionic-native/file-chooser/ngx/index.js");
@@ -2926,10 +2999,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var PopoverComponent = /** @class */ (function () {
-    function PopoverComponent(translateService, popoverController, socialSharing, categoryViewService, createProjectService, storage, toastService, alertController, apiProvider, projectService, transfer, file, platform, fileChooser, base64, loadingController) {
+    function PopoverComponent(translateService, popoverController, categoryViewService, createProjectService, storage, toastService, alertController, apiProvider, projectService, transfer, file, platform, socialSharing, fileChooser, base64, loadingController) {
         this.translateService = translateService;
         this.popoverController = popoverController;
-        this.socialSharing = socialSharing;
         this.categoryViewService = categoryViewService;
         this.createProjectService = createProjectService;
         this.storage = storage;
@@ -2940,6 +3012,7 @@ var PopoverComponent = /** @class */ (function () {
         this.transfer = transfer;
         this.file = file;
         this.platform = platform;
+        this.socialSharing = socialSharing;
         this.fileChooser = fileChooser;
         this.base64 = base64;
         this.loadingController = loadingController;
@@ -3178,17 +3251,17 @@ var PopoverComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["PopoverController"],
-            _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_4__["SocialSharing"],
-            _category_view_category_view_service__WEBPACK_IMPORTED_MODULE_5__["CategoryViewService"],
-            _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_6__["CreateProjectService"],
-            _ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"],
-            _toast_service__WEBPACK_IMPORTED_MODULE_8__["ToastService"],
+            _category_view_category_view_service__WEBPACK_IMPORTED_MODULE_4__["CategoryViewService"],
+            _create_project_create_project_service__WEBPACK_IMPORTED_MODULE_5__["CreateProjectService"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_6__["Storage"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_7__["ToastService"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["AlertController"],
-            _api_api__WEBPACK_IMPORTED_MODULE_9__["ApiProvider"],
-            _project_view_project_service__WEBPACK_IMPORTED_MODULE_10__["ProjectService"],
+            _api_api__WEBPACK_IMPORTED_MODULE_8__["ApiProvider"],
+            _project_view_project_service__WEBPACK_IMPORTED_MODULE_9__["ProjectService"],
             _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_11__["FileTransfer"],
             _ionic_native_file_ngx__WEBPACK_IMPORTED_MODULE_12__["File"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"],
+            _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_10__["SocialSharing"],
             _ionic_native_file_chooser_ngx__WEBPACK_IMPORTED_MODULE_13__["FileChooser"],
             _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_14__["Base64"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"]])

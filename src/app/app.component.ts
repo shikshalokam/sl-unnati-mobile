@@ -29,8 +29,6 @@ export class AppComponent {
 
   @ViewChild(NavController) nav: NavController;
   @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
-  lastTimeBackPress = 0;
-  timePeriodToExit = 2000;
   mappedProjectsToSync;
   myProjectsToSync;
   projectsToSync = [];
@@ -85,6 +83,7 @@ export class AppComponent {
         this.loggedInUser = value;
         if (this.loggedInUser) {
           this.subscription = this.interval.subscribe(val => {
+            console.log('auto syncing');
             this.prepareMappedProjectToSync();
           });
           this.menuCtrl.enable(true, 'unnati');
@@ -384,8 +383,6 @@ export class AppComponent {
                   }
                 });
               }
-              // this.autoSync(project);
-              // intentially left blank
               this.projectsToSync.push(project);
             } else {
               // intentially left blank

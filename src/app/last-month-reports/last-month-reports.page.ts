@@ -5,20 +5,29 @@ import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
 import { ToastController } from '@ionic/angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import $ from 'jquery'
+import { NetworkService } from '../network.service';
+import { MyschoolsService } from '../myschools/myschools.service';
 import { MyReportsService } from '../my-reports/my-reports.service';
+import { ToastService } from '../toast.service';
+
 @Component({
   selector: 'app-last-month-reports',
   templateUrl: './last-month-reports.page.html',
   styleUrls: ['./last-month-reports.page.scss'],
 })
 export class LastMonthReportsPage implements OnInit {
-  public currentMonth;
-  public showChart: boolean = false;
-  public report;
-  public chartOptions;
-  public showSkeleton: boolean = false;
-  public skeletons = [{}, {}, {}, {}, {}];
+  currentMonth;
+  showChart: boolean = false;
+  report;
+  connected: any = navigator.onLine;
+  chartOptions;
+  mySchools;
+  appFolderPath;
+  isIos;
+  page: number = 1;
+  count: number = 5;
+  showSkeleton: boolean = false;
+  skeletons = [{}, {}, {}, {}, {}];
   highcharts = Highcharts;
   color = "#20ba8d";
   constructor(
@@ -27,51 +36,61 @@ export class LastMonthReportsPage implements OnInit {
     public toastController: ToastController,
     public api: ApiProvider,
     public storage: Storage,
-    public screenOrientation: ScreenOrientation
-  ) { }
+    public networkService: NetworkService,
+    public toastService: ToastService,
+    public mySchoolsService: MyschoolsService,
+    public screenOrientation: ScreenOrientation,
+  ) {
+
+    this.networkService.emit.subscribe(value => {
+      this.connected = value;
+      alert(this.connected + "in school");
+    });
+  }
   ionViewDidEnter() {
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
     } catch (error) {
     }
+    this.getSchools();
   }
   ngOnInit() {
     // this.getChart();
-    if (navigator.onLine) {
-      this.getData();
-    } else {
-      this.errorToast('Please check your internet connection.');
-    }
+    this.getData();
+
   }
 
   getChart() {
     this.showChart = true;
-
   }
   public getData() {
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        this.showSkeleton = true;
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.myReportsService.getReports(userTokens.access_token, 'lastMonth').subscribe((data: any) => {
-              this.report = data.data;
-              this.setupChart();
+    if (this.connected) {
+      this.storage.get('userTokens').then(data => {
+        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+          this.showSkeleton = true;
+          let parsedData = JSON.parse(data._body);
+          if (parsedData && parsedData.access_token) {
+            let userTokens = {
+              access_token: parsedData.access_token,
+              refresh_token: parsedData.refresh_token,
+            };
+            this.storage.set('userTokens', userTokens).then(usertoken => {
+              this.myReportsService.getReports(userTokens.access_token, 'lastMonth').subscribe((data: any) => {
+                this.report = data.data;
+                this.setupChart();
+                this.showSkeleton = false;
+              })
+            }, error => {
               this.showSkeleton = false;
             })
-          }, error => {
-            this.showSkeleton = false;
-          })
-        }
-      }, error => {
-        this.showSkeleton = false;
+          }
+        }, error => {
+          this.showSkeleton = false;
+        })
       })
-    })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
   }
   public setupChart() {
     let totalTask;
@@ -135,7 +154,7 @@ export class LastMonthReportsPage implements OnInit {
     if (navigator.onLine) {
       this.router.navigate(['project-view/fullreports', value]);
     } else {
-      this.errorToast('Please check your internet connection.');
+      this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
   // Display error Message
@@ -147,4 +166,61 @@ export class LastMonthReportsPage implements OnInit {
     });
     toast.present();
   }
+  public getSchools() {
+    if (this.connected) {
+      this.storage.get('userTokens').then(data => {
+        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+          let parsedData = JSON.parse(data._body);
+          if (parsedData && parsedData.access_token) {
+            let userTokens = {
+              access_token: parsedData.access_token,
+              refresh_token: parsedData.refresh_token,
+            };
+            this.storage.set('userTokens', userTokens).then(data => {
+              this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
+                this.mySchools = data.data;
+                console.log(this.mySchools, "this.mySchools ");
+              }, error => { })
+            })
+            //resolve()
+          }
+        }, error => {
+        })
+      })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
+  }
+  public getReport(type) {
+    this.mySchools[0].entityId
+    if (this.connected) {
+      this.storage.get('userTokens').then(data => {
+        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+          let parsedData = JSON.parse(data._body);
+          if (parsedData && parsedData.access_token) {
+            let userTokens = {
+              access_token: parsedData.access_token,
+              refresh_token: parsedData.refresh_token,
+            };
+            this.storage.set('userTokens', userTokens).then(data => {
+              this.toastService.startLoader('Loading Please wait');
+              this.myReportsService.getReportData(parsedData.access_token, this.mySchools[0], 'lastMonth').subscribe((data: any) => {
+                this.toastService.stopLoader();
+                if (type == 'share') {
+                  this.myReportsService.share(data);
+                } else {
+                  this.myReportsService.download(data);
+                }
+              }, error => { })
+            })
+            //resolve()
+          }
+        }, error => {
+        })
+      })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
+  }
+
 }

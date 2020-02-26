@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PopoverController } from '@ionic/angular';
-import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { CategoryViewService } from '../category-view/category.view.service';
 import { CreateProjectService } from '../create-project/create-project.service';
 import { Storage } from '@ionic/storage';
@@ -9,6 +8,7 @@ import { ToastService } from '../toast.service';
 import { AlertController } from '@ionic/angular';
 import { ApiProvider } from '../api/api';
 import { ProjectService } from '../project-view/project.service';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { Platform } from '@ionic/angular';
@@ -33,7 +33,6 @@ export class PopoverComponent implements OnInit {
   constructor(
     public translateService: TranslateService,
     public popoverController: PopoverController,
-    public socialSharing: SocialSharing,
     public categoryViewService: CategoryViewService,
     public createProjectService: CreateProjectService,
     public storage: Storage,
@@ -44,6 +43,7 @@ export class PopoverComponent implements OnInit {
     public transfer: FileTransfer,
     public file: File,
     public platform: Platform,
+    public socialSharing: SocialSharing,
     public fileChooser: FileChooser,
     public base64: Base64,
     public loadingController: LoadingController) { }

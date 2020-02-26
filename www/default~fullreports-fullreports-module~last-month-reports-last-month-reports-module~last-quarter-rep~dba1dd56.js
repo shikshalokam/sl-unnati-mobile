@@ -120,6 +120,12 @@ var MyReportsService = /** @class */ (function () {
         });
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/reports/getDetailViewReport?reportType=' + state, { headers: httpHeaders });
     };
+    MyReportsService.prototype.getReportData = function (token, entity, type) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
+            'x-auth-token': token
+        });
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/reports/getMonthlyOrQuarterReportPdf?reportType=' + type + '&schoolName=' + entity.name + '&' + entity.entityId, { headers: httpHeaders });
+    };
     MyReportsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root',
