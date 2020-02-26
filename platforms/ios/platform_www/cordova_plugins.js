@@ -398,6 +398,14 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "cordova.plugins.fileOpener2"
       ]
+    },
+    {
+      "id": "cordova-plugin-fcm-with-dependecy-updated.FCMPlugin",
+      "file": "plugins/cordova-plugin-fcm-with-dependecy-updated/www/FCMPlugin.js",
+      "pluginId": "cordova-plugin-fcm-with-dependecy-updated",
+      "clobbers": [
+        "FCMPlugin"
+      ]
     }
   ];
   module.exports.metadata = {
@@ -423,6 +431,7 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-filepath": "1.5.7",
     "com-badrit-base64": "0.2.0",
     "cordova-plugin-camera": "4.1.0",
-    "cordova-plugin-file-opener2": "3.0.0"
+    "cordova-plugin-file-opener2": "3.0.0",
+    "cordova-plugin-fcm-with-dependecy-updated": "4.2.0"
   };
 });

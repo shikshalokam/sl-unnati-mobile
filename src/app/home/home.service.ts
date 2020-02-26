@@ -5,6 +5,7 @@ import { Subject } from 'rxjs'
   providedIn: 'root'
 })
 export class HomeService {
+  localDataUpdated = new Subject();
   public myProject = new Subject();
   public clearMyProject = new Subject();
   public tobeSync = new Subject();
@@ -16,6 +17,9 @@ export class HomeService {
 
   public loadMyProjects() {
     this.myProject.next();
+  }
+  public syncUpdated() {
+    this.localDataUpdated.next(true);
   }
   public setCount(count) {
     if (count == true) {

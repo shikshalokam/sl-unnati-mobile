@@ -100,6 +100,7 @@ ext {
 // PLUGIN GRADLE EXTENSIONS START
 apply from: "../cordova-plugin-badge/unnati-badge.gradle"
 apply from: "../cordova-plugin-local-notification/unnati-localnotification.gradle"
+apply from: "../cordova-plugin-fcm-with-dependecy-updated/unnati-FCMPlugin.gradle"
 // PLUGIN GRADLE EXTENSIONS END
 
 def hasBuildExtras1 = file('build-extras.gradle').exists()
@@ -299,6 +300,8 @@ dependencies {
     implementation "com.android.support:support-v4:26.+"
     implementation "com.android.support:support-v4:24.1.1+"
     implementation "com.android.support:support-v4:27.+"
+    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation "com.google.firebase:firebase-messaging:18.0.0"
     // SUB-PROJECT DEPENDENCIES END
 }
 
