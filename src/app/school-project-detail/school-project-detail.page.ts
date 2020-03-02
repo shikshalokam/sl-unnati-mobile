@@ -163,7 +163,7 @@ export class SchoolProjectDetailPage implements OnInit {
                 this.errorToast(data.message);
               } else if (data.status == "succes") {
                 this.successToast(data.message);
-                this.storage.set('projects', data).then(resp1 => {
+                this.storage.set('latestProjects', data).then(resp1 => {
                 }, error => { }
                 )
               }

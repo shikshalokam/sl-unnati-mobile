@@ -91,22 +91,41 @@ export class PopoverComponent implements OnInit {
   public deleteProject() {
     this.project.isDeleted = true;
     let projectData = this.project;
-    this.storage.get('projects').then(myProjects => {
-      if (myProjects[0].projects) {
-        myProjects[0].projects.forEach(function (project, i) {
-          if (project._id == projectData._id) {
-            projectData.isEdited = true;
-            myProjects[0].projects[i] = projectData;
-          }
+    this.storage.get('latestProjects').then(myProjects => {
+      if (myProjects.programs) {
+        myProjects.programs.forEach(programsList => {
+          programsList.projects.forEach(function (project, i) {
+            if (project._id == projectData._id) {
+              projectData.isEdited = true;
+              programsList.projects[i] = projectData;
+            }
+          });
+          this.storage.set('latestProjects', myProjects).then(project => {
+            this.toastService.successToast('message.project_deleted_success');
+            this.categoryViewService.deleteProject('deleted');
+            this.DismissClick();
+          }, error => {
+            this.toastService.errorToast('message.project_deleted_failed');
+          })
         });
-        this.storage.set('projects', myProjects).then(project => {
-          this.toastService.successToast('message.project_deleted_success');
-          this.categoryViewService.deleteProject('deleted');
-          this.DismissClick();
-        }, error => {
-          this.toastService.errorToast('message.project_deleted_failed');
-        })
+      } else {
+        if (myProjects[0].projects) {
+          myProjects[0].projects.forEach(function (project, i) {
+            if (project._id == projectData._id) {
+              projectData.isEdited = true;
+              myProjects[0].projects[i] = projectData;
+            }
+          });
+          this.storage.set('latestProjects', myProjects).then(project => {
+            this.toastService.successToast('message.project_deleted_success');
+            this.categoryViewService.deleteProject('deleted');
+            this.DismissClick();
+          }, error => {
+            this.toastService.errorToast('message.project_deleted_failed');
+          })
+        }
       }
+
     }, error => {
       this.toastService.errorToast('message.project_deleted_failed');
     })
@@ -155,24 +174,22 @@ export class PopoverComponent implements OnInit {
               }
               this.projectService.sync(projects, data.access_token).subscribe((data: any) => {
                 if (data.status == "success" || data.status == "succes") {
-                  // if (data.allProjects.data) {
+                  this.toastService.stopLoader();
                   data.allProjects.data.forEach(projects => {
                     projects.projects.forEach(sproject => {
                       if (sproject.share) {
                         this.getPDF(sproject._id);
                       }
-                      // sproject.share = false;
                     })
                   });
                   this.DismissClick();
                   this.syncUpdateInLocal(data.allProjects.data);
                 } else {
                   this.DismissClick();
+                  this.toastService.stopLoader();
                   this.toastService.errorToast1(data.message);
                 }
-                this.toastService.stopLoader();
               }, error => {
-                // intentially left blank
                 this.toastService.stopLoader();
               })
             })
@@ -191,17 +208,16 @@ export class PopoverComponent implements OnInit {
       projects.projects.forEach(sproject => {
         sproject.isNew = false;
         sproject.isSync = true;
-        sproject.createdType = 'by self';
         sproject.isEdited = false;
         sproject.share = false;
-        if (sproject.tasks && sproject.tasks.length >0) {
+        if (sproject.tasks && sproject.tasks.length > 0) {
           sproject.tasks.forEach(task => {
             task.isSync = true;
           });
         }
       })
     });
-    this.storage.set('projects', syncedProjects).then(myprojectsff => {
+    this.storage.set('latestProjects', syncedProjects).then(myprojectsff => {
     })
   }
   // geting pdf file report of project and share the project

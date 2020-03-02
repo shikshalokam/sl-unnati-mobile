@@ -15,6 +15,7 @@ export class CategoryViewPage {
   back = 'project-view/library'
   projects;
   searchInput;
+  searchProjects;
   templates;
   from;
   categoryHead;
@@ -32,8 +33,10 @@ export class CategoryViewPage {
       if (this.catType == 'my_projects') {
         this.categaryService.getMyProjects().then((myProjects: any) => {
           if (myProjects) {
-            myProjects = this.getSortData(myProjects);
-            myProjects.forEach(element => {
+            myProjects.forEach(programsList => {
+              programsList.projects.sort((a, b) => {
+                return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+              });
             });
             this.projects = myProjects;
           }
@@ -43,11 +46,12 @@ export class CategoryViewPage {
       }
     })
     rout.params.subscribe(param => {
+      this.searchProjects = '';
       this.catType = param.cat;
       if (param.from) {
         this.from = param.from;
         if (this.from == 'home') {
-          this.back = 'project-view/home'
+          this.back = 'project-view/home';
         }
       }
       switch (param.cat) {
@@ -124,11 +128,16 @@ export class CategoryViewPage {
   bgcolor = '#f7f7f7';
   public getMyProjects() {
     this.showSkeleton = true;
-    this.storage.get('projects').then(projects => {
+    this.storage.get('latestProjects').then(projects => {
       if (projects) {
         // projects = projects[0].projects.sort((a, b) => {
         //   <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
         // });
+        projects.forEach(programsList => {
+          programsList.projects.sort((a, b) => {
+            return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+          });
+        })
         this.projects = projects;
         this.showSkeleton = false;
       }
@@ -137,11 +146,11 @@ export class CategoryViewPage {
       this.showSkeleton = false;
     })
   }
-  getSortData(myProjects) {
-    return myProjects.sort((a, b) => {
-      return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
-    });
-  }
+  // getSortData(myProjects) {
+  //   return myProjects.sort((a, b) => {
+  //     return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+  //   });
+  // }
   public projectView(project) {
     this.storage.set('projectToBeView', project).then(project => {
       this.router.navigate(['/project-view/project-detail', this.catType])

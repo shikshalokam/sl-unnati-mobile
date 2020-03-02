@@ -44,19 +44,36 @@ export class FilesPage implements OnInit {
     })
   }
   public getCurrentProject(id) {
-    this.storage.get('projects').then(projectList => {
-      projectList[0].projects.forEach(project => {
-        if (project.tasks && project.tasks.length > 0) {
-          project.tasks.forEach(task => {
-            if (task.imageUrl) {
-              task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
+    this.storage.get('latestProjects').then(projectList => {
+      if (projectList.programs) {
+        projectList.programs.forEach(programsList => {
+          programsList.projects.forEach(project => {
+            if (project.tasks && project.tasks.length > 0) {
+              project.tasks.forEach(task => {
+                if (task.imageUrl) {
+                  task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
+                }
+              });
+            }
+            if (project._id == id) {
+              this.currentMyProject = project;
             }
           });
-        }
-        if (project._id == id) {
-          this.currentMyProject = project;
-        }
-      });
+        });
+      } else {
+        projectList[0].projects.forEach(project => {
+          if (project.tasks && project.tasks.length > 0) {
+            project.tasks.forEach(task => {
+              if (task.imageUrl) {
+                task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
+              }
+            });
+          }
+          if (project._id == id) {
+            this.currentMyProject = project;
+          }
+        });
+      }
     })
   }
   public selectTab(type) {
