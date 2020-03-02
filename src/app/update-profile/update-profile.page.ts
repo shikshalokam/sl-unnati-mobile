@@ -17,20 +17,20 @@ import { NotificationCardService } from '../notification-card/notification.servi
 export class UpdateProfilePage implements OnInit {
   profileForm: FormGroup;
   submitAttempt: boolean = false;
-  districts;
+  districtList;
   noData;
   entities;
-  clusters;
-  talukas;
+  clusterList;
+  talukList;
   connected: any = navigator.onLine;
   userDetails;
-  hubs;
+  hubList;
   back = "project-view/home"
-  blocks;
-  zones;
-  schools;
+  blockList;
+  zoneList;
+  schoolList;
   profile: any = {};
-  states;
+  stateList;
   body = 'message.thankyou_note';
   header = 'message.thankyou';
   button = 'button.continue';
@@ -95,7 +95,7 @@ export class UpdateProfilePage implements OnInit {
             // this.toastService.startLoader('Loading Please Wait');
             this.storage.set('userTokens', userTokens).then(data => {
               this.updateProfileService.getStates(userTokens.access_token).subscribe((states: any) => {
-                this.states = states.result;
+                this.stateList = states.result;
                 // this.toastService.stopLoader();
               }, erros => {
                 // this.toastService.stopLoader();
@@ -127,31 +127,31 @@ export class UpdateProfilePage implements OnInit {
                   this.updateProfileService.getImmediateChildren(userTokens.access_token, id).subscribe((entities: any) => {
                     switch (entities.result.immediateEntityType) {
                       case 'district': {
-                        this.districts = entities.result.data;
+                        this.districtList = entities.result.data;
                         break;
                       }
                       case 'zone': {
-                        this.zones = entities.result.data;
+                        this.zoneList = entities.result.data;
                         break;
                       }
                       case 'cluster': {
-                        this.clusters = entities.result.data;
+                        this.clusterList = entities.result.data;
                         break;
                       }
                       case 'block': {
-                        this.blocks = entities.result.data;
+                        this.blockList = entities.result.data;
                         break;
                       }
                       case 'school': {
-                        this.schools = entities.result.data;
+                        this.schoolList = entities.result.data;
                         break;
                       }
                       case 'hub': {
-                        this.hubs = entities.result.data;
+                        this.hubList = entities.result.data;
                         break;
                       }
                       case 'taluka': {
-                        this.talukas = entities.result.data;
+                        this.talukList = entities.result.data;
                         break;
                       }
                     }
@@ -185,31 +185,31 @@ export class UpdateProfilePage implements OnInit {
                   this.updateProfileService.getImmediateChildren(userTokens.access_token, id).subscribe((entities: any) => {
                     switch (entities.result.immediateEntityType) {
                       case 'district': {
-                        this.districts = entities.result.data;
+                        this.districtList = entities.result.data;
                         break;
                       }
                       case 'zone': {
-                        this.zones = entities.result.data;
+                        this.zoneList = entities.result.data;
                         break;
                       }
                       case 'cluster': {
-                        this.clusters = entities.result.data;
+                        this.clusterList = entities.result.data;
                         break;
                       }
                       case 'block': {
-                        this.blocks = entities.result.data;
+                        this.blockList = entities.result.data;
                         break;
                       }
                       case 'school': {
-                        this.schools = entities.result.data;
+                        this.schoolList = entities.result.data;
                         break;
                       }
                       case 'hub': {
-                        this.hubs = entities.result.data;
+                        this.hubList = entities.result.data;
                         break;
                       }
                       case 'taluka': {
-                        this.talukas = entities.result.data;
+                        this.talukList = entities.result.data;
                         break;
                       }
                     }
@@ -230,37 +230,38 @@ export class UpdateProfilePage implements OnInit {
   public saveInfo() {
     if (this.connected) {
       this.submitAttempt = true;
-      if (!this.profile.hub) {
-        delete this.profile.hub;
-      }
-      if (!this.profile.cluster) {
-        delete this.profile.cluster;
-      }
-      if (!this.profile.taluk) {
-        delete this.profile.taluk;
-      }
-      if (!this.profile.block) {
-        delete this.profile.block;
-      }
-      if (!this.profile.district) {
-        delete this.profile.district;
-      }
-      if (!this.profile.zone) {
-        delete this.profile.zone;
-      }
-      if (!this.profile.school) {
-        delete this.profile.school;
-      }
-      if (!this.profile.updatedBy) {
-        delete this.profile.updatedBy;
-      }
-      if (!this.profile.emailId) {
-        delete this.profile.emailId;
-      }
-      if (!this.profile.phoneNumber) {
-        delete this.profile.phoneNumber;
-      }
+
       if (this.profile.firstName && this.profile.lastName && this.profile.state && (this.profile.emailId || this.profile.phoneNumber)) {
+        if (!this.profile.hub) {
+          delete this.profile.hub;
+        }
+        if (!this.profile.cluster) {
+          delete this.profile.cluster;
+        }
+        if (!this.profile.taluk) {
+          delete this.profile.taluk;
+        }
+        if (!this.profile.block) {
+          delete this.profile.block;
+        }
+        if (!this.profile.district) {
+          delete this.profile.district;
+        }
+        if (!this.profile.zone) {
+          delete this.profile.zone;
+        }
+        if (!this.profile.school) {
+          delete this.profile.school;
+        }
+        if (!this.profile.updatedBy) {
+          delete this.profile.updatedBy;
+        }
+        if (!this.profile.emailId) {
+          delete this.profile.emailId;
+        }
+        if (!this.profile.phoneNumber) {
+          delete this.profile.phoneNumber;
+        }
         this.submitAttempt = false;
         this.storage.get('userTokens').then(data => {
           if (data) {
@@ -277,10 +278,11 @@ export class UpdateProfilePage implements OnInit {
                     this.storage.get('clearNotification').then((data) => {
                       // this.markAsRead(data);
                     });
-                    this.toastService.stopLoader();
                     this.updateProfileService.updateProfile('done');
                     this.showUpdatePop = true;
+                    console.log(this.showUpdatePop, "this.showUpdatePop");
                     this.submitAttempt = false;
+                    this.toastService.stopLoader();
                   }, error => {
                     this.toastService.stopLoader();
                   })

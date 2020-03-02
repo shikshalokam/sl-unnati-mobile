@@ -12,7 +12,7 @@ export class CustomPopupComponent implements OnInit {
   @Input() body;
   @Input() button;
   @Input() isActionable;
-  @Input() showPopup:boolean;
+  @Input() showPopup: boolean;
   constructor(
     public router: Router,
     public translate: TranslateService
