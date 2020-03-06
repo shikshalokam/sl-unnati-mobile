@@ -24,6 +24,10 @@ export class CustomPopupComponent implements OnInit {
   closepopup() {
     this.showPopup = false;
   }
+  cancel() {
+    this.closepopup();
+    localStorage.setItem('isPopUpShowen', 'true');
+  }
   public navigateToProfile() {
     this.closepopup();
     if (this.isActionable) {

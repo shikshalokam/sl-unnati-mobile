@@ -1,6 +1,10 @@
 <div class="custom-popup" *ngIf="showPopup">
+
   <div class="pop-container border-radius text-center">
-    <div class="pop-msg ">
+    <div class="close-btn" *ngIf="header == 'Confirm your details!'">
+      <ion-icon name="close" style="float:right" (click)="cancel()" style=" font-size: 1.5em;"></ion-icon>
+    </div>
+    <div class="pop-msg">
       <h5 class="bottom-border"> {{header}}</h5>
       <h5> {{body}}</h5>
     </div>

@@ -6,9 +6,9 @@ import { Storage } from '@ionic/storage';
 import { ToastController } from '@ionic/angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { NetworkService } from '../network.service';
-import { MyschoolsService } from '../myschools/myschools.service';
 import { MyReportsService } from '../my-reports/my-reports.service';
 import { ToastService } from '../toast.service';
+import { MyschoolsService } from '../myschools/myschools.service';
 
 @Component({
   selector: 'app-last-month-reports',
@@ -41,10 +41,8 @@ export class LastMonthReportsPage implements OnInit {
     public mySchoolsService: MyschoolsService,
     public screenOrientation: ScreenOrientation,
   ) {
-
     this.networkService.emit.subscribe(value => {
       this.connected = value;
-      alert(this.connected + "in school");
     });
   }
   ionViewDidEnter() {
@@ -83,7 +81,7 @@ export class LastMonthReportsPage implements OnInit {
             }, error => {
               this.showSkeleton = false;
             })
-          }
+          } 
         }, error => {
           this.showSkeleton = false;
         })
@@ -179,38 +177,6 @@ export class LastMonthReportsPage implements OnInit {
             this.storage.set('userTokens', userTokens).then(data => {
               this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
                 this.mySchools = data.data;
-                console.log(this.mySchools, "this.mySchools ");
-              }, error => { })
-            })
-            //resolve()
-          }
-        }, error => {
-        })
-      })
-    } else {
-      this.toastService.errorToast('message.nerwork_connection_check');
-    }
-  }
-  public getReport(type) {
-    this.mySchools[0].entityId
-    if (this.connected) {
-      this.storage.get('userTokens').then(data => {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.storage.set('userTokens', userTokens).then(data => {
-              this.toastService.startLoader('Loading Please wait');
-              this.myReportsService.getReportData(parsedData.access_token, this.mySchools[0], 'lastMonth').subscribe((data: any) => {
-                this.toastService.stopLoader();
-                if (type == 'share') {
-                  this.myReportsService.share(data);
-                } else {
-                  this.myReportsService.download(data);
-                }
               }, error => { })
             })
             //resolve()
@@ -223,4 +189,10 @@ export class LastMonthReportsPage implements OnInit {
     }
   }
 
+  public getReport(type) {
+    this.mySchools[0].type = type;
+    this.mySchools[0].isFullReport = false;
+    this.mySchools[0].reportType = 'lastMonth';
+    this.myReportsService.getReportEvent(this.mySchools[0]);
+  }
 }

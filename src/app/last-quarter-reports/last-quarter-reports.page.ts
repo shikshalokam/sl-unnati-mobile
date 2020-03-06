@@ -7,18 +7,25 @@ import { Storage } from '@ionic/storage';
 import { MyReportsService } from '../my-reports/my-reports.service';
 import { ToastController } from '@ionic/angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { MyschoolsService } from '../myschools/myschools.service';
+import { ToastService } from '../toast.service';
+import { NetworkService } from '../network.service';
 @Component({
   selector: 'app-last-quarter-reports',
   templateUrl: './last-quarter-reports.page.html',
   styleUrls: ['./last-quarter-reports.page.scss'],
 })
 export class LastQuarterReportsPage implements OnInit {
-  public currentMonth;
-  public chartOptions;
-  public showChart: boolean = false;
-  public report;
-  public showSkeleton: boolean = false;
-  public skeletons = [{}, {}, {}, {}, {}]
+  currentMonth;
+  chartOptions;
+  connected: any = navigator.onLine;
+  showChart: boolean = false;
+  report;
+  page: number = 1;
+  count: number = 5;
+  mySchools;
+  showSkeleton: boolean = false;
+  skeletons = [{}, {}, {}, {}, {}]
   highcharts = Highcharts;
   color = "#20ba8d";
   constructor(public router: Router,
@@ -26,13 +33,21 @@ export class LastQuarterReportsPage implements OnInit {
     public toastController: ToastController,
     public api: ApiProvider,
     public storage: Storage,
-    public screenOrientation: ScreenOrientation
-  ) { }
+    public screenOrientation: ScreenOrientation,
+    public mySchoolsService: MyschoolsService,
+    public toastService: ToastService,
+    public networkService: NetworkService,
+  ) {
+    this.networkService.emit.subscribe(value => {
+      this.connected = value;
+    });
+  }
   ionViewDidEnter() {
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
     } catch (error) {
     }
+    this.getSchools();
   }
   ngOnInit() {
     if (navigator.onLine) {
@@ -146,5 +161,35 @@ export class LastQuarterReportsPage implements OnInit {
       duration: 2000
     });
     toast.present();
+  }
+  public getReport(type) {
+    this.mySchools[0].type = type;
+    this.mySchools[0].isFullReport = false;
+    this.mySchools[0].reportType = 'lastQuarter'
+    this.myReportsService.getReportEvent(this.mySchools[0]);
+  }
+  public getSchools() {
+    if (this.connected) {
+      this.storage.get('userTokens').then(data => {
+        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+          let parsedData = JSON.parse(data._body);
+          if (parsedData && parsedData.access_token) {
+            let userTokens = {
+              access_token: parsedData.access_token,
+              refresh_token: parsedData.refresh_token,
+            };
+            this.storage.set('userTokens', userTokens).then(data => {
+              this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
+                this.mySchools = data.data;
+              }, error => { })
+            })
+            //resolve()
+          }
+        }, error => {
+        })
+      })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
   }
 }

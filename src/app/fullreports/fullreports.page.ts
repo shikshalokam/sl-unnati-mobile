@@ -5,25 +5,46 @@ import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
 import * as Highcharts from 'highcharts/highcharts-gantt';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { MyschoolsService } from '../myschools/myschools.service';
+import { NetworkService } from '../network.service';
+import { ToastService } from '../toast.service';
+
 @Component({
   selector: 'app-fullreports',
   templateUrl: './fullreports.page.html',
   styleUrls: ['./fullreports.page.scss'],
 })
 export class FullreportsPage implements OnInit {
-  public state;
-  public timeInterval
-  public reports
-  public idvalue = 'container';
+  state;
+  timeInterval
+  reports
+  idvalue = 'container';
+  connected: any = navigator.onLine;
+  page: number = 1;
+  count: number = 5;
   highcharts = Highcharts;
-  public showCharts: boolean = false;
-  public chartOptions;
-  public showSkeleton: boolean = false;
-  public skeleton = [{}];
-  public back = "/project-view/my-reports/last-month-reports"
-  constructor(public activatedRoute: ActivatedRoute, public screenOrientation: ScreenOrientation, public router: Router, public myReportsService: MyReportsService, public api: ApiProvider, public storage: Storage) {
+  showCharts: boolean = false;
+  chartOptions;
+  showSkeleton: boolean = false;
+  skeleton = [{}, {}, {}, {}];
+  mySchools;
+  back = "/project-view/my-reports/last-month-reports"
+  constructor(public activatedRoute: ActivatedRoute,
+    public screenOrientation: ScreenOrientation,
+    public router: Router,
+    public myReportsService: MyReportsService,
+    public api: ApiProvider,
+    public storage: Storage,
+    public mySchoolsService: MyschoolsService,
+    public networkService: NetworkService,
+    public toastService: ToastService,
+  ) {
+    this.networkService.emit.subscribe(value => {
+      this.connected = value;
+    });
     activatedRoute.params.subscribe((params: any) => {
       this.state = params.state;
+      this.getSchools();
       this.getReports(params.state);
       try {
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
@@ -68,7 +89,7 @@ export class FullreportsPage implements OnInit {
     })
   }
   public setUpChart(data) {
-    this.showSkeleton = false;
+    this.showSkeleton = true;
     for (let i = 0; i <= this.reports.length; i++) {
       let minDate = new Date(this.reports[i].xAxis.min);
       let maxDate = new Date(this.reports[i].xAxis.max);
@@ -99,16 +120,41 @@ export class FullreportsPage implements OnInit {
         }]
       });
     }
+    this.showSkeleton = false;
   }
   // go back
   public goBack() {
     this.router.navigate(['/project-view/my-reports/last-' + this.state + '-reports']);
   }
 
-  ngOnDestroy() {
-    // try {
-    //   this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-    // } catch (error) {
-    // }
+  public getSchools() {
+    if (this.connected) {
+      this.storage.get('userTokens').then(data => {
+        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+          let parsedData = JSON.parse(data._body);
+          if (parsedData && parsedData.access_token) {
+            let userTokens = {
+              access_token: parsedData.access_token,
+              refresh_token: parsedData.refresh_token,
+            };
+            this.storage.set('userTokens', userTokens).then(data => {
+              this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
+                this.mySchools = data.data;
+              }, error => { })
+            })
+            //resolve()
+          }
+        }, error => {
+        })
+      })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
+  }
+  public reportShare(type) {
+    this.mySchools[0].type = type;
+    this.mySchools[0].isFullReport = true;
+    this.mySchools[0].reportType = this.state;
+    this.myReportsService.getReportEvent(this.mySchools[0]);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
 import { Platform, NavController, MenuController } from '@ionic/angular';
 import { Market } from '@ionic-native/market/ngx';
@@ -13,7 +13,7 @@ import * as jwt_decode from "jwt-decode";
   templateUrl: './myschools.page.html',
   styleUrls: ['./myschools.page.scss'],
 })
-export class MyschoolsPage implements OnInit {
+export class MyschoolsPage{
   @ViewChild(NavController) nav: NavController;
   searchInput;
   connected: any = localStorage.getItem('networkStatus');
@@ -36,7 +36,6 @@ export class MyschoolsPage implements OnInit {
     this.menuCtrl.enable(true);
     this.networkService.emit.subscribe(value => {
       this.connected = value;
-      alert(this.connected + "in school");
     });
   }
   ionViewDidEnter() {
@@ -47,8 +46,6 @@ export class MyschoolsPage implements OnInit {
       let userDetails = jwt_decode(data.access_token);
       this.storage.set('userDetails', userDetails);
     })
-  }
-  ngOnInit() {
   }
   // get schools list
   public getSchools() {

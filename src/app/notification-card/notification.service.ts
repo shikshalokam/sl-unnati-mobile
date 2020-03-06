@@ -41,6 +41,8 @@ export class NotificationCardService {
         let httpHeaders = new HttpHeaders({
             'x-authenticated-user-token': token,
             'app': 'unnati',
+            'appName': "unnati",
+            'appVersion': AppConfigs.appVersion,
             'apptype': 'improvement-project',
             'os': this.platform.is('android') ? 'android' : 'ios'
         })
@@ -67,7 +69,7 @@ export class NotificationCardService {
     startNotificationPooling() {
         this.timeInterval = setInterval(() => {
             if (navigator.onLine) {
-                this.storage.get('userTokens').then(token => {   
+                this.storage.get('userTokens').then(token => {
                     this.checkForNotificationApi(token.access_token);
                 })
             }

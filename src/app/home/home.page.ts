@@ -91,6 +91,7 @@ export class HomePage implements OnInit {
     public updateProfile: UpdateProfileService) {
     this.menuCtrl.enable(true);
     // update profile pop handler
+
     homeService.localDataUpdated.subscribe(data => {
       this.getActiveProjects();
     })
@@ -177,12 +178,6 @@ export class HomePage implements OnInit {
   }
   //navigate to project Details page
   public navigateToDetails(project) {
-    // localStorage.setItem("id", project._id);
-    // this.storage.set('currentProject', project).then(data => {
-    //   localStorage.setItem("from", 'home');
-    //   this.router.navigate(['/project-view/detail', project._id, 'home']);
-    //   this.projectService.setTitle(data.title);
-    // })
     this.storage.set('projectToBeView', project).then(project => {
       this.router.navigate(['/project-view/project-detail', 'home'])
     })
@@ -206,9 +201,7 @@ export class HomePage implements OnInit {
       if (myProjects) {
         myProjects.forEach(programsList => {
           if (programsList) {
-            console.log(programsList.programs, "programs")
             if (programsList.programs._id == '5e01da0c0c72d5597433ec7a') {
-              console.log(programsList.projects, " programsList.projects");
               programsList.projects.sort((a, b) => {
                 return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
               });

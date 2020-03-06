@@ -153,9 +153,6 @@ export class CreateProjectPage implements OnInit {
   }
   // Create project
   public create() {
-    /** if (this.createProject.status == "INVALID" || !this.isValidDate || selectedCat.length == 0) {
-     New UI for Categories.
-      *  */
     if (this.createProject.status == "INVALID" || !this.isValidDate) {
       this.markLabelsAsInvalid = true;
     } else {
@@ -181,7 +178,6 @@ export class CreateProjectPage implements OnInit {
                 if (this.createNewProject) {
                   this.project._id = programsList.projects.length + 1;
                   programsList.projects.push(this.project);
-                  console.log(projectsList, "projectsList creating");
                   this.storage.set('latestProjects', projectsList).then(myProjects => {
                     this.storage.set('newcreatedproject', this.project).then(cmp => {
                       this.toastService.successToast('message.project_is_created');
@@ -189,7 +185,6 @@ export class CreateProjectPage implements OnInit {
                     })
                   })
                 } else {
-                  console.log('in else create project');
                   programsList.projects.forEach(project => {
                     if (project._id == this.project._id) {
                       project.category = this.project.category;
@@ -197,7 +192,6 @@ export class CreateProjectPage implements OnInit {
                       project.goal = this.project.goal;
                       project.endDate = this.project.endDate;
                       project.startDate = this.project.startDate;
-                      console.log('adding into local in else');
                       this.storage.set('latestProjects', projectsList).then(myProjects => {
                         this.storage.set('newcreatedproject', this.project).then(cmp => {
                           this.toastService.successToast('message.project_is_created');
@@ -208,10 +202,29 @@ export class CreateProjectPage implements OnInit {
                   });
                 }
                 // });
+              } else {
+                // if there is no basic structure is in local
+                if (programsList.projects) {
+                  this.project._id = programsList.projects.length + 1;
+                  programsList.projects.push(this.project)
+                } else {
+                  this.project._id = 1;
+                  let pro1 = [{
+                    projects: [
+                    ]
+                  }]
+                  pro1[0].projects.push(this.project);
+                  projectsList = pro1;
+                }
+                this.storage.set('latestProjects', projectsList).then(myProjects => {
+                  this.storage.set('newcreatedproject', this.project).then(cmp => {
+                    this.toastService.successToast('message.project_is_created');
+                    this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
+                  })
+                })
               }
             } else {
               // if there is no basic structure is in local
-              console.log(programsList[0], "programsList[0]");
               if (programsList[0].projects) {
                 this.project._id = programsList.projects.length + 1;
                 programsList[0].projects.push(this.project)
@@ -224,7 +237,6 @@ export class CreateProjectPage implements OnInit {
                 pro1[0].projects.push(this.project);
                 projectsList = pro1;
               }
-              console.log('adding into local in else 2222');
               this.storage.set('latestProjects', projectsList).then(myProjects => {
                 this.storage.set('newcreatedproject', this.project).then(cmp => {
                   this.toastService.successToast('message.project_is_created');
@@ -242,7 +254,6 @@ export class CreateProjectPage implements OnInit {
           }]
           pro1[0].projects.push(this.project);
           projectsList = pro1;
-          console.log('adding into local in outer else 245');
           this.storage.set('latestProjects', projectsList).then(myProjects => {
             this.storage.set('newcreatedproject', this.project).then(cmp => {
               this.toastService.successToast('message.project_is_created');
@@ -250,53 +261,6 @@ export class CreateProjectPage implements OnInit {
             })
           })
         }
-
-        // if (projectsList) {
-        //   // Create new project
-        //   if (this.createNewProject) {
-        //     this.project._id = projectsList[0].projects.length + 1;
-        //     projectsList[0].projects.push(this.project);
-        //     this.storage.set('latestProjects', projectsList).then(myProjects => {
-        //       this.storage.set('newcreatedproject', this.project).then(cmp => {
-        //         this.toastService.successToast('message.project_is_created');
-        //         this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
-        //       })
-        //     })
-        //   } else {
-        //     // insert edited fields into project, preventing create another project.
-        //     this.storage.get('latestProjects').then(myProjectsList => {
-        //       myProjectsList[0].projects.forEach(project => {
-        //         if (project._id == this.project._id) {
-        //           project.category = this.project.category;
-        //           project.title = this.project.title;
-        //           project.goal = this.project.goal;
-        //           project.endDate = this.project.endDate;
-        //           project.startDate = this.project.startDate;
-        //           this.storage.set('latestProjects', myProjectsList).then(myProjects => {
-        //             this.storage.set('newcreatedproject', this.project).then(cmp => {
-        //               this.toastService.successToast('message.project_is_created');
-        //               this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
-        //             })
-        //           })
-        //         }
-        //       });
-        //     })
-        //   }
-        // } else {
-        //   this.project._id = 1;
-        //   let pro1 = [{
-        //     projects: [
-        //     ]
-        //   }]
-        //   pro1[0].projects.push(this.project);
-        //   projectsList = pro1;
-        //   this.storage.set('latestProjects', projectsList).then(myProjects => {
-        //     this.storage.set('newcreatedproject', this.project).then(cmp => {
-        //       this.toastService.successToast('message.project_is_created');
-        //       this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
-        //     })
-        //   })
-        // }
       })
     }
   }

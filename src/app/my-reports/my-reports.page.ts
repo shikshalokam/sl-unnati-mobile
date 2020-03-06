@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
@@ -11,6 +10,10 @@ import { Base64 } from '@ionic-native/base64/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { ToastService } from '../toast.service';
 import { MyReportsService } from './my-reports.service';
+import { MyschoolsService } from '../myschools/myschools.service';
+import { ApiProvider } from '../api/api';
+import { Storage } from '@ionic/storage';
+
 declare var cordova: any;
 @Component({
   selector: 'app-my-reports',
@@ -20,6 +23,7 @@ declare var cordova: any;
 export class MyReportsPage implements OnInit {
   isIos;
   appFolderPath;
+  connected: any = navigator.onLine;
   constructor(
     public router: Router,
     public screenOrientation: ScreenOrientation,
@@ -31,18 +35,23 @@ export class MyReportsPage implements OnInit {
     public fileOpener: FileOpener,
     public transfer: FileTransfer,
     public toastService: ToastService,
-    public myReportsService: MyReportsService
+    public myReportsService: MyReportsService,
+    public mySchoolsService: MyschoolsService,
+    public api: ApiProvider,
+    public storage: Storage
   ) {
-    myReportsService.shareEvent.subscribe(data => {
-      this.share(data);
+    myReportsService.reportEvent.subscribe((data: any) => {
+      // this.share(data);
+      this.platform.ready().then(() => {
+        this.isIos = this.platform.is('ios') ? true : false;
+        this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
+        if (data.isFullReport) {
+          this.getFullReport(data);
+        } else {
+          this.getReport(data);
+        }
+      })
     });
-    myReportsService.downloadEvent.subscribe(data => {
-      this.download(data);
-    })
-    this.platform.ready().then(() => {
-      this.isIos = this.platform.is('ios') ? true : false;
-      this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
-    })
   }
   public back = "project-view/home";
   ngOnInit() {
@@ -57,8 +66,70 @@ export class MyReportsPage implements OnInit {
   public goBack() {
     this.router.navigate(['/project-view/home']);
   }
+  public getReport(mySchools: any) {
+    if (this.connected) {
+      this.storage.get('userTokens').then(data => {
+        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+          let parsedData = JSON.parse(data._body);
+          if (parsedData && parsedData.access_token) {
+            let userTokens = {
+              access_token: parsedData.access_token,
+              refresh_token: parsedData.refresh_token,
+            };
+            this.storage.set('userTokens', userTokens).then(data => {
+              this.toastService.startLoader('Loading Please wait');
+              this.myReportsService.getReportData(parsedData.access_token, mySchools).subscribe((data: any) => {
+                this.toastService.stopLoader();
+                if (mySchools.type === 'share') {
+                  this.share(data);
+                } else {
+                  this.download(data);
+                }
+              }, error => { })
+            })
+            //resolve()
+          }
+        }, error => {
+        })
+      })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
+  }
+
+  public getFullReport(mySchools: any) {
+    if (this.connected) {
+      this.storage.get('userTokens').then(data => {
+        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+          let parsedData = JSON.parse(data._body);
+          if (parsedData && parsedData.access_token) {
+            let userTokens = {
+              access_token: parsedData.access_token,
+              refresh_token: parsedData.refresh_token,
+            };
+            this.storage.set('userTokens', userTokens).then(data => {
+              this.toastService.startLoader('Loading Please wait');
+              this.myReportsService.getFullReportData(parsedData.access_token, mySchools).subscribe((data: any) => {
+                this.toastService.stopLoader();
+                if (mySchools.type === 'share') {
+                  this.share(data);
+                } else {
+                  this.download(data);
+                }
+              }, error => { })
+            })
+            //resolve()
+          }
+        }, error => {
+        })
+      })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
+  }
+
   public share(data) {
-    const fileName = 'LastMonthReport';
+    const fileName = 'Report';
     const fileTransfer: FileTransferObject = this.transfer.create();
     const url = data.pdfUrl;
     fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
@@ -83,21 +154,17 @@ export class MyReportsPage implements OnInit {
         method: "GET"
       }).then(res => res.blob()).then(blob => {
         this.appFolderPath = decodeURIComponent(this.appFolderPath);
-        // task.file.name = decodeURIComponent(task.file.name);
-        this.file.writeFile(this.appFolderPath, 'LastMonthReport', blob, { replace: true }).then(res => {
+        let filename = decodeURIComponent('Report');
+        this.file.writeFile(this.appFolderPath, 'Report', blob, { replace: true }).then(res => {
           this.fileOpener.open(
             res.toInternalURL(),
             'application/pdf'
           ).then((res) => {
-            console.log(res, 'sucess');
           }).catch(err => {
-            console.log(err, 'error');
           });
         }).catch(err => {
-          console.log('error in catch');
         });
       }).catch(err => {
-        console.log('error');
       });
   }
 }

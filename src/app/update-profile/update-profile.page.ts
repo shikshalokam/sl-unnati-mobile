@@ -52,6 +52,7 @@ export class UpdateProfilePage implements OnInit {
   }
 
   ngOnInit() {
+    this.showUpdatePop = false;
     this.storage.get('userTokens').then(data => {
       this.userDetails = jwt_decode(data.access_token);
     })
@@ -169,7 +170,7 @@ export class UpdateProfilePage implements OnInit {
       }
     }
   }
-  public getImmediateChildren1(id) {
+  public getImmediateChildrenAuto(id) {
     if (this.connected) {
       if (id && this.noData) {
         this.storage.get('userTokens').then(data => {
@@ -230,7 +231,7 @@ export class UpdateProfilePage implements OnInit {
   public saveInfo() {
     if (this.connected) {
       this.submitAttempt = true;
-
+      this.showUpdatePop = false;
       if (this.profile.firstName && this.profile.lastName && this.profile.state && (this.profile.emailId || this.profile.phoneNumber)) {
         if (!this.profile.hub) {
           delete this.profile.hub;
@@ -280,7 +281,6 @@ export class UpdateProfilePage implements OnInit {
                     });
                     this.updateProfileService.updateProfile('done');
                     this.showUpdatePop = true;
-                    console.log(this.showUpdatePop, "this.showUpdatePop");
                     this.submitAttempt = false;
                     this.toastService.stopLoader();
                   }, error => {
@@ -343,25 +343,25 @@ export class UpdateProfilePage implements OnInit {
                 delete data.result.createdAt;
                 delete data.result.createdBy;
                 if (data.result.state) {
-                  this.getImmediateChildren1(data.result.state);
+                  this.getImmediateChildrenAuto(data.result.state);
                 }
                 if (data.result.district) {
-                  this.getImmediateChildren1(data.result.district);
+                  this.getImmediateChildrenAuto(data.result.district);
                 }
                 if (data.result.hub) {
-                  this.getImmediateChildren1(data.result.hub);
+                  this.getImmediateChildrenAuto(data.result.hub);
                 }
                 if (data.result.zone) {
-                  this.getImmediateChildren1(data.result.zone);
+                  this.getImmediateChildrenAuto(data.result.zone);
                 }
                 if (data.result.cluster) {
-                  this.getImmediateChildren1(data.result.cluster);
+                  this.getImmediateChildrenAuto(data.result.cluster);
                 }
                 if (data.result.block) {
-                  this.getImmediateChildren1(data.result.block);
+                  this.getImmediateChildrenAuto(data.result.block);
                 }
                 if (data.result.school) {
-                  this.getImmediateChildren1(data.result.school);
+                  this.getImmediateChildrenAuto(data.result.school);
                 }
                 this.profile = data.result;
                 if (this.profile.firstName) {

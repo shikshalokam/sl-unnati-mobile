@@ -73,7 +73,7 @@ export class AboutPage implements OnInit {
       this.login.loggedIn('false');
       this.router.navigateByUrl('/login');
     }, error => {
-      //  alert(error + "Logout error")
+      //  alert(error + "Logout error") 
     })
     if (!localStorage.getItem("token")) {
       this.router.navigateByUrl('/login');
