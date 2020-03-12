@@ -104,12 +104,13 @@ var MyProjectsPage = /** @class */ (function () {
     }
     MyProjectsPage.prototype.ionViewDidEnter = function () {
         this.getMyProjects();
+        this.searchProjects = '';
     };
     MyProjectsPage.prototype.ngOnInit = function () {
     };
     MyProjectsPage.prototype.getMyProjects = function () {
         var _this = this;
-        this.storage.get('projects').then(function (myprojects) {
+        this.storage.get('latestProjects').then(function (myprojects) {
             _this.projects = myprojects;
         });
     };

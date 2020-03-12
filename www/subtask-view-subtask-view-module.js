@@ -229,7 +229,7 @@ var SubtaskViewPage = /** @class */ (function () {
                                     });
                                 });
                             });
-                            _this.storage.get('projects').then(function (data) {
+                            _this.storage.get('latestProjects').then(function (data) {
                                 if (typeof data == "string") {
                                     data = JSON.parse(data);
                                 }
@@ -241,7 +241,7 @@ var SubtaskViewPage = /** @class */ (function () {
                                                 task.subTasks.forEach(function (subtask) {
                                                     if (subtask._id == cst._id) {
                                                         subtask.isDeleted = true;
-                                                        _this.storage.set('projects', JSON.stringify(data)).then(function (data) {
+                                                        _this.storage.set('latestProjects', JSON.stringify(data)).then(function (data) {
                                                             _this.tasksService.loadProject();
                                                             _this.location.back();
                                                         });
@@ -375,7 +375,7 @@ var SubtaskViewPage = /** @class */ (function () {
                                                     task.subTasks = currentTask.subTasks;
                                                     //  task.subTasks.push(currentTask.subTasks);
                                                     _this.storage.set('currentProject', cp).then(function (currentProject) {
-                                                        _this.storage.get('projects').then(function (projectsList) {
+                                                        _this.storage.get('latestProjects').then(function (projectsList) {
                                                             if (typeof projectsList == "string") {
                                                                 projectsList = JSON.parse(projectsList);
                                                             }
@@ -384,7 +384,7 @@ var SubtaskViewPage = /** @class */ (function () {
                                                                     if (project._id == currentProject._id) {
                                                                         project.tasks = currentProject.tasks;
                                                                         //   project.tasks.push(currentProject.tasks);
-                                                                        _this.storage.set('projects', projectsList).then(function (pl) {
+                                                                        _this.storage.set('latestProjects', projectsList).then(function (pl) {
                                                                             _this.location.back();
                                                                             _this.tasksService.loadProject();
                                                                         });

@@ -133,19 +133,17 @@ var MyschoolsPage = /** @class */ (function () {
         this.menuCtrl.enable(true);
         this.networkService.emit.subscribe(function (value) {
             _this.connected = value;
-            alert(_this.connected + "in school");
         });
     }
     MyschoolsPage.prototype.ionViewDidEnter = function () {
         var _this = this;
+        this.searchInput = '';
         this.menuCtrl.enable(true);
         this.getSchools();
         this.storage.get('userTokens').then(function (data) {
             var userDetails = jwt_decode__WEBPACK_IMPORTED_MODULE_10__(data.access_token);
             _this.storage.set('userDetails', userDetails);
         });
-    };
-    MyschoolsPage.prototype.ngOnInit = function () {
     };
     // get schools list
     MyschoolsPage.prototype.getSchools = function () {

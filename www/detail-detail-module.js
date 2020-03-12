@@ -350,12 +350,12 @@ var DetailPage = /** @class */ (function () {
                             else if (data.status == "succes") {
                                 _this.successToast(data.message);
                                 _this.showSkeleton = false;
-                                _this.storage.get('projects').then(function (projects) {
+                                _this.storage.get('latestProjects').then(function (projects) {
                                     projects.data.forEach(function (project) {
                                         project.projects.forEach(function (pro) {
                                             if (pro._id == data.data._id) {
                                                 pro = data.data;
-                                                _this.storage.set('projects', projects).then(function (resp1) {
+                                                _this.storage.set('latestProjects', projects).then(function (resp1) {
                                                     _this.project = resp1.data;
                                                 }, function (error) {
                                                     _this.showSkeleton = false;

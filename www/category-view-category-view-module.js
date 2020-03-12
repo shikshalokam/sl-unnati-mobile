@@ -122,8 +122,10 @@ var CategoryViewPage = /** @class */ (function () {
             if (_this.catType == 'my_projects') {
                 _this.categaryService.getMyProjects().then(function (myProjects) {
                     if (myProjects) {
-                        myProjects = _this.getSortData(myProjects);
-                        myProjects.forEach(function (element) {
+                        myProjects.forEach(function (programsList) {
+                            programsList.projects.sort(function (a, b) {
+                                return new Date(b.lastUpdate) - new Date(a.lastUpdate);
+                            });
                         });
                         _this.projects = myProjects;
                     }
@@ -133,6 +135,7 @@ var CategoryViewPage = /** @class */ (function () {
             }
         });
         rout.params.subscribe(function (param) {
+            _this.searchProjects = '';
             _this.catType = param.cat;
             if (param.from) {
                 _this.from = param.from;
@@ -214,11 +217,16 @@ var CategoryViewPage = /** @class */ (function () {
     CategoryViewPage.prototype.getMyProjects = function () {
         var _this = this;
         this.showSkeleton = true;
-        this.storage.get('projects').then(function (projects) {
+        this.storage.get('latestProjects').then(function (projects) {
             if (projects) {
                 // projects = projects[0].projects.sort((a, b) => {
                 //   <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
                 // });
+                projects.forEach(function (programsList) {
+                    programsList.projects.sort(function (a, b) {
+                        return new Date(b.lastUpdate) - new Date(a.lastUpdate);
+                    });
+                });
                 _this.projects = projects;
                 _this.showSkeleton = false;
             }
@@ -227,11 +235,11 @@ var CategoryViewPage = /** @class */ (function () {
             _this.showSkeleton = false;
         });
     };
-    CategoryViewPage.prototype.getSortData = function (myProjects) {
-        return myProjects.sort(function (a, b) {
-            return new Date(b.lastUpdate) - new Date(a.lastUpdate);
-        });
-    };
+    // getSortData(myProjects) {
+    //   return myProjects.sort((a, b) => {
+    //     return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+    //   });
+    // }
     CategoryViewPage.prototype.projectView = function (project) {
         var _this = this;
         this.storage.set('projectToBeView', project).then(function (project) {

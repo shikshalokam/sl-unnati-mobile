@@ -63,7 +63,7 @@
           <!-- If local data is available and display my projects at first place -->
           <div *ngFor="let projects of projectList">
             <ion-card class="welcome-card
-              custom-card" *ngIf="!showHardcodedMyprojects && projects?.programs?._id =='5e01da0c0c72d5597433ec7a'">
+              custom-card" *ngIf="!showHardcodedMyprojects && projects?.programs?._id ==programId">
               <ion-card-header class="project-card">
                 {{projects?.programs?.name}}
               </ion-card-header>
@@ -90,7 +90,7 @@
         <div *ngIf="projectList">
           <div *ngFor="let projects of projectList">
             <ion-card class="welcome-card
-              custom-card" *ngIf="projects?.programs?.name && projects?.programs?._id !='5e01da0c0c72d5597433ec7a'">
+              custom-card" *ngIf="projects?.programs?.name && projects?.programs?._id !=programId">
               <div *ngIf="(projects.projects | searchProjects: searchInput).length == 0" style="text-align:center;">
               </div>
               <div *ngIf="((projects.projects | searchProjects: searchInput).length != 0 &&searchInput) ||!searchInput">
@@ -144,7 +144,7 @@
 
           <div *ngFor="let projects of projectList">
             <ion-card class="welcome-card
-              custom-card" *ngIf="!showHardcodedMyprojects && projects?.programs?._id =='5e01da0c0c72d5597433ec7a'">
+              custom-card" *ngIf="!showHardcodedMyprojects && projects?.programs?._id ==programId">
               <ion-card-header class="project-card">
                 {{projects?.programs?.name}}
               </ion-card-header>
@@ -169,7 +169,7 @@
           </div>
           <div *ngFor="let projects of projectList">
             <ion-card class="welcome-card
-              custom-card" *ngIf="projects?.programs?.name && projects?.programs?._id !='5e01da0c0c72d5597433ec7a'">
+              custom-card" *ngIf="projects?.programs?.name && projects?.programs?._id !=programId">
               <div *ngIf="(projects.projects | searchProjects: searchInput).length == 0" style="text-align:center;">
               </div>
               <div *ngIf="((projects.projects | searchProjects: searchInput).length != 0 &&searchInput) ||!searchInput">

@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { HomeService } from '../home/home.service';
 import { ToastService } from '../toast.service';
+import { AppConfigs } from '../app.config';
 @Component({
   selector: 'app-create-project',
   templateUrl: './create-project.page.html',
@@ -167,13 +168,21 @@ export class CreateProjectPage implements OnInit {
       }
       this.project.createdType = 'by self';
       // this.project.createdType ='by referance';
+      let environment = AppConfigs.currentEnvironment;
+      let programId = '';
+      AppConfigs.environments.forEach(env => {
+        if (environment === env.name) {
+          programId = env.programId;
+        }
+      });
+      console.log(programId, "programId ", environment);
       this.storage.get('latestProjects').then((projectsList: any) => {
         let mapped: boolean = false;
         if (projectsList) {
           projectsList.forEach(programsList => {
             // already basic structure is there in local
             if (programsList) {
-              if (programsList.programs._id == "5e01da0c0c72d5597433ec7a") {
+              if (programsList.programs && programsList.programs._id == programId) {
                 // programsList.projects.forEach(program => {
                 if (this.createNewProject) {
                   this.project._id = programsList.projects.length + 1;
@@ -184,7 +193,7 @@ export class CreateProjectPage implements OnInit {
                       this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                     })
                   })
-                } else {
+                } else if (programsList.programs) {
                   programsList.projects.forEach(project => {
                     if (project._id == this.project._id) {
                       project.category = this.project.category;
@@ -205,6 +214,7 @@ export class CreateProjectPage implements OnInit {
               } else {
                 // if there is no basic structure is in local
                 if (programsList.projects) {
+                  console.log('programsList.projects', programsList.projects);
                   this.project._id = programsList.projects.length + 1;
                   programsList.projects.push(this.project)
                 } else {

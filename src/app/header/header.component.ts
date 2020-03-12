@@ -48,10 +48,10 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.isIos = this.platform.is('ios') ? true : false;
-    this.fetchAllNotifications();
+    this.getNotificationCount();
   }
 
-  public fetchAllNotifications(infinateScrollRefrnc?) {
+  public getNotificationCount(infinateScrollRefrnc?) {
     this.storage.get('userTokens').then(data => {
       if (data) {
         this.api.refershToken(data.refresh_token).subscribe((data: any) => {
@@ -62,22 +62,8 @@ export class HeaderComponent implements OnInit {
               refresh_token: parsedData.refresh_token,
             };
             this.storage.set('userTokens', userTokens).then(usertoken => {
-              this.notificationCardService.getAllNotifications(userTokens.access_token, this.page, this.limit).subscribe((data: any) => {
-                if (data.result.data) {
-                  let update: boolean = false;
-                  data.result.data.forEach(notification => {
-                    if (notification.action === 'Update' && !notification.is_read && !update) {
-                      update = true;
-                      this.storage.set('clearNotification', notification).then((data) => {
-                        this.updateProfileService.updateProfile('Update');
-                      });
-                    }
-                  });
-                }
-              }, error => {
-                // intentially left blank
-              })
               this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data: any) => {
+                console.log(data, " esp of notification count");
                 this.notificationCardService.getCount(data.result.count);
               }, error => {
               })

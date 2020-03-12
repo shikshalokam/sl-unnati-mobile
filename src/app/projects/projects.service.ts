@@ -9,7 +9,10 @@ import { ApiProvider } from '../api/api';
     providedIn: 'root',
 })
 export class ProjectsService {
-    constructor(public api: ApiProvider, public http: HttpClient, public currentUser: CurrentUserProvider, public storage: Storage) {
+    constructor(public api: ApiProvider, 
+        public http: HttpClient, 
+        public currentUser: CurrentUserProvider, 
+        public storage: Storage) {
     }
     public getProjects() {
         return this.storage.get('projectsList');

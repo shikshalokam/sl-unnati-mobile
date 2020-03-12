@@ -15,7 +15,9 @@ import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
-import { UpdateProfileService } from '../update-profile/update-profile.service'
+import { UpdateProfileService } from '../update-profile/update-profile.service';
+import { AppConfigs } from '../app.config';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -196,12 +198,19 @@ export class HomePage implements OnInit {
     this.activeProjects = [];
     let ap = []
     let count = 0;
+    let environment = AppConfigs.currentEnvironment;
+    let programId = '';
+    AppConfigs.environments.forEach(env => {
+      if (environment === env.name) {
+        programId = env.programId;
+      }
+    });
     this.storage.get('latestProjects').then(myProjects => {
       this.myProjects = myProjects;
       if (myProjects) {
         myProjects.forEach(programsList => {
           if (programsList) {
-            if (programsList.programs._id == '5e01da0c0c72d5597433ec7a') {
+            if (programsList.programs && programsList.programs._id == programId) {
               programsList.projects.sort((a, b) => {
                 return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
               });
@@ -217,6 +226,7 @@ export class HomePage implements OnInit {
           }
         });
         if (count == 0) {
+          console.log(myProjects[0],"myProjects[0]");
           myProjects[0].projects.forEach(myProject => {
             if (count < 2) {
               if ((myProject.createdType == 'by self' || myProject.createdType == 'by reference') && myProject.isStarted && !myProject.isDeleted) {

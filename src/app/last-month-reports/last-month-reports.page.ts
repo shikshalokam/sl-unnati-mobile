@@ -21,7 +21,7 @@ export class LastMonthReportsPage implements OnInit {
   report;
   connected: any = navigator.onLine;
   chartOptions;
-  mySchools;
+  mySchools: any;
   appFolderPath;
   isIos;
   page: number = 1;
@@ -75,13 +75,15 @@ export class LastMonthReportsPage implements OnInit {
             this.storage.set('userTokens', userTokens).then(usertoken => {
               this.myReportsService.getReports(userTokens.access_token, 'lastMonth').subscribe((data: any) => {
                 this.report = data.data;
-                this.setupChart();
+                if (data.status != "failed") {
+                  this.setupChart();
+                }
                 this.showSkeleton = false;
               })
             }, error => {
               this.showSkeleton = false;
             })
-          } 
+          }
         }, error => {
           this.showSkeleton = false;
         })
@@ -176,7 +178,9 @@ export class LastMonthReportsPage implements OnInit {
             };
             this.storage.set('userTokens', userTokens).then(data => {
               this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
-                this.mySchools = data.data;
+                if (data.status != 'failed') {
+                  this.mySchools = data.data;
+                }
               }, error => { })
             })
             //resolve()
@@ -190,9 +194,22 @@ export class LastMonthReportsPage implements OnInit {
   }
 
   public getReport(type) {
-    this.mySchools[0].type = type;
-    this.mySchools[0].isFullReport = false;
-    this.mySchools[0].reportType = 'lastMonth';
-    this.myReportsService.getReportEvent(this.mySchools[0]);
+    let obj: any;
+    let obj1: any = {};
+    if (this.mySchools) {
+      this.mySchools[0].type = type;
+      this.mySchools[0].isFullReport = false;
+      this.mySchools[0].reportType = 'lastMonth';
+      obj = this.mySchools[0];
+    } else {
+      obj1.type = type;
+      obj1.isFullReport = false;
+      obj1.reportType = 'lastMonth';
+      obj1.name = '';
+      obj1.entityId = '';
+      obj = obj1;
+    }
+    console.log(obj, "obj");
+    this.myReportsService.getReportEvent(obj);
   }
 }

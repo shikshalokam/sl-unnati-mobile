@@ -136,6 +136,7 @@ var ProjectDetailPage = /** @class */ (function () {
             _this.editGoal = false;
             if (param.cat) {
                 _this.category = param.cat;
+                console.log(_this.category, "this.category");
                 if (_this.category == 'my-projects' || _this.category == 'active-projects' || _this.category == 'all-projects' || _this.category == 'projectsList') {
                     _this.back = 'project-view/projects';
                 }
@@ -201,6 +202,9 @@ var ProjectDetailPage = /** @class */ (function () {
                 project.isStarted = false;
             }
             _this.project = project;
+            if (_this.project) {
+                _this.updateTask();
+            }
             _this.show = true;
             _this.sortTasks();
         });
@@ -210,7 +214,9 @@ var ProjectDetailPage = /** @class */ (function () {
         var _this = this;
         this.projectId = '';
         this.project.isStarted = true;
-        this.project.status = 'In Progress';
+        if (this.project.status == 'Not started' || this.project.status == 'not yet started') {
+            this.project.status = 'In Progress';
+        }
         this.project.startDate = new Date();
         if (this.category != 'my_projects' && this.category != 'projectsList') {
             this.project.createdType = "by reference";
@@ -242,6 +248,8 @@ var ProjectDetailPage = /** @class */ (function () {
             }
             this.storage.set('projectToBeView', this.project).then(function (project) {
                 _this.project = project;
+                _this.storage.get('latestProjects').then(function (p) {
+                });
                 _this.createProjectService.insertIntoMyProjects(_this.project).then(function (data) {
                     _this.project.isStarted = true;
                     _this.category = 'my_projects';
@@ -291,6 +299,7 @@ var ProjectDetailPage = /** @class */ (function () {
                     _this.checkDate();
                 }
             }
+            console.log('calling updateByProjects 205');
             _this.createProjectService.updateByProjects(_this.project);
         }, function (err) { return console.log('Error occurred while getting date: ', err); });
     };
@@ -382,9 +391,59 @@ var ProjectDetailPage = /** @class */ (function () {
     };
     // update the task
     ProjectDetailPage.prototype.updateTask = function () {
-        this.project.isEdited = true;
-        this.project.lastUpdate = new Date();
-        this.createProjectService.updateByProjects(this.project);
+        var _this = this;
+        console.log(this.project, "this.project");
+        var cp = this.project;
+        cp.isEdited = true;
+        cp.lastUpdate = new Date();
+        console.log('calling updateByProjects 300');
+        //  this.createProjectService.updateByProjects(this.project);
+        var mapped = false;
+        return this.storage.get('latestProjects').then(function (projectList) {
+            projectList.forEach(function (projectsPrograms) {
+                if (projectsPrograms) {
+                    projectsPrograms.projects.forEach(function (project, i) {
+                        console.log(cp, "cp");
+                        if (project._id == cp._id) {
+                            cp.isEdited = true;
+                            projectsPrograms.projects[i] = cp;
+                            console.log('mapped', projectsPrograms.projects[i]);
+                            mapped = true;
+                        }
+                    });
+                }
+                if (!mapped) {
+                    console.log('in mapped');
+                    if (projectList[0].projects) {
+                        projectList[0].projects.forEach(function (project, i) {
+                            if (project._id == cp._id) {
+                                cp.isEdited = true;
+                                projectList[0].projects[i] = cp;
+                            }
+                        });
+                    }
+                    else {
+                        var pro1 = [{
+                                projects: []
+                            }];
+                        pro1[0].projects.push(_this.project);
+                        projectList = pro1;
+                        console.log(projectList, 'in last else');
+                    }
+                }
+            });
+            console.log('going to sync', projectList);
+            _this.storage.set('latestProjects', projectList).then(function (projects) {
+                _this.storage.set('newcreatedproject', _this.project).then(function (sucess) {
+                    _this.storage.set('projectToBeView', _this.project).then(function (updatedProject) {
+                    });
+                });
+            });
+        });
+        // this.storage.set('newcreatedproject', this.project).then(sucess => {
+        //   this.storage.set('projectToBeView', this.project).then(updatedProject => {
+        //   })
+        // })
     };
     // navigate to view task
     ProjectDetailPage.prototype.taskView = function (task) {
@@ -413,6 +472,7 @@ var ProjectDetailPage = /** @class */ (function () {
     ProjectDetailPage.prototype.updateCurrentProject = function (ct) {
         this.project.lastUpdate = new Date();
         this.project.isEdited = true;
+        console.log('calling updateByProjects 330');
         this.createProjectService.updateByProjects(this.project);
     };
     ProjectDetailPage.prototype.sortTasks = function () {

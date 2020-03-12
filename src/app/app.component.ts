@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonRouterOutlet, Platform, NavController, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -13,7 +13,6 @@ import { Storage } from '@ionic/storage';
 import { ProjectsService } from './projects/projects.service';
 import { MyschoolsService } from './myschools/myschools.service';
 import { ModalController } from '@ionic/angular';
-import { NgZone } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { ApiProvider } from './api/api';
 import { ProjectService } from '../app/project-view/project.service';
@@ -21,6 +20,8 @@ import { HomeService } from './home/home.service';
 import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
 import { FcmProvider } from './fcm';
+import * as jwt_decode from "jwt-decode";
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -66,7 +67,6 @@ export class AppComponent {
     public mySchoolsService: MyschoolsService,
     public networkService: NetworkService,
     public modalController: ModalController,
-    public zone: NgZone,
     public route: ActivatedRoute,
     public projectService: ProjectService,
     public api: ApiProvider,
@@ -82,6 +82,8 @@ export class AppComponent {
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
+          console.log('in constructor');
+          this.getProfileData();
           this.subscription = this.interval.subscribe(val => {
             this.prepareMappedProjectToSync();
           });
@@ -129,7 +131,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.getOldDataTOSync();
+      this.getOldDataToSync();
       if (localStorage.getItem("token") != null) {
         this.router.navigateByUrl('/project-view/home');
       } else {
@@ -171,6 +173,7 @@ export class AppComponent {
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
+        console.log(this.router.url, s, "segments");
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
           //this.presentAlertConfirm();
           navigator['app'].exitApp();
@@ -289,7 +292,7 @@ export class AppComponent {
   public navigate(url, title) {
     if (title == 'Sync') {
       this.prepareMappedProjectToSync();
-      this.getOldDataTOSync();
+      this.getOldDataToSync();
     } else if (url) {
       this.router.navigate([url]);
     }
@@ -340,23 +343,6 @@ export class AppComponent {
     this.translate.get(title).subscribe((text: string) => {
       this.title = text;
     });
-  }
-
-  checkNetwork() {
-    this.network.onDisconnect()
-      .subscribe(() => {
-        this.isConnected = false;
-        this.networkService.status(this.isConnected);
-        localStorage.setItem("networkStatus", this.isConnected);
-      }, error => {
-      });
-    this.network.onConnect()
-      .subscribe(() => {
-        this.isConnected = true;
-        this.networkService.status(this.isConnected);
-      }, error => {
-      });
-    // this.networkSubscriber();
   }
 
   public prepareMappedProjectToSync() {
@@ -462,7 +448,7 @@ export class AppComponent {
     // }
   }
   //  sync old data from older versions
-  public getOldDataTOSync() {
+  public getOldDataToSync() {
     let myProjectsToSync = [];
     let oldProjectsToSync = [];
     this.storage.get('userTokens').then(data => {
@@ -489,16 +475,14 @@ export class AppComponent {
               }
               myProjectsToSync.push(element);
             });
-            //this.prepareMappedProjectToSync();
             if (myProjectsToSync.length > 0) {
-              this.syncOldData(myProjectsToSync);
+              this.syncOldMyProjects(myProjectsToSync);
             }
           }
         })
       }
     })
     this.storage.get('projects').then(data => {
-      // version 0.0.3
       if (data && data.data) {
         data.data.forEach(programs => {
           programs.projects.forEach(element => {
@@ -506,12 +490,12 @@ export class AppComponent {
           });
         });
         if (oldProjectsToSync.length > 0) {
-          this.syncOldData1(oldProjectsToSync);
+          this.syncOldProjects(oldProjectsToSync);
         }
       }
     })
   }
-  syncOldData1(oldProjectsToSync) {
+  public syncOldProjects(oldProjectsToSync) {
     if (this.isConnected) {
       if (oldProjectsToSync.length > 0) {
         this.storage.get('userTokens').then(data => {
@@ -554,7 +538,7 @@ export class AppComponent {
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
-  syncOldData(oldProjectsToSync) {
+  public syncOldMyProjects(oldProjectsToSync) {
     if (this.isConnected) {
       if (oldProjectsToSync.length > 0) {
         this.storage.get('userTokens').then(data => {
@@ -614,5 +598,83 @@ export class AppComponent {
       this.toastService.successToast('message.sync_success');
       this.homeService.syncUpdated();
     })
+  }
+
+  // get profile data
+  public getProfileData() {
+    console.log('in get profile');
+    this.storage.get('userTokens').then(data => {
+      if (data) {
+        let userDetails;
+        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+          let parsedData = JSON.parse(data._body);
+          if (parsedData && parsedData.access_token) {
+            let userTokens = {
+              access_token: parsedData.access_token,
+              refresh_token: parsedData.refresh_token,
+            };
+            this.storage.set('userTokens', userTokens).then(data => {
+              this.storage.get('userTokens').then(data => {
+                userDetails = jwt_decode(data.access_token);
+                this.projectService.getProfileData(userTokens.access_token, userDetails.sub).subscribe((data: any) => {
+                  if (data.result) {
+                    data.result.relatedEntities.forEach(entity => {
+                      if (entity.entityType == "state") {
+                        if (entity.metaInformation.name == "Goa") {
+                          this.appPages = [
+                            {
+                              title: 'Home',
+                              url: '/project-view/home',
+                              icon: 'home'
+                            },
+                            {
+                              title: 'Sync',
+                              icon: 'sync',
+                              url: '',
+                            },
+                            {
+                              title: 'Tutorial Video',
+                              icon: 'play',
+                              url: '/project-view/tutorial-videos',
+                            },
+                            {
+                              title: 'Profile Update',
+                              icon: 'person',
+                              url: '/project-view/profile-update',
+                            },
+                            {
+                              title: 'About',
+                              url: '/project-view/about',
+                              icon: 'information-circle'
+                            },
+                            {
+                              title: 'Settings',
+                              icon: 'md-settings',
+                              children: [
+                                {
+                                  title: 'Languages',
+                                  icon: 'globe'
+                                },
+                              ]
+                            }
+                          ];
+                        }
+                      }
+                    });
+                  }
+                })
+              })
+            })
+          }
+        }, error => {
+          if (error.status === 0) {
+            this.router.navigateByUrl('/login');
+          }
+        })
+      } else {
+        this.router.navigateByUrl('/login');
+      }
+    })
+
   }
 }

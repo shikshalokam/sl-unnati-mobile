@@ -14,10 +14,6 @@ import * as moment from 'moment';
 export class NotificationCardComponent implements OnInit {
   ngOnInit() {
   }
-  // text: string;
-  // page = 1;
-  // limit = 5;
-  // totalCount;
   @Input() notifications;
   @Input() showViewMore;
   public skeletons = [{}, {}, {}, {}, {}, {}];
@@ -30,7 +26,6 @@ export class NotificationCardComponent implements OnInit {
     public router: Router,
     public api: ApiProvider,
     public storage: Storage) {
-
   }
 
   goToAllNotifications() {

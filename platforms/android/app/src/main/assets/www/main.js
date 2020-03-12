@@ -669,24 +669,6 @@ var map = {
 		"common",
 		"home-home-module"
 	],
-	"./kclg/kclg.module": [
-		"./src/app/kclg/kclg.module.ts",
-		"kclg-kclg-module"
-	],
-	"./last-month-reports/last-month-reports.module": [
-		"./src/app/last-month-reports/last-month-reports.module.ts",
-		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
-		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
-		"common",
-		"last-month-reports-last-month-reports-module"
-	],
-	"./last-quarter-reports/last-quarter-reports.module": [
-		"./src/app/last-quarter-reports/last-quarter-reports.module.ts",
-		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
-		"default~fullreports-fullreports-module~last-month-reports-last-month-reports-module~last-quarter-rep~d2e7ebb3",
-		"common",
-		"last-quarter-reports-last-quarter-reports-module"
-	],
 	"./library/library.module": [
 		"./src/app/library/library.module.ts",
 		"default~about-about-module~active-projects-active-projects-module~category-view-category-view-module~482461dc",
@@ -975,8 +957,6 @@ var routes = [
     { path: 'subtask-status/:id', loadChildren: './subtask-status/subtask-status.module#SubtaskStatusPageModule' },
     { path: 'notifications', loadChildren: './notifications/notifications.module#NotificationsPageModule' },
     { path: 'my-reports', loadChildren: './my-reports/my-reports.module#MyReportsPageModule' },
-    { path: 'last-month-reports', loadChildren: './last-month-reports/last-month-reports.module#LastMonthReportsPageModule' },
-    { path: 'last-quarter-reports', loadChildren: './last-quarter-reports/last-quarter-reports.module#LastQuarterReportsPageModule' },
     { path: 'fullreports/:state', loadChildren: './fullreports/fullreports.module#FullreportsPageModule' },
     { path: 'school-project-detail/:id', loadChildren: './school-project-detail/school-project-detail.module#SchoolProjectDetailPageModule' },
     { path: 'create-project', loadChildren: './create-project/create-project.module#CreateProjectPageModule' },
@@ -991,7 +971,6 @@ var routes = [
     { path: 'all-projects', loadChildren: './all-projects/all-projects.module#AllProjectsPageModule' },
     { path: 'files/:id', loadChildren: './files/files.module#FilesPageModule' },
     { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
-    { path: 'kclg', loadChildren: './kclg/kclg.module#KclgPageModule' },
     { path: 'update-profile', loadChildren: './update-profile/update-profile.module#UpdateProfilePageModule' },
     { path: 'tutorial-videos', loadChildren: './tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
 ];
@@ -1054,6 +1033,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./home/home.service */ "./src/app/home/home.service.ts");
 /* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./toast.service */ "./src/app/toast.service.ts");
 /* harmony import */ var _fcm__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./fcm */ "./src/app/fcm.ts");
+/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! jwt-decode */ "./node_modules/jwt-decode/lib/index.js");
+/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(jwt_decode__WEBPACK_IMPORTED_MODULE_20__);
 
 
 
@@ -1079,7 +1060,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent(storage, fcm, projectsService, alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, translate, network, mySchoolsService, networkService, modalController, zone, route, projectService, api, homeService, loadingController, toastService, categoryViewService) {
+    function AppComponent(storage, fcm, projectsService, alertController, router, menuCtrl, platform, splashScreen, statusBar, loginService, translate, network, mySchoolsService, networkService, modalController, route, projectService, api, homeService, loadingController, toastService, categoryViewService) {
         var _this = this;
         this.storage = storage;
         this.fcm = fcm;
@@ -1096,7 +1077,6 @@ var AppComponent = /** @class */ (function () {
         this.mySchoolsService = mySchoolsService;
         this.networkService = networkService;
         this.modalController = modalController;
-        this.zone = zone;
         this.route = route;
         this.projectService = projectService;
         this.api = api;
@@ -1105,6 +1085,7 @@ var AppComponent = /** @class */ (function () {
         this.toastService = toastService;
         this.categoryViewService = categoryViewService;
         this.projectsToSync = [];
+        this.oldProjectsToSync = [];
         this.type = 'quarter';
         this.count = 100;
         this.page = 1;
@@ -1121,8 +1102,9 @@ var AppComponent = /** @class */ (function () {
             _this.loginService.emit.subscribe(function (value) {
                 _this.loggedInUser = value;
                 if (_this.loggedInUser) {
+                    console.log('in constructor');
+                    _this.getProfileData();
                     _this.subscription = _this.interval.subscribe(function (val) {
-                        console.log('auto syncing');
                         _this.prepareMappedProjectToSync();
                     });
                     _this.menuCtrl.enable(true, 'unnati');
@@ -1139,7 +1121,7 @@ var AppComponent = /** @class */ (function () {
                             url: '',
                         },
                         {
-                            title: 'Tutorial Video',
+                            title: 'Tutorial Video',
                             icon: 'play',
                             url: '/project-view/tutorial-videos',
                         },
@@ -1170,39 +1152,13 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.initializeApp = function () {
         var _this = this;
         this.platform.ready().then(function () {
-            _this.storage.get('myprojects').then(function (myProjects) {
-                console.log(myProjects, "myProjects");
-                if (myProjects) {
-                    myProjects.forEach(function (element) {
-                        alert(element + "myProjects");
-                        alert(JSON.stringify(element) + "JSON.stringify(element)");
-                        alert(element._id + "element._id");
-                        alert(element._id.length + "element._id.length");
-                        alert(element.isNew + 'element.isNew');
-                        if (element._id.length > 4) {
-                            element.isNew = true;
-                            element.isEdited = true;
-                        }
-                        if (element.tasks && element.tasks.length > 0) {
-                            element.tasks.forEach(function (task) {
-                                if (task.isNew && task._id) {
-                                    delete task._id;
-                                }
-                                if (task.subTasks && task.subTasks.length > 0) {
-                                    task.subTasks.forEach(function (subtasks) {
-                                        if (subtasks.isNew && subtasks._id) {
-                                            delete subtasks._id;
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                    _this.projectsToSync = myProjects;
-                    // this.autoSync();
-                    _this.prepareMappedProjectToSync();
-                }
-            });
+            _this.getOldDataToSync();
+            if (localStorage.getItem("token") != null) {
+                _this.router.navigateByUrl('/project-view/home');
+            }
+            else {
+                _this.router.navigateByUrl('/login');
+            }
             if (!_this.isConnected && !navigator.onLine) {
                 _this.networkService.networkErrorToast();
             }
@@ -1212,7 +1168,7 @@ var AppComponent = /** @class */ (function () {
             _this.platform.pause.subscribe(function () {
                 localStorage.setItem('isPopUpShowen', null);
             });
-            // this.fcm.connectSubscription.unsubscribe();
+            // this.fcm.connectSubscription.unsubscribe();
             _this.fcm.subscribeToPushNotifications();
             _this.fcm.localNotificationClickHandler();
             _this.network.onDisconnect()
@@ -1232,13 +1188,14 @@ var AppComponent = /** @class */ (function () {
                 }, 15000);
                 localStorage.setItem("networkStatus", _this.isConnected);
             });
-            // this.networkSubscriber();
+            // this.networkSubscriber();
             _this.statusBar.overlaysWebView(false);
             _this.statusBar.backgroundColorByHexString('#fff');
             _this.platform.backButton.subscribeWithPriority(9999, function () {
                 var tree = _this.router.parseUrl(_this.router.url);
                 var g = tree.root.children[_angular_router__WEBPACK_IMPORTED_MODULE_9__["PRIMARY_OUTLET"]];
                 var s = g.segments;
+                console.log(_this.router.url, s, "segments");
                 if (_this.router.url == '/login' || _this.router.url == '/project-view/home') {
                     //this.presentAlertConfirm();
                     navigator['app'].exitApp();
@@ -1340,7 +1297,7 @@ var AppComponent = /** @class */ (function () {
                 _this.router.navigateByUrl('/login');
             }
             _this.hideSplasher();
-            // this.splashScreen.hide();
+            // this.splashScreen.hide();
         });
     };
     AppComponent.prototype.hideSplasher = function () {
@@ -1351,7 +1308,7 @@ var AppComponent = /** @class */ (function () {
             }, 1000);
         }
     };
-    //Langugae change
+    //Langugae change
     AppComponent.prototype.setLang = function (lang) {
         var _this = this;
         var language = this.translate.currentLang;
@@ -1375,6 +1332,7 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.navigate = function (url, title) {
         if (title == 'Sync') {
             this.prepareMappedProjectToSync();
+            this.getOldDataToSync();
         }
         else if (url) {
             this.router.navigate([url]);
@@ -1397,14 +1355,14 @@ var AppComponent = /** @class */ (function () {
                                     {
                                         name: 'selectedLang',
                                         type: 'radio',
-                                        label: "English English",
+                                        label: "English\u00A0English",
                                         value: 'en',
                                         checked: 'en' == language
                                     },
                                     {
                                         name: 'selectedLang',
                                         type: 'radio',
-                                        label: 'Kannada ಕನ್ನಡ',
+                                        label: 'Kannada ಕನ್ನಡ',
                                         value: 'ka',
                                         checked: 'ka' == language
                                     }
@@ -1440,62 +1398,11 @@ var AppComponent = /** @class */ (function () {
             _this.title = text;
         });
     };
-    AppComponent.prototype.checkNetwork = function () {
-        var _this = this;
-        this.network.onDisconnect()
-            .subscribe(function () {
-            _this.isConnected = false;
-            _this.networkService.status(_this.isConnected);
-            localStorage.setItem("networkStatus", _this.isConnected);
-        }, function (error) {
-        });
-        this.network.onConnect()
-            .subscribe(function () {
-            _this.isConnected = true;
-            _this.networkService.status(_this.isConnected);
-        }, function (error) {
-        });
-        // this.networkSubscriber();
-    };
     AppComponent.prototype.prepareMappedProjectToSync = function () {
         var _this = this;
         this.mappedProjectsToSync = false;
         this.projectsToSync = [];
-        // this.storage.get('myprojects').then(myProjects => {
-        //   if (myProjects) {
-        //     this.mappedProjectsToSync = true;
-        //     myProjects.forEach(project => {
-        //       if (project._id.length > 4) {
-        //         project.isNew = true;
-        //       }
-        //       if (project.isNew) {
-        //         delete project._id;
-        //       }
-        //       if (project.tasks && project.tasks.length > 0) {
-        //         project.tasks.forEach(task => {
-        //           if (task._id.length > 4) {
-        //             project.isNew = true;
-        //           }
-        //           if (task.isNew && task._id) {
-        //             delete task._id;
-        //           }
-        //           if (task.subTasks && task.subTasks.length > 0) {
-        //             task.subTasks.forEach(subtasks => {
-        //               if (subtasks.isNew && subtasks._id) {
-        //                 delete subtasks._id;
-        //               }
-        //               if (subtasks.isNew && subtasks._id) {
-        //                 delete subtasks._id;
-        //               }
-        //             })
-        //           }
-        //         });
-        //       }
-        //       this.projectsToSync.push(project);
-        //     });
-        //   }
-        // })
-        this.storage.get('projects').then(function (myProjects) {
+        this.storage.get('latestProjects').then(function (myProjects) {
             if (myProjects) {
                 myProjects.forEach(function (projectList) {
                     projectList.projects.forEach(function (project) {
@@ -1504,7 +1411,6 @@ var AppComponent = /** @class */ (function () {
                             if (project.isNew) {
                                 delete project._id;
                             }
-                            console.log(project._id, "project._id project._id", project._id.length);
                             _this.mappedProjectsToSync = true;
                             if (project.tasks && project.tasks.length > 0) {
                                 project.tasks.forEach(function (task) {
@@ -1523,12 +1429,10 @@ var AppComponent = /** @class */ (function () {
                                     }
                                 });
                             }
-                            // this.autoSync(project);
-                            // intentially left blank
                             _this.projectsToSync.push(project);
                         }
                         else {
-                            // intentially left blank
+                            // intentially left blank
                         }
                     });
                 });
@@ -1546,11 +1450,116 @@ var AppComponent = /** @class */ (function () {
             }
         });
     };
-    // auto sync
+    // auto sync
     AppComponent.prototype.autoSync = function () {
         var _this = this;
+        // if (this.isConnected) {
+        if (this.projectsToSync.length > 0) {
+            this.storage.get('userTokens').then(function (data) {
+                if (data) {
+                    _this.api.refershToken(data.refresh_token).subscribe(function (data) {
+                        var parsedData = JSON.parse(data._body);
+                        if (parsedData && parsedData.access_token) {
+                            var userTokens = {
+                                access_token: parsedData.access_token,
+                                refresh_token: parsedData.refresh_token,
+                            };
+                            _this.storage.set('userTokens', userTokens).then(function (data) {
+                                var projects = {
+                                    projects: _this.projectsToSync
+                                };
+                                _this.toastService.startLoader('Your data is syncing');
+                                _this.projectService.sync(projects, data.access_token).subscribe(function (data) {
+                                    _this.toastService.stopLoader();
+                                    if (data.status === "failed") {
+                                        _this.toastService.errorToast(data.message);
+                                    }
+                                    else if (data.status == "success" || data.status == "succes") {
+                                        _this.syncUpdateInLocal(data.allProjects.data);
+                                        _this.storage.get('myprojects').then(function (myProjects) {
+                                            if (myProjects) {
+                                                _this.storage.set('myprojects', '').then(function (myprojects) { });
+                                            }
+                                        });
+                                    }
+                                }, function (error) {
+                                    _this.toastService.stopLoader();
+                                });
+                            });
+                        }
+                    }, function (error) {
+                        if (error.status === 0) {
+                            _this.router.navigateByUrl('/login');
+                            _this.toastService.stopLoader();
+                        }
+                    });
+                }
+                else {
+                    _this.router.navigateByUrl('/login');
+                    _this.toastService.stopLoader();
+                }
+            }, function (error) {
+                _this.toastService.stopLoader();
+            });
+        }
+        // }
+        //  else {
+        //   this.toastService.errorToast('message.nerwork_connection_check');
+        // }
+    };
+    //  sync old data from older versions
+    AppComponent.prototype.getOldDataToSync = function () {
+        var _this = this;
+        var myProjectsToSync = [];
+        var oldProjectsToSync = [];
+        this.storage.get('userTokens').then(function (data) {
+            if (data) {
+                _this.storage.get('myprojects').then(function (myProjects) {
+                    if (myProjects) {
+                        myProjects.forEach(function (element) {
+                            if (element.isNew == undefined) {
+                                element.isNew = true;
+                            }
+                            if (element.tasks && element.tasks.length > 0) {
+                                element.tasks.forEach(function (task) {
+                                    if (task.isNew && task._id) {
+                                        delete task._id;
+                                    }
+                                    if (task.subTasks && task.subTasks.length > 0) {
+                                        task.subTasks.forEach(function (subtasks) {
+                                            if (subtasks.isNew && subtasks._id) {
+                                                delete subtasks._id;
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            myProjectsToSync.push(element);
+                        });
+                        if (myProjectsToSync.length > 0) {
+                            _this.syncOldMyProjects(myProjectsToSync);
+                        }
+                    }
+                });
+            }
+        });
+        this.storage.get('projects').then(function (data) {
+            if (data && data.data) {
+                data.data.forEach(function (programs) {
+                    programs.projects.forEach(function (element) {
+                        oldProjectsToSync.push(element);
+                    });
+                });
+                if (oldProjectsToSync.length > 0) {
+                    _this.syncOldProjects(oldProjectsToSync);
+                }
+            }
+        });
+    };
+    AppComponent.prototype.syncOldProjects = function (oldProjectsToSync) {
+        var _this = this;
         if (this.isConnected) {
-            if (this.projectsToSync.length > 0) {
+            if (oldProjectsToSync.length > 0) {
                 this.storage.get('userTokens').then(function (data) {
                     if (data) {
                         _this.api.refershToken(data.refresh_token).subscribe(function (data) {
@@ -1562,41 +1571,78 @@ var AppComponent = /** @class */ (function () {
                                 };
                                 _this.storage.set('userTokens', userTokens).then(function (data) {
                                     var projects = {
-                                        projects: _this.projectsToSync
+                                        projects: oldProjectsToSync
                                     };
-                                    _this.toastService.startLoader('Your data is syncing');
-                                    _this.projectService.sync(projects, data.access_token).subscribe(function (data) {
-                                        _this.toastService.stopLoader();
+                                    _this.projectService.oldDataSync(projects, data.access_token).subscribe(function (data) {
                                         if (data.status === "failed") {
                                             _this.toastService.errorToast(data.message);
                                         }
                                         else if (data.status == "success" || data.status == "succes") {
                                             _this.syncUpdateInLocal(data.allProjects.data);
-                                            _this.storage.get('myprojects').then(function (myProjects) {
-                                                console.log(myProjects, "myProjects");
-                                                if (myProjects) {
-                                                    _this.storage.set('myprojects', '').then(function (myprojects) { });
-                                                }
+                                            _this.storage.set('projects', '').then(function (myprojects) {
                                             });
                                         }
                                     }, function (error) {
-                                        _this.toastService.stopLoader();
+                                        _this.toastService.errorToast(error.message);
                                     });
                                 });
                             }
                         }, function (error) {
                             if (error.status === 0) {
                                 _this.router.navigateByUrl('/login');
-                                _this.toastService.stopLoader();
                             }
                         });
                     }
                     else {
                         _this.router.navigateByUrl('/login');
-                        _this.toastService.stopLoader();
                     }
-                }, function (error) {
-                    _this.toastService.stopLoader();
+                });
+            }
+        }
+        else {
+            this.toastService.errorToast('message.nerwork_connection_check');
+        }
+    };
+    AppComponent.prototype.syncOldMyProjects = function (oldProjectsToSync) {
+        var _this = this;
+        if (this.isConnected) {
+            if (oldProjectsToSync.length > 0) {
+                this.storage.get('userTokens').then(function (data) {
+                    if (data) {
+                        _this.api.refershToken(data.refresh_token).subscribe(function (data) {
+                            var parsedData = JSON.parse(data._body);
+                            if (parsedData && parsedData.access_token) {
+                                var userTokens = {
+                                    access_token: parsedData.access_token,
+                                    refresh_token: parsedData.refresh_token,
+                                };
+                                _this.storage.set('userTokens', userTokens).then(function (data) {
+                                    var projects = {
+                                        projects: oldProjectsToSync
+                                    };
+                                    _this.projectService.oldDataSync(projects, data.access_token).subscribe(function (data) {
+                                        if (data.status === "failed") {
+                                            _this.toastService.errorToast(data.message);
+                                        }
+                                        else if (data.status == "success" || data.status == "succes") {
+                                            _this.syncUpdateInLocal(data.allProjects.data);
+                                            _this.storage.set('myprojects', '').then(function (myprojects) {
+                                            });
+                                        }
+                                    }, function (error) {
+                                        _this.toastService.errorToast(error.message);
+                                    });
+                                });
+                            }
+                        }, function (error) {
+                            if (error.status === 0) {
+                                _this.router.navigateByUrl('/login');
+                            }
+                        });
+                    }
+                    else {
+                        _this.router.navigateByUrl('/login');
+                    }
                 });
             }
         }
@@ -1618,9 +1664,87 @@ var AppComponent = /** @class */ (function () {
                 }
             });
         });
-        this.storage.set('projects', syncedProjects).then(function (myprojectsff) {
+        this.storage.set('latestProjects', syncedProjects).then(function (myprojectsff) {
             _this.toastService.successToast('message.sync_success');
             _this.homeService.syncUpdated();
+        });
+    };
+    // get profile data
+    AppComponent.prototype.getProfileData = function () {
+        var _this = this;
+        console.log('in get profile');
+        this.storage.get('userTokens').then(function (data) {
+            if (data) {
+                var userDetails_1;
+                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
+                    var parsedData = JSON.parse(data._body);
+                    if (parsedData && parsedData.access_token) {
+                        var userTokens_1 = {
+                            access_token: parsedData.access_token,
+                            refresh_token: parsedData.refresh_token,
+                        };
+                        _this.storage.set('userTokens', userTokens_1).then(function (data) {
+                            _this.storage.get('userTokens').then(function (data) {
+                                userDetails_1 = jwt_decode__WEBPACK_IMPORTED_MODULE_20__(data.access_token);
+                                _this.projectService.getProfileData(userTokens_1.access_token, userDetails_1.sub).subscribe(function (data) {
+                                    if (data.result) {
+                                        data.result.relatedEntities.forEach(function (entity) {
+                                            if (entity.entityType == "state") {
+                                                if (entity.metaInformation.name == "Goa") {
+                                                    _this.appPages = [
+                                                        {
+                                                            title: 'Home',
+                                                            url: '/project-view/home',
+                                                            icon: 'home'
+                                                        },
+                                                        {
+                                                            title: 'Sync',
+                                                            icon: 'sync',
+                                                            url: '',
+                                                        },
+                                                        {
+                                                            title: 'Tutorial Video',
+                                                            icon: 'play',
+                                                            url: '/project-view/tutorial-videos',
+                                                        },
+                                                        {
+                                                            title: 'Profile Update',
+                                                            icon: 'person',
+                                                            url: '/project-view/profile-update',
+                                                        },
+                                                        {
+                                                            title: 'About',
+                                                            url: '/project-view/about',
+                                                            icon: 'information-circle'
+                                                        },
+                                                        {
+                                                            title: 'Settings',
+                                                            icon: 'md-settings',
+                                                            children: [
+                                                                {
+                                                                    title: 'Languages',
+                                                                    icon: 'globe'
+                                                                },
+                                                            ]
+                                                        }
+                                                    ];
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        });
+                    }
+                }, function (error) {
+                    if (error.status === 0) {
+                        _this.router.navigateByUrl('/login');
+                    }
+                });
+            }
+            else {
+                _this.router.navigateByUrl('/login');
+            }
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -1651,7 +1775,6 @@ var AppComponent = /** @class */ (function () {
             _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_13__["MyschoolsService"],
             _network_service__WEBPACK_IMPORTED_MODULE_8__["NetworkService"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ModalController"],
-            _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"],
             _angular_router__WEBPACK_IMPORTED_MODULE_9__["ActivatedRoute"],
             _app_project_view_project_service__WEBPACK_IMPORTED_MODULE_16__["ProjectService"],
             _api_api__WEBPACK_IMPORTED_MODULE_15__["ApiProvider"],
@@ -1678,8 +1801,21 @@ var AppComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppConfigs", function() { return AppConfigs; });
 var AppConfigs = {
-    appVersion: "2.0.1",
+    appVersion: "2.0.3",
     appName: "Unnati",
+    currentEnvironment: 'prod',
+    environments: [
+        {
+            name: 'dev',
+            programId: '5dfa1a02ab45a70b9f6c0191'
+        }, {
+            name: 'qa',
+            programId: '5df77a03df3511bcf7f6b899'
+        }, {
+            name: 'prod',
+            programId: '5e01da0c0c72d5597433ec7a'
+        }
+    ],
     // Dev urls
     // app_url: "https://dev.shikshalokam.org",
     // api_url: "https://devhome.shikshalokam.org",
@@ -1717,11 +1853,11 @@ var AppConfigs = {
     clientId: "sl-ionic-connect",
     environment: "Production",
     notification: {
-        kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
-        getUnreadNotificationCount: "notifications/in-app/unReadCount",
-        markAsRead: "notifications/in-app/markAsRead",
+        kendra_base_url: "https://api.shikshalokam.org/kendra/api/",
+        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+        markAsRead: "/notifications/in-app/markAsRead",
         getAllNotifications: "/notifications/in-app/list",
-        registerDevice: "notifications/push/registerDevice"
+        registerDevice: "/notifications/push/registerDevice"
     },
     //Staging Urls
     // app_url: "https://dev.shikshalokam.org",
@@ -1975,7 +2111,7 @@ var CategoryViewService = /** @class */ (function () {
     }
     //  get my projects from local 
     CategoryViewService.prototype.getMyProjects = function () {
-        return this.storage.get('projects').then(function (projects) {
+        return this.storage.get('latestProjects').then(function (projects) {
             return projects;
         });
     };
@@ -2030,6 +2166,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+
 
 
 
@@ -2058,29 +2196,65 @@ var CreateProjectService = /** @class */ (function () {
     //  Update project in my projects list.
     CreateProjectService.prototype.updateByProjects = function (updatedProject) {
         var _this = this;
-        return this.storage.get('projects').then(function (projectList) {
-            // projectList.forEach(projectsPrograms => {
-            projectList[0].projects.forEach(function (project, i) {
-                if (project._id == updatedProject._id) {
-                    updatedProject.isEdited = true;
-                    projectList[0].projects[i] = updatedProject;
+        var mapped = false;
+        return this.storage.get('latestProjects').then(function (projectList) {
+            projectList.forEach(function (projectsPrograms) {
+                if (projectsPrograms) {
+                    projectsPrograms.projects.forEach(function (project, i) {
+                        if (project._id == updatedProject._id) {
+                            updatedProject.isEdited = true;
+                            projectsPrograms.projects[i] = updatedProject;
+                            mapped = true;
+                        }
+                    });
                 }
             });
-            _this.storage.set('projects', projectList).then(function (project) {
+            if (!mapped) {
+                if (projectList[0].projects) {
+                    projectList[0].projects.forEach(function (project) {
+                        projectList[0].projects.push(updatedProject);
+                    });
+                }
+                else {
+                    var pro1 = [{
+                            projects: []
+                        }];
+                    pro1[0].projects.push(updatedProject);
+                    projectList = pro1;
+                }
+            }
+            _this.storage.set('newcreatedproject', updatedProject).then(function (sucess) {
+                _this.storage.set('projectToBeView', updatedProject).then(function (updatedProject) {
+                });
             });
-            // });
+            _this.storage.set('latestProjects', projectList).then(function (projects) {
+            });
         });
     };
     // add new project into my projects.
     CreateProjectService.prototype.insertIntoMyProjects = function (project) {
         var _this = this;
-        return this.storage.get('projects').then(function (projectList) {
+        var mapped = false;
+        var environment = _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].currentEnvironment;
+        var programId = '';
+        _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].environments.forEach(function (env) {
+            if (environment === env.name) {
+                programId = env.programId;
+            }
+        });
+        return this.storage.get('latestProjects').then(function (projectList) {
             if (projectList) {
                 projectList.forEach(function (projectsPrograms) {
-                    if (projectsPrograms) {
-                        projectsPrograms.projects.push(project);
-                        _this.storage.set('projects', projectList).then(function (projects) {
-                        });
+                    if (projectsPrograms.programs) {
+                        if (projectsPrograms.programs._id == programId) {
+                            projectsPrograms.projects.push(project);
+                            mapped = true;
+                        }
+                    }
+                });
+                if (!mapped) {
+                    if (projectList.projects) {
+                        projectList.projects.push(project);
                     }
                     else {
                         var pro1 = [{
@@ -2088,22 +2262,25 @@ var CreateProjectService = /** @class */ (function () {
                             }];
                         pro1[0].projects.push(project);
                         projectList = pro1;
-                        _this.storage.set('projects', projectList).then(function (projects) {
-                        });
                     }
-                });
+                }
             }
             else {
-                var projects = void 0;
-                project._id = 1;
-                var pro1 = [{
-                        projects: [{}]
-                    }];
-                pro1[0].projects = project;
-                projectList = pro1;
-                _this.storage.set('projects', projectList).then(function (projects) {
-                });
+                if (projectList.projects) {
+                    project._id = projectList.projects.length + 1;
+                    projectList.projects.push(project);
+                }
+                else {
+                    project._id = 1;
+                    var pro1 = [{
+                            projects: []
+                        }];
+                    pro1[0].projects.push(project);
+                    projectList = pro1;
+                }
             }
+            _this.storage.set('latestProjects', projectList).then(function (projects) {
+            });
         });
     };
     // update task in project after marking as delete. 
@@ -2561,6 +2738,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _current_user__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./current-user */ "./src/app/current-user.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+
 
 
 
@@ -2569,9 +2748,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var Login = /** @class */ (function () {
-    function Login(http, currentUser) {
+    function Login(http, currentUser, storage) {
         this.http = http;
         this.currentUser = currentUser;
+        this.storage = storage;
         this.emit = new rxjs__WEBPACK_IMPORTED_MODULE_6__["Subject"]();
     }
     Login.prototype.doLogin = function () {
@@ -2628,8 +2808,6 @@ var Login = /** @class */ (function () {
         // alert(tokens + "data in checkForCurrentUserLocalData");
         var loggedinUserId = this.currentUser.getDecodedAccessToken(tokens.access_token).sub;
         var currentUserId = this.currentUser.getCurrentUserData() ? this.currentUser.getCurrentUserData().sub : null;
-        // alert(loggedinUserId + "loggedinUserId")
-        // alert(currentUserId + "currentUserId")
         if (loggedinUserId === currentUserId || !currentUserId) {
             // alert("In IF");
             var userTokens = {
@@ -2639,9 +2817,6 @@ var Login = /** @class */ (function () {
                 isDeactivated: false
             };
             this.currentUser.setCurrentUserDetails(userTokens);
-            //let nav = this.app.getActiveNav();
-            //nav.setRoot(TabsPage);
-            // this.confirmPreviousUserName('as1@shikshalokamdev', tokens);
         }
         else {
             // this.confirmPreviousUserName(this.currentUser.getCurrentUserData().preferred_username, tokens);
@@ -2687,7 +2862,9 @@ var Login = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root',
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_http__WEBPACK_IMPORTED_MODULE_3__["Http"], _current_user__WEBPACK_IMPORTED_MODULE_5__["CurrentUserProvider"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_http__WEBPACK_IMPORTED_MODULE_3__["Http"],
+            _current_user__WEBPACK_IMPORTED_MODULE_5__["CurrentUserProvider"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"]])
     ], Login);
     return Login;
 }());
@@ -2882,6 +3059,8 @@ var NotificationCardService = /** @class */ (function () {
         var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
             'x-authenticated-user-token': token,
             'app': 'unnati',
+            'appName': "unnati",
+            'appVersion': _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].appVersion,
             'apptype': 'improvement-project',
             'os': this.platform.is('android') ? 'android' : 'ios'
         });
@@ -3074,21 +3253,40 @@ var PopoverComponent = /** @class */ (function () {
         var _this = this;
         this.project.isDeleted = true;
         var projectData = this.project;
-        this.storage.get('projects').then(function (myProjects) {
-            if (myProjects[0].projects) {
-                myProjects[0].projects.forEach(function (project, i) {
-                    if (project._id == projectData._id) {
-                        projectData.isEdited = true;
-                        myProjects[0].projects[i] = projectData;
-                    }
+        this.storage.get('latestProjects').then(function (myProjects) {
+            if (myProjects.programs) {
+                myProjects.programs.forEach(function (programsList) {
+                    programsList.projects.forEach(function (project, i) {
+                        if (project._id == projectData._id) {
+                            projectData.isEdited = true;
+                            programsList.projects[i] = projectData;
+                        }
+                    });
+                    _this.storage.set('latestProjects', myProjects).then(function (project) {
+                        _this.toastService.successToast('message.project_deleted_success');
+                        _this.categoryViewService.deleteProject('deleted');
+                        _this.DismissClick();
+                    }, function (error) {
+                        _this.toastService.errorToast('message.project_deleted_failed');
+                    });
                 });
-                _this.storage.set('projects', myProjects).then(function (project) {
-                    _this.toastService.successToast('message.project_deleted_success');
-                    _this.categoryViewService.deleteProject('deleted');
-                    _this.DismissClick();
-                }, function (error) {
-                    _this.toastService.errorToast('message.project_deleted_failed');
-                });
+            }
+            else {
+                if (myProjects[0].projects) {
+                    myProjects[0].projects.forEach(function (project, i) {
+                        if (project._id == projectData._id) {
+                            projectData.isEdited = true;
+                            myProjects[0].projects[i] = projectData;
+                        }
+                    });
+                    _this.storage.set('latestProjects', myProjects).then(function (project) {
+                        _this.toastService.successToast('message.project_deleted_success');
+                        _this.categoryViewService.deleteProject('deleted');
+                        _this.DismissClick();
+                    }, function (error) {
+                        _this.toastService.errorToast('message.project_deleted_failed');
+                    });
+                }
             }
         }, function (error) {
             _this.toastService.errorToast('message.project_deleted_failed');
@@ -3142,13 +3340,12 @@ var PopoverComponent = /** @class */ (function () {
                             };
                             _this.projectService.sync(projects, data.access_token).subscribe(function (data) {
                                 if (data.status == "success" || data.status == "succes") {
-                                    // if (data.allProjects.data) {
+                                    _this.toastService.stopLoader();
                                     data.allProjects.data.forEach(function (projects) {
                                         projects.projects.forEach(function (sproject) {
                                             if (sproject.share) {
                                                 _this.getPDF(sproject._id);
                                             }
-                                            // sproject.share = false;
                                         });
                                     });
                                     _this.DismissClick();
@@ -3156,11 +3353,10 @@ var PopoverComponent = /** @class */ (function () {
                                 }
                                 else {
                                     _this.DismissClick();
+                                    _this.toastService.stopLoader();
                                     _this.toastService.errorToast1(data.message);
                                 }
-                                _this.toastService.stopLoader();
                             }, function (error) {
-                                // intentially left blank
                                 _this.toastService.stopLoader();
                             });
                         });
@@ -3180,7 +3376,6 @@ var PopoverComponent = /** @class */ (function () {
             projects.projects.forEach(function (sproject) {
                 sproject.isNew = false;
                 sproject.isSync = true;
-                sproject.createdType = 'by self';
                 sproject.isEdited = false;
                 sproject.share = false;
                 if (sproject.tasks && sproject.tasks.length > 0) {
@@ -3190,7 +3385,7 @@ var PopoverComponent = /** @class */ (function () {
                 }
             });
         });
-        this.storage.set('projects', syncedProjects).then(function (myprojectsff) {
+        this.storage.set('latestProjects', syncedProjects).then(function (myprojectsff) {
         });
     };
     // geting pdf file report of project and share the project
@@ -3315,6 +3510,18 @@ var ProjectService = /** @class */ (function () {
         });
         return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/project/sync', data, { headers: httpHeaders });
     };
+    ProjectService.prototype.syncForPDF = function (data, token) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
+            'x-auth-token': token
+        });
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/projects/getProjectPdfWithSyc', data, { headers: httpHeaders });
+    };
+    ProjectService.prototype.oldDataSync = function (data, token) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
+            'x-auth-token': token
+        });
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/projects/syncLocalDataOnUpgradeOfApp', data, { headers: httpHeaders });
+    };
     ProjectService.prototype.loadChart = function () {
         this.emit.next('load');
     };
@@ -3326,6 +3533,17 @@ var ProjectService = /** @class */ (function () {
             'x-auth-token': token
         });
         return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/projectsDetailsById', data, { headers: httpHeaders });
+    };
+    ProjectService.prototype.getProfileData = function (token, profileId) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
+            'x-auth-token': token,
+            'gpsLocation': '0,0',
+            'x-authenticated-user-token': token,
+            'appVersion': _app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].appVersion,
+            'appName': _app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].appName,
+            'appType': "improvement-project"
+        });
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/assessment/api/v1/userExtension/getProfile/' + profileId, { headers: httpHeaders });
     };
     ProjectService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -3385,7 +3603,10 @@ var ProjectsService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root',
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_api__WEBPACK_IMPORTED_MODULE_6__["ApiProvider"], _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"], _current_user__WEBPACK_IMPORTED_MODULE_3__["CurrentUserProvider"], _ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_api__WEBPACK_IMPORTED_MODULE_6__["ApiProvider"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"],
+            _current_user__WEBPACK_IMPORTED_MODULE_3__["CurrentUserProvider"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"]])
     ], ProjectsService);
     return ProjectsService;
 }());

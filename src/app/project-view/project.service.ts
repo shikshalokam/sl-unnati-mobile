@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AppConfigs } from '../app.config'
 import { URLSearchParams, Http } from '@angular/http';
 import { Subject } from 'rxjs';
+
 @Injectable({
     providedIn: 'root',
 })
@@ -45,5 +46,15 @@ export class ProjectService {
         })
         return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projectsDetailsById', data, { headers: httpHeaders })
     }
-
+    public getProfileData(token, profileId) {
+        let httpHeaders = new HttpHeaders({
+            'x-auth-token': token,
+            'gpsLocation': '0,0',
+            'x-authenticated-user-token': token,
+            'appVersion': AppConfigs.appVersion,
+            'appName': AppConfigs.appName,
+            'appType': "improvement-project"
+        });
+        return this.http.get(AppConfigs.api_url + '/assessment/api/v1/userExtension/getProfile/' + profileId, { headers: httpHeaders })
+    }
 }

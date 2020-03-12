@@ -109,15 +109,15 @@ var NotificationsPage = /** @class */ (function () {
         this.notifications = [];
         this.page = 1;
         this.limit = 20;
-        this.showSkeleton = false;
+        this.showSkeleton = true;
         this.back = "/project-view/home";
         this.skeletons = [{}, {}, {}, {}, {}, {}];
     }
     NotificationsPage.prototype.ngOnInit = function () {
-        //this.fetchAllNotifications();
+        this.fetchAllNotifications();
     };
     NotificationsPage.prototype.ionViewDidEnter = function () {
-        this.fetchAllNotifications();
+        // this.fetchAllNotifications();
     };
     NotificationsPage.prototype.fetchAllNotifications = function (infinateScrollRefrnc) {
         var _this = this;

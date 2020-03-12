@@ -15,7 +15,7 @@ export class NotificationsPage implements OnInit {
   page = 1;
   limit = 20;
   totalCount;
-  public showSkeleton: boolean = false;
+  public showSkeleton: boolean = true;
   back = "/project-view/home";
   public skeletons = [{}, {}, {}, {}, {}, {}];
   constructor(public notificationCardService: NotificationCardService,
@@ -23,10 +23,10 @@ export class NotificationsPage implements OnInit {
     public storage: Storage,
     public updateProfileService: UpdateProfileService) { }
   ngOnInit() {
-    //this.fetchAllNotifications();
+    this.fetchAllNotifications();
   }
   ionViewDidEnter() {
-    this.fetchAllNotifications();
+    // this.fetchAllNotifications();
   }
   fetchAllNotifications(infinateScrollRefrnc?) {
     this.storage.get('userTokens').then(data => {
@@ -56,12 +56,12 @@ export class NotificationsPage implements OnInit {
 
   loadMore() {
     this.page++;
-    this.fetchAllNotifications()
+    this.fetchAllNotifications();
   }
   doInfinite(infiniteScroll) {
     if ((this.page * this.limit) < this.totalCount) {
       this.page++
-      this.fetchAllNotifications(infiniteScroll)
+      this.fetchAllNotifications(infiniteScroll);
     } else {
       infiniteScroll.enable(false)
     }

@@ -24,7 +24,8 @@
         "attach": "Attach",
         "mark_complete": "Mark Complete",
         "update": "Update",
-        "save_info": "Save info"
+        "save_info": "Save info",
+        "post": "Post"
     },
     "message": {
         "noUnreadNotifications": "You have no new Notifications!",
@@ -49,11 +50,11 @@
         "delete_project_confirm": "Are you sure you want to delete the project.",
         "marked_as_completed": "Task marked as completed.",
         "local_data_changes": "You have made changes in projects",
-        "want_sync_before_erase": "Do you want to syc the project before erase your data",
+        "want_sync_before_erase": "Do you want to sync the project before erase your data",
         "sync_success": "Sync Completed",
         "no_projects": "No projects to sync.",
         "data_syncing": "Your data is syncing",
-        "please_syc_before_logout": "Pelase sync the projects before logout",
+        "please_sync_before_logout": "Pelase sync the projects before logout",
         "update_profile": "Please update your details. Help us make your experience better.",
         "confirm_your_details": "Confirm your details!",
         "profile_updated": "User updated successfully",
@@ -61,7 +62,8 @@
         "email_phonenumber_require": " Please enter your Email id or Phone number.",
         "state_require": " Please select your state.",
         "thankyou_note": "Thank you for updating your details. We will verify and update it in two weeks.",
-        "thankyou": "Thank you"
+        "thankyou": "Thank you",
+        "share_success": "Share your success with others!"
     },
     "profile_update": {
         "title": "Update Info",

@@ -30,8 +30,6 @@ const routes: Routes = [
   { path: 'subtask-status/:id', loadChildren: './subtask-status/subtask-status.module#SubtaskStatusPageModule' },
   { path: 'notifications', loadChildren: './notifications/notifications.module#NotificationsPageModule' },
   { path: 'my-reports', loadChildren: './my-reports/my-reports.module#MyReportsPageModule' },
-  { path: 'last-month-reports', loadChildren: './last-month-reports/last-month-reports.module#LastMonthReportsPageModule' },
-  { path: 'last-quarter-reports', loadChildren: './last-quarter-reports/last-quarter-reports.module#LastQuarterReportsPageModule' },
   { path: 'fullreports/:state', loadChildren: './fullreports/fullreports.module#FullreportsPageModule' },
   { path: 'school-project-detail/:id', loadChildren: './school-project-detail/school-project-detail.module#SchoolProjectDetailPageModule' },
   { path: 'create-project', loadChildren: './create-project/create-project.module#CreateProjectPageModule' },
@@ -46,7 +44,6 @@ const routes: Routes = [
   { path: 'all-projects', loadChildren: './all-projects/all-projects.module#AllProjectsPageModule' },
   { path: 'files/:id', loadChildren: './files/files.module#FilesPageModule' },
   { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
-  { path: 'kclg', loadChildren: './kclg/kclg.module#KclgPageModule' },
   { path: 'update-profile', loadChildren: './update-profile/update-profile.module#UpdateProfilePageModule' },
   { path: 'tutorial-videos', loadChildren: './tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
 ];

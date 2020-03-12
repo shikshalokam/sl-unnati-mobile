@@ -187,6 +187,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
 /* harmony import */ var _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../update-profile/update-profile.service */ "./src/app/update-profile/update-profile.service.ts");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+
 
 
 
@@ -308,6 +310,7 @@ var HomePage = /** @class */ (function () {
     }
     HomePage.prototype.ionViewDidEnter = function () {
         var _this = this;
+        this.searchInput = '';
         if (localStorage.getItem("token") != null) {
             this.menuCtrl.enable(true, 'unnati');
             this.getActiveProjects();
@@ -319,7 +322,7 @@ var HomePage = /** @class */ (function () {
                     _this.getTemplates();
                 }
             });
-            this.storage.get('projects').then(function (projects) {
+            this.storage.get('latestProjects').then(function (projects) {
                 if (!projects) {
                     _this.getProjects();
                 }
@@ -360,12 +363,6 @@ var HomePage = /** @class */ (function () {
     //navigate to project Details page
     HomePage.prototype.navigateToDetails = function (project) {
         var _this = this;
-        // localStorage.setItem("id", project._id);
-        // this.storage.set('currentProject', project).then(data => {
-        //   localStorage.setItem("from", 'home');
-        //   this.router.navigate(['/project-view/detail', project._id, 'home']);
-        //   this.projectService.setTitle(data.title);
-        // })
         this.storage.set('projectToBeView', project).then(function (project) {
             _this.router.navigate(['/project-view/project-detail', 'home']);
         });
@@ -384,17 +381,44 @@ var HomePage = /** @class */ (function () {
         this.activeProjects = [];
         var ap = [];
         var count = 0;
-        this.storage.get('projects').then(function (myProjects) {
+        var environment = _app_config__WEBPACK_IMPORTED_MODULE_19__["AppConfigs"].currentEnvironment;
+        var programId = '';
+        _app_config__WEBPACK_IMPORTED_MODULE_19__["AppConfigs"].environments.forEach(function (env) {
+            if (environment === env.name) {
+                programId = env.programId;
+            }
+        });
+        this.storage.get('latestProjects').then(function (myProjects) {
             _this.myProjects = myProjects;
             if (myProjects) {
-                myProjects[0].projects.forEach(function (myProject) {
-                    if (count < 2) {
-                        if ((myProject.createdType == 'by self' || myProject.createdType == 'by reference') && myProject.isStarted && !myProject.isDeleted) {
-                            ap.push(myProject);
-                            count = count + 1;
+                myProjects.forEach(function (programsList) {
+                    if (programsList) {
+                        if (programsList.programs && programsList.programs._id == programId) {
+                            programsList.projects.sort(function (a, b) {
+                                return new Date(b.lastUpdate) - new Date(a.lastUpdate);
+                            });
+                            programsList.projects.forEach(function (myProject) {
+                                if (count < 2) {
+                                    if ((myProject.createdType == 'by self' || myProject.createdType == 'by reference') && myProject.isStarted && !myProject.isDeleted) {
+                                        ap.push(myProject);
+                                        count = count + 1;
+                                    }
+                                }
+                            });
                         }
                     }
                 });
+                if (count == 0) {
+                    console.log(myProjects[0], "myProjects[0]");
+                    myProjects[0].projects.forEach(function (myProject) {
+                        if (count < 2) {
+                            if ((myProject.createdType == 'by self' || myProject.createdType == 'by reference') && myProject.isStarted && !myProject.isDeleted) {
+                                ap.push(myProject);
+                                count = count + 1;
+                            }
+                        }
+                    });
+                }
                 _this.activeProjects = ap;
             }
             _this.showSkeleton = false;
@@ -474,7 +498,7 @@ var HomePage = /** @class */ (function () {
                                         project.programName = programs.programs.name;
                                     });
                                 });
-                                _this.storage.set('projects', resp.data).then(function (resp1) {
+                                _this.storage.set('latestProjects', resp.data).then(function (resp1) {
                                     _this.getActiveProjects();
                                 });
                             }

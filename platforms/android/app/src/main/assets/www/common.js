@@ -425,22 +425,51 @@ var CreateTaskService = /** @class */ (function () {
     }
     CreateTaskService.prototype.getProjectById = function (projectId) {
         var _this = this;
-        return this.storage.get('projects').then(function (projectList) {
-            projectList[0].projects.forEach(function (project) {
-                if (project._id == projectId) {
-                    return _this.project = project;
-                }
+        return this.storage.get('latestProjects').then(function (projectList) {
+            projectList.forEach(function (programs) {
+                programs.projects.forEach(function (project) {
+                    if (project._id == projectId) {
+                        return _this.project = project;
+                    }
+                });
             });
         });
     };
+    // public updateByProjects(updatedProject) {
+    //     this.storage.get('latestProjects').then(projectList => {
+    //         projectList[0].projects.forEach(project => {
+    //             if (project._id == updatedProject._id) {
+    //                 projectList[0].projects = updatedProject;
+    //                 this.storage.set('latestProjects', projectList).then(projects => {
+    //                 })
+    //             }
+    //         });
+    //     })
+    // }
     CreateTaskService.prototype.updateByProjects = function (updatedProject) {
-        var _this = this;
-        this.storage.get('projects').then(function (projectList) {
-            projectList[0].projects.forEach(function (project) {
-                if (project._id == updatedProject._id) {
-                    projectList[0].projects = updatedProject;
-                    _this.storage.set('projects', projectList).then(function (projects) {
+        var mapped = false;
+        return this.storage.get('latestProjects').then(function (projectList) {
+            projectList.forEach(function (projectsPrograms) {
+                if (projectsPrograms) {
+                    projectsPrograms.projects.forEach(function (project, i) {
+                        if (project._id == updatedProject._id) {
+                            updatedProject.isEdited = true;
+                            projectsPrograms.projects[i] = updatedProject;
+                            mapped = true;
+                        }
                     });
+                }
+                if (!mapped) {
+                    if (projectList[0].projects) {
+                        projectList[0].projects.push(updatedProject);
+                    }
+                    else {
+                        var pro1 = [{
+                                projects: []
+                            }];
+                        pro1[0].projects.push(updatedProject);
+                        projectList = pro1;
+                    }
                 }
             });
         });
@@ -448,15 +477,15 @@ var CreateTaskService = /** @class */ (function () {
     // add project into my projects
     CreateTaskService.prototype.insertIntoMyProjects = function (project) {
         var _this = this;
-        return this.storage.get('projects').then(function (projectList) {
+        return this.storage.get('latestProjects').then(function (projectList) {
             if (projectList[0].projects) {
                 projectList[0].projects.push(project);
-                _this.storage.set('projects', projectList).then(function (projects) {
+                _this.storage.set('latestProjects', projectList).then(function (projects) {
                 });
             }
             else {
                 projectList[0].projects.push(project);
-                _this.storage.set('projects', projectList).then(function (projects) {
+                _this.storage.set('latestProjects', projectList).then(function (projects) {
                 });
             }
         });

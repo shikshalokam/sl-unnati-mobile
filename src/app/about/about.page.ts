@@ -52,6 +52,7 @@ export class AboutPage implements OnInit {
   ionViewDidEnter() {
     this.storage.get('userTokens').then(data => {
       this.userDetails = jwt_decode(data.access_token);
+      console.log(this.userDetails, " this.userDetails");
     })
   }
   ngOnInit() {
@@ -85,7 +86,7 @@ export class AboutPage implements OnInit {
 
   async showConfirmAlert() {
     let alertTexts;
-    this.translateService.get(['message.local_data_changes'], ['message.please_syc_before_logout']).subscribe((texts: string) => {
+    this.translateService.get(['message.local_data_changes'], ['message.please_sync_before_logout']).subscribe((texts: string) => {
       alertTexts = texts;
     });
     const alert = await this.alertController.create({

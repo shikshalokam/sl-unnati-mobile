@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage'
+import { Storage } from '@ionic/storage';
+import { AppConfigs } from '../app.config';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -62,11 +64,18 @@ export class CreateProjectService {
     // add new project into my projects.
     public insertIntoMyProjects(project) {
         let mapped: boolean = false;
+        let environment = AppConfigs.currentEnvironment;
+        let programId = '';
+        AppConfigs.environments.forEach(env => {
+          if (environment === env.name) {
+            programId = env.programId;
+          }
+        });
         return this.storage.get('latestProjects').then(projectList => {
             if (projectList) {
                 projectList.forEach(projectsPrograms => {
                     if (projectsPrograms.programs) {
-                        if (projectsPrograms.programs._id == "5e01da0c0c72d5597433ec7a") {
+                        if (projectsPrograms.programs._id == programId) {
                             projectsPrograms.projects.push(project);
                             mapped = true;
                         }

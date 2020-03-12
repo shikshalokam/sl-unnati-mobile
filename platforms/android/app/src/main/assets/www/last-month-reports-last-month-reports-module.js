@@ -66,7 +66,7 @@ var LastMonthReportsPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-content class=\"ion-padding\">\n  <div *ngIf=\"report\">\n    <ion-fab vertical=\"top\" horizontal=\"end\">\n      <ion-fab-button size=\"small\">\n        <ion-icon ios=\"ios-more\" md=\"md-more\"></ion-icon>\n      </ion-fab-button>\n      <ion-fab-list side=\"start\">\n        <ion-fab-button color=\"medium\" (click)=\"getReport('share')\">\n          <ion-icon ios=\"ios-share\" md=\"md-share\"></ion-icon>\n        </ion-fab-button>\n        <ion-fab-button color=\"medium\" (click)=\"getReport('download')\">\n          <ion-icon ios=\"ios-download\" md=\"md-download\"></ion-icon>\n        </ion-fab-button>\n      </ion-fab-list>\n    </ion-fab>\n    <div *ngIf=\"mySchools[0].name\" style=\"width: 90%;\">\n      <h5>\n        {{mySchools[0].name }}\n      </h5>\n    </div>\n    <div>\n      <h5>\n        {{ \"last_month_report.projects_cmpltd_lstmnth\" | translate }}\n      </h5>\n      {{ report.startMonth }}\n    </div>\n    <ion-grid>\n      <ion-row>\n        <ion-col class=\"status-card task-completed-box\">\n          <h3>{{ \"last_month_report.completed\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.projectsCompleted <= 9\">\n              0{{ report.projectsCompleted }} &nbsp;</span>\n            <span *ngIf=\"report.projectsCompleted >= 10\">\n              {{ report.projectsCompleted }} &nbsp;</span>\n          </h1>\n        </ion-col>\n        <ion-col class=\"status-card task-pending-box\">\n          <h3>{{ \"last_month_report.pending\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.projectsPending <= 9\">\n              0{{ report.projectsPending }} &nbsp;</span>\n            <span *ngIf=\"report.projectsPending >= 10\">\n              {{ report.projectsPending }} &nbsp;</span>\n          </h1>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n    <div class=\"action-item\" (click)=\"viewFullReport('lastMonth')\">\n      {{ \"last_month_report.view_full_reports\" | translate }}\n    </div>\n    <h5>\n      {{ \"last_month_report.tasks_cmpltd_lstmnth\" | translate }}\n    </h5>\n    {{ report.startMonth }}\n    <div>\n      <highcharts-chart [Highcharts]=\"highcharts\" [options]=\"chartOptions\"\n        style=\"width: 100%; height: 400px; display: block;\">\n      </highcharts-chart>\n    </div>\n    <ion-row>\n      <ion-col class=\"legend-left\">\n        <span class=\"dot-pending\"> &nbsp; </span> {{'myreports.tasks_pending' | translate}} <br />\n        <span style=\"font-size:24px; \">{{ report.tasksPending }}</span>\n      </ion-col>\n      <ion-col class=\"legend-right\">\n        <span class=\"dot-completed\"> &nbsp; </span> {{'myreports.tasks_completed' | translate}} <br />\n        <span style=\"font-size:24px; \"> {{ report.tasksCompleted }} </span>\n      </ion-col>\n    </ion-row>\n  </div>\n  <div *ngIf=\"showSkeleton\">\n    <div class=\"skeleton-card-content\">\n      <ion-card *ngFor=\"let skeleton of skeletons\">\n        <ion-card-content class=\"skeleton-card-content\">\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>"
+module.exports = "<ion-content class=\"ion-padding\">\n  <div *ngIf=\"report\">\n    <ion-fab vertical=\"top\" horizontal=\"end\">\n      <ion-fab-button size=\"small\">\n        <ion-icon ios=\"ios-more\" md=\"md-more\"></ion-icon>\n      </ion-fab-button>\n      <ion-fab-list side=\"start\">\n        <ion-fab-button color=\"medium\" (click)=\"getReport('share')\">\n          <ion-icon ios=\"ios-share\" md=\"md-share\" style=\"color: #000;\"></ion-icon>\n        </ion-fab-button>\n        <ion-fab-button color=\"medium\" (click)=\"getReport('download')\">\n          <ion-icon ios=\"ios-download\" md=\"md-download\" style=\"color: #000;\"></ion-icon>\n        </ion-fab-button>\n      </ion-fab-list>\n    </ion-fab>\n    <div *ngIf=\"mySchools\" style=\"width: 90%;\">\n      <h5>\n        {{mySchools[0].name }}\n      </h5>\n    </div>\n    <div style=\" margin-top: 2.5em;\">\n      <h5>\n        {{ \"last_month_report.projects_cmpltd_lstmnth\" | translate }}\n      </h5>\n      {{ report.startMonth }}\n    </div>\n    <ion-grid style=\"padding: 0px;\n    margin-top: 2.5em;\">\n      <ion-row>\n        <ion-col class=\"status-card task-completed-box\">\n          <h3>{{ \"last_month_report.completed\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.projectsCompleted <= 9\">\n              0{{ report.projectsCompleted }} &nbsp;</span>\n            <span *ngIf=\"report.projectsCompleted >= 10\">\n              {{ report.projectsCompleted }} &nbsp;</span>\n          </h1>\n        </ion-col>\n        <ion-col class=\"status-card task-pending-box\">\n          <h3>{{ \"last_month_report.pending\" | translate }}</h3>\n          <h1>\n            <span *ngIf=\"report.projectsPending <= 9\">\n              0{{ report.projectsPending }} &nbsp;</span>\n            <span *ngIf=\"report.projectsPending >= 10\">\n              {{ report.projectsPending }} &nbsp;</span>\n          </h1>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n    <div class=\"action-item\" (click)=\"viewFullReport('lastMonth')\">\n      {{ \"last_month_report.view_full_reports\" | translate }}\n    </div>\n    <h5>\n      {{ \"last_month_report.tasks_cmpltd_lstmnth\" | translate }}\n    </h5>\n    {{ report.startMonth }}\n    <div>\n      <highcharts-chart [Highcharts]=\"highcharts\" [options]=\"chartOptions\"\n        style=\"width: 100%; height: 400px; display: block;\">\n      </highcharts-chart>\n    </div>\n    <ion-row>\n      <ion-col class=\"legend-left\">\n        <span class=\"dot-pending\"> &nbsp; </span> {{'myreports.tasks_pending' | translate}} <br />\n        <span style=\"font-size:24px; \">{{ report.tasksPending }}</span>\n      </ion-col>\n      <ion-col class=\"legend-right\">\n        <span class=\"dot-completed\"> &nbsp; </span> {{'myreports.tasks_completed' | translate}} <br />\n        <span style=\"font-size:24px; \"> {{ report.tasksCompleted }} </span>\n      </ion-col>\n    </ion-row>\n  </div>\n  <div *ngIf=\"showSkeleton\">\n    <div class=\"skeleton-card-content\">\n      <ion-card *ngFor=\"let skeleton of skeletons\">\n        <ion-card-content class=\"skeleton-card-content\">\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n          <p>\n            <ion-skeleton-text animated></ion-skeleton-text>\n          </p>\n        </ion-card-content>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>"
 
 /***/ }),
 
@@ -101,9 +101,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "./node_modules/@ionic-native/screen-orientation/ngx/index.js");
 /* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../network.service */ "./src/app/network.service.ts");
-/* harmony import */ var _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../myschools/myschools.service */ "./src/app/myschools/myschools.service.ts");
-/* harmony import */ var _my_reports_my_reports_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../my-reports/my-reports.service */ "./src/app/my-reports/my-reports.service.ts");
-/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+/* harmony import */ var _my_reports_my_reports_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../my-reports/my-reports.service */ "./src/app/my-reports/my-reports.service.ts");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+/* harmony import */ var _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../myschools/myschools.service */ "./src/app/myschools/myschools.service.ts");
 
 
 
@@ -138,7 +138,6 @@ var LastMonthReportsPage = /** @class */ (function () {
         this.color = "#20ba8d";
         this.networkService.emit.subscribe(function (value) {
             _this.connected = value;
-            alert(_this.connected + "in school");
         });
     }
     LastMonthReportsPage.prototype.ionViewDidEnter = function () {
@@ -171,7 +170,9 @@ var LastMonthReportsPage = /** @class */ (function () {
                         _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
                             _this.myReportsService.getReports(userTokens_1.access_token, 'lastMonth').subscribe(function (data) {
                                 _this.report = data.data;
-                                _this.setupChart();
+                                if (data.status != "failed") {
+                                    _this.setupChart();
+                                }
                                 _this.showSkeleton = false;
                             });
                         }, function (error) {
@@ -285,8 +286,9 @@ var LastMonthReportsPage = /** @class */ (function () {
                         };
                         _this.storage.set('userTokens', userTokens).then(function (data) {
                             _this.mySchoolsService.getSchools(parsedData.access_token, _this.count, _this.page).subscribe(function (data) {
-                                _this.mySchools = data.data;
-                                console.log(_this.mySchools, "this.mySchools ");
+                                if (data.status != 'failed') {
+                                    _this.mySchools = data.data;
+                                }
                             }, function (error) { });
                         });
                         //resolve()
@@ -300,38 +302,24 @@ var LastMonthReportsPage = /** @class */ (function () {
         }
     };
     LastMonthReportsPage.prototype.getReport = function (type) {
-        var _this = this;
-        this.mySchools[0].entityId;
-        if (this.connected) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.toastService.startLoader('Loading Please wait');
-                            _this.myReportsService.getReportData(parsedData.access_token, _this.mySchools[0], 'lastMonth').subscribe(function (data) {
-                                _this.toastService.stopLoader();
-                                if (type == 'share') {
-                                    _this.myReportsService.share(data);
-                                }
-                                else {
-                                    _this.myReportsService.download(data);
-                                }
-                            }, function (error) { });
-                        });
-                        //resolve()
-                    }
-                }, function (error) {
-                });
-            });
+        var obj;
+        var obj1 = {};
+        if (this.mySchools) {
+            this.mySchools[0].type = type;
+            this.mySchools[0].isFullReport = false;
+            this.mySchools[0].reportType = 'lastMonth';
+            obj = this.mySchools[0];
         }
         else {
-            this.toastService.errorToast('message.nerwork_connection_check');
+            obj1.type = type;
+            obj1.isFullReport = false;
+            obj1.reportType = 'lastMonth';
+            obj1.name = '';
+            obj1.entityId = '';
+            obj = obj1;
         }
+        console.log(obj, "obj");
+        this.myReportsService.getReportEvent(obj);
     };
     LastMonthReportsPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -340,13 +328,13 @@ var LastMonthReportsPage = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./last-month-reports.page.scss */ "./src/app/last-month-reports/last-month-reports.page.scss")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
-            _my_reports_my_reports_service__WEBPACK_IMPORTED_MODULE_10__["MyReportsService"],
+            _my_reports_my_reports_service__WEBPACK_IMPORTED_MODULE_9__["MyReportsService"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["ToastController"],
             _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"],
             _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
             _network_service__WEBPACK_IMPORTED_MODULE_8__["NetworkService"],
-            _toast_service__WEBPACK_IMPORTED_MODULE_11__["ToastService"],
-            _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_9__["MyschoolsService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_10__["ToastService"],
+            _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_11__["MyschoolsService"],
             _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_7__["ScreenOrientation"]])
     ], LastMonthReportsPage);
     return LastMonthReportsPage;

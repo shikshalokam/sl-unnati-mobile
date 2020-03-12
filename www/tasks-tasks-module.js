@@ -286,7 +286,7 @@ var TasksPage = /** @class */ (function () {
         });
     };
     TasksPage.prototype.updateProjects = function (data) {
-        this.storage.set('projects', data).then(function (data) {
+        this.storage.set('latestProjects', data).then(function (data) {
         });
     };
     TasksPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

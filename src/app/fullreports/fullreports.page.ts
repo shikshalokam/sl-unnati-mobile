@@ -90,7 +90,7 @@ export class FullreportsPage implements OnInit {
   }
   public setUpChart(data) {
     this.showSkeleton = true;
-    for (let i = 0; i <= this.reports.length; i++) {
+    for (let i = 0; i < this.reports.length; i++) {
       let minDate = new Date(this.reports[i].xAxis.min);
       let maxDate = new Date(this.reports[i].xAxis.max);
       let sdate = minDate.getDate();
@@ -139,7 +139,9 @@ export class FullreportsPage implements OnInit {
             };
             this.storage.set('userTokens', userTokens).then(data => {
               this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
-                this.mySchools = data.data;
+                if (data.status != 'failed') {
+                  this.mySchools = data.data;
+                }
               }, error => { })
             })
             //resolve()
@@ -151,10 +153,23 @@ export class FullreportsPage implements OnInit {
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
-  public reportShare(type) {
-    this.mySchools[0].type = type;
-    this.mySchools[0].isFullReport = true;
-    this.mySchools[0].reportType = this.state;
-    this.myReportsService.getReportEvent(this.mySchools[0]);
+
+  public getReport(type) {
+    let obj: any;
+    let obj1: any = {};
+    if (this.mySchools) {
+      this.mySchools[0].type = type;
+      this.mySchools[0].isFullReport = true;
+      this.mySchools[0].reportType = this.state;
+      obj = this.mySchools[0];
+    } else {
+      obj1.type = type;
+      obj1.isFullReport = true;
+      obj1.reportType = this.state;;
+      obj1.name = '';
+      obj1.entityId = '';
+      obj = obj1;
+    }
+    this.myReportsService.getReportEvent(obj);
   }
 }

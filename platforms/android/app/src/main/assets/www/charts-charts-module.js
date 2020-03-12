@@ -231,7 +231,7 @@ var ChartsPage = /** @class */ (function () {
         });
         this.route.params.subscribe(function (params) {
             _this.id = params.id;
-            _this.storage.get('projects').then(function (data) {
+            _this.storage.get('latestProjects').then(function (data) {
                 if (typeof data == 'string') {
                     data = JSON.parse(data);
                 }

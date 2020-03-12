@@ -20,9 +20,10 @@ declare var cordova: any;
   templateUrl: './my-reports.page.html',
   styleUrls: ['./my-reports.page.scss'],
 })
-export class MyReportsPage implements OnInit {
+export class MyReportsPage {
   isIos;
   appFolderPath;
+  back = "project-view/home";
   connected: any = navigator.onLine;
   constructor(
     public router: Router,
@@ -53,9 +54,7 @@ export class MyReportsPage implements OnInit {
       })
     });
   }
-  public back = "project-view/home";
-  ngOnInit() {
-  }
+
   ionViewDidEnter() {
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
@@ -80,12 +79,17 @@ export class MyReportsPage implements OnInit {
               this.toastService.startLoader('Loading Please wait');
               this.myReportsService.getReportData(parsedData.access_token, mySchools).subscribe((data: any) => {
                 this.toastService.stopLoader();
-                if (mySchools.type === 'share') {
-                  this.share(data);
-                } else {
-                  this.download(data);
+                if (data.status != 'failed') {
+                  if (mySchools.type === 'share') {
+                    this.share(data);
+                  } else {
+                    this.toastService.stopLoader();
+                    this.download(data);
+                  }
                 }
-              }, error => { })
+              }, error => {
+                this.toastService.stopLoader();
+              })
             })
             //resolve()
           }
@@ -111,12 +115,16 @@ export class MyReportsPage implements OnInit {
               this.toastService.startLoader('Loading Please wait');
               this.myReportsService.getFullReportData(parsedData.access_token, mySchools).subscribe((data: any) => {
                 this.toastService.stopLoader();
-                if (mySchools.type === 'share') {
-                  this.share(data);
-                } else {
-                  this.download(data);
+                if (data.status != 'failed') {
+                  if (mySchools.type === 'share') {
+                    this.share(data);
+                  } else {
+                    this.download(data);
+                  }
                 }
-              }, error => { })
+              }, error => {
+                this.toastService.stopLoader();
+              })
             })
             //resolve()
           }
@@ -129,6 +137,7 @@ export class MyReportsPage implements OnInit {
   }
 
   public share(data) {
+    this.toastService.startLoader('Loading Please wait');
     const fileName = 'Report';
     const fileTransfer: FileTransferObject = this.transfer.create();
     const url = data.pdfUrl;
@@ -136,8 +145,10 @@ export class MyReportsPage implements OnInit {
       this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
         let data = base64File.split(',');
         let base64Data = "data:application/pdf;base64," + data[1];
-        this.socialSharing.share("", fileName, base64Data, "").then(() => {
+        this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+          this.toastService.stopLoader();
         }, error => {
+          this.toastService.stopLoader();
           // intentially left blank
         });
       }, (err) => {

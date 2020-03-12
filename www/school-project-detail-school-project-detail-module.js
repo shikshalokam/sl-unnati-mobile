@@ -293,7 +293,7 @@ var SchoolProjectDetailPage = /** @class */ (function () {
                             }
                             else if (data.status == "succes") {
                                 _this.successToast(data.message);
-                                _this.storage.set('projects', data).then(function (resp1) {
+                                _this.storage.set('latestProjects', data).then(function (resp1) {
                                 }, function (error) { });
                             }
                         }, function (error) {

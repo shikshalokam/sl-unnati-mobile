@@ -46,6 +46,7 @@ export class ProjectDetailPage {
       this.editGoal = false;
       if (param.cat) {
         this.category = param.cat;
+        console.log(this.category, "this.category");
         if (this.category == 'my-projects' || this.category == 'active-projects' || this.category == 'all-projects' || this.category == 'projectsList') {
           this.back = 'project-view/projects';
         } else if (this.category == 'schools') {
@@ -120,9 +121,7 @@ export class ProjectDetailPage {
       this.project.status = 'In Progress';
     }
     this.project.startDate = new Date();
-    console.log(this.category, "this.category")
     if (this.category != 'my_projects' && this.category != 'projectsList') {
-      console.log('reference', this.category);
       this.project.createdType = "by reference";
       this.project.lastUpdate = new Date();
       this.project.isNew = true;
@@ -149,12 +148,9 @@ export class ProjectDetailPage {
           }
         })
       }
-      console.log('in by reference', this.project);
       this.storage.set('projectToBeView', this.project).then(project => {
         this.project = project;
-        console.log('mapping projects', this.project)
         this.storage.get('latestProjects').then(p => {
-          console.log(p, "ppppp");
         })
         this.createProjectService.insertIntoMyProjects(this.project).then(data => {
           this.project.isStarted = true;
@@ -163,7 +159,6 @@ export class ProjectDetailPage {
       })
     } else {
       this.project.lastUpdate = new Date();
-      console.log('calling updateByProjects 163', this.category);
       this.createProjectService.updateByProjects(this.project);
       this.storage.set('projectToBeView', this.project).then(project => {
         this.project = project;

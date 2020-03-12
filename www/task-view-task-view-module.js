@@ -213,7 +213,7 @@ var TaskViewPage = /** @class */ (function () {
                     };
                     _this.storage.set('userTokens', userTokens).then(function (usertoken) {
                         _this.taskService.syncTask(_this.task, usertoken.access_token).subscribe(function (sync) {
-                            _this.storage.get('projects').then(function (projects) {
+                            _this.storage.get('latestProjects').then(function (projects) {
                                 if (typeof projects == 'string') {
                                     projects = JSON.parse(projects);
                                 }
@@ -224,7 +224,7 @@ var TaskViewPage = /** @class */ (function () {
                                         if (pro._id == sync.data._id) {
                                             // project = sync;
                                             pro.tasks = sync.data.tasks;
-                                            _this.storage.set('projects', projects).then(function (projectsUpdated) {
+                                            _this.storage.set('latestProjects', projects).then(function (projectsUpdated) {
                                                 _this.taskService.loadProject();
                                                 _this.router.navigate(['/project-view/detail']);
                                             });
@@ -315,7 +315,7 @@ var TaskViewPage = /** @class */ (function () {
                     data.tasks[i].isDeleted = true;
                     //   data.tasks.splice(i,1);
                     _this.storage.set('currentProject', data).then(function (data) {
-                        _this.storage.get('projects').then(function (schema) {
+                        _this.storage.get('latestProjects').then(function (schema) {
                             if (typeof schema == "string") {
                                 schema = JSON.parse(schema);
                             }
@@ -325,7 +325,7 @@ var TaskViewPage = /** @class */ (function () {
                                         project.tasks.forEach(function (task) {
                                             if (task._id == _this.task._id) {
                                                 task.isDeleted = true;
-                                                _this.storage.set('projects', schema).then(function (data) {
+                                                _this.storage.set('latestProjects', schema).then(function (data) {
                                                     _this.taskService.loadProject();
                                                     _this.location.back();
                                                 });

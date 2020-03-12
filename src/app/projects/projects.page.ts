@@ -12,6 +12,8 @@ import { Network } from '@ionic-native/network/ngx';
 import { ProjectService } from '../project-view/project.service';
 import { HomeService } from '../home/home.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { AppConfigs } from '../app.config';
+
 //import { trigger, state, style, animate, transition } from '@angular/animations';
 @Component({
   selector: 'app-projects',
@@ -27,6 +29,8 @@ export class ProjectsPage {
   showSkeleton: boolean = false;
   showNoDataCard = '';
   myProjects;
+  environment;
+  programId;
   searchInput;
   showHardcodedMyprojects: boolean = true;
   //public projects:any =[];
@@ -57,6 +61,12 @@ export class ProjectsPage {
   }
 
   ionViewDidEnter() {
+    this.environment = AppConfigs.currentEnvironment;
+    AppConfigs.environments.forEach(env => {
+      if (this.environment === env.name) {
+        this.programId = env.programId;
+      }
+    });
     this.searchInput = '';
     this.connected = localStorage.getItem("networkStatus");
     try {
@@ -68,11 +78,12 @@ export class ProjectsPage {
 
   public getActiveProjects() {
     this.showSkeleton = true;
+ 
     this.storage.get('latestProjects').then(projects => {
       if (projects) {
         projects.forEach(programsList => {
           if (programsList.programs) {
-            if (programsList.programs._id == "5e01da0c0c72d5597433ec7a") {
+            if (programsList.programs._id == this.programId) {
               this.showHardcodedMyprojects = false;
             }
             programsList.projects.sort((a, b) => {

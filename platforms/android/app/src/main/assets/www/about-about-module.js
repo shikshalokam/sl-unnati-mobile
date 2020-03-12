@@ -156,6 +156,7 @@ var AboutPage = /** @class */ (function () {
         var _this = this;
         this.storage.get('userTokens').then(function (data) {
             _this.userDetails = jwt_decode__WEBPACK_IMPORTED_MODULE_9__(data.access_token);
+            console.log(_this.userDetails, " this.userDetails");
         });
     };
     AboutPage.prototype.ngOnInit = function () {
@@ -179,7 +180,7 @@ var AboutPage = /** @class */ (function () {
             _this.login.loggedIn('false');
             _this.router.navigateByUrl('/login');
         }, function (error) {
-            //  alert(error + "Logout error")
+            //  alert(error + "Logout error") 
         });
         if (!localStorage.getItem("token")) {
             this.router.navigateByUrl('/login');
@@ -195,7 +196,7 @@ var AboutPage = /** @class */ (function () {
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.translateService.get(['message.local_data_changes'], ['message.please_syc_before_logout']).subscribe(function (texts) {
+                        this.translateService.get(['message.local_data_changes'], ['message.please_sync_before_logout']).subscribe(function (texts) {
                             alertTexts = texts;
                         });
                         return [4 /*yield*/, this.alertController.create({

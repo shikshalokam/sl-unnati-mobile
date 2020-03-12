@@ -307,7 +307,7 @@ var SchoolTaskReportPage = /** @class */ (function () {
         this.connected = localStorage.getItem("networkStatus");
         var connected = navigator.onLine;
         if (connected) {
-            this.storage.get('projects').then(function (projects) {
+            this.storage.get('latestProjects').then(function (projects) {
                 if (projects) {
                     if (typeof projects == 'string') {
                         projects = JSON.parse(projects);
@@ -343,7 +343,7 @@ var SchoolTaskReportPage = /** @class */ (function () {
         var connected = navigator.onLine;
         if (connected) {
             // this.router.navigate(['/project-view/detail', id, 'school']);
-            this.storage.get('projects').then(function (projects) {
+            this.storage.get('latestProjects').then(function (projects) {
                 if (projects) {
                     if (typeof projects == 'string') {
                         projects = JSON.parse(projects);
@@ -408,7 +408,7 @@ var SchoolTaskReportPage = /** @class */ (function () {
                                         }
                                     });
                                 });
-                                _this.storage.get('projects').then(function (projects) {
+                                _this.storage.get('latestProjects').then(function (projects) {
                                     if (projects) {
                                         if (typeof projects == 'string') {
                                             projects = JSON.parse(projects);
@@ -418,7 +418,7 @@ var SchoolTaskReportPage = /** @class */ (function () {
                                             prjs.projects.forEach(function (project) {
                                                 if (project._id === id) {
                                                     prjs.projects.push(project);
-                                                    _this.storage.set('projects', projects).then(function (projects) {
+                                                    _this.storage.set('latestProjects', projects).then(function (projects) {
                                                     });
                                                     // this.storage.set('currentProject', project).then(cproject => {
                                                     //   if (path == 'details') {
@@ -441,7 +441,7 @@ var SchoolTaskReportPage = /** @class */ (function () {
                                         // })
                                     }
                                     else {
-                                        _this.storage.set('projects', resp).then(function (projects) {
+                                        _this.storage.set('latestProjects', resp).then(function (projects) {
                                             resp.data.projects.forEach(function (prj) {
                                                 // this.storage.set('currentProject', prj).then(cpsetup => {
                                                 //   if (path == 'details') {

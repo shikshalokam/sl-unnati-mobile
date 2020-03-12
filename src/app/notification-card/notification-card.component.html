@@ -33,14 +33,6 @@
       </div>
     </ion-item> -->
 </ion-list>
-
-<!-- <div class="_errorBox _flex-box errorMessage _justify-content-center">
-    <div *ngIf="notifications?.length"
-      class=" old-notification notificationCard">
-      {{'message.noUnreadNotifications' | translate}}
-    </div>
-  </div> -->
-
 <ion-list text-wrap class="errorContainer _flex-box" *ngIf="!notifications?.length">
   <ion-item no-lines class="old-notification notificationCard childContainer custom-list vertical-align-text">
     {{ "message.noUnreadNotifications" | translate }}

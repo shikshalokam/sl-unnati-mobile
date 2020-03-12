@@ -70,7 +70,7 @@ var MyReportsPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-tabs>\n    <ion-header\n      style=\"position: initial; z-index: auto;\"\n    >\n      <app-header\n        [title]=\"'myreports.title' | translate\"\n        [showMenu]=\"false\"\n        [showBack]=\"true\"\n        [noBorder]=\"false\"\n      [isGoBack]=\"back\"\n      >\n      </app-header>\n      <ion-tab-bar slot=\"top\">\n        <ion-tab-button tab=\"last-month-reports\">\n          <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n        </ion-tab-button>\n        <ion-tab-button tab=\"last-quarter-reports\">\n          <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n        </ion-tab-button>\n      </ion-tab-bar>\n    </ion-header>\n  </ion-tabs>"
+module.exports = "<ion-tabs>\n    <ion-header\n      style=\"position: initial; z-index: auto;\"\n    >\n      <app-header\n        [title]=\"'myreports.title' | translate\"\n        [showMenu]=\"false\"\n        [showBack]=\"true\"\n        [noBorder]=\"true\"\n      [isGoBack]=\"back\"\n      >\n      </app-header>\n      <ion-tab-bar slot=\"top\" style=\" border-bottom:2px solid #b23e33;\">\n        <ion-tab-button tab=\"last-month-reports\" style=\"max-width: 50%;\">\n          <ion-label>{{ \"myreports.last_month\" | translate }}</ion-label>\n        </ion-tab-button>\n        <ion-tab-button tab=\"last-quarter-reports\" style=\"max-width: 50%;\">\n          <ion-label>{{ \"myreports.last_quarter\" | translate }}</ion-label>\n        </ion-tab-button>\n      </ion-tab-bar>\n    </ion-header>\n  </ion-tabs>"
 
 /***/ }),
 
@@ -81,7 +81,7 @@ module.exports = "<ion-tabs>\n    <ion-header\n      style=\"position: initial; 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".tab-selected {\n  border-bottom: 4px solid #b23e33; }\n\nion-tab-button ion-label {\n  font-size: 16px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9teS1yZXBvcnRzL215LXJlcG9ydHMucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBRUksZ0NBQStCLEVBQUE7O0FBRW5DO0VBRVEsZUFBYyxFQUFBIiwiZmlsZSI6InNyYy9hcHAvbXktcmVwb3J0cy9teS1yZXBvcnRzLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi50YWItc2VsZWN0ZWRcbntcbiAgICBib3JkZXItYm90dG9tOjRweCBzb2xpZCAjYjIzZTMzO1xufVxuaW9uLXRhYi1idXR0b24ge1xuICAgIGlvbi1sYWJlbCB7XG4gICAgICAgIGZvbnQtc2l6ZToxNnB4O1xuICAgIH1cbn1cbiJdfQ== */"
+module.exports = ".tab-selected {\n  background: #b23e33;\n  color: #fff; }\n\nion-tab-button ion-label {\n  font-size: 16px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9teS1yZXBvcnRzL215LXJlcG9ydHMucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBRUksbUJBQW1CO0VBQ25CLFdBQVUsRUFBQTs7QUFFZDtFQUVRLGVBQWMsRUFBQSIsImZpbGUiOiJzcmMvYXBwL215LXJlcG9ydHMvbXktcmVwb3J0cy5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIudGFiLXNlbGVjdGVkXG57XG4gICAgYmFja2dyb3VuZDogI2IyM2UzMztcbiAgICBjb2xvcjojZmZmO1xufVxuaW9uLXRhYi1idXR0b24ge1xuICAgIGlvbi1sYWJlbCB7XG4gICAgICAgIGZvbnQtc2l6ZToxNnB4O1xuICAgIH1cbn0iXX0= */"
 
 /***/ }),
 
@@ -108,6 +108,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ionic-native/file-opener/ngx */ "./node_modules/@ionic-native/file-opener/ngx/index.js");
 /* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
 /* harmony import */ var _my_reports_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./my-reports.service */ "./src/app/my-reports/my-reports.service.ts");
+/* harmony import */ var _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../myschools/myschools.service */ "./src/app/myschools/myschools.service.ts");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+
+
+
 
 
 
@@ -122,7 +128,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var MyReportsPage = /** @class */ (function () {
-    function MyReportsPage(router, screenOrientation, file, platform, socialSharing, fileChooser, base64, fileOpener, transfer, toastService, myReportsService) {
+    function MyReportsPage(router, screenOrientation, file, platform, socialSharing, fileChooser, base64, fileOpener, transfer, toastService, myReportsService, mySchoolsService, api, storage) {
         var _this = this;
         this.router = router;
         this.screenOrientation = screenOrientation;
@@ -135,20 +141,25 @@ var MyReportsPage = /** @class */ (function () {
         this.transfer = transfer;
         this.toastService = toastService;
         this.myReportsService = myReportsService;
+        this.mySchoolsService = mySchoolsService;
+        this.api = api;
+        this.storage = storage;
         this.back = "project-view/home";
-        myReportsService.shareEvent.subscribe(function (data) {
-            _this.share(data);
-        });
-        myReportsService.downloadEvent.subscribe(function (data) {
-            _this.download(data);
-        });
-        this.platform.ready().then(function () {
-            _this.isIos = _this.platform.is('ios') ? true : false;
-            _this.appFolderPath = _this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
+        this.connected = navigator.onLine;
+        myReportsService.reportEvent.subscribe(function (data) {
+            // this.share(data);
+            _this.platform.ready().then(function () {
+                _this.isIos = _this.platform.is('ios') ? true : false;
+                _this.appFolderPath = _this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
+                if (data.isFullReport) {
+                    _this.getFullReport(data);
+                }
+                else {
+                    _this.getReport(data);
+                }
+            });
         });
     }
-    MyReportsPage.prototype.ngOnInit = function () {
-    };
     MyReportsPage.prototype.ionViewDidEnter = function () {
         try {
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
@@ -160,17 +171,95 @@ var MyReportsPage = /** @class */ (function () {
     MyReportsPage.prototype.goBack = function () {
         this.router.navigate(['/project-view/home']);
     };
+    MyReportsPage.prototype.getReport = function (mySchools) {
+        var _this = this;
+        if (this.connected) {
+            this.storage.get('userTokens').then(function (data) {
+                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
+                    var parsedData = JSON.parse(data._body);
+                    if (parsedData && parsedData.access_token) {
+                        var userTokens = {
+                            access_token: parsedData.access_token,
+                            refresh_token: parsedData.refresh_token,
+                        };
+                        _this.storage.set('userTokens', userTokens).then(function (data) {
+                            _this.toastService.startLoader('Loading Please wait');
+                            _this.myReportsService.getReportData(parsedData.access_token, mySchools).subscribe(function (data) {
+                                _this.toastService.stopLoader();
+                                if (data.status != 'failed') {
+                                    if (mySchools.type === 'share') {
+                                        _this.share(data);
+                                    }
+                                    else {
+                                        _this.toastService.stopLoader();
+                                        _this.download(data);
+                                    }
+                                }
+                            }, function (error) {
+                                _this.toastService.stopLoader();
+                            });
+                        });
+                        //resolve()
+                    }
+                }, function (error) {
+                });
+            });
+        }
+        else {
+            this.toastService.errorToast('message.nerwork_connection_check');
+        }
+    };
+    MyReportsPage.prototype.getFullReport = function (mySchools) {
+        var _this = this;
+        if (this.connected) {
+            this.storage.get('userTokens').then(function (data) {
+                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
+                    var parsedData = JSON.parse(data._body);
+                    if (parsedData && parsedData.access_token) {
+                        var userTokens = {
+                            access_token: parsedData.access_token,
+                            refresh_token: parsedData.refresh_token,
+                        };
+                        _this.storage.set('userTokens', userTokens).then(function (data) {
+                            _this.toastService.startLoader('Loading Please wait');
+                            _this.myReportsService.getFullReportData(parsedData.access_token, mySchools).subscribe(function (data) {
+                                _this.toastService.stopLoader();
+                                if (data.status != 'failed') {
+                                    if (mySchools.type === 'share') {
+                                        _this.share(data);
+                                    }
+                                    else {
+                                        _this.download(data);
+                                    }
+                                }
+                            }, function (error) {
+                                _this.toastService.stopLoader();
+                            });
+                        });
+                        //resolve()
+                    }
+                }, function (error) {
+                });
+            });
+        }
+        else {
+            this.toastService.errorToast('message.nerwork_connection_check');
+        }
+    };
     MyReportsPage.prototype.share = function (data) {
         var _this = this;
-        var fileName = 'LastMonthReport';
+        this.toastService.startLoader('Loading Please wait');
+        var fileName = 'Report';
         var fileTransfer = this.transfer.create();
         var url = data.pdfUrl;
         fileTransfer.download(url, this.appFolderPath + '/' + fileName).then(function (entry) {
             _this.base64.encodeFile(entry.nativeURL).then(function (base64File) {
                 var data = base64File.split(',');
                 var base64Data = "data:application/pdf;base64," + data[1];
-                _this.socialSharing.share("", fileName, base64Data, "").then(function () {
+                _this.socialSharing.share("", fileName, base64Data, "").then(function (data) {
+                    _this.toastService.stopLoader();
                 }, function (error) {
+                    _this.toastService.stopLoader();
                     // intentially left blank
                 });
             }, function (err) {
@@ -186,18 +275,14 @@ var MyReportsPage = /** @class */ (function () {
             method: "GET"
         }).then(function (res) { return res.blob(); }).then(function (blob) {
             _this.appFolderPath = decodeURIComponent(_this.appFolderPath);
-            // task.file.name = decodeURIComponent(task.file.name);
-            _this.file.writeFile(_this.appFolderPath, 'LastMonthReport', blob, { replace: true }).then(function (res) {
+            var filename = decodeURIComponent('Report');
+            _this.file.writeFile(_this.appFolderPath, 'Report', blob, { replace: true }).then(function (res) {
                 _this.fileOpener.open(res.toInternalURL(), 'application/pdf').then(function (res) {
-                    console.log(res, 'sucess');
                 }).catch(function (err) {
-                    console.log(err, 'error');
                 });
             }).catch(function (err) {
-                console.log('error in catch');
             });
         }).catch(function (err) {
-            console.log('error');
         });
     };
     MyReportsPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -216,7 +301,10 @@ var MyReportsPage = /** @class */ (function () {
             _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_10__["FileOpener"],
             _ionic_native_file_transfer_ngx__WEBPACK_IMPORTED_MODULE_5__["FileTransfer"],
             _toast_service__WEBPACK_IMPORTED_MODULE_11__["ToastService"],
-            _my_reports_service__WEBPACK_IMPORTED_MODULE_12__["MyReportsService"]])
+            _my_reports_service__WEBPACK_IMPORTED_MODULE_12__["MyReportsService"],
+            _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_13__["MyschoolsService"],
+            _api_api__WEBPACK_IMPORTED_MODULE_14__["ApiProvider"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_15__["Storage"]])
     ], MyReportsPage);
     return MyReportsPage;
 }());

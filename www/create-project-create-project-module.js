@@ -101,6 +101,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _home_home_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../home/home.service */ "./src/app/home/home.service.ts");
 /* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+
 
 
 
@@ -150,16 +152,20 @@ var CreateProjectPage = /** @class */ (function () {
             else {
                 _this.createNewProject = false;
                 _this.storage.get('newcreatedproject').then(function (data) {
-                    _this.storage.get('projects').then(function (projectsList) {
-                        projectsList[0].projects.forEach(function (project) {
-                            if (project._id == data._id) {
-                                _this.project = project;
-                                if (_this.project.startDate && _this.project.endDate) {
-                                    _this.startDate = _this.datepipe.transform(new Date(_this.project.startDate));
-                                    _this.endDate = _this.datepipe.transform(new Date(_this.project.endDate));
+                    _this.storage.get('latestProjects').then(function (projectsList) {
+                        projectsList.forEach(function (programs) {
+                            programs.projects.forEach(function (project) {
+                                if (project._id == data._id) {
+                                    _this.project = project;
+                                    if (_this.project.startDate && _this.project.endDate) {
+                                        _this.startDate = _this.datepipe.transform(new Date(_this.project.startDate));
+                                        _this.endDate = _this.datepipe.transform(new Date(_this.project.endDate));
+                                    }
                                 }
-                            }
+                            });
                         });
+                        // projectsList[0].projects.forEach(project => {
+                        // });
                     });
                 });
             }
@@ -246,9 +252,6 @@ var CreateProjectPage = /** @class */ (function () {
     // Create project
     CreateProjectPage.prototype.create = function () {
         var _this = this;
-        /** if (this.createProject.status == "INVALID" || !this.isValidDate || selectedCat.length == 0) {
-         New UI for Categories.
-          *  */
         if (this.createProject.status == "INVALID" || !this.isValidDate) {
             this.markLabelsAsInvalid = true;
         }
@@ -264,48 +267,106 @@ var CreateProjectPage = /** @class */ (function () {
             }
             this.project.createdType = 'by self';
             // this.project.createdType ='by referance';
-            this.storage.get('projects').then(function (projectsList) {
+            var environment_1 = _app_config__WEBPACK_IMPORTED_MODULE_10__["AppConfigs"].currentEnvironment;
+            var programId_1 = '';
+            _app_config__WEBPACK_IMPORTED_MODULE_10__["AppConfigs"].environments.forEach(function (env) {
+                if (environment_1 === env.name) {
+                    programId_1 = env.programId;
+                }
+            });
+            console.log(programId_1, "programId ", environment_1);
+            this.storage.get('latestProjects').then(function (projectsList) {
+                var mapped = false;
                 if (projectsList) {
-                    // Create new project
-                    if (_this.createNewProject) {
-                        _this.project._id = projectsList[0].projects.length + 1;
-                        projectsList[0].projects.push(_this.project);
-                        _this.storage.set('projects', projectsList).then(function (myProjects) {
-                            _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
-                                _this.toastService.successToast('message.project_is_created');
-                                _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
-                            });
-                        });
-                    }
-                    else {
-                        // insert edited fields into project, preventing create another project.
-                        _this.storage.get('projects').then(function (myProjectsList) {
-                            myProjectsList[0].projects.forEach(function (project) {
-                                if (project._id == _this.project._id) {
-                                    project.category = _this.project.category;
-                                    project.title = _this.project.title;
-                                    project.goal = _this.project.goal;
-                                    project.endDate = _this.project.endDate;
-                                    project.startDate = _this.project.startDate;
-                                    _this.storage.set('projects', myProjectsList).then(function (myProjects) {
+                    projectsList.forEach(function (programsList) {
+                        // already basic structure is there in local
+                        if (programsList) {
+                            if (programsList.programs && programsList.programs._id == programId_1) {
+                                // programsList.projects.forEach(program => {
+                                if (_this.createNewProject) {
+                                    _this.project._id = programsList.projects.length + 1;
+                                    programsList.projects.push(_this.project);
+                                    _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
                                         _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
                                             _this.toastService.successToast('message.project_is_created');
                                             _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
                                         });
                                     });
                                 }
+                                else if (programsList.programs) {
+                                    programsList.projects.forEach(function (project) {
+                                        if (project._id == _this.project._id) {
+                                            project.category = _this.project.category;
+                                            project.title = _this.project.title;
+                                            project.goal = _this.project.goal;
+                                            project.endDate = _this.project.endDate;
+                                            project.startDate = _this.project.startDate;
+                                            _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
+                                                _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
+                                                    _this.toastService.successToast('message.project_is_created');
+                                                    _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
+                                                });
+                                            });
+                                        }
+                                    });
+                                }
+                                // });
+                            }
+                            else {
+                                // if there is no basic structure is in local
+                                if (programsList.projects) {
+                                    console.log('programsList.projects', programsList.projects);
+                                    _this.project._id = programsList.projects.length + 1;
+                                    programsList.projects.push(_this.project);
+                                }
+                                else {
+                                    _this.project._id = 1;
+                                    var pro1 = [{
+                                            projects: []
+                                        }];
+                                    pro1[0].projects.push(_this.project);
+                                    projectsList = pro1;
+                                }
+                                _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
+                                    _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
+                                        _this.toastService.successToast('message.project_is_created');
+                                        _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
+                                    });
+                                });
+                            }
+                        }
+                        else {
+                            // if there is no basic structure is in local
+                            if (programsList[0].projects) {
+                                _this.project._id = programsList.projects.length + 1;
+                                programsList[0].projects.push(_this.project);
+                            }
+                            else {
+                                _this.project._id = 1;
+                                var pro1 = [{
+                                        projects: []
+                                    }];
+                                pro1[0].projects.push(_this.project);
+                                projectsList = pro1;
+                            }
+                            _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
+                                _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
+                                    _this.toastService.successToast('message.project_is_created');
+                                    _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
+                                });
                             });
-                        });
-                    }
+                        }
+                    });
                 }
                 else {
+                    // if there is no basic structure is in local
                     _this.project._id = 1;
                     var pro1 = [{
                             projects: []
                         }];
                     pro1[0].projects.push(_this.project);
                     projectsList = pro1;
-                    _this.storage.set('projects', projectsList).then(function (myProjects) {
+                    _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
                         _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
                             _this.toastService.successToast('message.project_is_created');
                             _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
