@@ -91,9 +91,7 @@ export class FilesPage implements OnInit {
             res.toInternalURL(),
             'application/pdf'
           ).then((res) => {
-            console.log(res, 'sucess');
           }).catch(err => {
-            console.log(err, 'error');
           });
         }).catch(err => {
           console.log('error in catch');

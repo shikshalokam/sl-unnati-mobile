@@ -171,7 +171,6 @@ export class LastQuarterReportsPage implements OnInit {
       this.mySchools[0].type = type;
       this.mySchools[0].isFullReport = false;
       this.mySchools[0].reportType = 'lastMonth';
-      console.log(this.mySchools[0], "  this.mySchools[0]");
       obj = this.mySchools[0];
     } else {
       obj1.type = type;
@@ -179,7 +178,6 @@ export class LastQuarterReportsPage implements OnInit {
       obj1.reportType = 'lastMonth';
       obj1.name = '';
       obj1.entityId = '';
-      console.log(obj1, "  this.mySchools[0]");
       obj = obj1;
     }
     this.myReportsService.getReportEvent(obj);

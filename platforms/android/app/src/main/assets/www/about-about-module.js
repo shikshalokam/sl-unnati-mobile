@@ -156,7 +156,6 @@ var AboutPage = /** @class */ (function () {
         var _this = this;
         this.storage.get('userTokens').then(function (data) {
             _this.userDetails = jwt_decode__WEBPACK_IMPORTED_MODULE_9__(data.access_token);
-            console.log(_this.userDetails, " this.userDetails");
         });
     };
     AboutPage.prototype.ngOnInit = function () {

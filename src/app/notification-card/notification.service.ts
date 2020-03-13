@@ -11,7 +11,8 @@ import { Platform } from '@ionic/angular';
 export class NotificationCardService {
     timeInterval;
     token;
-    public notificationCount = new Subject();
+    notificationCount = new Subject();
+    appUpdate = new Subject();
     constructor(public http: HttpClient,
         public storage: Storage,
         public platform: Platform) {
@@ -83,4 +84,7 @@ export class NotificationCardService {
         this.notificationCount.next(count);
     }
 
+    AppupdateEvent(data) {
+        this.appUpdate.next(data);
+    }
 }

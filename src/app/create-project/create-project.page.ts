@@ -175,7 +175,6 @@ export class CreateProjectPage implements OnInit {
           programId = env.programId;
         }
       });
-      console.log(programId, "programId ", environment);
       this.storage.get('latestProjects').then((projectsList: any) => {
         let mapped: boolean = false;
         if (projectsList) {
@@ -214,7 +213,6 @@ export class CreateProjectPage implements OnInit {
               } else {
                 // if there is no basic structure is in local
                 if (programsList.projects) {
-                  console.log('programsList.projects', programsList.projects);
                   this.project._id = programsList.projects.length + 1;
                   programsList.projects.push(this.project)
                 } else {

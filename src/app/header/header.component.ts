@@ -9,6 +9,10 @@ import { HomeService } from '../home/home.service';
 import { Platform } from '@ionic/angular';
 import { UpdateProfileService } from '../update-profile/update-profile.service';
 import { NetworkService } from '../network.service';
+import { AppConfigs } from '../app.config';
+
+// import { AppVersion } from '@ionic-native/app-version';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -35,7 +39,9 @@ export class HeaderComponent implements OnInit {
     public badge: Badge, public api: ApiProvider,
     public homeService: HomeService,
     public updateProfileService: UpdateProfileService,
-    public networkService: NetworkService) {
+    public networkService: NetworkService,
+    // public appVersion: AppVersion
+  ) {
     networkService.emit.subscribe(status => {
       this.connected = status;
     })
@@ -47,6 +53,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.storage.set('appUpdateVersions', AppConfigs.appVersion);
     this.isIos = this.platform.is('ios') ? true : false;
     this.getNotificationCount();
   }
@@ -64,6 +71,9 @@ export class HeaderComponent implements OnInit {
             this.storage.set('userTokens', userTokens).then(usertoken => {
               this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data: any) => {
                 console.log(data, " esp of notification count");
+                if (data.result.data && data.result.data.length) {
+                  this.initiatePopup(data.result.data);
+                }
                 this.notificationCardService.getCount(data.result.count);
               }, error => {
               })
@@ -89,5 +99,28 @@ export class HeaderComponent implements OnInit {
   }
   public menuToggle() {
     this.menuController.toggle();
+  }
+
+  public initiatePopup(data) {
+    console.log('in initiatePopup');
+    let isRejected;
+    data.forEach(element => {
+      if (element.action == "versionUpdate") {
+        // this.appVersion.getVersionNumber().then(currentVersion => {
+        if (element.payload.appVersion != parseInt(AppConfigs.appVersion)) {
+          this.storage.get('isRejected').then(data =>{
+            isRejected = data;
+          })
+          this.storage.get('appUpdateVersions').then(statusObj => {
+            if (statusObj && element.payload.appVersion != statusObj && !isRejected) {
+              this.notificationCardService.AppupdateEvent(element);
+            }
+          }).catch(error => {
+            this.notificationCardService.AppupdateEvent(element);
+          })
+        }
+        // })
+      }
+    });
   }
 }

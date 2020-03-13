@@ -183,9 +183,7 @@ var FilesPage = /** @class */ (function () {
             task.file.name = decodeURIComponent(task.file.name);
             _this.file.writeFile(_this.appFolderPath, task.file.name, blob, { replace: true }).then(function (res) {
                 _this.fileOpener.open(res.toInternalURL(), 'application/pdf').then(function (res) {
-                    console.log(res, 'sucess');
                 }).catch(function (err) {
-                    console.log(err, 'error');
                 });
             }).catch(function (err) {
                 console.log('error in catch');

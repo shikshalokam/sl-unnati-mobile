@@ -21,7 +21,7 @@ import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
 import { FcmProvider } from './fcm';
 import * as jwt_decode from "jwt-decode";
-
+import { NotificationCardService } from './notification-card/notification.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -30,19 +30,22 @@ export class AppComponent {
 
   @ViewChild(NavController) nav: NavController;
   @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
+  header;
+  showCloseButton: boolean = false;
+  body;
+  button;
+  appUpdate;
+  isActionable=''
+
   mappedProjectsToSync;
   myProjectsToSync;
   projectsToSync = [];
   oldProjectsToSync = [];
   subscription: Subscription;
   loading;
-  header;
   type = 'quarter';
   count = 100;
   page = 1;
-  body;
-  button;
-  isActionable;
   showUpdatePop: boolean = false;
   interval = interval(3600000);
   public title;
@@ -73,16 +76,24 @@ export class AppComponent {
     public homeService: HomeService,
     public loadingController: LoadingController,
     public toastService: ToastService,
-    public categoryViewService: CategoryViewService
+    public categoryViewService: CategoryViewService,
+    public notificationCardService: NotificationCardService
   ) {
     this.platform.ready().then(() => {
+      this.notificationCardService.appUpdate.subscribe(payload => {
+        console.log(payload, "payload");
+        if(payload){
+          this.showUpdatePop = true;
+          this.appUpdate = payload;
+          this.showCloseButton = true;
+        }
+      })
       this.homeService.tobeSync.subscribe(value => {
         this.prepareMappedProjectToSync();
       })
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
-          console.log('in constructor');
           this.getProfileData();
           this.subscription = this.interval.subscribe(val => {
             this.prepareMappedProjectToSync();
@@ -173,7 +184,7 @@ export class AppComponent {
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
-        console.log(this.router.url, s, "segments");
+        console.log(this.router.url, "this.router.url", s);
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
           //this.presentAlertConfirm();
           navigator['app'].exitApp();
@@ -602,7 +613,6 @@ export class AppComponent {
 
   // get profile data
   public getProfileData() {
-    console.log('in get profile');
     this.storage.get('userTokens').then(data => {
       if (data) {
         let userDetails;
@@ -640,7 +650,7 @@ export class AppComponent {
                             {
                               title: 'Profile Update',
                               icon: 'person',
-                              url: '/project-view/profile-update',
+                              url: '/project-view/update-profile',
                             },
                             {
                               title: 'About',
@@ -675,6 +685,5 @@ export class AppComponent {
         this.router.navigateByUrl('/login');
       }
     })
-
   }
 }

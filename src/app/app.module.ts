@@ -25,7 +25,6 @@ import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { DatePipe } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-//Google charts
 import { FCM } from '@ionic-native/fcm/ngx';
 import { FcmProvider } from './fcm';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
@@ -36,6 +35,9 @@ import { File } from '@ionic-native/file/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
+import { AppVersion } from '@ionic-native/app-version/ngx';
+import { SharedModule } from './shared.module';
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -49,6 +51,7 @@ export function createTranslateLoader(http: HttpClient) {
     FormsModule,
     ReactiveFormsModule,
     IonicModule.forRoot(),
+    SharedModule,
     AppRoutingModule,
     IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
@@ -76,8 +79,9 @@ export function createTranslateLoader(http: HttpClient) {
     FileTransferObject,
     File,
     FileChooser,
-    Camera, 
+    Camera,
     FilePath,
+    AppVersion,
     FileOpener,
     Base64,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

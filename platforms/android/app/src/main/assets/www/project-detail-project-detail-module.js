@@ -299,7 +299,6 @@ var ProjectDetailPage = /** @class */ (function () {
                     _this.checkDate();
                 }
             }
-            console.log('calling updateByProjects 205');
             _this.createProjectService.updateByProjects(_this.project);
         }, function (err) { return console.log('Error occurred while getting date: ', err); });
     };
@@ -392,28 +391,23 @@ var ProjectDetailPage = /** @class */ (function () {
     // update the task
     ProjectDetailPage.prototype.updateTask = function () {
         var _this = this;
-        console.log(this.project, "this.project");
         var cp = this.project;
         cp.isEdited = true;
         cp.lastUpdate = new Date();
-        console.log('calling updateByProjects 300');
         //  this.createProjectService.updateByProjects(this.project);
         var mapped = false;
         return this.storage.get('latestProjects').then(function (projectList) {
             projectList.forEach(function (projectsPrograms) {
                 if (projectsPrograms) {
                     projectsPrograms.projects.forEach(function (project, i) {
-                        console.log(cp, "cp");
                         if (project._id == cp._id) {
                             cp.isEdited = true;
                             projectsPrograms.projects[i] = cp;
-                            console.log('mapped', projectsPrograms.projects[i]);
                             mapped = true;
                         }
                     });
                 }
                 if (!mapped) {
-                    console.log('in mapped');
                     if (projectList[0].projects) {
                         projectList[0].projects.forEach(function (project, i) {
                             if (project._id == cp._id) {
@@ -428,11 +422,9 @@ var ProjectDetailPage = /** @class */ (function () {
                             }];
                         pro1[0].projects.push(_this.project);
                         projectList = pro1;
-                        console.log(projectList, 'in last else');
                     }
                 }
             });
-            console.log('going to sync', projectList);
             _this.storage.set('latestProjects', projectList).then(function (projects) {
                 _this.storage.set('newcreatedproject', _this.project).then(function (sucess) {
                     _this.storage.set('projectToBeView', _this.project).then(function (updatedProject) {
@@ -472,7 +464,6 @@ var ProjectDetailPage = /** @class */ (function () {
     ProjectDetailPage.prototype.updateCurrentProject = function (ct) {
         this.project.lastUpdate = new Date();
         this.project.isEdited = true;
-        console.log('calling updateByProjects 330');
         this.createProjectService.updateByProjects(this.project);
     };
     ProjectDetailPage.prototype.sortTasks = function () {

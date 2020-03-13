@@ -274,7 +274,6 @@ var CreateProjectPage = /** @class */ (function () {
                     programId_1 = env.programId;
                 }
             });
-            console.log(programId_1, "programId ", environment_1);
             this.storage.get('latestProjects').then(function (projectsList) {
                 var mapped = false;
                 if (projectsList) {
@@ -315,7 +314,6 @@ var CreateProjectPage = /** @class */ (function () {
                             else {
                                 // if there is no basic structure is in local
                                 if (programsList.projects) {
-                                    console.log('programsList.projects', programsList.projects);
                                     _this.project._id = programsList.projects.length + 1;
                                     programsList.projects.push(_this.project);
                                 }

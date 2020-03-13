@@ -135,7 +135,6 @@ var NewsfeedPage = /** @class */ (function () {
     return NewsfeedPage;
 }());
 
-"  ";
 
 
 /***/ })

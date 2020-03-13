@@ -111,7 +111,8 @@ var TaskBoardPage = /** @class */ (function () {
         var _this = this;
         this.ongoing = [];
         this.past = [];
-        this.storage.get('myprojects').then(function (projects) {
+        this.storage.get('latestProjects').then(function (projects) {
+            console.log(projects, "latest project");
             if (projects) {
                 projects.forEach(function (project) {
                     var count = 0;

@@ -23,7 +23,8 @@ export class TaskBoardPage {
   public getProjects() {
     this.ongoing = [];
     this.past = [];
-    this.storage.get('myprojects').then(projects => {
+    this.storage.get('latestProjects').then(projects => {
+      console.log(projects,"latest project");
       if (projects) {
         projects.forEach(project => {
           let count = 0;

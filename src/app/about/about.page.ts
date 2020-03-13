@@ -52,7 +52,6 @@ export class AboutPage implements OnInit {
   ionViewDidEnter() {
     this.storage.get('userTokens').then(data => {
       this.userDetails = jwt_decode(data.access_token);
-      console.log(this.userDetails, " this.userDetails");
     })
   }
   ngOnInit() {

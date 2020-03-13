@@ -31,6 +31,8 @@ export class UpdateProfilePage implements OnInit {
   schoolList;
   profile: any = {};
   stateList;
+  appUpdate='';
+  showCloseButton:boolean = false;
   body = 'message.thankyou_note';
   header = 'message.thankyou';
   button = 'button.continue';

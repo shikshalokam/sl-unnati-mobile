@@ -27,6 +27,8 @@ export class HomePage implements OnInit {
   connected: any = false;
   loggedIn: boolean = false;
   header;
+  appUpdate = '';
+  showCloseButton: boolean = false;
   body;
   button;
   isActionable;
@@ -108,7 +110,9 @@ export class HomePage implements OnInit {
         this.button = 'button.update';
         this.isActionable = '/project-view/update-profile';
         this.showUpdatePop = true;
-        let isPopUpShowen = localStorage.getItem('isPopUpShowen');
+
+        this.showCloseButton = true;
+        isPopUpShowen = localStorage.getItem('isPopUpShowen');
       } else {
         this.showUpdatePop = false;
       }
@@ -226,7 +230,6 @@ export class HomePage implements OnInit {
           }
         });
         if (count == 0) {
-          console.log(myProjects[0],"myProjects[0]");
           myProjects[0].projects.forEach(myProject => {
             if (count < 2) {
               if ((myProject.createdType == 'by self' || myProject.createdType == 'by reference') && myProject.isStarted && !myProject.isDeleted) {
