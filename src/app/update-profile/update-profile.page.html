@@ -31,32 +31,31 @@
       </ion-label>
       <!-- <input [type]="controls.input" [formControlName]="controls.label" /> -->
       <ion-input *ngIf="controls.input == 'text' && controls.visible" [type]="controls.input" name="{{controls.label}}"
-        placeholder={{controls.placeholder}} readonly={{!controls.editable}} value={{controls.value}}
-        [(ngModel)]="controls.value" [formControlName]="controls.field">
+        pattern={{controls.validation.regex}} placeholder={{controls.placeholder}} readonly={{!controls.editable}}
+        value={{controls.value}} [(ngModel)]="controls.value" [formControlName]="controls.field">
       </ion-input>
 
       <ion-input *ngIf="controls.input == 'number' && controls.visible" [type]="controls.input"
-        [pattern]="controls.validation.regex" [(ngModel)]="controls.value" [formControlName]="controls.field"
+        pattern={{controls.validation.regex}} [(ngModel)]="controls.value" [formControlName]="controls.field"
         placeholder={{controls.placeholder}} readonly={{!controls.editable}} value={{controls.value}}
         name="{{controls.label}}">
       </ion-input>
       <ion-select class="custom-select-box" *ngIf="controls.input == 'select' && controls.visible"
         [(ngModel)]="controls.value" name="{{controls.label}}" [formControlName]="controls.field"
-        placeholder={{controls.value?.label}} (ionChange)="getSubEntities($event,controls)">
+        placeholder={{controls.value?.label}} (ionChange)="getSubEntities($event)">
         <ion-select-option *ngFor="let state of controls.options" value="{{state.value}}"
           selected="state.value === controls.value.value">
           {{state.label}}</ion-select-option>
       </ion-select>
       <ng-container *ngIf="controls.input != 'multiselect'">
         <span class="required-field"
-          *ngIf="controls.validation.regex && dynamicForm.controls[controls.field].touched && dynamicForm.controls[controls.field].errors.required">
+          *ngIf="controls.validation.required && dynamicForm.controls[controls.field].touched && dynamicForm.controls[controls.field].errors.required">
           {{controls.label}} is required.
         </span>
         <span *ngIf="dynamicForm.controls[controls.field].errors[controls.validation.regex]" class="required-field">
           {{controls.label}} not valid, please enter valid {{controls.label}} .
         </span>
       </ng-container>
-      <!-- <input type="submit" [disabled]="!dynamicForm.valid"/> -->
       <ion-grid *ngIf="controls.input == 'multiselect'">
         <span style="font-size: 16px;
         font-weight: 600; text-transform: capitalize;">{{controls.label}} </span>

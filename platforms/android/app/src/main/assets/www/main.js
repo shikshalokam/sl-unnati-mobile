@@ -3031,7 +3031,7 @@ var FcmProvider = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-content>\n  <ion-item class=\"search-bar-custom\">\n    <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n    <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\" (keydown)=\"search()\">\n    </ion-input>\n    <!-- (keyup)=\"searchSchool(searchInput)\" -->\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor=\"let entity of data.options\">\n      <ion-label> {{entity.label}}</ion-label>\n      <ion-checkbox slot=\"end\" [(ngModel)]=\"entity.isChecked\"></ion-checkbox>\n    </ion-item>\n  </ion-list>\n</ion-content>\n\n<ion-footer>\n  <ion-toolbar>\n    <ion-row>\n      <ion-col size=\"6\">\n        <ion-button expand=\"block\" color=\"light\" (click)=\"close()\">{{'back' | translate}}</ion-button>\n      </ion-col>\n      <ion-col zise=\"6\">\n        <ion-button expand=\"block\" color=\"primary\" (click)=\"submit()\">{{'submit' | translate}}</ion-button>\n      </ion-col>\n    </ion-row>\n  </ion-toolbar>\n</ion-footer>"
+module.exports = "<ion-content>\n  <ion-item class=\"search-bar-custom\">\n    <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n    <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\" (keydown)=\"search()\">\n    </ion-input>\n    <!-- (keyup)=\"searchSchool(searchInput)\" -->\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor=\"let entity of  toBeSearch\">\n      <ion-label> {{entity.label}}</ion-label>\n      <ion-checkbox slot=\"end\" [(ngModel)]=\"entity.isChecked\"></ion-checkbox>\n    </ion-item>\n  </ion-list>\n</ion-content>\n\n<ion-footer>\n  <ion-toolbar>\n    <ion-row>\n      <ion-col size=\"6\">\n        <ion-button expand=\"block\" color=\"light\" (click)=\"close()\">{{'back' | translate}}</ion-button>\n      </ion-col>\n      <ion-col zise=\"6\">\n        <ion-button expand=\"block\" color=\"primary\" (click)=\"submit()\">{{'submit' | translate}}</ion-button>\n      </ion-col>\n    </ion-row>\n  </ion-toolbar>\n</ion-footer>"
 
 /***/ }),
 
@@ -3068,21 +3068,26 @@ var GetSubEntitiesPage = /** @class */ (function () {
     function GetSubEntitiesPage(modalController, updateProfileService) {
         this.modalController = modalController;
         this.updateProfileService = updateProfileService;
-        this.searchInput = '';
         this.page = 1;
         this.limit = 10;
     }
     GetSubEntitiesPage.prototype.ngOnInit = function () {
         var _this = this;
-        console.log(this.data, "data in get sub entities", this.data.value.length);
+        this.searchInput = this.searchInput;
+        console.log('searchInput', this.searchInput);
         if (this.data.value && this.data.value.length > 0) {
-            this.data.options.forEach(function (option) {
+            this.searchInput.forEach(function (option) {
+                option.isChecked = false;
                 _this.data.value.forEach(function (value) {
-                    console.log(value.value + '==' + option._id);
                     if (value.value == option._id) {
                         option.isChecked = true;
                     }
                 });
+            });
+        }
+        else {
+            this.searchInput.forEach(function (option) {
+                option.isChecked = false;
             });
         }
     };
@@ -3092,7 +3097,7 @@ var GetSubEntitiesPage = /** @class */ (function () {
     GetSubEntitiesPage.prototype.submit = function () {
         var _this = this;
         this.data.value = [];
-        this.data.options.forEach(function (entity) {
+        this.searchInput.forEach(function (entity) {
             if (entity.isChecked) {
                 var data = {
                     label: entity.label,
@@ -3111,7 +3116,7 @@ var GetSubEntitiesPage = /** @class */ (function () {
             if ((_this.page * _this.limit) < data.count) {
                 _this.page++;
             }
-            _this.data.options = data.result.data;
+            _this.searchInput = data.result.data;
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

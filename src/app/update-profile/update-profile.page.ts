@@ -77,16 +77,24 @@ export class UpdateProfilePage {
       const validationsArray = [];
       if (res.validation) {
         if (res.validation.required) {
-          validationsArray.push(
-            Validators.required
-          );
+          res.validation.name = "required",
+            validationsArray.push(
+              Validators.required
+            );
         }
         if (res.validation.regex) {
+          res.validation.name = "pattern";
           if (res.field == "phoneNumber") {
-            res.validation.regex = '^[0-9]{10}'
+            res.validation.regex = new RegExp("^[0-9]{10}");
+          }
+          if (res.field == "firstName") {
+            res.validation.regex = new RegExp("^[A-Za-z]+$");
+          }
+          if (res.field == "lastName") {
+            res.validation.regex = new RegExp("^[A-Za-z]+$");
           }
           if (res.field == "email") {
-            res.validation.regex = '/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'
+            res.validation.regex = new RegExp("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$");
           }
           validationsArray.push(
             Validators.pattern(res.validation.regex)
@@ -105,9 +113,8 @@ export class UpdateProfilePage {
     console.log(controls['email'], "email");
   }
 
-  public getSubEntities(event, data) {
-    console.log(event.detail.value.value, " this.profileFormData");
-    this.getImmediateChildren(event.detail.value.value);
+  public getSubEntities(event) {
+    this.getImmediateChildren(event.detail.value);
   }
   public getImmediateChildren(event) {
     if (this.connected) {
@@ -177,8 +184,15 @@ export class UpdateProfilePage {
       let obj = {
       }
       this.profileFormData.forEach(profile => {
-        if (profile)
+        if (profile.field == 'state') {
+          profile.options.forEach(option => {
+            if (option.value == profile.value) {
+              obj[profile.field] = option
+            }
+          });
+        } else {
           obj[profile.field] = profile.value
+        }
       });
       this.submitAttempt = false;
       let data = {
@@ -238,6 +252,23 @@ export class UpdateProfilePage {
       });
       modal.onDidDismiss().then((data: any) => {
         if (data.data) {
+          this.stateSubEntities[data.data.dependent].forEach(subEntity => {
+            console.log(subEntity, 'subEntity');
+            let mapped = false;
+            this.profileFormData.forEach(profile => {
+              console.log(mapped, 'mapped');
+              if (mapped) {
+                const index: number = this.profileFormData.indexOf(profile);
+                if (index !== -1) {
+                  this.profileFormData.splice(index, 1);
+                }
+              }
+              if (profile.field == subEntity) {
+                console.log(profile.field, "marking mapped as true")
+                mapped = true;
+              }
+            });
+          });
           this.getNextEntities(data.data);
         }
       })
@@ -323,6 +354,31 @@ export class UpdateProfilePage {
     const index: number = entityList.value.indexOf(entity);
     if (index !== -1) {
       entityList.value.splice(index, 1);
+
+    }
+    console.log(entityList, "entityList", entityList.value.length);
+    if (!entityList.value.length) {
+      console.log('entity list empty');
+      this.stateSubEntities[entityList.dependent].forEach(subEntity => {
+        console.log(subEntity, 'subEntity');
+        let mapped = false;
+        this.profileFormData.forEach(profile => {
+          console.log(mapped, 'mapped');
+          if (mapped) {
+            const index: number = this.profileFormData.indexOf(profile);
+            if (index !== -1) {
+              this.profileFormData.splice(index, 1);
+            }
+          }
+          if (profile.field == subEntity) {
+            console.log(profile.field, "marking mapped as true")
+            mapped = true;
+          }
+        });
+      });
+      console.log(this.profileFormData, "this.profileFormData outer if")
+    } else {
+      this.getNextEntities(entityList);
     }
   }
 }

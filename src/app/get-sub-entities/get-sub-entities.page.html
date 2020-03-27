@@ -6,7 +6,7 @@
     <!-- (keyup)="searchSchool(searchInput)" -->
   </ion-item>
   <ion-list>
-    <ion-item *ngFor="let entity of data.options">
+    <ion-item *ngFor="let entity of toBeSearch">
       <ion-label> {{entity.label}}</ion-label>
       <ion-checkbox slot="end" [(ngModel)]="entity.isChecked"></ion-checkbox>
     </ion-item>

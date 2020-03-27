@@ -8,7 +8,7 @@ import { UpdateProfileService } from '../update-profile/update-profile.service';
 })
 export class GetSubEntitiesPage implements OnInit {
   @Input() data;
-  searchInput = '';
+  searchInput;
   entity;
   page = 1;
   limit = 10;
@@ -18,15 +18,20 @@ export class GetSubEntitiesPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.data, "data in get sub entities", this.data.value.length);
-    if (this.data.value && this.data.value.length > 0) {
-      this.data.options.forEach(option => {
+    this.searchInput = this.data.options;
+    console.log('searchInput',this.searchInput);
+     if (this.data.value && this.data.value.length > 0) {
+      this.searchInput.forEach(option => {
+        option.isChecked = false;
         this.data.value.forEach(value => {
-          console.log(value.value + '==' + option._id)
           if (value.value == option._id) {
             option.isChecked = true;
           }
         });
+      });
+    } else {
+      this.searchInput.forEach(option => {
+        option.isChecked = false;
       });
     }
   }
@@ -36,7 +41,7 @@ export class GetSubEntitiesPage implements OnInit {
 
   public submit() {
     this.data.value = [];
-    this.data.options.forEach(entity => {
+    this.searchInput.forEach(entity => {
       if (entity.isChecked) {
         let data = {
           label: entity.label,
@@ -54,7 +59,7 @@ export class GetSubEntitiesPage implements OnInit {
       if ((this.page * this.limit) < data.count) {
         this.page++
       }
-      this.data.options = data.result.data;
+      this.searchInput = data.result.data;
     })
   }
 }
