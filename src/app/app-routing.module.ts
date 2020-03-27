@@ -46,6 +46,7 @@ const routes: Routes = [
   { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
   { path: 'update-profile', loadChildren: './update-profile/update-profile.module#UpdateProfilePageModule' },
   { path: 'tutorial-videos', loadChildren: './tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
+  { path: 'get-sub-entities', loadChildren: './get-sub-entities/get-sub-entities.module#GetSubEntitiesPageModule' },
 ];
 
 @NgModule({

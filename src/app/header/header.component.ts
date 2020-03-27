@@ -59,30 +59,12 @@ export class HeaderComponent implements OnInit {
   }
 
   public getNotificationCount(infinateScrollRefrnc?) {
-    this.storage.get('userTokens').then(data => {
-      if (data) {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.storage.set('userTokens', userTokens).then(usertoken => {
-              this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data: any) => {
-                console.log(data, " esp of notification count");
-                if (data.result.data && data.result.data.length) {
-                  this.initiatePopup(data.result.data);
-                }
-                this.notificationCardService.getCount(data.result.count);
-              }, error => {
-              })
-            }, error => {
-              // intentially left blank
-            })
-          }
-        })
+    this.notificationCardService.checkForNotificationApi().subscribe((data: any) => {
+      if (data.result.data && data.result.data.length) {
+        this.initiatePopup(data.result.data);
       }
+      this.notificationCardService.getCount(data.result.count);
+    }, error => {
     })
   }
   // Navigate to notification screen
@@ -102,13 +84,12 @@ export class HeaderComponent implements OnInit {
   }
 
   public initiatePopup(data) {
-    console.log('in initiatePopup');
     let isRejected;
     data.forEach(element => {
       if (element.action == "versionUpdate") {
         // this.appVersion.getVersionNumber().then(currentVersion => {
         if (element.payload.appVersion != parseInt(AppConfigs.appVersion)) {
-          this.storage.get('isRejected').then(data =>{
+          this.storage.get('isRejected').then(data => {
             isRejected = data;
           })
           this.storage.get('appUpdateVersions').then(statusObj => {

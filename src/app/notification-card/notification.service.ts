@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AppConfigs } from '../app.config'
+import { HttpClient } from '@angular/common/http';
+import { AppConfigs } from '../app.config';
 import { Subject } from 'rxjs/Subject';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
@@ -18,36 +18,16 @@ export class NotificationCardService {
         public platform: Platform) {
         //  this.startNotificationPooling();
     }
-    public getAllNotifications(token, pageCount, limit) {
-        let httpHeaders = new HttpHeaders({
-            'x-authenticated-user-token': token,
-            'app': 'unnati',
-            'apptype': 'improvement-project',
-            'os': this.platform.is('android') ? 'android' : 'ios'
-        })
-        return this.http.get(AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit, { headers: httpHeaders })
+    public getAllNotifications(pageCount, limit) {
+        return this.http.get(AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit)
     }
 
-    markAsRead(token, id) {
-        let httpHeaders = new HttpHeaders({
-            'x-authenticated-user-token': token,
-            'app': 'unnati',
-            'apptype': 'improvement-project',
-            'os': this.platform.is('android') ? 'android' : 'ios'
-        })
-        return this.http.get(AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.markAsRead + id + '?appName=unnati', { headers: httpHeaders })
+    markAsRead(id) {
+        return this.http.get(AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.markAsRead + id + '?appName=unnati')
     }
 
-    checkForNotificationApi(token) {
-        let httpHeaders = new HttpHeaders({
-            'x-authenticated-user-token': token,
-            'app': 'unnati',
-            'appName': "unnati",
-            'appVersion': AppConfigs.appVersion,
-            'apptype': 'improvement-project',
-            'os': this.platform.is('android') ? 'android' : 'ios'
-        })
-        return this.http.get(AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.getUnreadNotificationCount + '?appName=unnati', { headers: httpHeaders })
+    checkForNotificationApi() {
+        return this.http.get(AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.getUnreadNotificationCount + '?appName=unnati')
     }
     //   getMappedAssessment(notificationMeta) {
     //     switch (notificationMeta.payload.type) {
@@ -71,12 +51,12 @@ export class NotificationCardService {
         this.timeInterval = setInterval(() => {
             if (navigator.onLine) {
                 this.storage.get('userTokens').then(token => {
-                    this.checkForNotificationApi(token.access_token);
+                    this.checkForNotificationApi();
                 })
             }
         }, 12000);
         this.storage.get('userTokens').then(token => {
-            this.checkForNotificationApi(token.access_token);
+            this.checkForNotificationApi();
         })
     }
 

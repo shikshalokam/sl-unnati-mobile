@@ -174,35 +174,19 @@ var MyReportsPage = /** @class */ (function () {
     MyReportsPage.prototype.getReport = function (mySchools) {
         var _this = this;
         if (this.connected) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.toastService.startLoader('Loading Please wait');
-                            _this.myReportsService.getReportData(parsedData.access_token, mySchools).subscribe(function (data) {
-                                _this.toastService.stopLoader();
-                                if (data.status != 'failed') {
-                                    if (mySchools.type === 'share') {
-                                        _this.share(data);
-                                    }
-                                    else {
-                                        _this.toastService.stopLoader();
-                                        _this.download(data);
-                                    }
-                                }
-                            }, function (error) {
-                                _this.toastService.stopLoader();
-                            });
-                        });
-                        //resolve()
+            this.myReportsService.getReportData(mySchools).subscribe(function (data) {
+                _this.toastService.stopLoader();
+                if (data.status != 'failed') {
+                    if (mySchools.type === 'share') {
+                        _this.share(data);
                     }
-                }, function (error) {
-                });
+                    else {
+                        _this.toastService.stopLoader();
+                        _this.download(data);
+                    }
+                }
+            }, function (error) {
+                _this.toastService.stopLoader();
             });
         }
         else {
@@ -212,34 +196,18 @@ var MyReportsPage = /** @class */ (function () {
     MyReportsPage.prototype.getFullReport = function (mySchools) {
         var _this = this;
         if (this.connected) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.toastService.startLoader('Loading Please wait');
-                            _this.myReportsService.getFullReportData(parsedData.access_token, mySchools).subscribe(function (data) {
-                                _this.toastService.stopLoader();
-                                if (data.status != 'failed') {
-                                    if (mySchools.type === 'share') {
-                                        _this.share(data);
-                                    }
-                                    else {
-                                        _this.download(data);
-                                    }
-                                }
-                            }, function (error) {
-                                _this.toastService.stopLoader();
-                            });
-                        });
-                        //resolve()
+            this.myReportsService.getFullReportData(mySchools).subscribe(function (data) {
+                _this.toastService.stopLoader();
+                if (data.status != 'failed') {
+                    if (mySchools.type === 'share') {
+                        _this.share(data);
                     }
-                }, function (error) {
-                });
+                    else {
+                        _this.download(data);
+                    }
+                }
+            }, function (error) {
+                _this.toastService.stopLoader();
             });
         }
         else {

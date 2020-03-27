@@ -74,6 +74,7 @@ export class LastMonthReportsPage implements OnInit {
             };
             this.storage.set('userTokens', userTokens).then(usertoken => {
               this.myReportsService.getReports(userTokens.access_token, 'lastMonth').subscribe((data: any) => {
+                console.log(data,"resp");
                 this.report = data.data;
                 if (data.status != "failed") {
                   this.setupChart();
@@ -168,26 +169,11 @@ export class LastMonthReportsPage implements OnInit {
   }
   public getSchools() {
     if (this.connected) {
-      this.storage.get('userTokens').then(data => {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.storage.set('userTokens', userTokens).then(data => {
-              this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
-                if (data.status != 'failed') {
-                  this.mySchools = data.data;
-                }
-              }, error => { })
-            })
-            //resolve()
-          }
-        }, error => {
-        })
-      })
+      this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
+        if (data.status != 'failed') {
+          this.mySchools = data.data;
+        }
+      }, error => { })
     } else {
       this.toastService.errorToast('message.nerwork_connection_check');
     }
@@ -209,7 +195,6 @@ export class LastMonthReportsPage implements OnInit {
       obj1.entityId = '';
       obj = obj1;
     }
-    console.log(obj, "obj");
     this.myReportsService.getReportEvent(obj);
   }
 }

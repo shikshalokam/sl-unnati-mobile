@@ -29,28 +29,14 @@ export class NotificationsPage implements OnInit {
     // this.fetchAllNotifications();
   }
   fetchAllNotifications(infinateScrollRefrnc?) {
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.showSkeleton = true;
-            this.notificationCardService.getAllNotifications(userTokens.access_token, this.page, this.limit).subscribe((success: any) => {
-              this.totalCount = success.result.count;
-              // this.notificationCardService.getCount(this.totalCount);
-              this.notifications = this.notifications.concat(success.result.data);
-              this.showSkeleton = false;
-            }, error => {
-              this.showSkeleton = false;
-            })
-          }, error => {
-          })
-        }
-      })
+    this.showSkeleton = true;
+    this.notificationCardService.getAllNotifications(this.page, this.limit).subscribe((success: any) => {
+      this.totalCount = success.result.count;
+      // this.notificationCardService.getCount(this.totalCount);
+      this.notifications = this.notifications.concat(success.result.data);
+      this.showSkeleton = false;
+    }, error => {
+      this.showSkeleton = false;
     })
   }
 

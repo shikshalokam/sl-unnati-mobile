@@ -16,28 +16,16 @@ export class MyReportsService {
     constructor(public api: ApiProvider, public http: HttpClient, public currentUser: CurrentUserProvider, public storage: Storage) {
     }
     public getReports(data, state) {
-        let httpHeaders = new HttpHeaders({
-            'x-auth-token': data
-        })
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthViseReport?reportType=' + state, { headers: httpHeaders })
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthViseReport?reportType=' + state)
     }
     public getFullReports(token, state) {
-        let httpHeaders = new HttpHeaders({
-            'x-auth-token': token
-        })
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getDetailViewReport?reportType=' + state, { headers: httpHeaders })
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getDetailViewReport?reportType=' + state)
     }
-    public getReportData(token, entity) {
-        let httpHeaders = new HttpHeaders({
-            'x-auth-token': token
-        })
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthlyOrQuarterReportPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId, { headers: httpHeaders })
+    public getReportData(entity) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthlyOrQuarterReportPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
     }
-    public getFullReportData(token, entity) {
-        let httpHeaders = new HttpHeaders({
-            'x-auth-token': token
-        })
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getFullMonthlyOrQuarterPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId, { headers: httpHeaders })
+    public getFullReportData(entity) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getFullMonthlyOrQuarterPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
     }
     public share(data) {
         this.shareEvent.next(data)

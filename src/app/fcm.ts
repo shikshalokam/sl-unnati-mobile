@@ -162,29 +162,15 @@ export class FcmProvider {
    */
     public markAsRead(notificationMeta) {
         if (navigator.onLine) {
-            this.localStorage.get('userTokens').then(data => {
-                this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-                    let parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        let userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        this.localStorage.set('userTokens', userTokens).then(usertoken => {
-                            this.notificationCardService.markAsRead(userTokens.access_token, notificationMeta.id).subscribe(data => {
-                                notificationMeta.is_read = true;
-                                // this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
-                                //     // this.fetchAllNotifications();
-                                //     this.notificationCardService.getCount(data1.result.count);
-                                // }, error => {
-                                // })
-                            }, error => {
+            this.notificationCardService.markAsRead(notificationMeta.id).subscribe(data => {
+                notificationMeta.is_read = true;
+                // this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
+                //     // this.fetchAllNotifications();
+                //     this.notificationCardService.getCount(data1.result.count);
+                // }, error => {
+                // })
+            }, error => {
 
-                            })
-                        }, error => {
-                        })
-                    }
-                })
             })
         } else {
             //this.errorToast('Please check your internet connection.');

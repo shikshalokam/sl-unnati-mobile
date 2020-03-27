@@ -24,26 +24,31 @@ export class TaskBoardPage {
     this.ongoing = [];
     this.past = [];
     this.storage.get('latestProjects').then(projects => {
-      console.log(projects,"latest project");
-      if (projects) {
-        projects.forEach(project => {
-          let count = 0;
-          if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
-            project.tasks.forEach(task => {
-              if (task.status == 'Completed' || task.status == 'completed') {
-                if (count == 0) {
-                  this.ongoing.push(task);
-                  count++;
+      projects.forEach(program => {
+        console.log(program, "program");
+      });
+
+      projects.forEach(programsList => {
+        if (programsList.projects) {
+          programsList.projects.forEach(project => {
+            let count = 0;
+            if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
+              project.tasks.forEach(task => {
+                if (task.status == 'Completed' || task.status == 'completed') {
+                  if (count == 0) {
+                    this.ongoing.push(task);
+                    count++;
+                  } else {
+                    this.past.push(task);
+                  }
                 } else {
-                  this.past.push(task);
+                  this.ongoing.push(task);
                 }
-              } else {
-                this.ongoing.push(task);
-              }
-            });
-          }
-        });
-      }
+              });
+            }
+          });
+        }
+      });
     })
   }
   public selectTab(tab) {

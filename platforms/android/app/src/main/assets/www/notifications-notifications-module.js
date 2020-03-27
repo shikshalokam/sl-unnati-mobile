@@ -121,28 +121,14 @@ var NotificationsPage = /** @class */ (function () {
     };
     NotificationsPage.prototype.fetchAllNotifications = function (infinateScrollRefrnc) {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens_1 = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
-                        _this.showSkeleton = true;
-                        _this.notificationCardService.getAllNotifications(userTokens_1.access_token, _this.page, _this.limit).subscribe(function (success) {
-                            _this.totalCount = success.result.count;
-                            // this.notificationCardService.getCount(this.totalCount);
-                            _this.notifications = _this.notifications.concat(success.result.data);
-                            _this.showSkeleton = false;
-                        }, function (error) {
-                            _this.showSkeleton = false;
-                        });
-                    }, function (error) {
-                    });
-                }
-            });
+        this.showSkeleton = true;
+        this.notificationCardService.getAllNotifications(this.page, this.limit).subscribe(function (success) {
+            _this.totalCount = success.result.count;
+            // this.notificationCardService.getCount(this.totalCount);
+            _this.notifications = _this.notifications.concat(success.result.data);
+            _this.showSkeleton = false;
+        }, function (error) {
+            _this.showSkeleton = false;
         });
     };
     NotificationsPage.prototype.loadMore = function () {

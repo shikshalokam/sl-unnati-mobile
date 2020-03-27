@@ -186,10 +186,8 @@ var FilesPage = /** @class */ (function () {
                 }).catch(function (err) {
                 });
             }).catch(function (err) {
-                console.log('error in catch');
             });
         }).catch(function (err) {
-            console.log('error');
         });
     };
     FilesPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

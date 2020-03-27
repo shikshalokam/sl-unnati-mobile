@@ -149,24 +149,9 @@ var MyschoolsPage = /** @class */ (function () {
     MyschoolsPage.prototype.getSchools = function () {
         var _this = this;
         if (this.connected) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.mySchoolsService.getSchools(parsedData.access_token, _this.count, _this.page).subscribe(function (data) {
-                                _this.mySchools = data.data;
-                            }, function (error) { });
-                        });
-                        //resolve()
-                    }
-                }, function (error) {
-                });
-            });
+            this.mySchoolsService.getSchools(this.count, this.page).subscribe(function (data) {
+                _this.mySchools = data.data;
+            }, function (error) { });
         }
         else {
             this.networkService.networkErrorToast();
@@ -210,27 +195,13 @@ var MyschoolsPage = /** @class */ (function () {
         this.connected = localStorage.getItem("networkStatus");
         var connected = navigator.onLine;
         if (connected) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.mySchoolsService.searchScool(parsedData.access_token, keyword).subscribe(function (data) {
-                                _this.mySchools = data.data;
-                                _this.noSchools = false;
-                                if (data.data.length == 0) {
-                                    _this.noSchools = true;
-                                }
-                            });
-                        });
-                        //resolve()
-                    }
-                }, function (error) {
-                });
+            this.mySchoolsService.searchScool(keyword).subscribe(function (data) {
+                _this.mySchools = data.data;
+                _this.noSchools = false;
+                if (data.data.length == 0) {
+                    _this.noSchools = true;
+                }
+            }, function (error) {
             });
         }
         else {
@@ -242,25 +213,11 @@ var MyschoolsPage = /** @class */ (function () {
         var _this = this;
         event.target.complete();
         //getReports(data,limit,page)
-        this.storage.get('userTokens').then(function (data) {
-            _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens_1 = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
-                        _this.mySchoolsService.getSchools(userTokens_1.access_token, _this.count, _this.page).subscribe(function (data) {
-                            _this.page = _this.page + 1;
-                            event.target.disabled = true;
-                            _this.mySchools.push(data.data);
-                        }, function (error) {
-                        });
-                    }, function (error) {
-                    });
-                }
-            });
+        this.mySchoolsService.getSchools(this.count, this.page).subscribe(function (data) {
+            _this.page = _this.page + 1;
+            event.target.disabled = true;
+            _this.mySchools.push(data.data);
+        }, function (error) {
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

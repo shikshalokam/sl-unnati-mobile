@@ -177,11 +177,13 @@ var AboutPage = /** @class */ (function () {
         this.login.doLogout().then(function (data) {
             _this.badge.clear();
             _this.login.loggedIn('false');
+            console.log('navigation lohin 74 about');
             _this.router.navigateByUrl('/login');
         }, function (error) {
             //  alert(error + "Logout error") 
         });
         if (!localStorage.getItem("token")) {
+            console.log('navigation lohin 80 about');
             this.router.navigateByUrl('/login');
         }
     };

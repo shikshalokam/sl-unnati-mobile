@@ -227,26 +227,11 @@ var FullreportsPage = /** @class */ (function () {
     FullreportsPage.prototype.getSchools = function () {
         var _this = this;
         if (this.connected) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.mySchoolsService.getSchools(parsedData.access_token, _this.count, _this.page).subscribe(function (data) {
-                                if (data.status != 'failed') {
-                                    _this.mySchools = data.data;
-                                }
-                            }, function (error) { });
-                        });
-                        //resolve()
-                    }
-                }, function (error) {
-                });
-            });
+            this.mySchoolsService.getSchools(this.count, this.page).subscribe(function (data) {
+                if (data.status != 'failed') {
+                    _this.mySchools = data.data;
+                }
+            }, function (error) { });
         }
         else {
             this.toastService.errorToast('message.nerwork_connection_check');

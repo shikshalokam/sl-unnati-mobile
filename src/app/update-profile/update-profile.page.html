@@ -4,8 +4,8 @@
 </ion-header>
 <ion-content class="ion-padding">
   <div *ngIf="showUpdatePop">
-    <app-custom-popup [header]="header" [showCloseButton]="showCloseButton" [appUpdate]="appUpdate" [body]="body" [button]="button" [isActionable]="isActionable"
-      [showPopup]="true">
+    <app-custom-popup [header]="header" [showCloseButton]="showCloseButton" [appUpdate]="appUpdate" [body]="body"
+      [button]="button" [isActionable]="isActionable" [showPopup]="true">
     </app-custom-popup>
   </div>
   <div class="profile-card">
@@ -23,126 +23,92 @@
   </div>
   <h5 class="required-field" *ngIf="submitAttempt" style="padding-left:15px;">
     {{'create_project.fileds_mandatory' | translate}}</h5>
-  <form [formGroup]="profileForm" style="margin-bottom: 2em;">
-    <ion-item class="custom-ion-item">
+  <form [formGroup]="dynamicForm" *ngIf="showForm && profileFormData">
+    <ion-item class="custom-ion-item" *ngFor="let controls of profileFormData">
       <ion-label class="custom-label" position="floating"
-        [ngClass]="{'required-field':submitAttempt && !profile.firstName}">{{'profile_update.fname' | translate}}
+        [ngClass]="{'required-field':submitAttempt && controls.validation.required}"
+        *ngIf="controls.visible && controls.input != 'multiselect' "> {{controls.label}}
       </ion-label>
-      <ion-input formControlName="fname" type="text" placeholder="" [(ngModel)]="profile.firstName">
+      <!-- <input [type]="controls.input" [formControlName]="controls.label" /> -->
+      <ion-input *ngIf="controls.input == 'text' && controls.visible" [type]="controls.input" name="{{controls.label}}"
+        placeholder={{controls.placeholder}} readonly={{!controls.editable}} value={{controls.value}}
+        [(ngModel)]="controls.value" [formControlName]="controls.field">
       </ion-input>
-    </ion-item>
-    <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating"
-        [ngClass]="{'required-field':submitAttempt && !profile.lastName}">{{'profile_update.lname' | translate}}
-      </ion-label>
-      <ion-input formControlName="lname" type="text" [(ngModel)]="profile.lastName" placeholder="">
+
+      <ion-input *ngIf="controls.input == 'number' && controls.visible" [type]="controls.input"
+        [pattern]="controls.validation.regex" [(ngModel)]="controls.value" [formControlName]="controls.field"
+        placeholder={{controls.placeholder}} readonly={{!controls.editable}} value={{controls.value}}
+        name="{{controls.label}}">
       </ion-input>
-    </ion-item>
-    <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating"
-        [ngClass]="{'required-field':submitAttempt && !profile.emailId && !profile.phoneNumber}">
-        {{'profile_update.email_id' | translate}}
-      </ion-label>
-      <ion-input formControlName="emailId" type="text" [(ngModel)]="profile.emailId"
-        placeholder="{{'profile_update.email_placeholder' | translate}}">
-      </ion-input>
-    </ion-item>
-    <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating"
-        [ngClass]="{'required-field':submitAttempt && !profile.emailId && !profile.phoneNumber}">
-        {{'profile_update.phone_number' | translate}}</ion-label>
-      <ion-input formControlName="phoneNumber" type="text" [(ngModel)]="profile.phoneNumber"
-        placeholder="{{'profile_update.phone_placeholder' | translate}}">
-      </ion-input>
-    </ion-item>
-    <ion-item class="custom-ion-item" *ngIf="stateList">
-      <ion-label class="custom-select" position="floating"
-        [ngClass]="{'required-field':submitAttempt && !profile.state}">{{'profile_update.state' | translate}}
-      </ion-label>
-      <ion-select formControlName="state" class="custom-select-box" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.state"
-        [class.invalid]="!profileForm.controls.state.valid && (profileForm.controls.state.dirty || submitAttempt)">
-        <ion-select-option *ngFor="let state of stateList" value="{{state._id}}" selected="state._id === profile.state">
-          {{state.name}}</ion-select-option>
+      <ion-select class="custom-select-box" *ngIf="controls.input == 'select' && controls.visible"
+        [(ngModel)]="controls.value" name="{{controls.label}}" [formControlName]="controls.field"
+        placeholder={{controls.value?.label}} (ionChange)="getSubEntities($event,controls)">
+        <ion-select-option *ngFor="let state of controls.options" value="{{state.value}}"
+          selected="state.value === controls.value.value">
+          {{state.label}}</ion-select-option>
       </ion-select>
-    </ion-item>
-    <ion-item class="custom-ion-item" *ngIf="districtList">
-      <ion-label class="custom-select" position="floating">
-        {{'profile_update.district' | translate}}</ion-label>
-      <ion-select formControlName="district" class="custom-select-box" type="text" placeholder=""
-        [(ngModel)]="profile.district" (ionChange)="getImmediateChildren($event)">
-        <ion-select-option *ngFor="let district of districtList" value="{{district._id}}"
-          selected="district._id === profile.district">{{district.name}}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item class="custom-ion-item" *ngIf="blockList">
-      <ion-label class="custom-select" position="floating">
-        {{'profile_update.block' | translate}}</ion-label>
-      <ion-select formControlName="block" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.block">
-        <ion-select-option *ngFor="let block of blockList" value="{{block._id}}" selected="block._id === profile.block">
-          {{block.name}}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item class="custom-ion-item" *ngIf="zoneList">
-      <ion-label class="custom-label" position="floating">
-        {{'profile_update.zone' | translate}}</ion-label>
-      <ion-select formControlName="zone" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.zone">
-        <ion-select-option *ngFor="let zone of zoneList" value="{{zone._id}}" selected="zone._id === profile.zone">
-          {{zone.name}}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item class="custom-ion-item" *ngIf="clusterList">
-      <ion-label class="custom-label" position="floating">
-        {{'profile_update.cluster' | translate}}</ion-label>
-      <ion-select formControlName="cluster" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.cluster">
-        <ion-select-option *ngFor="let cluster of clusterList" value="{{cluster._id}}"
-          selected="cluster._id === profile.cluster">{{cluster.name}}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item class="custom-ion-item" *ngIf="talukList">
-      <ion-label class="custom-select" position="floating">
-        {{'profile_update.taluka' | translate}}</ion-label>
-      <ion-select formControlName="taluka" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.taluka">
-        <ion-select-option *ngFor="let taluka of talukList" value="{{taluka._id}}"
-          selected="taluka._id === profile.taluka">{{taluka.hub}}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item class="custom-ion-item" *ngIf="hubList">
-      <ion-label class="custom-select" position="floating">
-        {{'profile_update.hub' | translate}}</ion-label>
-      <ion-select formControlName="hub" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.hub">
-        <ion-select-option *ngFor="let hub of hubList" value="{{hub._id}}" selected="hub._id === profile.hub">
-          {{school.hub}}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item class="custom-ion-item" *ngIf="schoolList">
-      <ion-label class="custom-select" position="floating">
-        {{'profile_update.school' | translate}}</ion-label>
-      <ion-select formControlName="school" class="custom-select-box" type="text" placeholder=""
-        (ionChange)="getImmediateChildren($event)" [(ngModel)]="profile.school">
-        <ion-select-option *ngFor="let school of schoolList" value="{{school._id}}"
-          selected="school._id === profile.school">{{school.name}}
-        </ion-select-option>
-      </ion-select>
+      <ng-container *ngIf="controls.input != 'multiselect'">
+        <span class="required-field"
+          *ngIf="controls.validation.regex && dynamicForm.controls[controls.field].touched && dynamicForm.controls[controls.field].errors.required">
+          {{controls.label}} is required.
+        </span>
+        <span *ngIf="dynamicForm.controls[controls.field].errors[controls.validation.regex]" class="required-field">
+          {{controls.label}} not valid, please enter valid {{controls.label}} .
+        </span>
+      </ng-container>
+      <!-- <input type="submit" [disabled]="!dynamicForm.valid"/> -->
+      <ion-grid *ngIf="controls.input == 'multiselect'">
+        <span style="font-size: 16px;
+        font-weight: 600; text-transform: capitalize;">{{controls.label}} </span>
+        <ion-row *ngIf="controls.input == 'multiselect' && controls.visible" class="radio-grp">
+          <ion-radio-group value="list">
+            <ion-col size="6">
+              <ion-item>
+                <ion-label>From predefined list</ion-label>
+                <ion-radio slot="start" value="list" (ionSelect)="radioChecked(controls,'list')"
+                  [disabled]="!controls.options"></ion-radio>
+              </ion-item>
+            </ion-col>
+            <ion-col size="6">
+              <ion-item>
+                <ion-label>Others</ion-label>
+                <ion-radio slot="start" value="others" (ionSelect)="radioChecked(controls,'others')"
+                  [disabled]="!controls.options"></ion-radio>
+              </ion-item>
+            </ion-col>
+          </ion-radio-group>
+        </ion-row>
+        <div *ngIf="controls.value && controls.selectedType == 'list'">
+          <ion-chip *ngFor="let chip of controls.value">
+            <span *ngIf="chip.label"> {{chip?.label}} </span>
+            <ion-icon name="close-circle" (click)="removeEntity(chip,controls)"></ion-icon>
+          </ion-chip>
+          <ion-chip (click)="selectEntity(controls)">
+            <span color="primary">Add</span>
+            <ion-icon name="add-circle" color="primary"></ion-icon>
+          </ion-chip>
+        </div>
+        <ion-item *ngIf="controls.selectedType == 'others'">
+          <ion-input type="text" placeholder="Enter here..." [(ngModel)]="controls.others"
+            [ngModelOptions]="{standalone: true}">
+          </ion-input>
+          <ion-icon name="close" slot="end" (click)="reset(controls)"></ion-icon>
+          <ion-icon name="checkmark" slot="end" (click)="submitOthers(controls)"></ion-icon>
+        </ion-item>
+        <ion-item *ngIf="controls.selectedType == 'list' && !controls.value" (click)="selectEntity(controls)">
+          <ion-input type="text" placeholder="Enter here..." readonly>
+          </ion-input>
+        </ion-item>
+      </ion-grid>
     </ion-item>
     <div class="profile-actions">
-      <ion-button expand="block" (click)=saveInfo()>
+      <!-- [disabled]="!dynamicForm.valid" -->
+      <ion-button expand="block" (click)="saveInfo()">
         {{'button.save_info' | translate}}
       </ion-button>
     </div>
     <div class="profile-actions">
-      <ion-button expand="block" (click)=cancel()>
+      <ion-button expand="block" (click)="cancel()" type="submit">
         {{'button.cancel' | translate}}
       </ion-button>
     </div>

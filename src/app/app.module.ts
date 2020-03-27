@@ -11,7 +11,7 @@ import { PopoverComponent } from './popover/popover.component';
 import { CurrentUserProvider } from './current-user';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS, } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -37,13 +37,14 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { SharedModule } from './shared.module';
-
+import { TokenInterceptor } from './interceptors/token.interceptor';
+import { GetSubEntitiesPage } from './get-sub-entities/get-sub-entities.page';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 @NgModule({
-  declarations: [AppComponent, PopoverComponent],
-  entryComponents: [PopoverComponent],
+  declarations: [AppComponent, PopoverComponent,GetSubEntitiesPage],
+  entryComponents: [PopoverComponent, GetSubEntitiesPage],
   imports: [
     BrowserModule,
     HttpModule,
@@ -85,6 +86,11 @@ export function createTranslateLoader(http: HttpClient) {
     FileOpener,
     Base64,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
     FCM,
     FcmProvider,
     LocalNotifications, Badge

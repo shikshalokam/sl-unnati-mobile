@@ -94,10 +94,8 @@ export class FilesPage implements OnInit {
           }).catch(err => {
           });
         }).catch(err => {
-          console.log('error in catch');
         });
       }).catch(err => {
-        console.log('error');
       });
   }
 }

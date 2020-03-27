@@ -895,6 +895,10 @@ var map = {
 		"common",
 		"fullreports-fullreports-module"
 	],
+	"./get-sub-entities/get-sub-entities.module": [
+		"./src/app/get-sub-entities/get-sub-entities.module.ts",
+		"get-sub-entities-get-sub-entities-module"
+	],
 	"./home/home.module": [
 		"./src/app/home/home.module.ts",
 		"common",
@@ -1178,6 +1182,7 @@ var routes = [
     { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
     { path: 'update-profile', loadChildren: './update-profile/update-profile.module#UpdateProfilePageModule' },
     { path: 'tutorial-videos', loadChildren: './tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
+    { path: 'get-sub-entities', loadChildren: './get-sub-entities/get-sub-entities.module#GetSubEntitiesPageModule' },
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -1307,7 +1312,6 @@ var AppComponent = /** @class */ (function () {
         this.isConnected = localStorage.getItem('networkStatus');
         this.platform.ready().then(function () {
             _this.notificationCardService.appUpdate.subscribe(function (payload) {
-                console.log(payload, "payload");
                 if (payload) {
                     _this.showUpdatePop = true;
                     _this.appUpdate = payload;
@@ -1320,7 +1324,50 @@ var AppComponent = /** @class */ (function () {
             _this.loginService.emit.subscribe(function (value) {
                 _this.loggedInUser = value;
                 if (_this.loggedInUser) {
-                    _this.getProfileData();
+                    _this.storage.get('allowProfileUpdateForm').then(function (data) {
+                        if (data) {
+                            _this.appPages = [
+                                {
+                                    title: 'Home',
+                                    url: '/project-view/home',
+                                    icon: 'home'
+                                },
+                                {
+                                    title: 'Sync',
+                                    icon: 'sync',
+                                    url: '',
+                                },
+                                {
+                                    title: 'Tutorial Video',
+                                    icon: 'play',
+                                    url: '/project-view/tutorial-videos',
+                                },
+                                {
+                                    title: 'Profile Update',
+                                    icon: 'person',
+                                    url: '/project-view/update-profile',
+                                },
+                                {
+                                    title: 'About',
+                                    url: '/project-view/about',
+                                    icon: 'information-circle'
+                                },
+                                {
+                                    title: 'Settings',
+                                    icon: 'md-settings',
+                                    children: [
+                                        {
+                                            title: 'Languages',
+                                            icon: 'globe'
+                                        },
+                                    ]
+                                }
+                            ];
+                        }
+                        else {
+                            _this.getProfileData();
+                        }
+                    });
                     _this.subscription = _this.interval.subscribe(function (val) {
                         _this.prepareMappedProjectToSync();
                     });
@@ -1341,6 +1388,11 @@ var AppComponent = /** @class */ (function () {
                             title: 'Tutorial Video',
                             icon: 'play',
                             url: '/project-view/tutorial-videos',
+                        },
+                        {
+                            title: 'Profile Update',
+                            icon: 'person',
+                            url: '/project-view/update-profile',
                         },
                         {
                             title: 'About',
@@ -1370,12 +1422,17 @@ var AppComponent = /** @class */ (function () {
         var _this = this;
         this.platform.ready().then(function () {
             _this.getOldDataToSync();
-            if (localStorage.getItem("token") != null) {
-                _this.router.navigateByUrl('/project-view/home');
-            }
-            else {
-                _this.router.navigateByUrl('/login');
-            }
+            _this.storage.get('userTokens').then(function (data) {
+                console.log('data checking user 146', data);
+                if (data != null) {
+                    console.log('/project-view/home');
+                    _this.router.navigateByUrl('/project-view/home');
+                }
+                else {
+                    console.log('/login');
+                    _this.router.navigateByUrl('/login');
+                }
+            });
             if (!_this.isConnected && !navigator.onLine) {
                 _this.networkService.networkErrorToast();
             }
@@ -1507,12 +1564,6 @@ var AppComponent = /** @class */ (function () {
                     }
                 }
             });
-            if (localStorage.getItem("token") != null) {
-                _this.router.navigateByUrl('/project-view/home');
-            }
-            else {
-                _this.router.navigateByUrl('/login');
-            }
             _this.hideSplasher();
             // this.splashScreen.hide();
         });
@@ -1672,48 +1723,22 @@ var AppComponent = /** @class */ (function () {
         var _this = this;
         // if (this.isConnected) {
         if (this.projectsToSync.length > 0) {
-            this.storage.get('userTokens').then(function (data) {
-                if (data) {
-                    _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                        var parsedData = JSON.parse(data._body);
-                        if (parsedData && parsedData.access_token) {
-                            var userTokens = {
-                                access_token: parsedData.access_token,
-                                refresh_token: parsedData.refresh_token,
-                            };
-                            _this.storage.set('userTokens', userTokens).then(function (data) {
-                                var projects = {
-                                    projects: _this.projectsToSync
-                                };
-                                _this.toastService.startLoader('Your data is syncing');
-                                _this.projectService.sync(projects, data.access_token).subscribe(function (data) {
-                                    _this.toastService.stopLoader();
-                                    if (data.status === "failed") {
-                                        _this.toastService.errorToast(data.message);
-                                    }
-                                    else if (data.status == "success" || data.status == "succes") {
-                                        _this.syncUpdateInLocal(data.allProjects.data);
-                                        _this.storage.get('myprojects').then(function (myProjects) {
-                                            if (myProjects) {
-                                                _this.storage.set('myprojects', '').then(function (myprojects) { });
-                                            }
-                                        });
-                                    }
-                                }, function (error) {
-                                    _this.toastService.stopLoader();
-                                });
-                            });
-                        }
-                    }, function (error) {
-                        if (error.status === 0) {
-                            _this.router.navigateByUrl('/login');
-                            _this.toastService.stopLoader();
+            var projects = {
+                projects: this.projectsToSync
+            };
+            this.toastService.startLoader('Your data is syncing');
+            this.projectService.sync(projects).subscribe(function (data) {
+                _this.toastService.stopLoader();
+                if (data.status === "failed") {
+                    _this.toastService.errorToast(data.message);
+                }
+                else if (data.status == "success" || data.status == "succes") {
+                    _this.syncUpdateInLocal(data.allProjects.data);
+                    _this.storage.get('myprojects').then(function (myProjects) {
+                        if (myProjects) {
+                            _this.storage.set('myprojects', '').then(function (myprojects) { });
                         }
                     });
-                }
-                else {
-                    _this.router.navigateByUrl('/login');
-                    _this.toastService.stopLoader();
                 }
             }, function (error) {
                 _this.toastService.stopLoader();
@@ -1777,42 +1802,20 @@ var AppComponent = /** @class */ (function () {
         var _this = this;
         if (this.isConnected) {
             if (oldProjectsToSync.length > 0) {
-                this.storage.get('userTokens').then(function (data) {
-                    if (data) {
-                        _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                            var parsedData = JSON.parse(data._body);
-                            if (parsedData && parsedData.access_token) {
-                                var userTokens = {
-                                    access_token: parsedData.access_token,
-                                    refresh_token: parsedData.refresh_token,
-                                };
-                                _this.storage.set('userTokens', userTokens).then(function (data) {
-                                    var projects = {
-                                        projects: oldProjectsToSync
-                                    };
-                                    _this.projectService.oldDataSync(projects, data.access_token).subscribe(function (data) {
-                                        if (data.status === "failed") {
-                                            _this.toastService.errorToast(data.message);
-                                        }
-                                        else if (data.status == "success" || data.status == "succes") {
-                                            _this.syncUpdateInLocal(data.allProjects.data);
-                                            _this.storage.set('projects', '').then(function (myprojects) {
-                                            });
-                                        }
-                                    }, function (error) {
-                                        _this.toastService.errorToast(error.message);
-                                    });
-                                });
-                            }
-                        }, function (error) {
-                            if (error.status === 0) {
-                                _this.router.navigateByUrl('/login');
-                            }
+                var projects = {
+                    projects: oldProjectsToSync
+                };
+                this.projectService.oldDataSync(projects).subscribe(function (data) {
+                    if (data.status === "failed") {
+                        _this.toastService.errorToast(data.message);
+                    }
+                    else if (data.status == "success" || data.status == "succes") {
+                        _this.syncUpdateInLocal(data.allProjects.data);
+                        _this.storage.set('projects', '').then(function (myprojects) {
                         });
                     }
-                    else {
-                        _this.router.navigateByUrl('/login');
-                    }
+                }, function (error) {
+                    _this.toastService.errorToast(error.message);
                 });
             }
         }
@@ -1824,42 +1827,20 @@ var AppComponent = /** @class */ (function () {
         var _this = this;
         if (this.isConnected) {
             if (oldProjectsToSync.length > 0) {
-                this.storage.get('userTokens').then(function (data) {
-                    if (data) {
-                        _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                            var parsedData = JSON.parse(data._body);
-                            if (parsedData && parsedData.access_token) {
-                                var userTokens = {
-                                    access_token: parsedData.access_token,
-                                    refresh_token: parsedData.refresh_token,
-                                };
-                                _this.storage.set('userTokens', userTokens).then(function (data) {
-                                    var projects = {
-                                        projects: oldProjectsToSync
-                                    };
-                                    _this.projectService.oldDataSync(projects, data.access_token).subscribe(function (data) {
-                                        if (data.status === "failed") {
-                                            _this.toastService.errorToast(data.message);
-                                        }
-                                        else if (data.status == "success" || data.status == "succes") {
-                                            _this.syncUpdateInLocal(data.allProjects.data);
-                                            _this.storage.set('myprojects', '').then(function (myprojects) {
-                                            });
-                                        }
-                                    }, function (error) {
-                                        _this.toastService.errorToast(error.message);
-                                    });
-                                });
-                            }
-                        }, function (error) {
-                            if (error.status === 0) {
-                                _this.router.navigateByUrl('/login');
-                            }
+                var projects = {
+                    projects: oldProjectsToSync
+                };
+                this.projectService.oldDataSync(projects).subscribe(function (data) {
+                    if (data.status === "failed") {
+                        _this.toastService.errorToast(data.message);
+                    }
+                    else if (data.status == "success" || data.status == "succes") {
+                        _this.syncUpdateInLocal(data.allProjects.data);
+                        _this.storage.set('myprojects', '').then(function (myprojects) {
                         });
                     }
-                    else {
-                        _this.router.navigateByUrl('/login');
-                    }
+                }, function (error) {
+                    _this.toastService.errorToast(error.message);
                 });
             }
         }
@@ -1890,75 +1871,61 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.getProfileData = function () {
         var _this = this;
         this.storage.get('userTokens').then(function (data) {
+            console.log(data, "data ssss");
             if (data) {
                 var userDetails_1;
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens_1 = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens_1).then(function (data) {
-                            _this.storage.get('userTokens').then(function (data) {
-                                userDetails_1 = jwt_decode__WEBPACK_IMPORTED_MODULE_20__(data.access_token);
-                                _this.projectService.getProfileData(userTokens_1.access_token, userDetails_1.sub).subscribe(function (data) {
-                                    if (data.result) {
-                                        data.result.relatedEntities.forEach(function (entity) {
-                                            if (entity.entityType == "state") {
-                                                if (entity.metaInformation.name == "Goa") {
-                                                    _this.appPages = [
-                                                        {
-                                                            title: 'Home',
-                                                            url: '/project-view/home',
-                                                            icon: 'home'
-                                                        },
-                                                        {
-                                                            title: 'Sync',
-                                                            icon: 'sync',
-                                                            url: '',
-                                                        },
-                                                        {
-                                                            title: 'Tutorial Video',
-                                                            icon: 'play',
-                                                            url: '/project-view/tutorial-videos',
-                                                        },
-                                                        {
-                                                            title: 'Profile Update',
-                                                            icon: 'person',
-                                                            url: '/project-view/update-profile',
-                                                        },
-                                                        {
-                                                            title: 'About',
-                                                            url: '/project-view/about',
-                                                            icon: 'information-circle'
-                                                        },
-                                                        {
-                                                            title: 'Settings',
-                                                            icon: 'md-settings',
-                                                            children: [
-                                                                {
-                                                                    title: 'Languages',
-                                                                    icon: 'globe'
-                                                                },
-                                                            ]
-                                                        }
-                                                    ];
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            });
+                _this.storage.get('userTokens').then(function (data) {
+                    userDetails_1 = jwt_decode__WEBPACK_IMPORTED_MODULE_20__(data.access_token);
+                    _this.projectService.getProfileData(userDetails_1.sub).subscribe(function (data) {
+                        console.log(data.result, "data.result");
+                        _this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(function (data) {
                         });
-                    }
-                }, function (error) {
-                    if (error.status === 0) {
-                        _this.router.navigateByUrl('/login');
-                    }
+                        if (data.result) {
+                            if (data.result.allowProfileUpdateForm) {
+                                _this.appPages = [
+                                    {
+                                        title: 'Home',
+                                        url: '/project-view/home',
+                                        icon: 'home'
+                                    },
+                                    {
+                                        title: 'Sync',
+                                        icon: 'sync',
+                                        url: '',
+                                    },
+                                    {
+                                        title: 'Tutorial Video',
+                                        icon: 'play',
+                                        url: '/project-view/tutorial-videos',
+                                    },
+                                    {
+                                        title: 'Profile Update',
+                                        icon: 'person',
+                                        url: '/project-view/update-profile',
+                                    },
+                                    {
+                                        title: 'About',
+                                        url: '/project-view/about',
+                                        icon: 'information-circle'
+                                    },
+                                    {
+                                        title: 'Settings',
+                                        icon: 'md-settings',
+                                        children: [
+                                            {
+                                                title: 'Languages',
+                                                icon: 'globe'
+                                            },
+                                        ]
+                                    }
+                                ];
+                            }
+                        }
+                    });
                 });
             }
             else {
+                console.log('602 navigate to login');
                 _this.router.navigateByUrl('/login');
             }
         });
@@ -2019,9 +1986,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppConfigs", function() { return AppConfigs; });
 var AppConfigs = {
     appVersion: "2.0.3",
-    appName: "Unnati",
+    appName: "unnati",
     currentVersion: "20003",
-    currentEnvironment: 'qa',
+    currentEnvironment: 'dev',
     environments: [
         {
             name: 'dev',
@@ -2035,34 +2002,34 @@ var AppConfigs = {
         }
     ],
     // Dev urls
-    // app_url: "https://dev.shikshalokam.org",
-    // api_url: "https://devhome.shikshalokam.org",
-    // api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
-    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
-    // clientId: "sl-ionic-connect",
-    // environment: "Development",
-    // //Notification urls
-    // notification: {
-    //     kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
-    //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
-    //     markAsRead: "/notifications/in-app/markAsRead/",
-    //     getAllNotifications: "/notifications/in-app/list",
-    //     registerDevice: "/notifications/push/registerDevice"
-    // },
-    // QA
-    app_url: "https://qa.shikshalokam.org",
-    api_url: "https://qahome.shikshalokam.org",
-    api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    app_url: "https://dev.shikshalokam.org",
+    api_url: "https://devhome.shikshalokam.org",
+    api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
+    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
     clientId: "sl-ionic-connect",
-    environment: "qa",
+    environment: "Development",
+    //Notification urls
     notification: {
-        kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+        kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
         getUnreadNotificationCount: "/notifications/in-app/unReadCount",
         markAsRead: "/notifications/in-app/markAsRead/",
         getAllNotifications: "/notifications/in-app/list",
         registerDevice: "/notifications/push/registerDevice"
     },
+    // QA
+    // app_url: "https://qa.shikshalokam.org",
+    // api_url: "https://qahome.shikshalokam.org",
+    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    // clientId: "sl-ionic-connect",
+    // environment: "qa",
+    // notification: {
+    //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+    //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+    //     markAsRead: "/notifications/in-app/markAsRead/",
+    //     getAllNotifications: "/notifications/in-app/list",
+    //     registerDevice: "/notifications/push/registerDevice"
+    // },
     //AWS Prod Urls
     // app_url: "https://bodh.shikshalokam.org",
     // api_url: "https://api.shikshalokam.org",
@@ -2194,6 +2161,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! @ionic-native/base64/ngx */ "./node_modules/@ionic-native/base64/ngx/index.js");
 /* harmony import */ var _ionic_native_app_version_ngx__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @ionic-native/app-version/ngx */ "./node_modules/@ionic-native/app-version/ngx/index.js");
 /* harmony import */ var _shared_module__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./shared.module */ "./src/app/shared.module.ts");
+/* harmony import */ var _interceptors_token_interceptor__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./interceptors/token.interceptor */ "./src/app/interceptors/token.interceptor.ts");
+/* harmony import */ var _get_sub_entities_get_sub_entities_page__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./get-sub-entities/get-sub-entities.page */ "./src/app/get-sub-entities/get-sub-entities.page.ts");
+
+
 
 
 
@@ -2245,8 +2216,8 @@ var AppModule = /** @class */ (function () {
     }
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_12__["AppComponent"], _popover_popover_component__WEBPACK_IMPORTED_MODULE_10__["PopoverComponent"]],
-            entryComponents: [_popover_popover_component__WEBPACK_IMPORTED_MODULE_10__["PopoverComponent"]],
+            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_12__["AppComponent"], _popover_popover_component__WEBPACK_IMPORTED_MODULE_10__["PopoverComponent"], _get_sub_entities_get_sub_entities_page__WEBPACK_IMPORTED_MODULE_41__["GetSubEntitiesPage"]],
+            entryComponents: [_popover_popover_component__WEBPACK_IMPORTED_MODULE_10__["PopoverComponent"], _get_sub_entities_get_sub_entities_page__WEBPACK_IMPORTED_MODULE_41__["GetSubEntitiesPage"]],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"],
                 _angular_http__WEBPACK_IMPORTED_MODULE_15__["HttpModule"],
@@ -2288,6 +2259,11 @@ var AppModule = /** @class */ (function () {
                 _ionic_native_file_opener_ngx__WEBPACK_IMPORTED_MODULE_27__["FileOpener"],
                 _ionic_native_base64_ngx__WEBPACK_IMPORTED_MODULE_37__["Base64"],
                 { provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"], useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicRouteStrategy"] },
+                {
+                    provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_14__["HTTP_INTERCEPTORS"],
+                    useClass: _interceptors_token_interceptor__WEBPACK_IMPORTED_MODULE_40__["TokenInterceptor"],
+                    multi: true
+                },
                 _ionic_native_fcm_ngx__WEBPACK_IMPORTED_MODULE_28__["FCM"],
                 _fcm__WEBPACK_IMPORTED_MODULE_29__["FcmProvider"],
                 _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_30__["LocalNotifications"], _ionic_native_badge_ngx__WEBPACK_IMPORTED_MODULE_31__["Badge"]
@@ -2345,22 +2321,16 @@ var CategoryViewService = /** @class */ (function () {
         });
     };
     //  get projects by category
-    CategoryViewService.prototype.getTemplatesByCategory = function (data) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-            'x-auth-token': data
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].api_url + '/unnati/api/v1/template/all', { headers: httpHeaders });
+    CategoryViewService.prototype.getTemplatesByCategory = function () {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].api_url + '/unnati/api/v1/template/all');
     };
     //  delete project event
     CategoryViewService.prototype.deleteProject = function (value) {
         this.deleteEvent.next();
     };
     // get pdf of project
-    CategoryViewService.prototype.getPDF = function (data, token) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-            'x-auth-token': token
-        });
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].api_url + '/unnati/api/v1/getProjectPdf', data, { headers: httpHeaders });
+    CategoryViewService.prototype.getPDF = function (data) {
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].api_url + '/unnati/api/v1/getProjectPdf', data);
     };
     CategoryViewService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -3023,30 +2993,15 @@ var FcmProvider = /** @class */ (function () {
    * @param notificationMeta
    */
     FcmProvider.prototype.markAsRead = function (notificationMeta) {
-        var _this = this;
         if (navigator.onLine) {
-            this.localStorage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens_2 = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.localStorage.set('userTokens', userTokens_2).then(function (usertoken) {
-                            _this.notificationCardService.markAsRead(userTokens_2.access_token, notificationMeta.id).subscribe(function (data) {
-                                notificationMeta.is_read = true;
-                                // this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
-                                //     // this.fetchAllNotifications();
-                                //     this.notificationCardService.getCount(data1.result.count);
-                                // }, error => {
-                                // })
-                            }, function (error) {
-                            });
-                        }, function (error) {
-                        });
-                    }
-                });
+            this.notificationCardService.markAsRead(notificationMeta.id).subscribe(function (data) {
+                notificationMeta.is_read = true;
+                // this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
+                //     // this.fetchAllNotifications();
+                //     this.notificationCardService.getCount(data1.result.count);
+                // }, error => {
+                // })
+            }, function (error) {
             });
         }
         else {
@@ -3063,6 +3018,158 @@ var FcmProvider = /** @class */ (function () {
             _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["Platform"]])
     ], FcmProvider);
     return FcmProvider;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/get-sub-entities/get-sub-entities.page.html":
+/*!*************************************************************!*\
+  !*** ./src/app/get-sub-entities/get-sub-entities.page.html ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<ion-content>\n  <ion-item class=\"search-bar-custom\">\n    <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n    <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\" (keydown)=\"search()\">\n    </ion-input>\n    <!-- (keyup)=\"searchSchool(searchInput)\" -->\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor=\"let entity of data.options\">\n      <ion-label> {{entity.label}}</ion-label>\n      <ion-checkbox slot=\"end\" [(ngModel)]=\"entity.isChecked\"></ion-checkbox>\n    </ion-item>\n  </ion-list>\n</ion-content>\n\n<ion-footer>\n  <ion-toolbar>\n    <ion-row>\n      <ion-col size=\"6\">\n        <ion-button expand=\"block\" color=\"light\" (click)=\"close()\">{{'back' | translate}}</ion-button>\n      </ion-col>\n      <ion-col zise=\"6\">\n        <ion-button expand=\"block\" color=\"primary\" (click)=\"submit()\">{{'submit' | translate}}</ion-button>\n      </ion-col>\n    </ion-row>\n  </ion-toolbar>\n</ion-footer>"
+
+/***/ }),
+
+/***/ "./src/app/get-sub-entities/get-sub-entities.page.scss":
+/*!*************************************************************!*\
+  !*** ./src/app/get-sub-entities/get-sub-entities.page.scss ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2dldC1zdWItZW50aXRpZXMvZ2V0LXN1Yi1lbnRpdGllcy5wYWdlLnNjc3MifQ== */"
+
+/***/ }),
+
+/***/ "./src/app/get-sub-entities/get-sub-entities.page.ts":
+/*!***********************************************************!*\
+  !*** ./src/app/get-sub-entities/get-sub-entities.page.ts ***!
+  \***********************************************************/
+/*! exports provided: GetSubEntitiesPage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetSubEntitiesPage", function() { return GetSubEntitiesPage; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../update-profile/update-profile.service */ "./src/app/update-profile/update-profile.service.ts");
+
+
+
+
+var GetSubEntitiesPage = /** @class */ (function () {
+    function GetSubEntitiesPage(modalController, updateProfileService) {
+        this.modalController = modalController;
+        this.updateProfileService = updateProfileService;
+        this.searchInput = '';
+        this.page = 1;
+        this.limit = 10;
+    }
+    GetSubEntitiesPage.prototype.ngOnInit = function () {
+        var _this = this;
+        console.log(this.data, "data in get sub entities", this.data.value.length);
+        if (this.data.value && this.data.value.length > 0) {
+            this.data.options.forEach(function (option) {
+                _this.data.value.forEach(function (value) {
+                    console.log(value.value + '==' + option._id);
+                    if (value.value == option._id) {
+                        option.isChecked = true;
+                    }
+                });
+            });
+        }
+    };
+    GetSubEntitiesPage.prototype.close = function () {
+        this.modalController.dismiss();
+    };
+    GetSubEntitiesPage.prototype.submit = function () {
+        var _this = this;
+        this.data.value = [];
+        this.data.options.forEach(function (entity) {
+            if (entity.isChecked) {
+                var data = {
+                    label: entity.label,
+                    value: entity._id
+                };
+                _this.data.value.push(data);
+            }
+        });
+        console.log(this.data, " this.data on submit");
+        this.modalController.dismiss(this.data);
+    };
+    GetSubEntitiesPage.prototype.search = function () {
+        var _this = this;
+        this.updateProfileService.searchEntities(this.data.dependent, this.data.field, this.searchInput, 1, this.limit).subscribe(function (data) {
+            console.log(data, 'data');
+            if ((_this.page * _this.limit) < data.count) {
+                _this.page++;
+            }
+            _this.data.options = data.result.data;
+        });
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], GetSubEntitiesPage.prototype, "data", void 0);
+    GetSubEntitiesPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-get-sub-entities',
+            template: __webpack_require__(/*! ./get-sub-entities.page.html */ "./src/app/get-sub-entities/get-sub-entities.page.html"),
+            styles: [__webpack_require__(/*! ./get-sub-entities.page.scss */ "./src/app/get-sub-entities/get-sub-entities.page.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ModalController"],
+            _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_3__["UpdateProfileService"]])
+    ], GetSubEntitiesPage);
+    return GetSubEntitiesPage;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/get-sub-entities/search-entities.filter.ts":
+/*!************************************************************!*\
+  !*** ./src/app/get-sub-entities/search-entities.filter.ts ***!
+  \************************************************************/
+/*! exports provided: SearchEntities */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SearchEntities", function() { return SearchEntities; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var SearchEntities = /** @class */ (function () {
+    function SearchEntities() {
+    }
+    SearchEntities.prototype.transform = function (items, searchText) {
+        if (!items)
+            return [];
+        if (!searchText) {
+            return items;
+        }
+        searchText = searchText.trim();
+        searchText = searchText.toLowerCase();
+        return items.filter(function (it) {
+            return it.label.toLowerCase().includes(searchText);
+        });
+    };
+    SearchEntities = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({
+            name: 'searchEntities'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], SearchEntities);
+    return SearchEntities;
 }());
 
 
@@ -3163,30 +3270,12 @@ var HeaderComponent = /** @class */ (function () {
     };
     HeaderComponent.prototype.getNotificationCount = function (infinateScrollRefrnc) {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            if (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens_1 = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
-                            _this.notificationCardService.checkForNotificationApi(userTokens_1.access_token).subscribe(function (data) {
-                                console.log(data, " esp of notification count");
-                                if (data.result.data && data.result.data.length) {
-                                    _this.initiatePopup(data.result.data);
-                                }
-                                _this.notificationCardService.getCount(data.result.count);
-                            }, function (error) {
-                            });
-                        }, function (error) {
-                            // intentially left blank
-                        });
-                    }
-                });
+        this.notificationCardService.checkForNotificationApi().subscribe(function (data) {
+            if (data.result.data && data.result.data.length) {
+                _this.initiatePopup(data.result.data);
             }
+            _this.notificationCardService.getCount(data.result.count);
+        }, function (error) {
         });
     };
     // Navigate to notification screen
@@ -3206,7 +3295,6 @@ var HeaderComponent = /** @class */ (function () {
     };
     HeaderComponent.prototype.initiatePopup = function (data) {
         var _this = this;
-        console.log('in initiatePopup');
         var isRejected;
         data.forEach(function (element) {
             if (element.action == "versionUpdate") {
@@ -3402,6 +3490,141 @@ var FilterPipe = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/interceptors/token.interceptor.ts":
+/*!***************************************************!*\
+  !*** ./src/app/interceptors/token.interceptor.ts ***!
+  \***************************************************/
+/*! exports provided: TokenInterceptor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TokenInterceptor", function() { return TokenInterceptor; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+
+
+
+
+
+
+
+
+
+
+var TokenInterceptor = /** @class */ (function () {
+    function TokenInterceptor(router, toastController, storage, platform, api) {
+        this.router = router;
+        this.toastController = toastController;
+        this.storage = storage;
+        this.platform = platform;
+        this.api = api;
+        console.log('in constructor calling');
+    }
+    TokenInterceptor.prototype.intercept = function (request, next) {
+        var _this = this;
+        this.storage.get('userTokens').then(function (token) {
+            _this.token = token;
+        });
+        // this.getFreshToken();
+        if (this.token) {
+            request = request.clone({
+                setHeaders: {
+                    'x-auth-token': this.token.access_token,
+                    'x-authenticated-user-token': this.token.access_token,
+                    'gpsLocation': '0,0',
+                    'appVersion': _app_config__WEBPACK_IMPORTED_MODULE_8__["AppConfigs"].appVersion,
+                    'appName': _app_config__WEBPACK_IMPORTED_MODULE_8__["AppConfigs"].appName,
+                    'appType': "improvement-project",
+                    'os': this.platform.is('ios') ? 'ios' : 'android'
+                }
+            });
+        }
+        if (!request.headers.has('Content-Type')) {
+            request = request.clone({
+                setHeaders: {
+                    'content-type': 'application/json'
+                }
+            });
+        }
+        request = request.clone({
+            headers: request.headers.set('Accept', 'application/json')
+        });
+        return next.handle(request).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (event) {
+            if (event instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpResponse"]) {
+            }
+            return event;
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["catchError"])(function (error) {
+            if (error.status === 401) {
+                if (error.error.success === false) {
+                    _this.presentToast('Login failed');
+                }
+                else {
+                    console.log('ggggg navigating to login');
+                    // this.router.navigate(['login']);
+                }
+            }
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(error);
+        }));
+    };
+    TokenInterceptor.prototype.getFreshToken = function () {
+        var _this = this;
+        this.storage.get('userTokens').then(function (token) {
+            _this.api.refershToken(token.refresh_token).subscribe(function (data) {
+                var parsedData = JSON.parse(data._body);
+                if (parsedData && parsedData.access_token) {
+                    var userTokens = {
+                        access_token: parsedData.access_token,
+                        refresh_token: parsedData.refresh_token,
+                    };
+                    _this.storage.set('userTokens', userTokens).then(function (data) {
+                    });
+                    return _this.token = userTokens.access_token;
+                }
+            });
+        });
+    };
+    TokenInterceptor.prototype.presentToast = function (msg) {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var toast;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.toastController.create({
+                            message: msg,
+                            duration: 2000,
+                            position: 'top'
+                        })];
+                    case 1:
+                        toast = _a.sent();
+                        toast.present();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    TokenInterceptor = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_9__["ToastController"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_4__["Storage"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_9__["Platform"],
+            _api_api__WEBPACK_IMPORTED_MODULE_3__["ApiProvider"]])
+    ], TokenInterceptor);
+    return TokenInterceptor;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/login.service.ts":
 /*!**********************************!*\
   !*** ./src/app/login.service.ts ***!
@@ -3576,18 +3799,12 @@ var MyschoolsService = /** @class */ (function () {
     function MyschoolsService(http) {
         this.http = http;
     }
-    MyschoolsService.prototype.getSchools = function (token, count, page) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-auth-token': token
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].api_url + '/unnati/api/v1/schoolList?limit=' + count + '&page=' + page, { headers: httpHeaders });
+    MyschoolsService.prototype.getSchools = function (count, page) {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].api_url + '/unnati/api/v1/schoolList?limit=' + count + '&page=' + page);
     };
     // Search school by name.
-    MyschoolsService.prototype.searchScool = function (token, keyword) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-auth-token': token
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].api_url + '/unnati/api/v1/schoolList?limit=100&page=0&search=' + keyword, { headers: httpHeaders });
+    MyschoolsService.prototype.searchScool = function (keyword) {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].api_url + '/unnati/api/v1/schoolList?limit=100&page=0&search=' + keyword);
     };
     MyschoolsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -3837,34 +4054,18 @@ var NotificationCardComponent = /** @class */ (function () {
     NotificationCardComponent.prototype.markAsRead = function (notificationMeta) {
         var _this = this;
         if (navigator.onLine) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens_1 = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.showSkeleton = true;
-                        _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
-                            _this.notificationCardService.markAsRead(userTokens_1.access_token, notificationMeta.id).subscribe(function (data) {
-                                notificationMeta.is_read = true;
-                                _this.showSkeleton = false;
-                                _this.notificationCardService.checkForNotificationApi(userTokens_1.access_token).subscribe(function (data1) {
-                                    // this.fetchAllNotifications();
-                                    _this.showSkeleton = false;
-                                    _this.notificationCardService.getCount(data1.result.count);
-                                }, function (error) {
-                                    _this.showSkeleton = false;
-                                });
-                            }, function (error) {
-                                _this.showSkeleton = false;
-                            });
-                        }, function (error) {
-                            _this.showSkeleton = false;
-                        });
-                    }
+            this.notificationCardService.markAsRead(notificationMeta.id).subscribe(function (data) {
+                notificationMeta.is_read = true;
+                _this.showSkeleton = false;
+                _this.notificationCardService.checkForNotificationApi().subscribe(function (data1) {
+                    // this.fetchAllNotifications();
+                    _this.showSkeleton = false;
+                    _this.notificationCardService.getCount(data1.result.count);
+                }, function (error) {
+                    _this.showSkeleton = false;
                 });
+            }, function (error) {
+                _this.showSkeleton = false;
             });
         }
         else {
@@ -3953,34 +4154,14 @@ var NotificationCardService = /** @class */ (function () {
         this.appUpdate = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
         //  this.startNotificationPooling();
     }
-    NotificationCardService.prototype.getAllNotifications = function (token, pageCount, limit) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-authenticated-user-token': token,
-            'app': 'unnati',
-            'apptype': 'improvement-project',
-            'os': this.platform.is('android') ? 'android' : 'ios'
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit, { headers: httpHeaders });
+    NotificationCardService.prototype.getAllNotifications = function (pageCount, limit) {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit);
     };
-    NotificationCardService.prototype.markAsRead = function (token, id) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-authenticated-user-token': token,
-            'app': 'unnati',
-            'apptype': 'improvement-project',
-            'os': this.platform.is('android') ? 'android' : 'ios'
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.markAsRead + id + '?appName=unnati', { headers: httpHeaders });
+    NotificationCardService.prototype.markAsRead = function (id) {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.markAsRead + id + '?appName=unnati');
     };
-    NotificationCardService.prototype.checkForNotificationApi = function (token) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
-            'x-authenticated-user-token': token,
-            'app': 'unnati',
-            'appName': "unnati",
-            'appVersion': _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].appVersion,
-            'apptype': 'improvement-project',
-            'os': this.platform.is('android') ? 'android' : 'ios'
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getUnreadNotificationCount + '?appName=unnati', { headers: httpHeaders });
+    NotificationCardService.prototype.checkForNotificationApi = function () {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getUnreadNotificationCount + '?appName=unnati');
     };
     //   getMappedAssessment(notificationMeta) {
     //     switch (notificationMeta.payload.type) {
@@ -4002,12 +4183,12 @@ var NotificationCardService = /** @class */ (function () {
         this.timeInterval = setInterval(function () {
             if (navigator.onLine) {
                 _this.storage.get('userTokens').then(function (token) {
-                    _this.checkForNotificationApi(token.access_token);
+                    _this.checkForNotificationApi();
                 });
             }
         }, 12000);
         this.storage.get('userTokens').then(function (token) {
-            _this.checkForNotificationApi(token.access_token);
+            _this.checkForNotificationApi();
         });
     };
     NotificationCardService.prototype.getCount = function (count) {
@@ -4242,50 +4423,36 @@ var PopoverComponent = /** @class */ (function () {
                     }
                 });
             }
-            this.storage.get('userTokens').then(function (data) {
-                _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.toastService.startLoader('Loading, please wait');
-                            var metaData = [];
-                            metaData.push(_this.projectToSync);
-                            var projects = {
-                                projects: _this.projectToSync
-                            };
-                            _this.projectService.sync(projects, data.access_token).subscribe(function (data) {
-                                if (data.status == "success" || data.status == "succes") {
-                                    _this.toastService.stopLoader();
-                                    data.allProjects.data.forEach(function (projects) {
-                                        projects.projects.forEach(function (sproject) {
-                                            if (sproject.share) {
-                                                _this.getPDF(sproject._id);
-                                            }
-                                        });
-                                    });
-                                    _this.DismissClick();
-                                    _this.syncUpdateInLocal(data.allProjects.data);
-                                }
-                                else {
-                                    _this.DismissClick();
-                                    _this.toastService.stopLoader();
-                                    _this.toastService.errorToast1(data.message);
-                                }
-                            }, function (error) {
-                                _this.toastService.stopLoader();
-                            });
+            this.toastService.startLoader('Loading, please wait');
+            var metaData = [];
+            metaData.push(this.projectToSync);
+            var projects = {
+                projects: this.projectToSync
+            };
+            this.projectService.sync(projects).subscribe(function (data) {
+                if (data.status == "success" || data.status == "succes") {
+                    _this.toastService.stopLoader();
+                    data.allProjects.data.forEach(function (projects) {
+                        projects.projects.forEach(function (sproject) {
+                            if (sproject.share) {
+                                _this.getPDF(sproject._id);
+                            }
                         });
-                    }
-                }, function (error) {
-                    // intentially left blank
-                });
+                    });
+                    _this.DismissClick();
+                    _this.syncUpdateInLocal(data.allProjects.data);
+                }
+                else {
+                    _this.DismissClick();
+                    _this.toastService.stopLoader();
+                    _this.toastService.errorToast1(data.message);
+                }
+            }, function (error) {
+                _this.toastService.stopLoader();
             });
         }
         else {
+            this.toastService.startLoader('Loading, please wait');
             this.getPDF(this.project._id);
             this.DismissClick();
         }
@@ -4310,47 +4477,31 @@ var PopoverComponent = /** @class */ (function () {
     // geting pdf file report of project and share the project
     PopoverComponent.prototype.getPDF = function (id) {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens_1 = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
-                        var projectData = {
-                            "projectId": id
-                        };
-                        _this.toastService.startLoader('Loading, please wait');
-                        _this.categoryViewService.getPDF(projectData, userTokens_1.access_token).subscribe(function (data) {
-                            var fileName = _this.project.title.replace(/\s/g, "");
-                            var fileTransfer = _this.transfer.create();
-                            var url = data.pdfUrl;
-                            fileTransfer.download(url, _this.appFolderPath + '/' + fileName).then(function (entry) {
-                                _this.base64.encodeFile(entry.nativeURL).then(function (base64File) {
-                                    var data = base64File.split(',');
-                                    var base64Data = "data:application/pdf;base64," + data[1];
-                                    _this.toastService.stopLoader();
-                                    _this.DismissClick();
-                                    _this.socialSharing.share("", fileName, base64Data, "").then(function () {
-                                    }, function (error) {
-                                        // intentially left blank
-                                    });
-                                }, function (err) {
-                                    _this.toastService.stopLoader();
-                                });
-                            }, function (error) {
-                                _this.toastService.stopLoader();
-                            });
-                        }, function (error) {
-                            _this.toastService.stopLoader();
-                        });
+        var projectData = {
+            "projectId": id
+        };
+        this.categoryViewService.getPDF(projectData).subscribe(function (data) {
+            var fileName = _this.project.title.replace(/\s/g, "");
+            var fileTransfer = _this.transfer.create();
+            var url = data.pdfUrl;
+            fileTransfer.download(url, _this.appFolderPath + '/' + fileName).then(function (entry) {
+                _this.base64.encodeFile(entry.nativeURL).then(function (base64File) {
+                    var data = base64File.split(',');
+                    var base64Data = "data:application/pdf;base64," + data[1];
+                    _this.toastService.stopLoader();
+                    _this.DismissClick();
+                    _this.socialSharing.share("", fileName, base64Data, "").then(function () {
                     }, function (error) {
-                        _this.toastService.stopLoader();
+                        // intentially left blank
                     });
-                }
+                }, function (err) {
+                    _this.toastService.stopLoader();
+                });
+            }, function (error) {
+                _this.toastService.stopLoader();
             });
+        }, function (error) {
+            _this.toastService.stopLoader();
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -4423,23 +4574,17 @@ var ProjectService = /** @class */ (function () {
         this.title = new rxjs__WEBPACK_IMPORTED_MODULE_7__["Subject"]();
     }
     // sync subtask
-    ProjectService.prototype.sync = function (data, token) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
-            'x-auth-token': token
-        });
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/project/sync', data, { headers: httpHeaders });
+    ProjectService.prototype.sync = function (data) {
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/project/sync', data);
     };
-    ProjectService.prototype.syncForPDF = function (data, token) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
-            'x-auth-token': token
-        });
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/projects/getProjectPdfWithSyc', data, { headers: httpHeaders });
-    };
-    ProjectService.prototype.oldDataSync = function (data, token) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
-            'x-auth-token': token
-        });
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/projects/syncLocalDataOnUpgradeOfApp', data, { headers: httpHeaders });
+    // public syncForPDF(data, token) {
+    //     let httpHeaders = new HttpHeaders({
+    //         'x-auth-token': token
+    //     })
+    //     return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projects/getProjectPdfWithSyc', data, { headers: httpHeaders })
+    // }
+    ProjectService.prototype.oldDataSync = function (data) {
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/projects/syncLocalDataOnUpgradeOfApp', data);
     };
     ProjectService.prototype.loadChart = function () {
         this.emit.next('load');
@@ -4447,22 +4592,11 @@ var ProjectService = /** @class */ (function () {
     ProjectService.prototype.setTitle = function (title) {
         this.title.next(title);
     };
-    ProjectService.prototype.projectDetails = function (token, data) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
-            'x-auth-token': token
-        });
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/projectsDetailsById', data, { headers: httpHeaders });
+    ProjectService.prototype.projectDetails = function (data) {
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/projectsDetailsById', data);
     };
-    ProjectService.prototype.getProfileData = function (token, profileId) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
-            'x-auth-token': token,
-            'gpsLocation': '0,0',
-            'x-authenticated-user-token': token,
-            'appVersion': _app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].appVersion,
-            'appName': _app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].appName,
-            'appType': "improvement-project"
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/assessment/api/v1/userExtension/getProfile/' + profileId, { headers: httpHeaders });
+    ProjectService.prototype.getProfileData = function (profileId) {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/kendra-service/api/v1/user-extension/getProfile/' + profileId);
     };
     ProjectService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -4511,12 +4645,8 @@ var ProjectsService = /** @class */ (function () {
     ProjectsService.prototype.getProjects = function () {
         return this.storage.get('projectsList');
     };
-    ProjectsService.prototype.getAssignedProjects = function (data, type) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
-            //'x-auth-token': this.currentUser.curretUser.accessToken
-            'x-auth-token': data
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/all?type=' + type, { headers: httpHeaders });
+    ProjectsService.prototype.getAssignedProjects = function (type) {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["AppConfigs"].api_url + '/unnati/api/v1/all?type=' + type);
     };
     ProjectsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -4555,8 +4685,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./myschools/search.filter */ "./src/app/myschools/search.filter.ts");
 /* harmony import */ var _home_search_filter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./home/search.filter */ "./src/app/home/search.filter.ts");
-/* harmony import */ var _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./task-board/task-board.filter */ "./src/app/task-board/task-board.filter.ts");
-/* harmony import */ var _custom_popup_custom_popup_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./custom-popup/custom-popup.component */ "./src/app/custom-popup/custom-popup.component.ts");
+/* harmony import */ var _get_sub_entities_search_entities_filter__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./get-sub-entities/search-entities.filter */ "./src/app/get-sub-entities/search-entities.filter.ts");
+/* harmony import */ var _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./task-board/task-board.filter */ "./src/app/task-board/task-board.filter.ts");
+/* harmony import */ var _custom_popup_custom_popup_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./custom-popup/custom-popup.component */ "./src/app/custom-popup/custom-popup.component.ts");
+
 
 
 
@@ -4583,10 +4715,23 @@ var SharedModule = /** @class */ (function () {
                 _ngx_translate_core__WEBPACK_IMPORTED_MODULE_7__["TranslateModule"].forChild()
             ],
             declarations: [
-                _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"], _custom_popup_custom_popup_component__WEBPACK_IMPORTED_MODULE_12__["CustomPopupComponent"], _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__["TaskBoardPipe"]
+                _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"],
+                _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"],
+                _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"],
+                _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"],
+                _custom_popup_custom_popup_component__WEBPACK_IMPORTED_MODULE_13__["CustomPopupComponent"],
+                _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_12__["TaskBoardPipe"],
+                _get_sub_entities_search_entities_filter__WEBPACK_IMPORTED_MODULE_11__["SearchEntities"]
             ],
             exports: [
-                highcharts_angular__WEBPACK_IMPORTED_MODULE_4__["HighchartsChartModule"], _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"], _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"], _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"], _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"], _custom_popup_custom_popup_component__WEBPACK_IMPORTED_MODULE_12__["CustomPopupComponent"], _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_11__["TaskBoardPipe"]
+                highcharts_angular__WEBPACK_IMPORTED_MODULE_4__["HighchartsChartModule"],
+                _header_header_component__WEBPACK_IMPORTED_MODULE_5__["HeaderComponent"],
+                _notification_card_notification_card_component__WEBPACK_IMPORTED_MODULE_6__["NotificationCardComponent"],
+                _myschools_search_filter__WEBPACK_IMPORTED_MODULE_9__["SearchSchool"],
+                _home_search_filter__WEBPACK_IMPORTED_MODULE_10__["FilterPipe"],
+                _custom_popup_custom_popup_component__WEBPACK_IMPORTED_MODULE_13__["CustomPopupComponent"],
+                _task_board_task_board_filter__WEBPACK_IMPORTED_MODULE_12__["TaskBoardPipe"],
+                _get_sub_entities_search_entities_filter__WEBPACK_IMPORTED_MODULE_11__["SearchEntities"]
             ]
         })
     ], SharedModule);
@@ -4813,34 +4958,31 @@ var UpdateProfileService = /** @class */ (function () {
     }
     // get States
     UpdateProfileService.prototype.getStates = function (token) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-            'X-authenticated-user-token': token
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/listByEntityType/state', { headers: httpHeaders });
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/listByEntityType/state');
     };
     // get immediate Children
-    UpdateProfileService.prototype.getImmediateChildren = function (token, id) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-            'X-authenticated-user-token': token
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/immediateEntities/' + id, { headers: httpHeaders });
-        //return this.http.get(AppConfigs.api_url + '/unnati/api/v1/getSubTaskDetails/5dcd367997dccf453772b8f6/5dcd367997dccf453772b8f5', { headers: httpHeaders });
+    UpdateProfileService.prototype.getImmediateChildren = function (id) {
+        // return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/entities/subEntityList?type='+entity+'&search=&page=&limit=',data);
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/subEntityList/' + id);
     };
-    UpdateProfileService.prototype.saveInfo = function (token, data) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-            'X-authenticated-user-token': token
-        });
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/user-profile/update', data, { headers: httpHeaders });
+    // public getSubEntities(data) {
+    //   return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/entities/subEntityList?type='+entity+'&search='+searchText+'&page='+page+'&limit='+limit,data);
+    // }
+    UpdateProfileService.prototype.searchEntities = function (id, entity, searchText, page, limit) {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/subEntityList/' + id + '?type=' + entity + '&search=' + searchText + '&page=' + page + '&limit=' + limit);
+    };
+    UpdateProfileService.prototype.saveInfo = function (data) {
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/user-profile/update', data);
     };
     // event triggers for update popups
     UpdateProfileService.prototype.updateProfile = function (status) {
         this.updatedUser.next(status);
     };
-    UpdateProfileService.prototype.getProfileData = function (token) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-            'X-authenticated-user-token': token
-        });
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/user-profile/details', { headers: httpHeaders });
+    UpdateProfileService.prototype.getProfileData = function () {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/user-profile/getForm');
+    };
+    UpdateProfileService.prototype.getSubEntities = function (data, type) {
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/subEntityList?type=' + type + '&search=&page=&limit=', data);
     };
     UpdateProfileService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({

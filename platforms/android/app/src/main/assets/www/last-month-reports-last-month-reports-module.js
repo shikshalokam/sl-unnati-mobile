@@ -169,6 +169,7 @@ var LastMonthReportsPage = /** @class */ (function () {
                         };
                         _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
                             _this.myReportsService.getReports(userTokens_1.access_token, 'lastMonth').subscribe(function (data) {
+                                console.log(data, "resp");
                                 _this.report = data.data;
                                 if (data.status != "failed") {
                                     _this.setupChart();
@@ -276,26 +277,11 @@ var LastMonthReportsPage = /** @class */ (function () {
     LastMonthReportsPage.prototype.getSchools = function () {
         var _this = this;
         if (this.connected) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.mySchoolsService.getSchools(parsedData.access_token, _this.count, _this.page).subscribe(function (data) {
-                                if (data.status != 'failed') {
-                                    _this.mySchools = data.data;
-                                }
-                            }, function (error) { });
-                        });
-                        //resolve()
-                    }
-                }, function (error) {
-                });
-            });
+            this.mySchoolsService.getSchools(this.count, this.page).subscribe(function (data) {
+                if (data.status != 'failed') {
+                    _this.mySchools = data.data;
+                }
+            }, function (error) { });
         }
         else {
             this.toastService.errorToast('message.nerwork_connection_check');
@@ -318,7 +304,6 @@ var LastMonthReportsPage = /** @class */ (function () {
             obj1.entityId = '';
             obj = obj1;
         }
-        console.log(obj, "obj");
         this.myReportsService.getReportEvent(obj);
     };
     LastMonthReportsPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

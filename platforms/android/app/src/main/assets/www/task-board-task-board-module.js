@@ -112,28 +112,32 @@ var TaskBoardPage = /** @class */ (function () {
         this.ongoing = [];
         this.past = [];
         this.storage.get('latestProjects').then(function (projects) {
-            console.log(projects, "latest project");
-            if (projects) {
-                projects.forEach(function (project) {
-                    var count = 0;
-                    if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
-                        project.tasks.forEach(function (task) {
-                            if (task.status == 'Completed' || task.status == 'completed') {
-                                if (count == 0) {
-                                    _this.ongoing.push(task);
-                                    count++;
+            projects.forEach(function (program) {
+                console.log(program, "program");
+            });
+            projects.forEach(function (programsList) {
+                if (programsList.projects) {
+                    programsList.projects.forEach(function (project) {
+                        var count = 0;
+                        if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
+                            project.tasks.forEach(function (task) {
+                                if (task.status == 'Completed' || task.status == 'completed') {
+                                    if (count == 0) {
+                                        _this.ongoing.push(task);
+                                        count++;
+                                    }
+                                    else {
+                                        _this.past.push(task);
+                                    }
                                 }
                                 else {
-                                    _this.past.push(task);
+                                    _this.ongoing.push(task);
                                 }
-                            }
-                            else {
-                                _this.ongoing.push(task);
-                            }
-                        });
-                    }
-                });
-            }
+                            });
+                        }
+                    });
+                }
+            });
         });
     };
     TaskBoardPage.prototype.selectTab = function (tab) {

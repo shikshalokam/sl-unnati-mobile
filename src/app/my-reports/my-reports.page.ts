@@ -67,34 +67,18 @@ export class MyReportsPage {
   }
   public getReport(mySchools: any) {
     if (this.connected) {
-      this.storage.get('userTokens').then(data => {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.storage.set('userTokens', userTokens).then(data => {
-              this.toastService.startLoader('Loading Please wait');
-              this.myReportsService.getReportData(parsedData.access_token, mySchools).subscribe((data: any) => {
-                this.toastService.stopLoader();
-                if (data.status != 'failed') {
-                  if (mySchools.type === 'share') {
-                    this.share(data);
-                  } else {
-                    this.toastService.stopLoader();
-                    this.download(data);
-                  }
-                }
-              }, error => {
-                this.toastService.stopLoader();
-              })
-            })
-            //resolve()
+      this.myReportsService.getReportData(mySchools).subscribe((data: any) => {
+        this.toastService.stopLoader();
+        if (data.status != 'failed') {
+          if (mySchools.type === 'share') {
+            this.share(data);
+          } else {
+            this.toastService.stopLoader();
+            this.download(data);
           }
-        }, error => {
-        })
+        }
+      }, error => {
+        this.toastService.stopLoader();
       })
     } else {
       this.toastService.errorToast('message.nerwork_connection_check');
@@ -103,33 +87,17 @@ export class MyReportsPage {
 
   public getFullReport(mySchools: any) {
     if (this.connected) {
-      this.storage.get('userTokens').then(data => {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.storage.set('userTokens', userTokens).then(data => {
-              this.toastService.startLoader('Loading Please wait');
-              this.myReportsService.getFullReportData(parsedData.access_token, mySchools).subscribe((data: any) => {
-                this.toastService.stopLoader();
-                if (data.status != 'failed') {
-                  if (mySchools.type === 'share') {
-                    this.share(data);
-                  } else {
-                    this.download(data);
-                  }
-                }
-              }, error => {
-                this.toastService.stopLoader();
-              })
-            })
-            //resolve()
+      this.myReportsService.getFullReportData(mySchools).subscribe((data: any) => {
+        this.toastService.stopLoader();
+        if (data.status != 'failed') {
+          if (mySchools.type === 'share') {
+            this.share(data);
+          } else {
+            this.download(data);
           }
-        }, error => {
-        })
+        }
+      }, error => {
+        this.toastService.stopLoader();
       })
     } else {
       this.toastService.errorToast('message.nerwork_connection_check');

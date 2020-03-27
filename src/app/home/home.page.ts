@@ -66,7 +66,7 @@ export class HomePage implements OnInit {
   tiles = [
     { title: "create project", icon: 'assets/images/homeTiles/createproject.png', url: '/project-view/create-project' },
     { title: "library", icon: 'assets/images/homeTiles/library.png', url: '/project-view/library' },
-    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '' }, // /project-view/task-board
+    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '/project-view/task-board' }, // /project-view/task-board
     { title: "reports", icon: 'assets/images/homeTiles/reports.png', url: '/project-view/my-reports/last-month-reports' }
   ]
   activeProjects = [];
@@ -267,80 +267,40 @@ export class HomePage implements OnInit {
   }
   // get templates
   getTemplates() {
-    this.storage.get('userTokens').then(data => {
-      this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.categoryViewService.getTemplatesByCategory(userTokens.access_token).subscribe((data: any) => {
-              if (data.data) {
-                this.storage.set('templates', data.data).then(templates => {
-                })
-              }
-            }, error => { })
-          }, error => {
-          })
-        }
-      })
-    })
+    this.categoryViewService.getTemplatesByCategory().subscribe((data: any) => {
+      if (data.data) {
+        this.storage.set('templates', data.data).then(templates => {
+        })
+      }
+    }, error => { })
   }
   // get Projects
   public getProjects() {
-    this.storage.get('userTokens').then(data => {
-      this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.projectsService.getAssignedProjects(usertoken.access_token, this.type).subscribe((resp: any) => {
-              if (resp.status != 'failed') {
-                resp.data.forEach(programs => {
-                  programs.projects.forEach(project => {
-                    project.lastUpdate = project.lastSync;
-                    project.isSync = true;
-                    project.isEdited = false;
-                    project.isNew = false;
-                    if (project.status != 'not yet started' && project.status != 'Not started') {
-                      project.isStarted = true;
-                    }
-                    project.programName = programs.programs.name;
-                  });
-                });
-                this.storage.set('latestProjects', resp.data).then(resp1 => {
-                  this.getActiveProjects();
-                })
-              }
-            })
-          })
-        }
-      })
+    this.projectsService.getAssignedProjects(this.type).subscribe((resp: any) => {
+      if (resp.status != 'failed') {
+        resp.data.forEach(programs => {
+          programs.projects.forEach(project => {
+            project.lastUpdate = project.lastSync;
+            project.isSync = true;
+            project.isEdited = false;
+            project.isNew = false;
+            if (project.status != 'not yet started' && project.status != 'Not started') {
+              project.isStarted = true;
+            }
+            project.programName = programs.programs.name;
+          });
+        });
+        this.storage.set('latestProjects', resp.data).then(resp1 => {
+          this.getActiveProjects();
+        })
+      }
+    },error =>{
     })
   }
   //  get schools
   public getSchools() {
-    this.storage.get('userTokens').then(data => {
-      this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
-              this.mySchools = data.data;
-            }, error => { })
-          }, error => {
-          })
-        }
-      })
-    })
+    this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
+      this.mySchools = data.data;
+    }, error => { })
   }
 }

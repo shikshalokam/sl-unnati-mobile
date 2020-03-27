@@ -13,7 +13,7 @@ import * as jwt_decode from "jwt-decode";
   templateUrl: './myschools.page.html',
   styleUrls: ['./myschools.page.scss'],
 })
-export class MyschoolsPage{
+export class MyschoolsPage {
   @ViewChild(NavController) nav: NavController;
   searchInput;
   connected: any = localStorage.getItem('networkStatus');
@@ -39,7 +39,7 @@ export class MyschoolsPage{
     });
   }
   ionViewDidEnter() {
-    this.searchInput ='';
+    this.searchInput = '';
     this.menuCtrl.enable(true);
     this.getSchools();
     this.storage.get('userTokens').then(data => {
@@ -50,24 +50,9 @@ export class MyschoolsPage{
   // get schools list
   public getSchools() {
     if (this.connected) {
-      this.storage.get('userTokens').then(data => {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.storage.set('userTokens', userTokens).then(data => {
-              this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
-                this.mySchools = data.data;
-              }, error => { })
-            })
-            //resolve()
-          }
-        }, error => {
-        })
-      })
+      this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
+        this.mySchools = data.data;
+      }, error => { })
     } else {
       this.networkService.networkErrorToast();
     }
@@ -106,29 +91,14 @@ export class MyschoolsPage{
   public searchSchool(keyword) {
     this.connected = localStorage.getItem("networkStatus");
     let connected = navigator.onLine;
-
     if (connected) {
-      this.storage.get('userTokens').then(data => {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.storage.set('userTokens', userTokens).then(data => {
-              this.mySchoolsService.searchScool(parsedData.access_token, keyword).subscribe((data: any) => {
-                this.mySchools = data.data;
-                this.noSchools = false;
-                if (data.data.length == 0) {
-                  this.noSchools = true;
-                }
-              })
-            })
-            //resolve()
-          }
-        }, error => {
-        })
+      this.mySchoolsService.searchScool(keyword).subscribe((data: any) => {
+        this.mySchools = data.data;
+        this.noSchools = false;
+        if (data.data.length == 0) {
+          this.noSchools = true;
+        }
+      }, error => {
       })
     } else {
       this.networkService.networkErrorToast();
@@ -138,25 +108,11 @@ export class MyschoolsPage{
   public loadData(event) {
     event.target.complete();
     //getReports(data,limit,page)
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.mySchoolsService.getSchools(userTokens.access_token, this.count, this.page).subscribe((data: any) => {
-              this.page = this.page + 1;
-              event.target.disabled = true;
-              this.mySchools.push(data.data);
-            }, error => {
-            })
-          }, error => {
-          })
-        }
-      })
+    this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
+      this.page = this.page + 1;
+      event.target.disabled = true;
+      this.mySchools.push(data.data);
+    }, error => {
     })
   }
 }

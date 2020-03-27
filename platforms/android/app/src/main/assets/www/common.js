@@ -435,17 +435,6 @@ var CreateTaskService = /** @class */ (function () {
             });
         });
     };
-    // public updateByProjects(updatedProject) {
-    //     this.storage.get('latestProjects').then(projectList => {
-    //         projectList[0].projects.forEach(project => {
-    //             if (project._id == updatedProject._id) {
-    //                 projectList[0].projects = updatedProject;
-    //                 this.storage.set('latestProjects', projectList).then(projects => {
-    //                 })
-    //             }
-    //         });
-    //     })
-    // }
     CreateTaskService.prototype.updateByProjects = function (updatedProject) {
         var mapped = false;
         return this.storage.get('latestProjects').then(function (projectList) {

@@ -265,7 +265,7 @@ var HomePage = /** @class */ (function () {
         this.tiles = [
             { title: "create project", icon: 'assets/images/homeTiles/createproject.png', url: '/project-view/create-project' },
             { title: "library", icon: 'assets/images/homeTiles/library.png', url: '/project-view/library' },
-            { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '' },
+            { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '/project-view/task-board' },
             { title: "reports", icon: 'assets/images/homeTiles/reports.png', url: '/project-view/my-reports/last-month-reports' }
         ];
         this.activeProjects = [];
@@ -453,83 +453,43 @@ var HomePage = /** @class */ (function () {
     // get templates
     HomePage.prototype.getTemplates = function () {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens_1 = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
-                        _this.categoryViewService.getTemplatesByCategory(userTokens_1.access_token).subscribe(function (data) {
-                            if (data.data) {
-                                _this.storage.set('templates', data.data).then(function (templates) {
-                                });
-                            }
-                        }, function (error) { });
-                    }, function (error) {
-                    });
-                }
-            });
-        });
+        this.categoryViewService.getTemplatesByCategory().subscribe(function (data) {
+            if (data.data) {
+                _this.storage.set('templates', data.data).then(function (templates) {
+                });
+            }
+        }, function (error) { });
     };
     // get Projects
     HomePage.prototype.getProjects = function () {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens).then(function (usertoken) {
-                        _this.projectsService.getAssignedProjects(usertoken.access_token, _this.type).subscribe(function (resp) {
-                            if (resp.status != 'failed') {
-                                resp.data.forEach(function (programs) {
-                                    programs.projects.forEach(function (project) {
-                                        project.lastUpdate = project.lastSync;
-                                        project.isSync = true;
-                                        project.isEdited = false;
-                                        project.isNew = false;
-                                        if (project.status != 'not yet started' && project.status != 'Not started') {
-                                            project.isStarted = true;
-                                        }
-                                        project.programName = programs.programs.name;
-                                    });
-                                });
-                                _this.storage.set('latestProjects', resp.data).then(function (resp1) {
-                                    _this.getActiveProjects();
-                                });
-                            }
-                        });
+        this.projectsService.getAssignedProjects(this.type).subscribe(function (resp) {
+            if (resp.status != 'failed') {
+                resp.data.forEach(function (programs) {
+                    programs.projects.forEach(function (project) {
+                        project.lastUpdate = project.lastSync;
+                        project.isSync = true;
+                        project.isEdited = false;
+                        project.isNew = false;
+                        if (project.status != 'not yet started' && project.status != 'Not started') {
+                            project.isStarted = true;
+                        }
+                        project.programName = programs.programs.name;
                     });
-                }
-            });
+                });
+                _this.storage.set('latestProjects', resp.data).then(function (resp1) {
+                    _this.getActiveProjects();
+                });
+            }
+        }, function (error) {
         });
     };
     //  get schools
     HomePage.prototype.getSchools = function () {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.apiProvider.refershToken(data.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens).then(function (usertoken) {
-                        _this.mySchoolsService.getSchools(parsedData.access_token, _this.count, _this.page).subscribe(function (data) {
-                            _this.mySchools = data.data;
-                        }, function (error) { });
-                    }, function (error) {
-                    });
-                }
-            });
-        });
+        this.mySchoolsService.getSchools(this.count, this.page).subscribe(function (data) {
+            _this.mySchools = data.data;
+        }, function (error) { });
     };
     HomePage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
