@@ -74,7 +74,6 @@ export class LastMonthReportsPage implements OnInit {
             };
             this.storage.set('userTokens', userTokens).then(usertoken => {
               this.myReportsService.getReports(userTokens.access_token, 'lastMonth').subscribe((data: any) => {
-                console.log(data,"resp");
                 this.report = data.data;
                 if (data.status != "failed") {
                   this.setupChart();

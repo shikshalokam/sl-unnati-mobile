@@ -10,6 +10,7 @@ import { NetworkService } from '../network.service';
 import { NotificationCardService } from '../notification-card/notification.service';
 import { ModalController } from '@ionic/angular';
 import { GetSubEntitiesPage } from '../get-sub-entities/get-sub-entities.page';
+import { AlertController } from '@ionic/angular';
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.page.html',
@@ -54,7 +55,8 @@ export class UpdateProfilePage {
     public router: Router,
     public modalController: ModalController,
     public notificationCardService: NotificationCardService,
-    public networkService: NetworkService
+    public networkService: NetworkService,
+    public alertController: AlertController
   ) {
 
   }
@@ -96,6 +98,9 @@ export class UpdateProfilePage {
           if (res.field == "email") {
             res.validation.regex = new RegExp("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$");
           }
+          if (res.field == "state") {
+            delete res.validation.regex
+          }
           validationsArray.push(
             Validators.pattern(res.validation.regex)
           );
@@ -107,10 +112,6 @@ export class UpdateProfilePage {
       controls
     );
     this.showForm = true;
-    console.log(controls['firstName'], "firstname");
-    console.log(controls['lastName'], "lastname");
-    console.log(controls['phoneNumber'], "phoneNumber");
-    console.log(controls['email'], "email");
   }
 
   public getSubEntities(event) {
@@ -121,7 +122,7 @@ export class UpdateProfilePage {
       let id;
       id = event;
       if (id) {
-        this.toastService.startLoader('Loadinng, please wait');
+        this.toastService.startLoader('Loading, please wait');
         this.updateProfileService.getImmediateChildren(id).subscribe((entities: any) => {
           if (entities.result.data) {
             let entityData = [];
@@ -137,10 +138,12 @@ export class UpdateProfilePage {
               options: entities.result.data,
               visible: true
             }
+            console.log(entities.result.data, "entities.result.data");
             let mapped: boolean = false;
             this.profileFormData.forEach(element => {
               if (element.field == entities.result.data[0].entityType && !mapped) {
                 element.options = entities.result.data;
+                element.value = [];
                 element.dependent = id;
                 mapped = true;
               }
@@ -148,6 +151,18 @@ export class UpdateProfilePage {
             if (!mapped) {
               this.profileFormData.push(data);
             }
+            let remove = false;
+            let toBeRemove = [];
+            this.stateSubEntities[id].forEach(element => {
+              if (remove) {
+                toBeRemove.push(element);
+              }
+              if (entities.result.data[0].entityType == element) {
+                remove = true;
+              }
+            });
+            const filteredItems = this.profileFormData.filter(item => !toBeRemove.includes(item.field));
+            this.profileFormData = filteredItems;
           } else {
             this.profileFormData.forEach(element => {
               if (element.input == 'multiselect') {
@@ -165,11 +180,11 @@ export class UpdateProfilePage {
                 }
               }
             });
-            this.toastService.errorToast('No sub entites found.');
+            // this.toastService.errorToast('No sub entites found.');
           }
           this.toastService.stopLoader();
         }, erros => {
-          this.toastService.stopLoader();
+          // this.toastService.stopLoader();
         })
       }
     }
@@ -177,14 +192,30 @@ export class UpdateProfilePage {
 
   // Save user info 
   public saveInfo() {
+    let valid = true;
     if (this.connected) {
-      this.submitAttempt = true;
       this.showUpdatePop = false;
-
+      this.submitAttempt = false;
       let obj = {
       }
       this.profileFormData.forEach(profile => {
-        if (profile.field == 'state') {
+        if (profile.validation.regex) {
+          if (!profile.patternMatch) {
+            valid = false;
+          }
+        }
+        if (profile.validation.required) {
+          if (!profile.value) {
+            valid = false;
+          }
+        }
+        if (valid) {
+          this.submitAttempt = false;
+        } else {
+          this.submitAttempt = true;
+          // this.toastService.errorToast('message.fileds_mandatory');
+        }
+        if (profile.field == 'state' && !profile.value.value) {
           profile.options.forEach(option => {
             if (option.value == profile.value) {
               obj[profile.field] = option
@@ -194,21 +225,26 @@ export class UpdateProfilePage {
           obj[profile.field] = profile.value
         }
       });
-      this.submitAttempt = false;
+
       let data = {
         'metaInformation': obj
       }
-      this.updateProfileService.saveInfo(data).subscribe((data: any) => {
-        this.storage.get('clearNotification').then((data) => {
-          // this.markAsRead(data);
-        });
-        this.updateProfileService.updateProfile('done');
-        this.showUpdatePop = true;
+      if (valid) {
         this.submitAttempt = false;
-        this.toastService.stopLoader();
-      }, error => {
-        this.toastService.stopLoader();
-      })
+        this.toastService.startLoader('Loading,please wait');
+        this.updateProfileService.saveInfo(data).subscribe((data: any) => {
+          this.storage.get('clearNotification').then((data) => {
+            // this.markAsRead(data);
+          });
+          this.updateProfileService.updateProfile('done');
+          this.showUpdatePop = true;
+          this.submitAttempt = false;
+          this.toastService.stopLoader();
+        }, error => {
+          this.toastService.stopLoader();
+        })
+      }
+
     } else {
       this.toastService.errorToast('message.nerwork_connection_check');
     }
@@ -217,7 +253,6 @@ export class UpdateProfilePage {
   public cancel() {
     this.router.navigate(['/project-view/home'])
   }
-
 
   // get user profile data
   public getProfileData() {
@@ -228,21 +263,30 @@ export class UpdateProfilePage {
       this.profileFormData = data.result.form;
       this.stateSubEntities = data.result.statesWithSubEntities;
       this.profileFormData.forEach(element => {
-        if (element.field == 'state') {
-          this.getImmediateChildren(element.value.value);
-        }
+        element.patternMatch = true;
+        // if (element.field == 'state') {
+        //   this.getImmediateChildren(element.value.value);
+        // }
       });
+      console.log('stop 260')
       this.toastService.stopLoader();
       this.prepareForm();
+      if (this.profileFormData[this.profileFormData.length - 1].field != 'state') {
+        this.getNextEntities(this.profileFormData[this.profileFormData.length - 1]);
+      }
     }, error => {
       this.toastService.stopLoader();
     })
   }
   public radioChecked(data, value) {
     data.selectedType = value;
+    if (value == 'others') {
+      data.label = 'others'
+    }
   }
 
   async selectEntity(data) {
+    console.log(data,"data nnn");
     if (data.options) {
       const modal = await this.modalController.create({
         component: GetSubEntitiesPage,
@@ -252,23 +296,18 @@ export class UpdateProfilePage {
       });
       modal.onDidDismiss().then((data: any) => {
         if (data.data) {
-          this.stateSubEntities[data.data.dependent].forEach(subEntity => {
-            console.log(subEntity, 'subEntity');
-            let mapped = false;
-            this.profileFormData.forEach(profile => {
-              console.log(mapped, 'mapped');
-              if (mapped) {
-                const index: number = this.profileFormData.indexOf(profile);
-                if (index !== -1) {
-                  this.profileFormData.splice(index, 1);
-                }
-              }
-              if (profile.field == subEntity) {
-                console.log(profile.field, "marking mapped as true")
-                mapped = true;
-              }
-            });
+          let mapped = false;
+          let toBeRemove = [];
+          this.stateSubEntities[data.data.dependent].forEach(element => {
+            if (mapped) {
+              toBeRemove.push(element);
+            }
+            if (data.data.field == element) {
+              mapped = true;
+            }
           });
+          const filteredItems = this.profileFormData.filter(item => !toBeRemove.includes(item.field));
+          this.profileFormData = filteredItems;
           this.getNextEntities(data.data);
         }
       })
@@ -276,7 +315,6 @@ export class UpdateProfilePage {
     }
   }
   public getNextEntities(data) {
-    this.toastService.startLoader('Loadinng, please wait');
     let entity = [];
     let entities;
     let type = '';
@@ -301,6 +339,7 @@ export class UpdateProfilePage {
     entities = {
       entities: entity
     }
+    this.toastService.startLoader('Loading, please wait');
     this.updateProfileService.getSubEntities(entities, type).subscribe((entity: any) => {
       if (entity.result && entity.result.data) {
         let data1 = {
@@ -331,7 +370,6 @@ export class UpdateProfilePage {
         this.toastService.stopLoader();
       } else {
         this.toastService.stopLoader();
-        this.toastService.errorToast('No sub entites found.')
       }
     }, error => {
       this.toastService.stopLoader();
@@ -356,29 +394,54 @@ export class UpdateProfilePage {
       entityList.value.splice(index, 1);
 
     }
-    console.log(entityList, "entityList", entityList.value.length);
-    if (!entityList.value.length) {
-      console.log('entity list empty');
-      this.stateSubEntities[entityList.dependent].forEach(subEntity => {
-        console.log(subEntity, 'subEntity');
-        let mapped = false;
-        this.profileFormData.forEach(profile => {
-          console.log(mapped, 'mapped');
-          if (mapped) {
-            const index: number = this.profileFormData.indexOf(profile);
-            if (index !== -1) {
-              this.profileFormData.splice(index, 1);
-            }
-          }
-          if (profile.field == subEntity) {
-            console.log(profile.field, "marking mapped as true")
-            mapped = true;
-          }
-        });
-      });
-      console.log(this.profileFormData, "this.profileFormData outer if")
-    } else {
-      this.getNextEntities(entityList);
+    // if (!entityList.value.length) {
+    let mapped = false;
+    let toBeRemove = [];
+    this.stateSubEntities[entityList.dependent].forEach(element => {
+      if (mapped) {
+        toBeRemove.push(element);
+      }
+      if (entityList.field == element) {
+        mapped = true;
+      }
+    });
+    const filteredItems = this.profileFormData.filter(item => !toBeRemove.includes(item.field));
+    this.profileFormData = filteredItems;
+    // } else {
+    if (entityList.value && entityList.value.length > 0) {
+      // this.getNextEntities(entityList);
     }
+    // }
+  }
+  public checkPatter(data) {
+    if (data.value) {
+      let result = data.validation.regex.test(data.value);
+      data.patternMatch = result;
+    } else {
+      data.patternMatch = true;
+    }
+  }
+
+  async deleteConfirm(entity, entityList) {
+    const alert = await this.alertController.create({
+      header: 'Cofirm!',
+      message: 'Do you want delete ' + entity.label + ' from ' + entityList.label + '?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+          }
+        }, {
+          text: 'Okay',
+          handler: () => {
+            this.removeEntity(entity, entityList);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

@@ -160,7 +160,6 @@ export class SchoolProjectDetailPage implements OnInit {
       }, error => {
         this.showSkeleton = false;
         if (error.status === 0) {
-          console.log("/login 163 ");
           this.router.navigateByUrl('/login');
         }
       })

@@ -67,7 +67,6 @@ export class CustomPopupComponent implements OnInit {
   }
   public getTranslateKeys() {
     if (this.header && this.body && this.button) {
-      console.log(this.showPopup, " this.showPopup =");
       this.translate.get([this.header, this.body, this.button]).subscribe((text: string) => {
         this.header = text[this.header];
         this.body = text[this.body];
@@ -75,7 +74,6 @@ export class CustomPopupComponent implements OnInit {
       });
     }
   }
-
 
   public openApp() {
     // org.shikshalokam.app://community.shikshalokam.org/learn

@@ -190,12 +190,9 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.getOldDataToSync();
       this.storage.get('userTokens').then(data => {
-        console.log('data checking user 146', data);
         if (data != null) {
-          console.log('/project-view/home');
           this.router.navigateByUrl('/project-view/home');
         } else {
-          console.log('/login');
           this.router.navigateByUrl('/login');
         }
       })
@@ -235,7 +232,6 @@ export class AppComponent {
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
-        console.log(this.router.url, "this.router.url", s);
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
           //this.presentAlertConfirm();
           navigator['app'].exitApp();
@@ -593,15 +589,12 @@ export class AppComponent {
   // get profile data
   public getProfileData() {
     this.storage.get('userTokens').then(data => {
-      console.log(data, "data ssss");
       if (data) {
         let userDetails;
         this.storage.get('userTokens').then(data => {
           userDetails = jwt_decode(data.access_token);
           this.projectService.getProfileData(userDetails.sub).subscribe((data: any) => {
-            console.log(data.result, "data.result");
             this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(data => {
-
             })
             if (data.result) {
               if (data.result.allowProfileUpdateForm) {
@@ -647,7 +640,6 @@ export class AppComponent {
           })
         })
       } else {
-        console.log('602 navigate to login');
         this.router.navigateByUrl('/login');
       }
     })

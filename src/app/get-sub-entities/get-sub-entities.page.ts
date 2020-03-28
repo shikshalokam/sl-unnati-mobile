@@ -9,6 +9,7 @@ import { UpdateProfileService } from '../update-profile/update-profile.service';
 export class GetSubEntitiesPage implements OnInit {
   @Input() data;
   searchInput;
+  toBeSearch;
   entity;
   page = 1;
   limit = 10;
@@ -18,10 +19,10 @@ export class GetSubEntitiesPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.searchInput = this.data.options;
-    console.log('searchInput',this.searchInput);
-     if (this.data.value && this.data.value.length > 0) {
-      this.searchInput.forEach(option => {
+    this.toBeSearch = this.data.options;
+    console.log(this.toBeSearch,"tobeasearch")
+    if (this.data.value && this.data.value.length > 0) {
+      this.toBeSearch.forEach(option => {
         option.isChecked = false;
         this.data.value.forEach(value => {
           if (value.value == option._id) {
@@ -30,7 +31,7 @@ export class GetSubEntitiesPage implements OnInit {
         });
       });
     } else {
-      this.searchInput.forEach(option => {
+      this.toBeSearch.forEach(option => {
         option.isChecked = false;
       });
     }
@@ -41,7 +42,7 @@ export class GetSubEntitiesPage implements OnInit {
 
   public submit() {
     this.data.value = [];
-    this.searchInput.forEach(entity => {
+    this.toBeSearch.forEach(entity => {
       if (entity.isChecked) {
         let data = {
           label: entity.label,
@@ -50,16 +51,15 @@ export class GetSubEntitiesPage implements OnInit {
         this.data.value.push(data);
       }
     });
-    console.log(this.data, " this.data on submit");
     this.modalController.dismiss(this.data);
   }
   public search() {
     this.updateProfileService.searchEntities(this.data.dependent, this.data.field, this.searchInput, 1, this.limit).subscribe((data: any) => {
-      console.log(data, 'data');
       if ((this.page * this.limit) < data.count) {
         this.page++
       }
-      this.searchInput = data.result.data;
+      this.toBeSearch = data.result.data;
+      console.log(this.toBeSearch.length);
     })
   }
 }

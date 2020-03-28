@@ -25,7 +25,6 @@ export class TokenInterceptor implements HttpInterceptor {
         public storage: Storage,
         public platform: Platform,
         public api: ApiProvider) {
-        console.log('in constructor calling');
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -69,7 +68,6 @@ export class TokenInterceptor implements HttpInterceptor {
                     if (error.error.success === false) {
                         this.presentToast('Login failed');
                     } else {
-                        console.log('ggggg navigating to login')
                         // this.router.navigate(['login']);
                     }
                 }

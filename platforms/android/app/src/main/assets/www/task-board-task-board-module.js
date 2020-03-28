@@ -112,9 +112,6 @@ var TaskBoardPage = /** @class */ (function () {
         this.ongoing = [];
         this.past = [];
         this.storage.get('latestProjects').then(function (projects) {
-            projects.forEach(function (program) {
-                console.log(program, "program");
-            });
             projects.forEach(function (programsList) {
                 if (programsList.projects) {
                     programsList.projects.forEach(function (project) {

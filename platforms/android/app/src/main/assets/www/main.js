@@ -1423,13 +1423,10 @@ var AppComponent = /** @class */ (function () {
         this.platform.ready().then(function () {
             _this.getOldDataToSync();
             _this.storage.get('userTokens').then(function (data) {
-                console.log('data checking user 146', data);
                 if (data != null) {
-                    console.log('/project-view/home');
                     _this.router.navigateByUrl('/project-view/home');
                 }
                 else {
-                    console.log('/login');
                     _this.router.navigateByUrl('/login');
                 }
             });
@@ -1469,7 +1466,6 @@ var AppComponent = /** @class */ (function () {
                 var tree = _this.router.parseUrl(_this.router.url);
                 var g = tree.root.children[_angular_router__WEBPACK_IMPORTED_MODULE_9__["PRIMARY_OUTLET"]];
                 var s = g.segments;
-                console.log(_this.router.url, "this.router.url", s);
                 if (_this.router.url == '/login' || _this.router.url == '/project-view/home') {
                     //this.presentAlertConfirm();
                     navigator['app'].exitApp();
@@ -1871,13 +1867,11 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.getProfileData = function () {
         var _this = this;
         this.storage.get('userTokens').then(function (data) {
-            console.log(data, "data ssss");
             if (data) {
                 var userDetails_1;
                 _this.storage.get('userTokens').then(function (data) {
                     userDetails_1 = jwt_decode__WEBPACK_IMPORTED_MODULE_20__(data.access_token);
                     _this.projectService.getProfileData(userDetails_1.sub).subscribe(function (data) {
-                        console.log(data.result, "data.result");
                         _this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(function (data) {
                         });
                         if (data.result) {
@@ -1925,7 +1919,6 @@ var AppComponent = /** @class */ (function () {
                 });
             }
             else {
-                console.log('602 navigate to login');
                 _this.router.navigateByUrl('/login');
             }
         });
@@ -1985,10 +1978,10 @@ var AppComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppConfigs", function() { return AppConfigs; });
 var AppConfigs = {
-    appVersion: "2.0.3",
+    appVersion: "2.0.4",
     appName: "unnati",
-    currentVersion: "20003",
-    currentEnvironment: 'dev',
+    currentVersion: "20004",
+    currentEnvironment: 'qa',
     environments: [
         {
             name: 'dev',
@@ -2002,34 +1995,34 @@ var AppConfigs = {
         }
     ],
     // Dev urls
-    app_url: "https://dev.shikshalokam.org",
-    api_url: "https://devhome.shikshalokam.org",
-    api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
-    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
-    clientId: "sl-ionic-connect",
-    environment: "Development",
-    //Notification urls
-    notification: {
-        kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
-        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
-        markAsRead: "/notifications/in-app/markAsRead/",
-        getAllNotifications: "/notifications/in-app/list",
-        registerDevice: "/notifications/push/registerDevice"
-    },
-    // QA
-    // app_url: "https://qa.shikshalokam.org",
-    // api_url: "https://qahome.shikshalokam.org",
-    // api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
-    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    // app_url: "https://dev.shikshalokam.org",
+    // api_url: "https://devhome.shikshalokam.org",
+    // api_base_url: "https://devhome.shikshalokam.org/assessment-service/api/v1",
+    // api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYTJiMTA5MWVlMDE0MDQ3OTdhYjRjZDI3ODJmYTFkZCJ9.olC-mJ9JVqeeIf-eyBVYciPIIsqDm46XHbKuO1GgNG0',
     // clientId: "sl-ionic-connect",
-    // environment: "qa",
+    // environment: "Development",
+    // //Notification urls
     // notification: {
-    //     kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+    //     kendra_base_url: "https://devhome.shikshalokam.org/kendra-service/api/",
     //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
     //     markAsRead: "/notifications/in-app/markAsRead/",
     //     getAllNotifications: "/notifications/in-app/list",
     //     registerDevice: "/notifications/push/registerDevice"
     // },
+    // QA
+    app_url: "https://qa.shikshalokam.org",
+    api_url: "https://qahome.shikshalokam.org",
+    api_base_url: "https://community.shikshalokam.org/assessment/api/v1",
+    api_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGYxZGEyNDEwYzg0NTA1OGIwODQ2YmZkYjkyMzNjYSJ9.osbihbs4szlRkDI9x70wPBvC0MY3Rwdh6KapmTUFj5U',
+    clientId: "sl-ionic-connect",
+    environment: "qa",
+    notification: {
+        kendra_base_url: "https://qahome.shikshalokam.org/kendra-service/api/",
+        getUnreadNotificationCount: "/notifications/in-app/unReadCount",
+        markAsRead: "/notifications/in-app/markAsRead/",
+        getAllNotifications: "/notifications/in-app/list",
+        registerDevice: "/notifications/push/registerDevice"
+    },
     //AWS Prod Urls
     // app_url: "https://bodh.shikshalokam.org",
     // api_url: "https://api.shikshalokam.org",
@@ -2711,7 +2704,6 @@ var CustomPopupComponent = /** @class */ (function () {
     CustomPopupComponent.prototype.getTranslateKeys = function () {
         var _this = this;
         if (this.header && this.body && this.button) {
-            console.log(this.showPopup, " this.showPopup =");
             this.translate.get([this.header, this.body, this.button]).subscribe(function (text) {
                 _this.header = text[_this.header];
                 _this.body = text[_this.body];
@@ -3031,7 +3023,7 @@ var FcmProvider = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-content>\n  <ion-item class=\"search-bar-custom\">\n    <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n    <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\" (keydown)=\"search()\">\n    </ion-input>\n    <!-- (keyup)=\"searchSchool(searchInput)\" -->\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor=\"let entity of  toBeSearch\">\n      <ion-label> {{entity.label}}</ion-label>\n      <ion-checkbox slot=\"end\" [(ngModel)]=\"entity.isChecked\"></ion-checkbox>\n    </ion-item>\n  </ion-list>\n</ion-content>\n\n<ion-footer>\n  <ion-toolbar>\n    <ion-row>\n      <ion-col size=\"6\">\n        <ion-button expand=\"block\" color=\"light\" (click)=\"close()\">{{'back' | translate}}</ion-button>\n      </ion-col>\n      <ion-col zise=\"6\">\n        <ion-button expand=\"block\" color=\"primary\" (click)=\"submit()\">{{'submit' | translate}}</ion-button>\n      </ion-col>\n    </ion-row>\n  </ion-toolbar>\n</ion-footer>"
+module.exports = "<ion-content>\n  <ion-item class=\"search-bar-custom\">\n    <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n    <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\"\n      (ionChange)=\"search()\">\n    </ion-input>\n    <!-- (keyup)=\"searchSchool(searchInput)\" -->\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor=\"let entity of toBeSearch\">\n      <ion-label> {{entity.label}}</ion-label>\n      <ion-checkbox slot=\"end\" [(ngModel)]=\"entity.isChecked\"></ion-checkbox>\n    </ion-item>\n  </ion-list>\n  <ion-card *ngIf=\"toBeSearch && toBeSearch.length == 0\" style=\"text-align: center;\">\n    No data found.\n  </ion-card>\n</ion-content>\n\n<ion-footer>\n  <ion-toolbar>\n    <ion-row>\n      <ion-col size=\"6\">\n        <ion-button expand=\"block\" color=\"light\" (click)=\"close()\">{{'back' | translate}}</ion-button>\n      </ion-col>\n      <ion-col zise=\"6\">\n        <ion-button expand=\"block\" color=\"primary\" (click)=\"submit()\">{{'submit' | translate}}</ion-button>\n      </ion-col>\n    </ion-row>\n  </ion-toolbar>\n</ion-footer>"
 
 /***/ }),
 
@@ -3073,10 +3065,10 @@ var GetSubEntitiesPage = /** @class */ (function () {
     }
     GetSubEntitiesPage.prototype.ngOnInit = function () {
         var _this = this;
-        this.searchInput = this.searchInput;
-        console.log('searchInput', this.searchInput);
+        this.toBeSearch = this.data.options;
+        console.log(this.toBeSearch, "tobeasearch");
         if (this.data.value && this.data.value.length > 0) {
-            this.searchInput.forEach(function (option) {
+            this.toBeSearch.forEach(function (option) {
                 option.isChecked = false;
                 _this.data.value.forEach(function (value) {
                     if (value.value == option._id) {
@@ -3086,7 +3078,7 @@ var GetSubEntitiesPage = /** @class */ (function () {
             });
         }
         else {
-            this.searchInput.forEach(function (option) {
+            this.toBeSearch.forEach(function (option) {
                 option.isChecked = false;
             });
         }
@@ -3097,7 +3089,7 @@ var GetSubEntitiesPage = /** @class */ (function () {
     GetSubEntitiesPage.prototype.submit = function () {
         var _this = this;
         this.data.value = [];
-        this.searchInput.forEach(function (entity) {
+        this.toBeSearch.forEach(function (entity) {
             if (entity.isChecked) {
                 var data = {
                     label: entity.label,
@@ -3106,17 +3098,16 @@ var GetSubEntitiesPage = /** @class */ (function () {
                 _this.data.value.push(data);
             }
         });
-        console.log(this.data, " this.data on submit");
         this.modalController.dismiss(this.data);
     };
     GetSubEntitiesPage.prototype.search = function () {
         var _this = this;
         this.updateProfileService.searchEntities(this.data.dependent, this.data.field, this.searchInput, 1, this.limit).subscribe(function (data) {
-            console.log(data, 'data');
             if ((_this.page * _this.limit) < data.count) {
                 _this.page++;
             }
-            _this.searchInput = data.result.data;
+            _this.toBeSearch = data.result.data;
+            console.log(_this.toBeSearch.length);
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -3532,7 +3523,6 @@ var TokenInterceptor = /** @class */ (function () {
         this.storage = storage;
         this.platform = platform;
         this.api = api;
-        console.log('in constructor calling');
     }
     TokenInterceptor.prototype.intercept = function (request, next) {
         var _this = this;
@@ -3573,7 +3563,6 @@ var TokenInterceptor = /** @class */ (function () {
                     _this.presentToast('Login failed');
                 }
                 else {
-                    console.log('ggggg navigating to login');
                     // this.router.navigate(['login']);
                 }
             }

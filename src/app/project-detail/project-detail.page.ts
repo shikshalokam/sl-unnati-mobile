@@ -46,7 +46,6 @@ export class ProjectDetailPage {
       this.editGoal = false;
       if (param.cat) {
         this.category = param.cat;
-        console.log(this.category, "this.category");
         if (this.category == 'my-projects' || this.category == 'active-projects' || this.category == 'all-projects' || this.category == 'projectsList') {
           this.back = 'project-view/projects';
         } else if (this.category == 'schools') {

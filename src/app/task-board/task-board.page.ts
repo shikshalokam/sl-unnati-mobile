@@ -24,10 +24,6 @@ export class TaskBoardPage {
     this.ongoing = [];
     this.past = [];
     this.storage.get('latestProjects').then(projects => {
-      projects.forEach(program => {
-        console.log(program, "program");
-      });
-
       projects.forEach(programsList => {
         if (programsList.projects) {
           programsList.projects.forEach(project => {

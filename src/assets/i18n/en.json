@@ -28,6 +28,7 @@
         "post": "Post"
     },
     "message": {
+        "fileds_mandatory": "Please fill Mandatory Fields",
         "noUnreadNotifications": "You have no new Notifications!",
         "nerwork_connection_check": "Please check your internet connection.",
         "comingsoon": "Coming Soon.",

@@ -169,7 +169,6 @@ var LastMonthReportsPage = /** @class */ (function () {
                         };
                         _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
                             _this.myReportsService.getReports(userTokens_1.access_token, 'lastMonth').subscribe(function (data) {
-                                console.log(data, "resp");
                                 _this.report = data.data;
                                 if (data.status != "failed") {
                                     _this.setupChart();

@@ -71,13 +71,11 @@ export class AboutPage implements OnInit {
     this.login.doLogout().then(data => {
       this.badge.clear();
       this.login.loggedIn('false');
-      console.log('navigation lohin 74 about');
       this.router.navigateByUrl('/login');
     }, error => {
       //  alert(error + "Logout error") 
     })
     if (!localStorage.getItem("token")) {
-      console.log('navigation lohin 80 about');
       this.router.navigateByUrl('/login');
     }
   }

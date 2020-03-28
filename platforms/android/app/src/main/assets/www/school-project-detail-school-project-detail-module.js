@@ -289,7 +289,6 @@ var SchoolProjectDetailPage = /** @class */ (function () {
             }, function (error) {
                 _this.showSkeleton = false;
                 if (error.status === 0) {
-                    console.log("/login 163 ");
                     _this.router.navigateByUrl('/login');
                 }
             });
