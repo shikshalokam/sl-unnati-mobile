@@ -27,6 +27,8 @@ export class ProjectsPage {
   showSkeleton: boolean = false;
   showNoDataCard = '';
   myProjects;
+  searchProjects;
+  showHardcodedMyprojects: boolean = true;
   //public projects:any =[];
   constructor(public currentUser: CurrentUserProvider,
     public homeService: HomeService,
@@ -55,6 +57,7 @@ export class ProjectsPage {
   }
 
   ionViewDidEnter() {
+    this.searchProjects = '';
     this.connected = localStorage.getItem("networkStatus");
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
@@ -65,14 +68,31 @@ export class ProjectsPage {
 
   public getActiveProjects() {
     this.showSkeleton = true;
-    this.storage.get('projects').then(projects => {
+    this.storage.get('latestProjects').then(projects => {
       if (projects) {
-        projects[0].projects.sort((a, b) => {
-          return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
-        });
+        // projects[0].projects.sort((a, b) => {
+        //   return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+        // });
+        console.log(this.projectList, "this.projectList");
+        if (projects) {
+          projects.forEach(programsList => {
+            if (programsList.programs) {
+              if (programsList.programs._id == "5e01da0c0c72d5597433ec7a") {
+                this.showHardcodedMyprojects = false;
+                console.log(this.showHardcodedMyprojects, "this.showHardcodedMyprojects");
+              }
+              console.log(programsList.projects, "programsList.projects before");
+              programsList.projects.sort((a, b) => {
+                return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+              });
+              console.log(programsList.projects, "programsList.projects after");
+            }
+          });
+        }
+
         this.projectList = projects;
         this.showSkeleton = false;
-      }else {
+      } else {
         this.showSkeleton = false;
       }
     });

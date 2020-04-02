@@ -84,7 +84,7 @@ export class TasksPage implements OnInit {
     //       this.storage.get('currentProject').then(data => {
     //         this.storage.set('currentProject', data).then(response => {
     //           this.tasks = response.tasks;
-    //           this.storage.get('projects').then((data: any) => {
+    //           this.storage.get('latestProjects').then((data: any) => {
     //             this.tasksService.loadProject();
     //           })
     //         })
@@ -129,7 +129,7 @@ export class TasksPage implements OnInit {
   }
   
   updateProjects(data) {
-    this.storage.set('projects', data).then(data => {
+    this.storage.set('latestProjects', data).then(data => {
     })
   }
 }

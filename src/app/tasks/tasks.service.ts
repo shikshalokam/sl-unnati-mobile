@@ -29,7 +29,7 @@ export class TasksService {
         project.tasks.push(JSON.stringify(task));
         // parse recentely added task
         project.tasks[project.tasks.length - 1] = JSON.parse(project.tasks[project.tasks.length - 1]);
-        this.storage.get('projects').then(data => {
+        this.storage.get('latestProjects').then(data => {
           if (typeof data == "string") {
             data = JSON.parse(data);
           }
@@ -38,7 +38,7 @@ export class TasksService {
             projects.projects.forEach(array => {
               if (array._id === project._id) {
                 array.tasks.push(task);
-                this.storage.set('projects', JSON.stringify(data)).then(data => {
+                this.storage.set('latestProjects', JSON.stringify(data)).then(data => {
                   this.loadProject();
                 });
               }
@@ -83,7 +83,7 @@ export class TasksService {
             if (task._id === currentTask._id) {
               task.subTasks.push(JSON.stringify(subtask));
               task.subTasks[task.subTasks.length - 1] = JSON.parse(task.subTasks[task.subTasks.length - 1]);
-              this.storage.get('projects').then(data => {
+              this.storage.get('latestProjects').then(data => {
                 if (typeof data == "string") {
                   data = JSON.parse(data);
                 }
@@ -93,7 +93,7 @@ export class TasksService {
                     array.tasks.forEach(task => {
                       if (task._id == currentTask._id) {
                         task.subTasks.push(subtask);
-                        this.storage.set('projects', JSON.stringify(data)).then(data => {
+                        this.storage.set('latestProjects', JSON.stringify(data)).then(data => {
                           this.loadProject();
                           // this.location.back();
                         });
@@ -155,7 +155,7 @@ export class TasksService {
             }
           })
 
-          this.storage.get('projects').then(projectsList => {
+          this.storage.get('latestProjects').then(projectsList => {
             if (typeof projectsList == "string") {
               projectsList = JSON.parse(projectsList);
             }
@@ -168,7 +168,7 @@ export class TasksService {
                 task.title = value.title;
                 task.startDate = value.startDate;
                 task.endDate = value.endDate;
-                this.storage.set('projects', projectsList).then(data => {
+                this.storage.set('latestProjects', projectsList).then(data => {
                   this.loadProject();
                 })
               }
@@ -200,7 +200,7 @@ export class TasksService {
             this.storage.set('currentProject', data).then(data => {
               this.updateProjectsDetails(value.Project_id);
             });
-            this.storage.get('projects').then(projectsList => {
+            this.storage.get('latestProjects').then(projectsList => {
               if (typeof projectsList == "string") {
                 projectsList = JSON.parse(projectsList);
               }
@@ -214,7 +214,7 @@ export class TasksService {
                         subtask.title = value.title;
                         subtask.startDate = value.startDate;
                         subtask.endDate = value.endDate;
-                        return this.storage.set('projects', projectsList).then(data => {
+                        return this.storage.set('latestProjects', projectsList).then(data => {
                           this.loadProject();
                         })
                       }
@@ -234,7 +234,7 @@ export class TasksService {
     this.storage.get('currentProject').then(data => {
       currentProject = data;
     })
-    this.storage.get('projects').then(projects => {
+    this.storage.get('latestProjects').then(projects => {
       if (projects.data != null) {
         if (typeof projects.data == 'string') {
           projects.data = JSON.parse(projects.data);
@@ -246,10 +246,10 @@ export class TasksService {
           projects.data.tasks.push(currentProject.tasks);
           this.storage.set('currentProject', projects.data).then(data => {
           })
-          this.storage.set('projects', projects).then(data => {
+          this.storage.set('latestProjects', projects).then(data => {
           });
         }
-        this.storage.set('projects', projects).then(data => {
+        this.storage.set('latestProjects', projects).then(data => {
         });
       }
     })

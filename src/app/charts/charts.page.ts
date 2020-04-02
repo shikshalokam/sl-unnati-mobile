@@ -48,7 +48,7 @@ export class ChartsPage implements OnInit, OnDestroy {
     });
     this.route.params.subscribe(params => {
       this.id = params.id;
-      this.storage.get('projects').then(data => {
+      this.storage.get('latestProjects').then(data => {
         if (typeof data == 'string') {
           data = JSON.parse(data);
         }

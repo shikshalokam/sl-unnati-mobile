@@ -29,11 +29,10 @@ export class AppComponent {
 
   @ViewChild(NavController) nav: NavController;
   @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
-  lastTimeBackPress = 0;
-  timePeriodToExit = 2000;
   mappedProjectsToSync;
   myProjectsToSync;
   projectsToSync = [];
+  oldProjectsToSync = [];
   subscription: Subscription;
   loading;
   header;
@@ -49,7 +48,6 @@ export class AppComponent {
   public loggedIn: boolean = false;
   public appPages = [];
   public history = [];
-
   public isConnected: any = localStorage.getItem('networkStatus');
   public loggedInUser;
   constructor(
@@ -101,7 +99,7 @@ export class AppComponent {
               url: '',
             },
             {
-              title: 'Tutorial Video',
+              title: 'Tutorial Video',
               icon: 'play',
               url: '/project-view/tutorial-videos',
             },
@@ -131,6 +129,12 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.getOldDataTOSync();
+      if (localStorage.getItem("token") != null) {
+        this.router.navigateByUrl('/project-view/home');
+      } else {
+        this.router.navigateByUrl('/login');
+      }
       if (!this.isConnected && !navigator.onLine) {
         this.networkService.networkErrorToast();
       }
@@ -140,7 +144,7 @@ export class AppComponent {
       this.platform.pause.subscribe(() => {
         localStorage.setItem('isPopUpShowen', null);
       });
-      // this.fcm.connectSubscription.unsubscribe();
+      // this.fcm.connectSubscription.unsubscribe();
       this.fcm.subscribeToPushNotifications();
       this.fcm.localNotificationClickHandler();
       this.network.onDisconnect()
@@ -160,7 +164,7 @@ export class AppComponent {
           }, 15000);
           localStorage.setItem("networkStatus", this.isConnected);
         });
-      // this.networkSubscriber();
+      // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
       this.platform.backButton.subscribeWithPriority(9999, () => {
@@ -250,7 +254,7 @@ export class AppComponent {
         this.router.navigateByUrl('/login');
       }
       this.hideSplasher();
-      // this.splashScreen.hide();
+      // this.splashScreen.hide();
     });
   }
   hideSplasher() {
@@ -261,7 +265,7 @@ export class AppComponent {
     }
   }
 
-  //Langugae change
+  //Langugae change
   public setLang(lang) {
     let language: string = this.translate.currentLang;
     if (lang != language) {
@@ -285,11 +289,12 @@ export class AppComponent {
   public navigate(url, title) {
     if (title == 'Sync') {
       this.prepareMappedProjectToSync();
+      this.getOldDataTOSync();
     } else if (url) {
       this.router.navigate([url]);
     }
   }
-  async presentAlertCheckbox() {
+  async presentAlertCheckbox() {
     let language: string = this.translate.currentLang;
     let selectLan;
     this.translate.get('select_languages').subscribe((text: string) => {
@@ -301,14 +306,14 @@ export class AppComponent {
         {
           name: 'selectedLang',
           type: 'radio',
-          label: `English English`,
+          label: `English English`,
           value: 'en',
           checked: 'en' == language
         },
         {
           name: 'selectedLang',
           type: 'radio',
-          label: 'Kannada ಕನ್ನಡ',
+          label: 'Kannada ಕನ್ನಡ',
           value: 'ka',
           checked: 'ka' == language
         }
@@ -351,13 +356,13 @@ export class AppComponent {
         this.networkService.status(this.isConnected);
       }, error => {
       });
-    // this.networkSubscriber();
+    // this.networkSubscriber();
   }
 
   public prepareMappedProjectToSync() {
     this.mappedProjectsToSync = false;
     this.projectsToSync = [];
-    this.storage.get('projects').then(myProjects => {
+    this.storage.get('latestProjects').then(myProjects => {
       if (myProjects) {
         myProjects.forEach(projectList => {
           projectList.projects.forEach(project => {
@@ -384,11 +389,11 @@ export class AppComponent {
                   }
                 });
               }
-              // this.autoSync(project);
-              // intentially left blank
+              // this.autoSync(project);
+              // intentially left blank
               this.projectsToSync.push(project);
             } else {
-              // intentially left blank
+              // intentially left blank
             }
           });
         })
@@ -404,9 +409,9 @@ export class AppComponent {
       }
     })
   }
-  // auto sync
+  // auto sync
   public autoSync() {
-    if (this.isConnected) {
+    // if (this.isConnected) {
       if (this.projectsToSync.length > 0) {
         this.storage.get('userTokens').then(data => {
           if (data) {
@@ -421,13 +426,18 @@ export class AppComponent {
                   let projects = {
                     projects: this.projectsToSync
                   }
-                  this.toastService.startLoader('Your data is syncing');
+                  this.toastService.startLoader('Your data is syncing');
                   this.projectService.sync(projects, data.access_token).subscribe((data: any) => {
                     this.toastService.stopLoader();
                     if (data.status === "failed") {
                       this.toastService.errorToast(data.message);
                     } else if (data.status == "success" || data.status == "succes") {
                       this.syncUpdateInLocal(data.allProjects.data);
+                      this.storage.get('myprojects').then(myProjects => {
+                        if (myProjects) {
+                          this.storage.set('myprojects', '').then(myprojects => { })
+                        }
+                      })
                     }
                   }, error => {
                     this.toastService.stopLoader();
@@ -448,6 +458,143 @@ export class AppComponent {
           this.toastService.stopLoader();
         })
       }
+    // }
+    //  else {
+    //   this.toastService.errorToast('message.nerwork_connection_check');
+    // }
+  }
+  //  sync old data from older versions
+  public getOldDataTOSync() {
+    let myProjectsToSync = [];
+    let oldProjectsToSync = [];
+    this.storage.get('userTokens').then(data => {
+      if (data) {
+        this.storage.get('myprojects').then(myProjects => {
+          if (myProjects) {
+            myProjects.forEach(element => {
+              if (element.isNew == undefined) {
+                element.isNew = true;
+              }
+              if (element.tasks && element.tasks.length > 0) {
+                element.tasks.forEach(task => {
+                  if (task.isNew && task._id) {
+                    delete task._id;
+                  }
+                  if (task.subTasks && task.subTasks.length > 0) {
+                    task.subTasks.forEach(subtasks => {
+                      if (subtasks.isNew && subtasks._id) {
+                        delete subtasks._id;
+                      }
+                    })
+                  }
+                });
+              }
+              myProjectsToSync.push(element);
+            });
+            //this.prepareMappedProjectToSync();
+            if (myProjectsToSync.length > 0) {
+              this.syncOldData(myProjectsToSync);
+            }
+          }
+        })
+      }
+    })
+    this.storage.get('projects').then(data => {
+      // version 0.0.3
+      if (data && data.data) {
+        data.data.forEach(programs => {
+          programs.projects.forEach(element => {
+            oldProjectsToSync.push(element);
+          });
+        });
+        if (oldProjectsToSync.length > 0) {
+          this.syncOldData1(oldProjectsToSync);
+        }
+      }
+    })
+  }
+  syncOldData1(oldProjectsToSync) {
+    if (this.isConnected) {
+      if (oldProjectsToSync.length > 0) {
+        this.storage.get('userTokens').then(data => {
+          if (data) {
+            this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+              let parsedData = JSON.parse(data._body);
+              if (parsedData && parsedData.access_token) {
+                let userTokens = {
+                  access_token: parsedData.access_token,
+                  refresh_token: parsedData.refresh_token,
+                };
+                this.storage.set('userTokens', userTokens).then(data => {
+                  let projects = {
+                    projects: oldProjectsToSync
+                  }
+                  this.projectService.oldDataSync(projects, data.access_token).subscribe((data: any) => {
+                    if (data.status === "failed") {
+                      this.toastService.errorToast(data.message);
+                    } else if (data.status == "success" || data.status == "succes") {
+                      this.syncUpdateInLocal(data.allProjects.data);
+                      this.storage.set('projects', '').then(myprojects => {
+                      })
+                    }
+                  }, error => {
+                    this.toastService.errorToast(error.message);
+                  })
+                })
+              }
+            }, error => {
+              if (error.status === 0) {
+                this.router.navigateByUrl('/login');
+              }
+            })
+          } else {
+            this.router.navigateByUrl('/login');
+          }
+        })
+      }
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
+  }
+  syncOldData(oldProjectsToSync) {
+    if (this.isConnected) {
+      if (oldProjectsToSync.length > 0) {
+        this.storage.get('userTokens').then(data => {
+          if (data) {
+            this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+              let parsedData = JSON.parse(data._body);
+              if (parsedData && parsedData.access_token) {
+                let userTokens = {
+                  access_token: parsedData.access_token,
+                  refresh_token: parsedData.refresh_token,
+                };
+                this.storage.set('userTokens', userTokens).then(data => {
+                  let projects = {
+                    projects: oldProjectsToSync
+                  }
+                  this.projectService.oldDataSync(projects, data.access_token).subscribe((data: any) => {
+                    if (data.status === "failed") {
+                      this.toastService.errorToast(data.message);
+                    } else if (data.status == "success" || data.status == "succes") {
+                      this.syncUpdateInLocal(data.allProjects.data);
+                      this.storage.set('myprojects', '').then(myprojects => {
+                      })
+                    }
+                  }, error => {
+                    this.toastService.errorToast(error.message);
+                  })
+                })
+              }
+            }, error => {
+              if (error.status === 0) {
+                this.router.navigateByUrl('/login');
+              }
+            })
+          } else {
+            this.router.navigateByUrl('/login');
+          }
+        })
+      }
     } else {
       this.toastService.errorToast('message.nerwork_connection_check');
     }
@@ -465,7 +612,7 @@ export class AppComponent {
         }
       })
     });
-    this.storage.set('projects', syncedProjects).then(myprojectsff => {
+    this.storage.set('latestProjects', syncedProjects).then(myprojectsff => {
       this.toastService.successToast('message.sync_success');
       this.homeService.syncUpdated();
     })
