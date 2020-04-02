@@ -120,7 +120,7 @@ export class SubtaskViewPage implements OnInit {
                   });
                 });
               })
-              this.storage.get('projects').then(data => {
+              this.storage.get('latestProjects').then(data => {
                 if (typeof data == "string") {
                   data = JSON.parse(data);
                 }
@@ -132,7 +132,7 @@ export class SubtaskViewPage implements OnInit {
                         task.subTasks.forEach(subtask => {
                           if (subtask._id == cst._id) {
                             subtask.isDeleted = true;
-                            this.storage.set('projects', JSON.stringify(data)).then(data => {
+                            this.storage.set('latestProjects', JSON.stringify(data)).then(data => {
                               this.tasksService.loadProject();
                               this.location.back();
                             });
@@ -262,7 +262,7 @@ export class SubtaskViewPage implements OnInit {
                           task.subTasks = currentTask.subTasks;
                           //  task.subTasks.push(currentTask.subTasks);
                           this.storage.set('currentProject', cp).then(currentProject => {
-                            this.storage.get('projects').then(projectsList => {
+                            this.storage.get('latestProjects').then(projectsList => {
                               if (typeof projectsList == "string") {
                                 projectsList = JSON.parse(projectsList);
                               }
@@ -271,7 +271,7 @@ export class SubtaskViewPage implements OnInit {
                                   if (project._id == currentProject._id) {
                                     project.tasks = currentProject.tasks;
                                     //   project.tasks.push(currentProject.tasks);
-                                    this.storage.set('projects', projectsList).then(pl => {
+                                    this.storage.set('latestProjects', projectsList).then(pl => {
                                       this.location.back();
                                       this.tasksService.loadProject();
                                     })

@@ -12,7 +12,7 @@ export class CategoryViewService {
     public http: HttpClient) { }
   //  get my projects from local 
   public getMyProjects() {
-    return this.storage.get('projects').then(projects => {
+    return this.storage.get('latestProjects').then(projects => {
       return projects;
     })
   }
