@@ -20,7 +20,6 @@ export class GetSubEntitiesPage implements OnInit {
 
   ngOnInit() {
     this.toBeSearch = this.data.options;
-    console.log(this.toBeSearch,"tobeasearch")
     if (this.data.value && this.data.value.length > 0) {
       this.toBeSearch.forEach(option => {
         option.isChecked = false;
@@ -59,7 +58,6 @@ export class GetSubEntitiesPage implements OnInit {
         this.page++
       }
       this.toBeSearch = data.result.data;
-      console.log(this.toBeSearch.length);
     })
   }
 }

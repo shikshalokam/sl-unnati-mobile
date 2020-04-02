@@ -19,6 +19,7 @@ import { AppConfigs } from '../app.config';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  timeInterval;
   @Input() title: string;
   @Input() showMenu: boolean = true;
   @Input() showBack: boolean;
@@ -46,24 +47,30 @@ export class HeaderComponent implements OnInit {
       this.connected = status;
     })
     this.isIos = this.platform.is('ios') ? true : false;
-    notificationCardService.notificationCount.subscribe(count => {
+    notificationCardService.notificationCount.subscribe((count: any) => {
       this.notificationCount = count;
       this.badge.set(this.notificationCount);
     })
+    this.startNotificationPooling();
   }
 
   ngOnInit() {
-    this.storage.set('appUpdateVersions', AppConfigs.appVersion);
-    this.isIos = this.platform.is('ios') ? true : false;
-    this.getNotificationCount();
+    this.platform.ready().then(() => {
+      this.storage.get('userTokens').then(data => {
+        if (data) {
+          this.getNotificationCount();
+        }
+      })
+      this.isIos = this.platform.is('ios') ? true : false;
+    })
   }
 
   public getNotificationCount(infinateScrollRefrnc?) {
     this.notificationCardService.checkForNotificationApi().subscribe((data: any) => {
-      if (data.result.data && data.result.data.length) {
+      if (data.result) {
+        this.notificationCardService.getCount(data.result.count);
         this.initiatePopup(data.result.data);
       }
-      this.notificationCardService.getCount(data.result.count);
     }, error => {
     })
   }
@@ -87,21 +94,31 @@ export class HeaderComponent implements OnInit {
     let isRejected;
     data.forEach(element => {
       if (element.action == "versionUpdate") {
-        // this.appVersion.getVersionNumber().then(currentVersion => {
-        if (element.payload.appVersion != parseInt(AppConfigs.appVersion)) {
-          this.storage.get('isRejected').then(data => {
-            isRejected = data;
-          })
+        if (element.payload.appVersion != AppConfigs.appVersion) {
           this.storage.get('appUpdateVersions').then(statusObj => {
-            if (statusObj && element.payload.appVersion != statusObj && !isRejected) {
+            if (statusObj) {
+              if (element.payload.appVersion != statusObj) {
+                this.storage.set('appUpdateVersions', element.payload.appVersion).then(statusObj => {
+                })
+                this.notificationCardService.AppupdateEvent(element);
+              }
+            } else {
               this.notificationCardService.AppupdateEvent(element);
             }
           }).catch(error => {
             this.notificationCardService.AppupdateEvent(element);
           })
         }
-        // })
       }
     });
+
+  }
+  startNotificationPooling() {
+    this.timeInterval = setInterval(() => {
+      if (this.connected) {
+        this.getNotificationCount();
+      }
+    }, 12000);
+    this.getNotificationCount();
   }
 }

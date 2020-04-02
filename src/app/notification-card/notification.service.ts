@@ -12,11 +12,12 @@ export class NotificationCardService {
     timeInterval;
     token;
     notificationCount = new Subject();
+    appUpdatePopUp = new Subject();
     appUpdate = new Subject();
     constructor(public http: HttpClient,
         public storage: Storage,
         public platform: Platform) {
-        //  this.startNotificationPooling();
+        // this.startNotificationPooling();
     }
     public getAllNotifications(pageCount, limit) {
         return this.http.get(AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit)
@@ -27,6 +28,7 @@ export class NotificationCardService {
     }
 
     checkForNotificationApi() {
+        console.log('calling checkForNotificationApi');
         return this.http.get(AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.getUnreadNotificationCount + '?appName=unnati')
     }
     //   getMappedAssessment(notificationMeta) {
@@ -50,14 +52,10 @@ export class NotificationCardService {
     startNotificationPooling() {
         this.timeInterval = setInterval(() => {
             if (navigator.onLine) {
-                this.storage.get('userTokens').then(token => {
-                    this.checkForNotificationApi();
-                })
+                this.checkForNotificationApi();
             }
         }, 12000);
-        this.storage.get('userTokens').then(token => {
-            this.checkForNotificationApi();
-        })
+        this.checkForNotificationApi();
     }
 
     getCount(count) {
@@ -66,5 +64,8 @@ export class NotificationCardService {
 
     AppupdateEvent(data) {
         this.appUpdate.next(data);
+    }
+    popClose() {
+        this.appUpdatePopUp.next();
     }
 }

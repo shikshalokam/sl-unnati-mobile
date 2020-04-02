@@ -1209,7 +1209,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser>\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n            <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n          </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content>\n        <ion-list>\n          <div *ngFor=\"let p of appPages\">\n            <!-- *ngIf=\"p.url\" -->\n            <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.title != 'Settings'\">\n              <ion-item [routerDirection]=\"'root'\" (click)=\"navigate(p.url,p.title)\">\n                <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n                <ion-label>\n                  {{p.title}}\n                </ion-label>\n              </ion-item>\n            </ion-menu-toggle>\n            <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\"\n              detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n              <ion-label>{{ p.title }}</ion-label>\n            </ion-item>\n            <!-- Children List for clicked Item -->\n            <ion-list *ngIf=\"p.open\">\n              <ion-menu-toggle auto-hide=\"false\">\n                <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n                  routerLinkActive=\"active\" style=\"padding-left:30px;\"\n                  (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n                  <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n                  <ion-label>\n                    {{ sub.title }}\n                  </ion-label>\n                </ion-item>\n              </ion-menu-toggle>\n            </ion-list>\n          </div>\n        </ion-list>\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n  <div *ngIf=\"showUpdatePop\">\n    <app-custom-popup [header]=\"header\" [showPopup]=\"false\" [showCloseButton]=\"showCloseButton\" [appUpdate]=\"appUpdate\"\n      [body]=\"body\" [button]=\"button\" [showUpdatePopup]=\"true\" [isActionable]=\"isActionable\">\n    </app-custom-popup>\n  </div>\n</ion-app>"
+module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser>\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n            <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n          </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content>\n        <ion-list>\n          <div *ngFor=\"let p of appPages\">\n            <!-- *ngIf=\"p.url\" -->\n            <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.title != 'Settings'\">\n              <ion-item [routerDirection]=\"'root'\" (click)=\"navigate(p.url,p.title)\">\n                <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n                <ion-label>\n                  {{p.title}}\n                </ion-label>\n              </ion-item>\n            </ion-menu-toggle>\n            <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\"\n              detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n              <ion-label>{{ p.title }}</ion-label>\n            </ion-item>\n            <!-- Children List for clicked Item -->\n            <ion-list *ngIf=\"p.open\">\n              <ion-menu-toggle auto-hide=\"false\">\n                <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n                  routerLinkActive=\"active\" style=\"padding-left:30px;\"\n                  (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n                  <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n                  <ion-label>\n                    {{ sub.title }}\n                  </ion-label>\n                </ion-item>\n              </ion-menu-toggle>\n            </ion-list>\n          </div>\n        </ion-list>\n    {{showUpdatePop}} --- fff\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n  <div *ngIf=\"showUpdatePop\">\n    <app-custom-popup [appUpdate]=\"appUpdate\" [showUpdatePopup]=\"showUpdatePopup\" [showPopup]=\"showPopup\">\n    </app-custom-popup>\n  </div>\n</ion-app>"
 
 /***/ }),
 
@@ -1298,6 +1298,9 @@ var AppComponent = /** @class */ (function () {
         this.categoryViewService = categoryViewService;
         this.notificationCardService = notificationCardService;
         this.showCloseButton = false;
+        this.appUpdate = {};
+        this.showPopup = false;
+        this.showUpdatePopup = false;
         this.isActionable = '';
         this.projectsToSync = [];
         this.oldProjectsToSync = [];
@@ -1311,11 +1314,19 @@ var AppComponent = /** @class */ (function () {
         this.history = [];
         this.isConnected = localStorage.getItem('networkStatus');
         this.platform.ready().then(function () {
+            _this.notificationCardService.appUpdatePopUp.subscribe(function (data) {
+                _this.showUpdatePop = false;
+            });
             _this.notificationCardService.appUpdate.subscribe(function (payload) {
                 if (payload) {
-                    _this.showUpdatePop = true;
                     _this.appUpdate = payload;
-                    _this.showCloseButton = true;
+                    _this.appUpdate.actions = {
+                        showCloseButton: true,
+                        showUpdatePopup: true,
+                    };
+                    _this.showUpdatePopup = true;
+                    _this.showUpdatePop = true;
+                    _this.showPopup = false;
                 }
             });
             _this.homeService.tobeSync.subscribe(function (value) {
@@ -1421,7 +1432,6 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.initializeApp = function () {
         var _this = this;
         this.platform.ready().then(function () {
-            _this.getOldDataToSync();
             _this.storage.get('userTokens').then(function (data) {
                 if (data != null) {
                     _this.router.navigateByUrl('/project-view/home');
@@ -1459,6 +1469,9 @@ var AppComponent = /** @class */ (function () {
                 }, 15000);
                 localStorage.setItem("networkStatus", _this.isConnected);
             });
+            if (_this.isConnected) {
+                _this.getOldDataToSync();
+            }
             // this.networkSubscriber();
             _this.statusBar.overlaysWebView(false);
             _this.statusBar.backgroundColorByHexString('#fff');
@@ -1704,7 +1717,9 @@ var AppComponent = /** @class */ (function () {
                     _this.toastService.successToast('message.already_sync');
                 }
                 else {
-                    _this.autoSync();
+                    if (_this.isConnected) {
+                        _this.autoSync();
+                    }
                 }
             }
             else {
@@ -1866,62 +1881,87 @@ var AppComponent = /** @class */ (function () {
     // get profile data
     AppComponent.prototype.getProfileData = function () {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            if (data) {
-                var userDetails_1;
-                _this.storage.get('userTokens').then(function (data) {
-                    userDetails_1 = jwt_decode__WEBPACK_IMPORTED_MODULE_20__(data.access_token);
-                    _this.projectService.getProfileData(userDetails_1.sub).subscribe(function (data) {
-                        _this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(function (data) {
-                        });
-                        if (data.result) {
-                            if (data.result.allowProfileUpdateForm) {
-                                _this.appPages = [
-                                    {
-                                        title: 'Home',
-                                        url: '/project-view/home',
-                                        icon: 'home'
-                                    },
-                                    {
-                                        title: 'Sync',
-                                        icon: 'sync',
-                                        url: '',
-                                    },
-                                    {
-                                        title: 'Tutorial Video',
-                                        icon: 'play',
-                                        url: '/project-view/tutorial-videos',
-                                    },
-                                    {
-                                        title: 'Profile Update',
-                                        icon: 'person',
-                                        url: '/project-view/update-profile',
-                                    },
-                                    {
-                                        title: 'About',
-                                        url: '/project-view/about',
-                                        icon: 'information-circle'
-                                    },
-                                    {
-                                        title: 'Settings',
-                                        icon: 'md-settings',
-                                        children: [
-                                            {
-                                                title: 'Languages',
-                                                icon: 'globe'
-                                            },
-                                        ]
+        if (this.isConnected) {
+            this.storage.get('userTokens').then(function (data) {
+                if (data) {
+                    var userDetails_1;
+                    _this.storage.get('userTokens').then(function (data) {
+                        userDetails_1 = jwt_decode__WEBPACK_IMPORTED_MODULE_20__(data.access_token);
+                        _this.projectService.getProfileData(userDetails_1.sub).subscribe(function (data) {
+                            _this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(function (data) {
+                            });
+                            if (data.result) {
+                                if (data.result.showPopupForm == false) {
+                                    var isPopUpShowen = localStorage.getItem('isPopUpShowen');
+                                    if (isPopUpShowen == "null") {
+                                        isPopUpShowen = false;
                                     }
-                                ];
+                                    if (!isPopUpShowen) {
+                                        _this.appUpdate.title = 'Confirm your details!';
+                                        _this.appUpdate.text = 'Please update your details. Help us make your experience better.';
+                                        _this.appUpdate.isActionable = '/project-view/update-profile';
+                                        _this.appUpdate.actions = {
+                                            showCloseButton: true,
+                                            showUpdatePopup: true,
+                                            showUpdatePop: true,
+                                        };
+                                        _this.showUpdatePop = true,
+                                            _this.showUpdatePopup = false;
+                                        _this.showPopup = true;
+                                        isPopUpShowen = localStorage.getItem('isPopUpShowen');
+                                    }
+                                    else {
+                                        _this.showUpdatePop = false;
+                                    }
+                                }
+                                if (data.result.allowProfileUpdateForm) {
+                                    _this.appPages = [
+                                        {
+                                            title: 'Home',
+                                            url: '/project-view/home',
+                                            icon: 'home'
+                                        },
+                                        {
+                                            title: 'Sync',
+                                            icon: 'sync',
+                                            url: '',
+                                        },
+                                        {
+                                            title: 'Tutorial Video',
+                                            icon: 'play',
+                                            url: '/project-view/tutorial-videos',
+                                        },
+                                        {
+                                            title: 'Profile Update',
+                                            icon: 'person',
+                                            url: '/project-view/update-profile',
+                                        },
+                                        {
+                                            title: 'About',
+                                            url: '/project-view/about',
+                                            icon: 'information-circle'
+                                        },
+                                        {
+                                            title: 'Settings',
+                                            icon: 'md-settings',
+                                            children: [
+                                                {
+                                                    title: 'Languages',
+                                                    icon: 'globe'
+                                                },
+                                            ]
+                                        }
+                                    ];
+                                }
                             }
-                        }
+                        });
                     });
-                });
-            }
-            else {
-                _this.router.navigateByUrl('/login');
-            }
-        });
+                }
+                else {
+                    _this.router.navigateByUrl('/login');
+                }
+            });
+        }
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["NavController"]),
@@ -1981,7 +2021,7 @@ var AppConfigs = {
     appVersion: "2.0.4",
     appName: "unnati",
     currentVersion: "20004",
-    currentEnvironment: 'qa',
+    currentEnvironment: 'dev',
     environments: [
         {
             name: 'dev',
@@ -2617,7 +2657,7 @@ var CurrentUserProvider = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"custom-popup\" *ngIf=\"showPopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"close-btn\" *ngIf=\"showCloseButton\">\n      <ion-icon name=\"close-circle\" style=\"float:right; font-size: 24px;\" (click)=\"cancel()\" style=\" font-size: 1.5em;\">\n      </ion-icon>\n    </div>\n    <div class=\"pop-msg\">\n      <h5 class=\"bottom-border\"> {{header}}</h5>\n      <h5> {{body}}</h5>\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"navigateToProfile()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{button}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>\n<div class=\"custom-popup\" *ngIf=\"showUpdatePopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"close-btn\" *ngIf=\"showCloseButton\">\n      <ion-icon name=\"close-circle\" style=\"float:right; font-size: 24px;\" (click)=\"close()\" style=\" font-size: 1.5em;\">\n      </ion-icon>\n    </div>\n    <div class=\"pop-msg\">\n      <h5 class=\"bottom-border\">{{appUpdate?.title}}</h5>\n      <h5> {{appUpdate.text}}</h5>\n      <div *ngIf=\"releaseNote?.length\">\n        <p>Release note</p>\n        <ul>\n          <li *ngFor=\"let note of releaseNote\">{{note}}</li>\n        </ul>\n      </div>\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"openApp()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{button}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>"
+module.exports = "<div class=\"custom-popup\" *ngIf=\"showPopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"close-btn\" *ngIf=\"appUpdate.actions.showCloseButton\">\n      <ion-icon name=\"close-circle\" style=\"float:right; font-size: 24px;\" (click)=\"cancel()\" style=\" font-size: 1.5em;\">\n      </ion-icon>\n    </div>\n    <div class=\"pop-msg\">\n      <h5 class=\"bottom-border\">{{appUpdate?.title}}</h5>\n      <h5> {{appUpdate.text}}</h5>\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"navigateToProfile()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{button}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>\n\n<!-- App update -->\n<div class=\"custom-popup\" *ngIf=\"showUpdatePopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"close-btn\" *ngIf=\"appUpdate.actions.showCloseButton\">\n      <ion-icon name=\"close-circle\" style=\"float:right; font-size: 24px;\" (click)=\"close()\" style=\" font-size: 1.5em;\">\n      </ion-icon>\n    </div>\n    <div class=\"pop-msg\">\n      <h5 class=\"bottom-border\">{{appUpdate?.title}}</h5>\n      <h5> {{appUpdate.text}}</h5>\n      <div *ngIf=\"releaseNote?.length\">\n        <p>Release note</p>\n        <ul>\n          <li *ngFor=\"let note of releaseNote\">{{note}}</li>\n        </ul>\n      </div>\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"openApp()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{button}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -2649,7 +2689,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/market/ngx */ "./node_modules/@ionic-native/market/ngx/index.js");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
 /* harmony import */ var _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/app-launcher/ngx */ "./node_modules/@ionic-native/app-launcher/ngx/index.js");
-/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+/* harmony import */ var _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../notification-card/notification.service */ "./src/app/notification-card/notification.service.ts");
 
 
 
@@ -2659,13 +2699,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var CustomPopupComponent = /** @class */ (function () {
-    function CustomPopupComponent(router, translate, market, storage, appLauncher) {
+    function CustomPopupComponent(router, translate, market, storage, appLauncher, notificationCardService
+    // public appVersion: AppVersion,
+    ) {
         var _this = this;
         this.router = router;
         this.translate = translate;
         this.market = market;
         this.storage = storage;
         this.appLauncher = appLauncher;
+        this.notificationCardService = notificationCardService;
         this.storage.get('appUpdateVersions').then(function (obj) {
             _this.currentAppVersionObj = obj;
         }).catch(function (error) {
@@ -2696,8 +2739,8 @@ var CustomPopupComponent = /** @class */ (function () {
     };
     CustomPopupComponent.prototype.navigateToProfile = function () {
         this.closepopup();
-        if (this.isActionable) {
-            this.router.navigate([this.isActionable]);
+        if (this.appUpdate.isActionable) {
+            this.router.navigate([this.appUpdate.isActionable]);
         }
         this.showPopup = false;
     };
@@ -2719,7 +2762,7 @@ var CustomPopupComponent = /** @class */ (function () {
         };
         this.appLauncher.canLaunch(options).then(function (canLaunch) {
             if (canLaunch) {
-                _this.currentAppVersionObj = _app_config__WEBPACK_IMPORTED_MODULE_7__["AppConfigs"].appVersion;
+                _this.currentAppVersionObj = _this.appUpdate.payload.appVersion;
                 _this.storage.set('appUpdateVersions', _this.currentAppVersionObj);
                 _this.storage.set('isRejected', false).then(function (data) {
                 });
@@ -2742,11 +2785,12 @@ var CustomPopupComponent = /** @class */ (function () {
         });
     };
     CustomPopupComponent.prototype.close = function () {
+        this.notificationCardService.popClose();
         this.showUpdatePopup = false;
-        this.currentAppVersionObj = '';
+        this.currentAppVersionObj = this.appUpdate.payload.appVersion;
+        this.storage.set('appUpdateVersions', this.currentAppVersionObj);
         this.storage.set('isRejected', true).then(function (data) {
         });
-        this.storage.set('appUpdateVersions', this.currentAppVersionObj);
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -2790,7 +2834,10 @@ var CustomPopupComponent = /** @class */ (function () {
             _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"],
             _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_4__["Market"],
             _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
-            _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_6__["AppLauncher"]])
+            _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_6__["AppLauncher"],
+            _notification_card_notification_service__WEBPACK_IMPORTED_MODULE_7__["NotificationCardService"]
+            // public appVersion: AppVersion,
+        ])
     ], CustomPopupComponent);
     return CustomPopupComponent;
 }());
@@ -3066,7 +3113,6 @@ var GetSubEntitiesPage = /** @class */ (function () {
     GetSubEntitiesPage.prototype.ngOnInit = function () {
         var _this = this;
         this.toBeSearch = this.data.options;
-        console.log(this.toBeSearch, "tobeasearch");
         if (this.data.value && this.data.value.length > 0) {
             this.toBeSearch.forEach(function (option) {
                 option.isChecked = false;
@@ -3107,7 +3153,6 @@ var GetSubEntitiesPage = /** @class */ (function () {
                 _this.page++;
             }
             _this.toBeSearch = data.result.data;
-            console.log(_this.toBeSearch.length);
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -3258,19 +3303,26 @@ var HeaderComponent = /** @class */ (function () {
             _this.notificationCount = count;
             _this.badge.set(_this.notificationCount);
         });
+        this.startNotificationPooling();
     }
     HeaderComponent.prototype.ngOnInit = function () {
-        this.storage.set('appUpdateVersions', _app_config__WEBPACK_IMPORTED_MODULE_11__["AppConfigs"].appVersion);
-        this.isIos = this.platform.is('ios') ? true : false;
-        this.getNotificationCount();
+        var _this = this;
+        this.platform.ready().then(function () {
+            _this.storage.get('userTokens').then(function (data) {
+                if (data) {
+                    _this.getNotificationCount();
+                }
+            });
+            _this.isIos = _this.platform.is('ios') ? true : false;
+        });
     };
     HeaderComponent.prototype.getNotificationCount = function (infinateScrollRefrnc) {
         var _this = this;
         this.notificationCardService.checkForNotificationApi().subscribe(function (data) {
-            if (data.result.data && data.result.data.length) {
+            if (data.result) {
+                _this.notificationCardService.getCount(data.result.count);
                 _this.initiatePopup(data.result.data);
             }
-            _this.notificationCardService.getCount(data.result.count);
         }, function (error) {
         });
     };
@@ -3294,22 +3346,33 @@ var HeaderComponent = /** @class */ (function () {
         var isRejected;
         data.forEach(function (element) {
             if (element.action == "versionUpdate") {
-                // this.appVersion.getVersionNumber().then(currentVersion => {
-                if (element.payload.appVersion != parseInt(_app_config__WEBPACK_IMPORTED_MODULE_11__["AppConfigs"].appVersion)) {
-                    _this.storage.get('isRejected').then(function (data) {
-                        isRejected = data;
-                    });
+                if (element.payload.appVersion != _app_config__WEBPACK_IMPORTED_MODULE_11__["AppConfigs"].appVersion) {
                     _this.storage.get('appUpdateVersions').then(function (statusObj) {
-                        if (statusObj && element.payload.appVersion != statusObj && !isRejected) {
+                        if (statusObj) {
+                            if (element.payload.appVersion != statusObj) {
+                                _this.storage.set('appUpdateVersions', element.payload.appVersion).then(function (statusObj) {
+                                });
+                                _this.notificationCardService.AppupdateEvent(element);
+                            }
+                        }
+                        else {
                             _this.notificationCardService.AppupdateEvent(element);
                         }
                     }).catch(function (error) {
                         _this.notificationCardService.AppupdateEvent(element);
                     });
                 }
-                // })
             }
         });
+    };
+    HeaderComponent.prototype.startNotificationPooling = function () {
+        var _this = this;
+        this.timeInterval = setInterval(function () {
+            if (_this.connected) {
+                _this.getNotificationCount();
+            }
+        }, 12000);
+        this.getNotificationCount();
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -3523,6 +3586,7 @@ var TokenInterceptor = /** @class */ (function () {
         this.storage = storage;
         this.platform = platform;
         this.api = api;
+        this.refreshTokenInProgress = false;
     }
     TokenInterceptor.prototype.intercept = function (request, next) {
         var _this = this;
@@ -3559,32 +3623,43 @@ var TokenInterceptor = /** @class */ (function () {
             return event;
         }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["catchError"])(function (error) {
             if (error.status === 401) {
-                if (error.error.success === false) {
-                    _this.presentToast('Login failed');
+                if (!_this.refreshTokenInProgress) {
+                    _this.storage.get('userTokens').then(function (token) {
+                        _this.api.refershToken(token.refresh_token).subscribe(function (data) {
+                            var parsedData = JSON.parse(data._body);
+                            if (parsedData && parsedData.access_token) {
+                                var userTokens = {
+                                    access_token: parsedData.access_token,
+                                    refresh_token: parsedData.refresh_token,
+                                };
+                                _this.storage.set('userTokens', userTokens).then(function (data) {
+                                });
+                                _this.refreshTokenInProgress = true;
+                                request = request.clone({
+                                    setHeaders: {
+                                        'x-auth-token': _this.token.access_token,
+                                        'x-authenticated-user-token': _this.token.access_token,
+                                        'gpsLocation': '0,0',
+                                        'appVersion': _app_config__WEBPACK_IMPORTED_MODULE_8__["AppConfigs"].appVersion,
+                                        'appName': _app_config__WEBPACK_IMPORTED_MODULE_8__["AppConfigs"].appName,
+                                        'appType': "improvement-project",
+                                        'os': _this.platform.is('ios') ? 'ios' : 'android'
+                                    }
+                                });
+                                return next.handle(request);
+                            }
+                        });
+                    });
                 }
                 else {
-                    // this.router.navigate(['login']);
+                    _this.router.navigate(['login']);
                 }
             }
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(error);
         }));
     };
     TokenInterceptor.prototype.getFreshToken = function () {
-        var _this = this;
-        this.storage.get('userTokens').then(function (token) {
-            _this.api.refershToken(token.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens).then(function (data) {
-                    });
-                    return _this.token = userTokens.access_token;
-                }
-            });
-        });
+        console.log('in get token interceptoor');
     };
     TokenInterceptor.prototype.presentToast = function (msg) {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
@@ -4145,8 +4220,9 @@ var NotificationCardService = /** @class */ (function () {
         this.storage = storage;
         this.platform = platform;
         this.notificationCount = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
+        this.appUpdatePopUp = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
         this.appUpdate = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
-        //  this.startNotificationPooling();
+        // this.startNotificationPooling();
     }
     NotificationCardService.prototype.getAllNotifications = function (pageCount, limit) {
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit);
@@ -4155,6 +4231,7 @@ var NotificationCardService = /** @class */ (function () {
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.markAsRead + id + '?appName=unnati');
     };
     NotificationCardService.prototype.checkForNotificationApi = function () {
+        console.log('calling checkForNotificationApi');
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getUnreadNotificationCount + '?appName=unnati');
     };
     //   getMappedAssessment(notificationMeta) {
@@ -4176,20 +4253,19 @@ var NotificationCardService = /** @class */ (function () {
         var _this = this;
         this.timeInterval = setInterval(function () {
             if (navigator.onLine) {
-                _this.storage.get('userTokens').then(function (token) {
-                    _this.checkForNotificationApi();
-                });
+                _this.checkForNotificationApi();
             }
         }, 12000);
-        this.storage.get('userTokens').then(function (token) {
-            _this.checkForNotificationApi();
-        });
+        this.checkForNotificationApi();
     };
     NotificationCardService.prototype.getCount = function (count) {
         this.notificationCount.next(count);
     };
     NotificationCardService.prototype.AppupdateEvent = function (data) {
         this.appUpdate.next(data);
+    };
+    NotificationCardService.prototype.popClose = function () {
+        this.appUpdatePopUp.next();
     };
     NotificationCardService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({

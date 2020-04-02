@@ -143,7 +143,7 @@ var HomePageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"\" [noBorder]=\"true\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <!-- loader -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- loader ends here -->\n  <div *ngIf=\"!showSkeleton\">\n    <div *ngIf=\"showUpdatePop\">\n      <app-custom-popup [header]=\"header\" [appUpdate]=\"appUpdate\" [body]=\"body\" [button]=\"button\" [showPopup]=\"true\"\n        [isActionable]=\"isActionable\">\n      </app-custom-popup>\n    </div>\n    <ion-item class=\"search-bar-custom\">\n      <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n      <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\"></ion-input>\n      <!-- (keyup)=\"searchSchool(searchInput)\" -->\n    </ion-item>\n    <div *ngIf=\"!searchInput\">\n      <ion-grid class=\"tiles-container\">\n        <ion-row>\n          <ion-col *ngFor=\"let tile of tiles\" class=\"tiles\" size=\"6\">\n            <ion-card (click)=\"navigate(tile.url)\">\n              <img src=\"{{tile.icon}}\">\n              <p>{{tile.title}}</p>\n            </ion-card>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n      <div class=\"activeprojects-container\" *ngIf=\"activeProjects\">\n        <h4>{{'home.active_projects' | translate}} </h4>\n        <div *ngFor=\"let ap of activeProjects\">\n          <ion-card (click)=\"viewProject(ap)\">\n            <ion-card-header style=\"padding: 0px;\">\n              <div class=\"collection-label\">{{ap.category}}</div>\n            </ion-card-header>\n            <ion-card-content style=\"padding:0px;\">\n              <ion-row>\n                <ion-col class=\"date-col\">\n                  <h3> {{ap.endDate | date : 'MMM dd'}} </h3>\n                </ion-col>\n                <ion-col class=\"title-col\">\n                  {{ap.title}}\n                </ion-col>\n              </ion-row>\n            </ion-card-content>\n          </ion-card>\n        </div>\n        <ion-button class=\"activeproject-btn\" expand=\"block\" color=\"secondary\" *ngIf=\"activeProjects?.length > 0\"\n          (click)=\"viewMore()\">\n          {{'button.view_more' | translate}}\n        </ion-button>\n      </div>\n    </div>\n    <!-- Search Results -->\n    <div *ngIf=\"searchInput\">\n      <div class=\"welcome-card custom-card\" *ngFor=\"let projects of projectList;\" style=\"margin:10px;\">\n        <div *ngIf=\"(projects.projects | searchProjects: searchInput).length == 0\" style=\"text-align:center;\">\n        </div>\n        <div *ngFor=\"let project of projects.projects | searchProjects: searchInput\">\n          <ion-card class=\"inner-card search-results\" *ngIf=\"!project.isDeleted\" (click)=\"navigateToDetails(project)\">\n            <ion-grid>\n              <ion-row>\n                <ion-col style=\"min-width: 85%; margin: auto;\n              font-weight: 500;\">\n                  {{ project.title }}\n                </ion-col>\n                <ion-col class=\"arrow-mark\">\n                  <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n                </ion-col>\n              </ion-row>\n            </ion-grid>\n          </ion-card>\n        </div>\n      </div>\n      <!-- Search my projects -->\n      <!-- <div class=\"welcome-card custom-card\" style=\"margin:10px;\">\n        <div *ngFor=\"let project of myProjects | searchProjects: searchInput\">\n          <ion-card class=\"inner-card search-results\" (click)=\"navigateToDetails(project)\" *ngIf=\"!project.isDeleted\">\n            <ion-grid>\n              <ion-row>\n                <ion-col style=\"min-width: 85%; margin: auto;\n                font-weight: 500;\">\n                  {{ project.title }}\n                </ion-col>\n                <ion-col class=\"arrow-mark\">\n                  <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n                </ion-col>\n              </ion-row>\n            </ion-grid>\n          </ion-card>\n        </div>\n      </div> -->\n      <!-- Schools  -->\n      <ion-card class=\"welcome-card custom-card\" *ngIf=\"( mySchools | searchSchool: searchInput).length == 0\">\n        <div class=\"no-results\">\n          No Data available.\n        </div>\n      </ion-card>\n      <ion-card class=\"inner-card search-results\" *ngFor=\"let school of mySchools | searchSchool: searchInput\"\n        style=\"margin:10px;\" (click)=\"navigateToSchool(school)\">\n        <ion-grid>\n          <ion-row>\n            <ion-col style=\"min-width: 85%; margin: auto;\n            font-weight: 500;\">\n              {{school.name}}\n            </ion-col>\n            <ion-col class=\"arrow-mark\">\n              <ion-icon name=\"ios-arrow-forward\"></ion-icon>\n            </ion-col>\n          </ion-row>\n        </ion-grid>\n      </ion-card>\n      <!-- search library -->\n      <ion-card class=\"welcome-card custom-card\" *ngIf=\"( libraries | searchSchool: searchInput).length == 0\">\n        <div class=\"no-results\">\n          No Data available.\n        </div>\n      </ion-card>\n      <ion-card class=\"inner-card search-results\" *ngFor=\"let library of libraries | searchSchool: searchInput\"\n        style=\"margin:10px;\" (click)=\"navigateToLibrary(library.key)\">\n        <ion-grid>\n          <ion-row>\n            <ion-col style=\"min-width: 85%; margin: auto;\n            font-weight: 500;\">\n              {{library.name}}\n            </ion-col>\n            <ion-col class=\"arrow-mark\">\n              <ion-icon name=\"ios-arrow-forward\"></ion-icon>\n            </ion-col>\n          </ion-row>\n        </ion-grid>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"\" [noBorder]=\"true\">\n  </app-header>\n</ion-header>\n<ion-content>\n  <!-- loader -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- loader ends here -->\n  <div *ngIf=\"!showSkeleton\">\n    <!-- <div *ngIf=\"showUpdatePop\">\n      <app-custom-popup [header]=\"header\" [appUpdate]=\"appUpdate\" [body]=\"body\" [button]=\"button\" [showPopup]=\"true\"\n        [isActionable]=\"isActionable\">\n      </app-custom-popup>\n    </div> -->\n    <ion-item class=\"search-bar-custom\">\n      <ion-icon name=\"search\" item-left color=\"dark\"></ion-icon>\n      <ion-input type=\"text\" placeholder=\"{{'home.search' | translate }}\" [(ngModel)]=\"searchInput\"></ion-input>\n      <!-- (keyup)=\"searchSchool(searchInput)\" -->\n    </ion-item>\n    <div *ngIf=\"!searchInput\">\n      <ion-grid class=\"tiles-container\">\n        <ion-row>\n          <ion-col *ngFor=\"let tile of tiles\" class=\"tiles\" size=\"6\">\n            <ion-card (click)=\"navigate(tile.url)\">\n              <img src=\"{{tile.icon}}\">\n              <p>{{tile.title}}</p>\n            </ion-card>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n      <div class=\"activeprojects-container\" *ngIf=\"activeProjects\">\n        <h4>{{'home.active_projects' | translate}} </h4>\n        <div *ngFor=\"let ap of activeProjects\">\n          <ion-card (click)=\"viewProject(ap)\">\n            <ion-card-header style=\"padding: 0px;\">\n              <div class=\"collection-label\">{{ap.category}}</div>\n            </ion-card-header>\n            <ion-card-content style=\"padding:0px;\">\n              <ion-row>\n                <ion-col class=\"date-col\">\n                  <h3> {{ap.endDate | date : 'MMM dd'}} </h3>\n                </ion-col>\n                <ion-col class=\"title-col\">\n                  {{ap.title}}\n                </ion-col>\n              </ion-row>\n            </ion-card-content>\n          </ion-card>\n        </div>\n        <ion-button class=\"activeproject-btn\" expand=\"block\" color=\"secondary\" *ngIf=\"activeProjects?.length > 0\"\n          (click)=\"viewMore()\">\n          {{'button.view_more' | translate}}\n        </ion-button>\n      </div>\n    </div>\n    <!-- Search Results -->\n    <div *ngIf=\"searchInput\">\n      <div class=\"welcome-card custom-card\" *ngFor=\"let projects of projectList;\" style=\"margin:10px;\">\n        <div *ngIf=\"(projects.projects | searchProjects: searchInput).length == 0\" style=\"text-align:center;\">\n        </div>\n        <div *ngFor=\"let project of projects.projects | searchProjects: searchInput\">\n          <ion-card class=\"inner-card search-results\" *ngIf=\"!project.isDeleted\" (click)=\"navigateToDetails(project)\">\n            <ion-grid>\n              <ion-row>\n                <ion-col style=\"min-width: 85%; margin: auto;\n              font-weight: 500;\">\n                  {{ project.title }}\n                </ion-col>\n                <ion-col class=\"arrow-mark\">\n                  <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n                </ion-col>\n              </ion-row>\n            </ion-grid>\n          </ion-card>\n        </div>\n      </div>\n      <!-- Search my projects -->\n      <!-- <div class=\"welcome-card custom-card\" style=\"margin:10px;\">\n        <div *ngFor=\"let project of myProjects | searchProjects: searchInput\">\n          <ion-card class=\"inner-card search-results\" (click)=\"navigateToDetails(project)\" *ngIf=\"!project.isDeleted\">\n            <ion-grid>\n              <ion-row>\n                <ion-col style=\"min-width: 85%; margin: auto;\n                font-weight: 500;\">\n                  {{ project.title }}\n                </ion-col>\n                <ion-col class=\"arrow-mark\">\n                  <ion-icon name=\"ios-arrow-forward\"> </ion-icon>\n                </ion-col>\n              </ion-row>\n            </ion-grid>\n          </ion-card>\n        </div>\n      </div> -->\n      <!-- Schools  -->\n      <ion-card class=\"welcome-card custom-card\" *ngIf=\"( mySchools | searchSchool: searchInput).length == 0\">\n        <div class=\"no-results\">\n          No Data available.\n        </div>\n      </ion-card>\n      <ion-card class=\"inner-card search-results\" *ngFor=\"let school of mySchools | searchSchool: searchInput\"\n        style=\"margin:10px;\" (click)=\"navigateToSchool(school)\">\n        <ion-grid>\n          <ion-row>\n            <ion-col style=\"min-width: 85%; margin: auto;\n            font-weight: 500;\">\n              {{school.name}}\n            </ion-col>\n            <ion-col class=\"arrow-mark\">\n              <ion-icon name=\"ios-arrow-forward\"></ion-icon>\n            </ion-col>\n          </ion-row>\n        </ion-grid>\n      </ion-card>\n      <!-- search library -->\n      <ion-card class=\"welcome-card custom-card\" *ngIf=\"( libraries | searchSchool: searchInput).length == 0\">\n        <div class=\"no-results\">\n          No Data available.\n        </div>\n      </ion-card>\n      <ion-card class=\"inner-card search-results\" *ngFor=\"let library of libraries | searchSchool: searchInput\"\n        style=\"margin:10px;\" (click)=\"navigateToLibrary(library.key)\">\n        <ion-grid>\n          <ion-row>\n            <ion-col style=\"min-width: 85%; margin: auto;\n            font-weight: 500;\">\n              {{library.name}}\n            </ion-col>\n            <ion-col class=\"arrow-mark\">\n              <ion-icon name=\"ios-arrow-forward\"></ion-icon>\n            </ion-col>\n          </ion-row>\n        </ion-grid>\n      </ion-card>\n    </div>\n  </div>\n</ion-content>"
 
 /***/ }),
 
@@ -186,9 +186,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "./node_modules/@ionic-native/screen-orientation/ngx/index.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
-/* harmony import */ var _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../update-profile/update-profile.service */ "./src/app/update-profile/update-profile.service.ts");
-/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
-
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
 
 
 
@@ -209,7 +207,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var HomePage = /** @class */ (function () {
-    function HomePage(datepipe, storage, apiProvider, homeService, categoryViewService, router, projectsService, login, screenOrientation, projectService, translate, networkService, menuCtrl, reportsService, mySchoolsService, toastService, updateProfile) {
+    function HomePage(datepipe, storage, apiProvider, homeService, categoryViewService, router, projectsService, login, screenOrientation, projectService, translate, networkService, menuCtrl, reportsService, mySchoolsService, toastService) {
         var _this = this;
         this.datepipe = datepipe;
         this.storage = storage;
@@ -227,12 +225,8 @@ var HomePage = /** @class */ (function () {
         this.reportsService = reportsService;
         this.mySchoolsService = mySchoolsService;
         this.toastService = toastService;
-        this.updateProfile = updateProfile;
         this.connected = false;
         this.loggedIn = false;
-        this.appUpdate = '';
-        this.showCloseButton = false;
-        this.showUpdatePop = false;
         this.type = 'quarter';
         this.count = 100;
         this.page = 1;
@@ -275,24 +269,6 @@ var HomePage = /** @class */ (function () {
         // update profile pop handler
         homeService.localDataUpdated.subscribe(function (data) {
             _this.getActiveProjects();
-        });
-        updateProfile.updatedUser.subscribe(function (status) {
-            var isPopUpShowen = localStorage.getItem('isPopUpShowen');
-            if (isPopUpShowen == "null") {
-                isPopUpShowen = false;
-            }
-            if (status == "Update" && !isPopUpShowen) {
-                _this.body = 'message.update_profile';
-                _this.header = 'message.confirm_your_details';
-                _this.button = 'button.update';
-                _this.isActionable = '/project-view/update-profile';
-                _this.showUpdatePop = true;
-                _this.showCloseButton = true;
-                isPopUpShowen = localStorage.getItem('isPopUpShowen');
-            }
-            else {
-                _this.showUpdatePop = false;
-            }
         });
         homeService.activeProjectLoad.subscribe(function (data) {
             if (data == 'activeProjectLoad') {
@@ -384,9 +360,9 @@ var HomePage = /** @class */ (function () {
         this.activeProjects = [];
         var ap = [];
         var count = 0;
-        var environment = _app_config__WEBPACK_IMPORTED_MODULE_19__["AppConfigs"].currentEnvironment;
+        var environment = _app_config__WEBPACK_IMPORTED_MODULE_18__["AppConfigs"].currentEnvironment;
         var programId = '';
-        _app_config__WEBPACK_IMPORTED_MODULE_19__["AppConfigs"].environments.forEach(function (env) {
+        _app_config__WEBPACK_IMPORTED_MODULE_18__["AppConfigs"].environments.forEach(function (env) {
             if (environment === env.name) {
                 programId = env.programId;
             }
@@ -512,8 +488,7 @@ var HomePage = /** @class */ (function () {
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["MenuController"],
             _reports_reports_service__WEBPACK_IMPORTED_MODULE_13__["ReportsService"],
             _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_14__["MyschoolsService"],
-            _toast_service__WEBPACK_IMPORTED_MODULE_17__["ToastService"],
-            _update_profile_update_profile_service__WEBPACK_IMPORTED_MODULE_18__["UpdateProfileService"]])
+            _toast_service__WEBPACK_IMPORTED_MODULE_17__["ToastService"]])
     ], HomePage);
     return HomePage;
 }());

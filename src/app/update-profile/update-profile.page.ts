@@ -268,7 +268,6 @@ export class UpdateProfilePage {
         //   this.getImmediateChildren(element.value.value);
         // }
       });
-      console.log('stop 260')
       this.toastService.stopLoader();
       this.prepareForm();
       if (this.profileFormData[this.profileFormData.length - 1].field != 'state') {
@@ -286,7 +285,7 @@ export class UpdateProfilePage {
   }
 
   async selectEntity(data) {
-    console.log(data,"data nnn");
+    console.log(data, "data nnn");
     if (data.options) {
       const modal = await this.modalController.create({
         component: GetSubEntitiesPage,
