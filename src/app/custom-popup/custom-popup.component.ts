@@ -5,6 +5,7 @@ import { Market } from '@ionic-native/market/ngx';
 import { Storage } from '@ionic/storage';
 import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
 import { AppConfigs } from '../app.config';
+import{NotificationCardService} from '../notification-card/notification.service';
 
 @Component({
   selector: 'app-custom-popup',
@@ -28,6 +29,7 @@ export class CustomPopupComponent implements OnInit {
     public market: Market,
     public storage: Storage,
     public appLauncher: AppLauncher,
+    public notificationCardService:NotificationCardService
     // public appVersion: AppVersion,
   ) {
     this.storage.get('appUpdateVersions').then(obj => {
@@ -60,8 +62,8 @@ export class CustomPopupComponent implements OnInit {
   }
   public navigateToProfile() {
     this.closepopup();
-    if (this.isActionable) {
-      this.router.navigate([this.isActionable]);
+    if (this.appUpdate.isActionable) {
+      this.router.navigate([this.appUpdate.isActionable]);
     }
     this.showPopup = false;
   }
@@ -82,7 +84,7 @@ export class CustomPopupComponent implements OnInit {
     }
     this.appLauncher.canLaunch(options).then((canLaunch: boolean) => {
       if (canLaunch) {
-        this.currentAppVersionObj = AppConfigs.appVersion;
+        this.currentAppVersionObj = this.appUpdate.payload.appVersion;
         this.storage.set('appUpdateVersions', this.currentAppVersionObj);
         this.storage.set('isRejected', false).then(data => {
 
@@ -105,11 +107,11 @@ export class CustomPopupComponent implements OnInit {
     })
   }
   close() {
+    this.notificationCardService.popClose();
     this.showUpdatePopup = false;
-    this.currentAppVersionObj = ''
-    this.storage.set('isRejected', true).then(data => {
-
-    })
+    this.currentAppVersionObj = this.appUpdate.payload.appVersion;
     this.storage.set('appUpdateVersions', this.currentAppVersionObj);
+    this.storage.set('isRejected', true).then(data => {
+    })
   }
 }

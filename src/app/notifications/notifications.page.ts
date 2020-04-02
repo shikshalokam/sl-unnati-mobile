@@ -33,7 +33,7 @@ export class NotificationsPage implements OnInit {
     this.notificationCardService.getAllNotifications(this.page, this.limit).subscribe((success: any) => {
       this.totalCount = success.result.count;
       // this.notificationCardService.getCount(this.totalCount);
-      this.notifications = this.notifications.concat(success.result.data);
+      this.notifications = this.notifications.concat(success.result.count);
       this.showSkeleton = false;
     }, error => {
       this.showSkeleton = false;

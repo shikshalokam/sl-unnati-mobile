@@ -20,6 +20,7 @@ import { ToastController, Platform } from '@ionic/angular';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
     token;
+    refreshTokenInProgress = false;
     constructor(private router: Router,
         public toastController: ToastController,
         public storage: Storage,
@@ -65,10 +66,35 @@ export class TokenInterceptor implements HttpInterceptor {
             }),
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 401) {
-                    if (error.error.success === false) {
-                        this.presentToast('Login failed');
+                    if (!this.refreshTokenInProgress) {
+                        this.storage.get('userTokens').then(token => {
+                            this.api.refershToken(token.refresh_token).subscribe((data: any) => {
+                                let parsedData = JSON.parse(data._body);
+                                if (parsedData && parsedData.access_token) {
+                                    let userTokens = {
+                                        access_token: parsedData.access_token,
+                                        refresh_token: parsedData.refresh_token,
+                                    };
+                                    this.storage.set('userTokens', userTokens).then(data => {
+                                    })
+                                    this.refreshTokenInProgress = true;
+                                    request = request.clone({
+                                        setHeaders: {
+                                            'x-auth-token': this.token.access_token,
+                                            'x-authenticated-user-token': this.token.access_token,
+                                            'gpsLocation': '0,0',
+                                            'appVersion': AppConfigs.appVersion,
+                                            'appName': AppConfigs.appName,
+                                            'appType': "improvement-project",
+                                            'os': this.platform.is('ios') ? 'ios' : 'android'
+                                        }
+                                    });
+                                    return next.handle(request);
+                                }
+                            })
+                        })
                     } else {
-                        // this.router.navigate(['login']);
+                        this.router.navigate(['login']);
                     }
                 }
                 return throwError(error);
@@ -76,21 +102,8 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
     public getFreshToken() {
-        this.storage.get('userTokens').then(token => {
-            this.api.refershToken(token.refresh_token).subscribe((data: any) => {
-                let parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    let userTokens = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    this.storage.set('userTokens', userTokens).then(data => {
-                    })
-                    return this.token = userTokens.access_token
+        console.log('in get token interceptoor');
 
-                }
-            })
-        })
     }
     async presentToast(msg) {
         const toast = await this.toastController.create({

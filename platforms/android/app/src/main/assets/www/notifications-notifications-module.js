@@ -125,7 +125,7 @@ var NotificationsPage = /** @class */ (function () {
         this.notificationCardService.getAllNotifications(this.page, this.limit).subscribe(function (success) {
             _this.totalCount = success.result.count;
             // this.notificationCardService.getCount(this.totalCount);
-            _this.notifications = _this.notifications.concat(success.result.data);
+            _this.notifications = _this.notifications.concat(success.result.count);
             _this.showSkeleton = false;
         }, function (error) {
             _this.showSkeleton = false;

@@ -15,7 +15,6 @@ import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
-import { UpdateProfileService } from '../update-profile/update-profile.service';
 import { AppConfigs } from '../app.config';
 
 @Component({
@@ -26,14 +25,7 @@ import { AppConfigs } from '../app.config';
 export class HomePage implements OnInit {
   connected: any = false;
   loggedIn: boolean = false;
-  header;
-  appUpdate = '';
-  showCloseButton: boolean = false;
-  body;
-  button;
-  isActionable;
   myProjects;
-  showUpdatePop: boolean = false;
   type = 'quarter';
   count = 100;
   page = 1;
@@ -91,31 +83,12 @@ export class HomePage implements OnInit {
     public menuCtrl: MenuController,
     public reportsService: ReportsService,
     public mySchoolsService: MyschoolsService,
-    public toastService: ToastService,
-    public updateProfile: UpdateProfileService) {
+    public toastService: ToastService) {
     this.menuCtrl.enable(true);
     // update profile pop handler
 
     homeService.localDataUpdated.subscribe(data => {
       this.getActiveProjects();
-    })
-    updateProfile.updatedUser.subscribe((status) => {
-      let isPopUpShowen: any = localStorage.getItem('isPopUpShowen');
-      if (isPopUpShowen == "null") {
-        isPopUpShowen = false;
-      }
-      if (status == "Update" && !isPopUpShowen) {
-        this.body = 'message.update_profile';
-        this.header = 'message.confirm_your_details';
-        this.button = 'button.update';
-        this.isActionable = '/project-view/update-profile';
-        this.showUpdatePop = true;
-
-        this.showCloseButton = true;
-        isPopUpShowen = localStorage.getItem('isPopUpShowen');
-      } else {
-        this.showUpdatePop = false;
-      }
     })
     homeService.activeProjectLoad.subscribe(data => {
       if (data == 'activeProjectLoad') {
@@ -294,7 +267,7 @@ export class HomePage implements OnInit {
           this.getActiveProjects();
         })
       }
-    },error =>{
+    }, error => {
     })
   }
   //  get schools
