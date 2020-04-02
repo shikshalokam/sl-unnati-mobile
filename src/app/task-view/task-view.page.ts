@@ -104,7 +104,7 @@ export class TaskViewPage implements OnInit {
           };
           this.storage.set('userTokens', userTokens).then(usertoken => {
             this.taskService.syncTask(this.task, usertoken.access_token).subscribe((sync: any) => {
-              this.storage.get('projects').then((projects) => {
+              this.storage.get('latestProjects').then((projects) => {
                 if (typeof projects == 'string') {
                   projects = JSON.parse(projects);
                 }
@@ -115,7 +115,7 @@ export class TaskViewPage implements OnInit {
                     if (pro._id == sync.data._id) {
                       // project = sync;
                       pro.tasks = sync.data.tasks;
-                      this.storage.set('projects', projects).then(projectsUpdated => {
+                      this.storage.set('latestProjects', projects).then(projectsUpdated => {
                         this.taskService.loadProject();
                         this.router.navigate(['/project-view/detail']);
                       })
@@ -217,7 +217,7 @@ export class TaskViewPage implements OnInit {
           data.tasks[i].isDeleted = true;
           //   data.tasks.splice(i,1);
           this.storage.set('currentProject', data).then(data => {
-            this.storage.get('projects').then(schema => {
+            this.storage.get('latestProjects').then(schema => {
               if (typeof schema == "string") {
                 schema = JSON.parse(schema);
               }
@@ -227,7 +227,7 @@ export class TaskViewPage implements OnInit {
                     project.tasks.forEach(task => {
                       if (task._id == this.task._id) {
                         task.isDeleted = true;
-                        this.storage.set('projects', schema).then(data => {
+                        this.storage.set('latestProjects', schema).then(data => {
                           this.taskService.loadProject();
                           this.location.back();
                         })

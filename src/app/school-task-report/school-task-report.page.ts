@@ -119,7 +119,7 @@ export class SchoolTaskReportPage implements OnInit {
     this.connected = localStorage.getItem("networkStatus");
     let connected = navigator.onLine;
     if (connected) {
-      this.storage.get('projects').then(projects => {
+      this.storage.get('latestProjects').then(projects => {
         if (projects) {
           if (typeof projects == 'string') {
             projects = JSON.parse(projects);
@@ -152,7 +152,7 @@ export class SchoolTaskReportPage implements OnInit {
     let connected = navigator.onLine;
     if (connected) {
       // this.router.navigate(['/project-view/detail', id, 'school']);
-      this.storage.get('projects').then(projects => {
+      this.storage.get('latestProjects').then(projects => {
         if (projects) {
           if (typeof projects == 'string') {
             projects = JSON.parse(projects);
@@ -213,7 +213,7 @@ export class SchoolTaskReportPage implements OnInit {
                     }
                   })
                 });
-                this.storage.get('projects').then((projects: any) => {
+                this.storage.get('latestProjects').then((projects: any) => {
                   if (projects) {
                     if (typeof projects == 'string') {
                       projects = JSON.parse(projects);
@@ -223,7 +223,7 @@ export class SchoolTaskReportPage implements OnInit {
                       prjs.projects.forEach(project => {
                         if (project._id === id) {
                           prjs.projects.push(project);
-                          this.storage.set('projects', projects).then(projects => {
+                          this.storage.set('latestProjects', projects).then(projects => {
                           })
                           // this.storage.set('currentProject', project).then(cproject => {
                           //   if (path == 'details') {
@@ -244,7 +244,7 @@ export class SchoolTaskReportPage implements OnInit {
                     });
                     // })
                   } else {
-                    this.storage.set('projects', resp).then(projects => {
+                    this.storage.set('latestProjects', resp).then(projects => {
                       resp.data.projects.forEach(prj => {
                         // this.storage.set('currentProject', prj).then(cpsetup => {
                         //   if (path == 'details') {

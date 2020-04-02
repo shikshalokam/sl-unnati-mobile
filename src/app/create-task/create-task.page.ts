@@ -63,12 +63,36 @@ export class CreateTaskPage implements OnInit {
     })
   }
   public getCurrentProject(id) {
-    this.storage.get('projects').then(projectList => {
-      projectList[0].projects.forEach(project => {
-        if (project._id == id) {
-          this.currentMyProject = project;
-        }
-      });
+    let mapped: boolean = false;
+    this.storage.get('latestProjects').then(projectList => {
+      if (projectList) {
+        projectList.forEach(programs => {
+          programs.projects.forEach(project => {
+            if (project._id == id) {
+              this.currentMyProject = project;
+              mapped = true;
+            }
+          });
+        });
+        // projectList.programs.forEach(programs => {
+        //   if (programs.projects) {
+        //     programs.projects.forEach(project => {
+        //       if (project._id == id) {
+        //         this.currentMyProject = project;
+        //         mapped = true;
+        //       }
+        //     });
+        //   }
+        // });
+      }
+
+      if (!mapped) {
+        projectList[0].projects.forEach(project => {
+          if (project._id == id) {
+            this.currentMyProject = project;
+          }
+        });
+      }
     })
   }
   // set date
@@ -88,6 +112,7 @@ export class CreateTaskPage implements OnInit {
   //  Create new Task
   //  Create new Task
   public create() {
+    let mapped: boolean = false;
     if (!this.task.title) {
       this.markLabelsAsInvalid = true;
     } else {
@@ -111,18 +136,32 @@ export class CreateTaskPage implements OnInit {
       this.storage.set('newcreatedproject', this.currentMyProject).then(cp => {
         this.currentMyProject = cp;
         // if (this.currentMyProject.createdType) {
-        this.storage.get('projects').then(myProjects => {
+        this.storage.get('latestProjects').then(myProjects => {
           if (myProjects) {
+            if (myProjects.program)
+              myProjects.program.forEach(programs => {
+                if (programs.projects) {
+                  programs.projects.forEach(project => {
+                    if (project._id == cp._id) {
+                      this.currentMyProject = project;
+                      mapped = true;
+                    }
+                  });
+                }
+              });
+          }
+          if (!mapped) {
             myProjects[0].projects.forEach(function (myProject, i) {
               if (myProject._id == cp._id) {
                 myProjects[0].projects[i] = cp;
               }
             });
-            this.storage.set('projects', myProjects).then(success => {
-              this.toastService.successToast('message.task_is_created');
-              this.homeService.loadActiveProjects();
-            })
           }
+          console.log('adding with task', myProjects);
+          this.storage.set('latestProjects', myProjects).then(success => {
+            this.toastService.successToast('message.task_is_created');
+            this.homeService.loadActiveProjects();
+          })
         })
       })
       this.task = {};
@@ -141,7 +180,7 @@ export class CreateTaskPage implements OnInit {
     this.showpopup = false;
   }
   // Navigate to project view screen
-  public navigateToProjectViewScreen() {
+  public navigateToProjectViewScreen() { 
     this.closepopup();
     this.storage.set('projectToBeView', this.currentMyProject).then(project => {
       this.router.navigate(['/project-view/project-detail/my_projects'])
@@ -184,17 +223,30 @@ export class CreateTaskPage implements OnInit {
     this.currentMyProject.lastUpdate = new Date();
     this.storage.set('newcreatedproject', this.currentMyProject).then(cp => {
       this.currentMyProject = cp;
-      this.storage.get('projects').then(myProjects => {
+      this.storage.get('latestProjects').then(myProjects => {
         if (myProjects) {
-          myProjects[0].projects.forEach(myProject => {
-            if (myProject._id == cp._id) {
-              myProject.title = cp.title;
-              myProject.tasks = cp.tasks;
-              this.storage.set('projects', myProjects).then(success => {
-                this.homeService.loadActiveProjects();
-              })
-            }
-          });
+          if (myProjects.program)
+            myProjects.program.forEach(programs => {
+              if (programs.projects) {
+                programs.projects.forEach(project => {
+                  if (project._id == cp._id) {
+                    project = cp;
+                    this.storage.set('latestProjects', myProjects).then(success => {
+                      this.homeService.loadActiveProjects();
+                    })
+                  }
+                });
+              }
+            });
+          // myProjects[0].projects.forEach(myProject => {
+          //   if (myProject._id == cp._id) {
+          //     myProject.title = cp.title;
+          //     myProject.tasks = cp.tasks;
+          //     this.storage.set('latestProjects', myProjects).then(success => {
+          //       this.homeService.loadActiveProjects();
+          //     })
+          //   }
+          // });
         }
       })
     })
