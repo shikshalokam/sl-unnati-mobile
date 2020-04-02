@@ -35,43 +35,27 @@ export class SchoolProjectDetailPage implements OnInit {
   ngOnInit() {
   }
   public getProjectDetail(id) {
-    this.storage.get('userTokens').then(data => {
-      this.showSkeleton = true;
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.showSkeleton = true;
-            let pid = {
-              projectId: id
-            }
-            this.showSkeleton = true;
-            this.projectService.projectDetails(parsedData.access_token, id).subscribe((resp: any) => {
-              this.project = [];
-              this.showSkeleton = false;
-              if (resp.status != 'failed') {
-                if (resp.data) {
-                  this.project = resp.data;
-                } else {
-                }
-
-                this.showSkeleton = false;
-              } else {
-                this.errorToast(resp.message);
-                this.showSkeleton = false;
-              }
-            }, error => {
-              this.showSkeleton = false;
-            })
-          })
+    this.showSkeleton = true;
+    let pid = {
+      projectId: id
+    }
+    this.showSkeleton = true;
+    this.projectService.projectDetails(id).subscribe((resp: any) => {
+      this.project = [];
+      this.showSkeleton = false;
+      if (resp.status != 'failed') {
+        if (resp.data) {
+          this.project = resp.data;
+        } else {
         }
-      }, error => {
+
         this.showSkeleton = false;
-      })
+      } else {
+        this.errorToast(resp.message);
+        this.showSkeleton = false;
+      }
+    }, error => {
+      this.showSkeleton = false;
     })
   }
 
@@ -114,7 +98,7 @@ export class SchoolProjectDetailPage implements OnInit {
   }
   // Create task
   async createTask() {
-    
+
   }
 
   // Success message 
@@ -157,7 +141,7 @@ export class SchoolProjectDetailPage implements OnInit {
             if (this.project.status = 'completed') {
               this.project.status = 'not yet started';
             }
-            this.projectService.sync(this.project, data.access_token).subscribe((data: any) => {
+            this.projectService.sync(this.project).subscribe((data: any) => {
               this.showSkeleton = false;
               if (data.status == "failed") {
                 this.errorToast(data.message);

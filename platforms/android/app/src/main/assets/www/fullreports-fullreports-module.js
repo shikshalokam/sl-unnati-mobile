@@ -66,7 +66,7 @@ var FullreportsPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header\n    [title]=\"'fullreports.title' | translate\"\n    [showMenu]=\"false\"\n    [showBack]=\"true\"\n    [isGoBack]=\"back\"\n    [noBorder]=\"false\"\n  >\n  </app-header>\n</ion-header>\n\n<ion-content class=\"ion-padding\">\n  <h5 *ngIf=\"state == 'latsMonth'\">\n    {{ \"fullreports.undertaken_prjcts_inmonth\" | translate }}\n  </h5>\n  <h5 *ngIf=\"state == 'lastQuarter'\">\n    {{ \"fullreports.undertaken_prjcts_inqrtr\" | translate }}\n  </h5>\n  <!-- <ion-card *ngFor=\"let report of reports; let i = index\">\n    <ion-card-header>\n      {{ report.title.text }}\n    </ion-card-header>\n  </ion-card> -->\n  <!-- <div >\n    <ion-card>\n      <ion-card-header> Project Name </ion-card-header>\n      <ion-card-content id=\"container0\"> </ion-card-content>\n    </ion-card>\n    <ion-card id=\"container1\"></ion-card>\n    <ion-card id=\"container2\"></ion-card>\n    <ion-card id=\"container3\"></ion-card>\n    <ion-card id=\"container4\"></ion-card>\n    <ion-card id=\"container5\"></ion-card>\n    <ion-card id=\"container6\"></ion-card>\n    <ion-card id=\"container7\"></ion-card>\n    <ion-card id=\"container8\"></ion-card>\n    <ion-card id=\"container9\"></ion-card>\n  </div> -->\n\n  <div>\n    <ion-card\n      *ngFor=\"let report of reports; let i = index\"\n      style=\"background: #f5f5f5b8;\n    border-radius: 10px;\"\n    >\n      <ion-card-header class=\"chart-title\">\n        {{ report.title.text }}\n      </ion-card-header>\n      <ion-card-content>\n        <div id=\"{{ idvalue }}{{ i }}\"></div>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <!-- <div *ngIf=\"chartOptions\">\n    <highcharts-chart\n      [Highcharts]=\"highcharts\"\n      [options]=\"chartOptions\"\n      style=\"width: 100%; height: 400px; display: block;\"\n    >\n    </highcharts-chart>\n  </div> -->\n  <div *ngIf=\"showSkeleton\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text\n                animated\n                style=\" width: 48%;\n                        float: left;height: 200px;\n                        margin-left: 2%;\"\n              ></ion-skeleton-text>\n              <ion-skeleton-text\n                animated\n                animated\n                style=\" width: 48%;\n                        float: left;\n                        margin-left: 2%;height: 200px;\"\n              ></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n</ion-content>\n"
+module.exports = "<ion-header>\n  <app-header [title]=\"'fullreports.title' | translate\" [showMenu]=\"false\" [showBack]=\"true\" [isGoBack]=\"back\"\n    [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n\n<ion-content class=\"ion-padding\">\n  <ion-fab vertical=\"top\" horizontal=\"end\">\n    <ion-fab-button size=\"small\">\n      <ion-icon ios=\"ios-more\" md=\"md-more\"></ion-icon>\n    </ion-fab-button>\n    <ion-fab-list side=\"start\">\n      <ion-fab-button color=\"medium\" (click)=\"getReport('share')\">\n        <ion-icon ios=\"ios-share\" md=\"md-share\" style=\"color: #000;\"></ion-icon>\n      </ion-fab-button>\n      <ion-fab-button color=\"medium\" (click)=\"getReport('download')\">\n        <ion-icon ios=\"ios-download\" md=\"md-download\" style=\"color: #000;\"></ion-icon>\n      </ion-fab-button>\n    </ion-fab-list>\n  </ion-fab>\n\n  <div *ngIf=\"mySchools && mySchools[0].name\" style=\"width: 90%;\">\n    <h5>\n      {{mySchools[0].name }}\n    </h5>\n  </div>\n\n  <h5 *ngIf=\"state == 'latsMonth'\">\n    {{ \"fullreports.undertaken_prjcts_inmonth\" | translate }}\n  </h5>\n  <h5 *ngIf=\"state == 'lastQuarter'\">\n    {{ \"fullreports.undertaken_prjcts_inqrtr\" | translate }}\n  </h5>\n  <div *ngFor=\"let report of reports; let i = index\">\n    <ion-card style=\"background: #f5f5f5b8;\n    border-radius: 10px;\" *ngIf=\" report?.title?.text\">\n      <ion-card-header class=\"chart-title\">\n        {{ report.title.text }}\n      </ion-card-header>\n      <ion-card-content>\n        <div id=\"{{ idvalue }}{{ i }}\"></div>\n      </ion-card-content>\n    </ion-card>\n  </div>\n  <div *ngIf=\"showSkeleton == 'true'\">\n    <ion-card>\n      <ion-card-content class=\"skeleton-card-content\">\n        <ion-card *ngFor=\"let skeleton of skeletons\">\n          <ion-card-content class=\"skeleton-card-content\">\n            <p>\n              <ion-skeleton-text animated style=\" width: 48%;\n                        float: left;height: 200px;\n                        margin-left: 2%;\"></ion-skeleton-text>\n              <ion-skeleton-text animated style=\" width: 48%;\n                        float: left;\n                        margin-left: 2%;height: 200px;\"></ion-skeleton-text>\n              <ion-skeleton-text animated></ion-skeleton-text>\n            </p>\n          </ion-card-content>\n        </ion-card>\n      </ion-card-content>\n    </ion-card>\n  </div>\n</ion-content>"
 
 /***/ }),
 
@@ -100,6 +100,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var highcharts_highcharts_gantt__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! highcharts/highcharts-gantt */ "./node_modules/highcharts/highcharts-gantt.js");
 /* harmony import */ var highcharts_highcharts_gantt__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(highcharts_highcharts_gantt__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "./node_modules/@ionic-native/screen-orientation/ngx/index.js");
+/* harmony import */ var _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../myschools/myschools.service */ "./src/app/myschools/myschools.service.ts");
+/* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../network.service */ "./src/app/network.service.ts");
+/* harmony import */ var _toast_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../toast.service */ "./src/app/toast.service.ts");
+
+
+
 
 
 
@@ -109,7 +115,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var FullreportsPage = /** @class */ (function () {
-    function FullreportsPage(activatedRoute, screenOrientation, router, myReportsService, api, storage) {
+    function FullreportsPage(activatedRoute, screenOrientation, router, myReportsService, api, storage, mySchoolsService, networkService, toastService) {
         var _this = this;
         this.activatedRoute = activatedRoute;
         this.screenOrientation = screenOrientation;
@@ -117,14 +123,24 @@ var FullreportsPage = /** @class */ (function () {
         this.myReportsService = myReportsService;
         this.api = api;
         this.storage = storage;
+        this.mySchoolsService = mySchoolsService;
+        this.networkService = networkService;
+        this.toastService = toastService;
         this.idvalue = 'container';
+        this.connected = navigator.onLine;
+        this.page = 1;
+        this.count = 5;
         this.highcharts = highcharts_highcharts_gantt__WEBPACK_IMPORTED_MODULE_6__;
         this.showCharts = false;
         this.showSkeleton = false;
-        this.skeleton = [{}];
+        this.skeleton = [{}, {}, {}, {}];
         this.back = "/project-view/my-reports/last-month-reports";
+        this.networkService.emit.subscribe(function (value) {
+            _this.connected = value;
+        });
         activatedRoute.params.subscribe(function (params) {
             _this.state = params.state;
+            _this.getSchools();
             _this.getReports(params.state);
             try {
                 _this.screenOrientation.lock(_this.screenOrientation.ORIENTATIONS.LANDSCAPE);
@@ -171,8 +187,8 @@ var FullreportsPage = /** @class */ (function () {
         });
     };
     FullreportsPage.prototype.setUpChart = function (data) {
-        this.showSkeleton = false;
-        for (var i = 0; i <= this.reports.length; i++) {
+        this.showSkeleton = true;
+        for (var i = 0; i < this.reports.length; i++) {
             var minDate = new Date(this.reports[i].xAxis.min);
             var maxDate = new Date(this.reports[i].xAxis.max);
             var sdate = minDate.getDate();
@@ -202,16 +218,44 @@ var FullreportsPage = /** @class */ (function () {
                     }]
             });
         }
+        this.showSkeleton = false;
     };
     // go back
     FullreportsPage.prototype.goBack = function () {
         this.router.navigate(['/project-view/my-reports/last-' + this.state + '-reports']);
     };
-    FullreportsPage.prototype.ngOnDestroy = function () {
-        // try {
-        //   this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-        // } catch (error) {
-        // }
+    FullreportsPage.prototype.getSchools = function () {
+        var _this = this;
+        if (this.connected) {
+            this.mySchoolsService.getSchools(this.count, this.page).subscribe(function (data) {
+                if (data.status != 'failed') {
+                    _this.mySchools = data.data;
+                }
+            }, function (error) { });
+        }
+        else {
+            this.toastService.errorToast('message.nerwork_connection_check');
+        }
+    };
+    FullreportsPage.prototype.getReport = function (type) {
+        var obj;
+        var obj1 = {};
+        if (this.mySchools) {
+            this.mySchools[0].type = type;
+            this.mySchools[0].isFullReport = true;
+            this.mySchools[0].reportType = this.state;
+            obj = this.mySchools[0];
+        }
+        else {
+            obj1.type = type;
+            obj1.isFullReport = true;
+            obj1.reportType = this.state;
+            ;
+            obj1.name = '';
+            obj1.entityId = '';
+            obj = obj1;
+        }
+        this.myReportsService.getReportEvent(obj);
     };
     FullreportsPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -219,7 +263,15 @@ var FullreportsPage = /** @class */ (function () {
             template: __webpack_require__(/*! ./fullreports.page.html */ "./src/app/fullreports/fullreports.page.html"),
             styles: [__webpack_require__(/*! ./fullreports.page.scss */ "./src/app/fullreports/fullreports.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_7__["ScreenOrientation"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], _my_reports_my_reports_service__WEBPACK_IMPORTED_MODULE_3__["MyReportsService"], _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_7__["ScreenOrientation"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _my_reports_my_reports_service__WEBPACK_IMPORTED_MODULE_3__["MyReportsService"],
+            _api_api__WEBPACK_IMPORTED_MODULE_4__["ApiProvider"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
+            _myschools_myschools_service__WEBPACK_IMPORTED_MODULE_8__["MyschoolsService"],
+            _network_service__WEBPACK_IMPORTED_MODULE_9__["NetworkService"],
+            _toast_service__WEBPACK_IMPORTED_MODULE_10__["ToastService"]])
     ], FullreportsPage);
     return FullreportsPage;
 }());

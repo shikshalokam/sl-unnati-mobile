@@ -1,0 +1,31 @@
+<ion-content>
+  <ion-item class="search-bar-custom">
+    <ion-icon name="search" item-left color="dark"></ion-icon>
+    <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"
+      (ionChange)="search()">
+    </ion-input>
+    <!-- (keyup)="searchSchool(searchInput)" -->
+  </ion-item>
+  <ion-list>
+    <ion-item *ngFor="let entity of toBeSearch">
+      <ion-label> {{entity.label}}</ion-label>
+      <ion-checkbox slot="end" [(ngModel)]="entity.isChecked"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <ion-card *ngIf="toBeSearch && toBeSearch.length == 0" style="text-align: center;">
+    No data found.
+  </ion-card>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col size="6">
+        <ion-button expand="block" color="light" (click)="close()">{{'back' | translate}}</ion-button>
+      </ion-col>
+      <ion-col zise="6">
+        <ion-button expand="block" color="primary" (click)="submit()">{{'submit' | translate}}</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

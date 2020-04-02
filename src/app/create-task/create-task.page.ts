@@ -157,7 +157,6 @@ export class CreateTaskPage implements OnInit {
               }
             });
           }
-          console.log('adding with task', myProjects);
           this.storage.set('latestProjects', myProjects).then(success => {
             this.toastService.successToast('message.task_is_created');
             this.homeService.loadActiveProjects();

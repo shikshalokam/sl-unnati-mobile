@@ -1,6 +1,5 @@
 
-declare var require: any;
-import { Component, OnInit, OnDestroy, AfterViewInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { TasksService } from '../tasks/tasks.service';
 import { ProjectService } from '../project-view/project.service';
@@ -10,7 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiProvider } from '../api/api';
 import { AlertController, Platform } from '@ionic/angular';
 import * as Highcharts from 'highcharts/highcharts-gantt';
-import $ from 'jquery'
 @Component({
   selector: 'app-charts',
   templateUrl: './charts.page.html',
@@ -28,8 +26,14 @@ export class ChartsPage implements OnInit, OnDestroy {
   chartOptions;
   highcharts = Highcharts;
   public refreshToken: any;
-  constructor(public storage: Storage, public platform: Platform, public projectService: ProjectService, public alertController: AlertController,
-    public route: ActivatedRoute, @Inject(Router) public router: Router, public api: ApiProvider, public location: Location,
+  constructor(public storage: Storage,
+    public platform: Platform,
+    public projectService: ProjectService,
+    public alertController: AlertController,
+    public route: ActivatedRoute,
+    public router: Router,
+    public api: ApiProvider,
+    public location: Location,
     public tasksService: TasksService, public screenOrientation: ScreenOrientation) {
     this.projectService.emit.subscribe(value => {
       try {
@@ -85,8 +89,6 @@ export class ChartsPage implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.platform.ready().then(() => {
-      // THE CHART
-      //this.setupChart();
       try {
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
       } catch (error) {
@@ -198,74 +200,59 @@ export class ChartsPage implements OnInit, OnDestroy {
   }
   // Get projects 
   public getProjectsFromService() {
-    this.storage.get('userTokens').then(data => {
-      this.refreshToken = data.refresh_token;
-      this.api.refershToken(this.refreshToken).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            let id = {
-              projectId: this.id
-            }
-            this.projectService.projectDetails(parsedData.access_token, id).subscribe((resp: any) => {
-              this.storage.set('projectToBeView', resp.data).then(pc => {
-                this.value = [];
-                var dates = [];
-                this.totalTasks = 0;
-                this.totalSTasks = 0;
-                pc.projects.forEach(project => {
-                  this.title = project.title;
-                  this.status = project.status;
-                  this.entityId = project.entityId;
-                  if (project.tasks) {
-                    this.totalTasks = project.tasks.length;
-                    project.tasks.forEach(task => {
-                      if (task.subTasks) {
-                        this.totalSTasks = this.totalSTasks + task.subTasks.length;
-                      }
-                      task.startDate = new Date(task.startDate);
-                      task.endDate = new Date(task.endDate);
-                      dates.push(new Date(task.startDate));
-                      dates.push(new Date(task.endDate));
-                      let id = task._id;
-                      let sdate = task.startDate.getDate();
-                      let smonth = task.startDate.getMonth();
-                      let syear = task.startDate.getFullYear();
-                      let edate = task.endDate.getDate();
-                      let emonth = task.endDate.getMonth();
-                      let eyear = task.endDate.getFullYear();
-                      let color: string;
-                      if (task.status == 'in progress' || task.status == 'In progress') {
-                        color = '#f7a35c';
-                      }
-                      else if (task.status == 'completed' || task.status == 'Completed') {
-                        color = '#67e427';
-                      } else if (task.status == 'not yet started' || task.status == 'Not started') {
-                        color = '#adafad';
-                      }
-                      this.value.push({
-                        name: task.title,
-                        start: Date.UTC(syear, smonth, sdate),
-                        end: Date.UTC(eyear, emonth, edate),
-                        color: color,
-                        id: task._id
-                      })
-                    });
-                  }
-                });
-                var min = dates.sort((a, b) => a - b)[0], max = dates.slice(-1)[0];
-                this.loadChart(this.value, min, max);
-              });
-            }, error => {
-            })
-          })
-        }
-      }, error => {
-      })
+    let id = {
+      projectId: this.id
+    }
+    this.projectService.projectDetails(id).subscribe((resp: any) => {
+      this.storage.set('projectToBeView', resp.data).then(pc => {
+        this.value = [];
+        var dates = [];
+        this.totalTasks = 0;
+        this.totalSTasks = 0;
+        pc.projects.forEach(project => {
+          this.title = project.title;
+          this.status = project.status;
+          this.entityId = project.entityId;
+          if (project.tasks) {
+            this.totalTasks = project.tasks.length;
+            project.tasks.forEach(task => {
+              if (task.subTasks) {
+                this.totalSTasks = this.totalSTasks + task.subTasks.length;
+              }
+              task.startDate = new Date(task.startDate);
+              task.endDate = new Date(task.endDate);
+              dates.push(new Date(task.startDate));
+              dates.push(new Date(task.endDate));
+              let id = task._id;
+              let sdate = task.startDate.getDate();
+              let smonth = task.startDate.getMonth();
+              let syear = task.startDate.getFullYear();
+              let edate = task.endDate.getDate();
+              let emonth = task.endDate.getMonth();
+              let eyear = task.endDate.getFullYear();
+              let color: string;
+              if (task.status == 'in progress' || task.status == 'In progress') {
+                color = '#f7a35c';
+              }
+              else if (task.status == 'completed' || task.status == 'Completed') {
+                color = '#67e427';
+              } else if (task.status == 'not yet started' || task.status == 'Not started') {
+                color = '#adafad';
+              }
+              this.value.push({
+                name: task.title,
+                start: Date.UTC(syear, smonth, sdate),
+                end: Date.UTC(eyear, emonth, edate),
+                color: color,
+                id: task._id
+              })
+            });
+          }
+        });
+        var min = dates.sort((a, b) => a - b)[0], max = dates.slice(-1)[0];
+        this.loadChart(this.value, min, max);
+      });
+    }, error => {
     })
   }
   async presentAlert() {

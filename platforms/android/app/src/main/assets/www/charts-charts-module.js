@@ -231,7 +231,7 @@ var ChartsPage = /** @class */ (function () {
         });
         this.route.params.subscribe(function (params) {
             _this.id = params.id;
-            _this.storage.get('projects').then(function (data) {
+            _this.storage.get('latestProjects').then(function (data) {
                 if (typeof data == 'string') {
                     data = JSON.parse(data);
                 }
@@ -271,8 +271,6 @@ var ChartsPage = /** @class */ (function () {
     ChartsPage.prototype.ngOnInit = function () {
         var _this = this;
         this.platform.ready().then(function () {
-            // THE CHART
-            //this.setupChart();
             try {
                 _this.screenOrientation.lock(_this.screenOrientation.ORIENTATIONS.LANDSCAPE);
             }
@@ -384,75 +382,60 @@ var ChartsPage = /** @class */ (function () {
     // Get projects 
     ChartsPage.prototype.getProjectsFromService = function () {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.refreshToken = data.refresh_token;
-            _this.api.refershToken(_this.refreshToken).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens).then(function (usertoken) {
-                        var id = {
-                            projectId: _this.id
-                        };
-                        _this.projectService.projectDetails(parsedData.access_token, id).subscribe(function (resp) {
-                            _this.storage.set('projectToBeView', resp.data).then(function (pc) {
-                                _this.value = [];
-                                var dates = [];
-                                _this.totalTasks = 0;
-                                _this.totalSTasks = 0;
-                                pc.projects.forEach(function (project) {
-                                    _this.title = project.title;
-                                    _this.status = project.status;
-                                    _this.entityId = project.entityId;
-                                    if (project.tasks) {
-                                        _this.totalTasks = project.tasks.length;
-                                        project.tasks.forEach(function (task) {
-                                            if (task.subTasks) {
-                                                _this.totalSTasks = _this.totalSTasks + task.subTasks.length;
-                                            }
-                                            task.startDate = new Date(task.startDate);
-                                            task.endDate = new Date(task.endDate);
-                                            dates.push(new Date(task.startDate));
-                                            dates.push(new Date(task.endDate));
-                                            var id = task._id;
-                                            var sdate = task.startDate.getDate();
-                                            var smonth = task.startDate.getMonth();
-                                            var syear = task.startDate.getFullYear();
-                                            var edate = task.endDate.getDate();
-                                            var emonth = task.endDate.getMonth();
-                                            var eyear = task.endDate.getFullYear();
-                                            var color;
-                                            if (task.status == 'in progress' || task.status == 'In progress') {
-                                                color = '#f7a35c';
-                                            }
-                                            else if (task.status == 'completed' || task.status == 'Completed') {
-                                                color = '#67e427';
-                                            }
-                                            else if (task.status == 'not yet started' || task.status == 'Not started') {
-                                                color = '#adafad';
-                                            }
-                                            _this.value.push({
-                                                name: task.title,
-                                                start: Date.UTC(syear, smonth, sdate),
-                                                end: Date.UTC(eyear, emonth, edate),
-                                                color: color,
-                                                id: task._id
-                                            });
-                                        });
-                                    }
-                                });
-                                var min = dates.sort(function (a, b) { return a - b; })[0], max = dates.slice(-1)[0];
-                                _this.loadChart(_this.value, min, max);
+        var id = {
+            projectId: this.id
+        };
+        this.projectService.projectDetails(id).subscribe(function (resp) {
+            _this.storage.set('projectToBeView', resp.data).then(function (pc) {
+                _this.value = [];
+                var dates = [];
+                _this.totalTasks = 0;
+                _this.totalSTasks = 0;
+                pc.projects.forEach(function (project) {
+                    _this.title = project.title;
+                    _this.status = project.status;
+                    _this.entityId = project.entityId;
+                    if (project.tasks) {
+                        _this.totalTasks = project.tasks.length;
+                        project.tasks.forEach(function (task) {
+                            if (task.subTasks) {
+                                _this.totalSTasks = _this.totalSTasks + task.subTasks.length;
+                            }
+                            task.startDate = new Date(task.startDate);
+                            task.endDate = new Date(task.endDate);
+                            dates.push(new Date(task.startDate));
+                            dates.push(new Date(task.endDate));
+                            var id = task._id;
+                            var sdate = task.startDate.getDate();
+                            var smonth = task.startDate.getMonth();
+                            var syear = task.startDate.getFullYear();
+                            var edate = task.endDate.getDate();
+                            var emonth = task.endDate.getMonth();
+                            var eyear = task.endDate.getFullYear();
+                            var color;
+                            if (task.status == 'in progress' || task.status == 'In progress') {
+                                color = '#f7a35c';
+                            }
+                            else if (task.status == 'completed' || task.status == 'Completed') {
+                                color = '#67e427';
+                            }
+                            else if (task.status == 'not yet started' || task.status == 'Not started') {
+                                color = '#adafad';
+                            }
+                            _this.value.push({
+                                name: task.title,
+                                start: Date.UTC(syear, smonth, sdate),
+                                end: Date.UTC(eyear, emonth, edate),
+                                color: color,
+                                id: task._id
                             });
-                        }, function (error) {
                         });
-                    });
-                }
-            }, function (error) {
+                    }
+                });
+                var min = dates.sort(function (a, b) { return a - b; })[0], max = dates.slice(-1)[0];
+                _this.loadChart(_this.value, min, max);
             });
+        }, function (error) {
         });
     };
     ChartsPage.prototype.presentAlert = function () {
@@ -482,9 +465,14 @@ var ChartsPage = /** @class */ (function () {
             template: __webpack_require__(/*! ./charts.page.html */ "./src/app/charts/charts.page.html"),
             styles: [__webpack_require__(/*! ./charts.page.scss */ "./src/app/charts/charts.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](5, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"])),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"], _ionic_angular__WEBPACK_IMPORTED_MODULE_9__["Platform"], _project_view_project_service__WEBPACK_IMPORTED_MODULE_4__["ProjectService"], _ionic_angular__WEBPACK_IMPORTED_MODULE_9__["AlertController"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_7__["ActivatedRoute"], _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"], _api_api__WEBPACK_IMPORTED_MODULE_8__["ApiProvider"], _angular_common__WEBPACK_IMPORTED_MODULE_5__["Location"],
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_9__["Platform"],
+            _project_view_project_service__WEBPACK_IMPORTED_MODULE_4__["ProjectService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_9__["AlertController"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_7__["ActivatedRoute"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"],
+            _api_api__WEBPACK_IMPORTED_MODULE_8__["ApiProvider"],
+            _angular_common__WEBPACK_IMPORTED_MODULE_5__["Location"],
             _tasks_tasks_service__WEBPACK_IMPORTED_MODULE_3__["TasksService"], _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_6__["ScreenOrientation"]])
     ], ChartsPage);
     return ChartsPage;

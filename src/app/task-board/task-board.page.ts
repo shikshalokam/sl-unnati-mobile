@@ -23,26 +23,28 @@ export class TaskBoardPage {
   public getProjects() {
     this.ongoing = [];
     this.past = [];
-    this.storage.get('myprojects').then(projects => {
-      if (projects) {
-        projects.forEach(project => {
-          let count = 0;
-          if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
-            project.tasks.forEach(task => {
-              if (task.status == 'Completed' || task.status == 'completed') {
-                if (count == 0) {
-                  this.ongoing.push(task);
-                  count++;
+    this.storage.get('latestProjects').then(projects => {
+      projects.forEach(programsList => {
+        if (programsList.projects) {
+          programsList.projects.forEach(project => {
+            let count = 0;
+            if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
+              project.tasks.forEach(task => {
+                if (task.status == 'Completed' || task.status == 'completed') {
+                  if (count == 0) {
+                    this.ongoing.push(task);
+                    count++;
+                  } else {
+                    this.past.push(task);
+                  }
                 } else {
-                  this.past.push(task);
+                  this.ongoing.push(task);
                 }
-              } else {
-                this.ongoing.push(task);
-              }
-            });
-          }
-        });
-      }
+              });
+            }
+          });
+        }
+      });
     })
   }
   public selectTab(tab) {

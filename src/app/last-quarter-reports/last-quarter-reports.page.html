@@ -1,10 +1,31 @@
 <ion-content class="ion-padding">
   <div *ngIf="report">
-    <h5>
-      {{ "last_quarter_report.projects_cmpltd_lstqrtr" | translate }}
-    </h5>
+    <ion-fab vertical="top" horizontal="end">
+      <ion-fab-button size="small">
+        <ion-icon ios="ios-more" md="md-more"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="start">
+        <ion-fab-button color="medium" (click)="getReport('share')">
+          <ion-icon ios="ios-share" md="md-share" style="color: #000;"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button color="medium" (click)="getReport('download')">
+          <ion-icon ios="ios-download" md="md-download" style="color: #000;"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+    <div *ngIf="mySchools" style="width: 90%;">
+      <h5>
+        {{mySchools[0].name }}
+      </h5>
+    </div>
+    <div style="margin-top: 2.5em;">
+      <h5>
+        {{ "last_quarter_report.projects_cmpltd_lstqrtr" | translate }}
+      </h5>
+    </div>
     <div>{{ report.startMonth }} - {{ report.endMonth }}</div>
-    <ion-grid>
+    <ion-grid style="padding: 0px;
+    margin-top: 2.5em;">
       <ion-row>
         <ion-col class="status-card task-completed-box">
           <h3>{{ "last_month_report.completed" | translate }}</h3>

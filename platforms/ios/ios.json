@@ -113,7 +113,7 @@
               "count": 1
             },
             {
-              "xml": "<feature name=\"FCMPlugin\"><param name=\"ios-package\" value=\"FCMPlugin\" /></feature>",
+              "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
               "count": 1
             }
           ]
@@ -137,22 +137,12 @@
       },
       "*/Entitlements-Debug.plist": {
         "parents": {
-          "aps-environment": [
-            {
-              "xml": "<string>development</string>",
-              "count": 1
-            }
-          ]
+          "aps-environment": []
         }
       },
       "*/Entitlements-Release.plist": {
         "parents": {
-          "aps-environment": [
-            {
-              "xml": "<string>production</string>",
-              "count": 1
-            }
-          ]
+          "aps-environment": []
         }
       }
     }
@@ -229,7 +219,7 @@
     "cordova-plugin-file-opener2": {
       "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },
-    "cordova-plugin-fcm-with-dependecy-updated": {
+    "cordova-plugin-app-version": {
       "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     }
   },
@@ -635,11 +625,11 @@
       ]
     },
     {
-      "id": "cordova-plugin-fcm-with-dependecy-updated.FCMPlugin",
-      "file": "plugins/cordova-plugin-fcm-with-dependecy-updated/www/FCMPlugin.js",
-      "pluginId": "cordova-plugin-fcm-with-dependecy-updated",
+      "id": "cordova-plugin-app-version.AppVersionPlugin",
+      "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
+      "pluginId": "cordova-plugin-app-version",
       "clobbers": [
-        "FCMPlugin"
+        "cordova.getAppVersion"
       ]
     }
   ],
@@ -667,6 +657,6 @@
     "com-badrit-base64": "0.2.0",
     "cordova-plugin-camera": "4.1.0",
     "cordova-plugin-file-opener2": "3.0.0",
-    "cordova-plugin-fcm-with-dependecy-updated": "4.2.0"
+    "cordova-plugin-app-version": "0.1.9"
   }
 }

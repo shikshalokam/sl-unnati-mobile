@@ -90,18 +90,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MyschoolsPage", function() { return MyschoolsPage; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../network.service */ "./src/app/network.service.ts");
-/* harmony import */ var _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic-native/app-launcher/ngx */ "./node_modules/@ionic-native/app-launcher/ngx/index.js");
-/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic-native/market/ngx */ "./node_modules/@ionic-native/market/ngx/index.js");
+/* harmony import */ var _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic-native/app-launcher/ngx */ "./node_modules/@ionic-native/app-launcher/ngx/index.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/market/ngx */ "./node_modules/@ionic-native/market/ngx/index.js");
+/* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../network.service */ "./src/app/network.service.ts");
 /* harmony import */ var _myschools_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./myschools.service */ "./src/app/myschools/myschools.service.ts");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../api/api */ "./src/app/api/api.ts");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
-/* harmony import */ var _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ionic-native/network/ngx */ "./node_modules/@ionic-native/network/ngx/index.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! jwt-decode */ "./node_modules/jwt-decode/lib/index.js");
-/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(jwt_decode__WEBPACK_IMPORTED_MODULE_11__);
-
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! jwt-decode */ "./node_modules/jwt-decode/lib/index.js");
+/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(jwt_decode__WEBPACK_IMPORTED_MODULE_10__);
 
 
 
@@ -114,13 +112,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var MyschoolsPage = /** @class */ (function () {
-    function MyschoolsPage(networkService, menuCtrl, router, navctrl, network, api, mySchoolsService, storage, platform, appLauncher, market) {
+    function MyschoolsPage(networkService, menuCtrl, router, navctrl, api, mySchoolsService, storage, platform, appLauncher, market) {
         var _this = this;
         this.networkService = networkService;
         this.menuCtrl = menuCtrl;
         this.router = router;
         this.navctrl = navctrl;
-        this.network = network;
         this.api = api;
         this.mySchoolsService = mySchoolsService;
         this.storage = storage;
@@ -136,49 +133,25 @@ var MyschoolsPage = /** @class */ (function () {
         this.menuCtrl.enable(true);
         this.networkService.emit.subscribe(function (value) {
             _this.connected = value;
-            if (_this.connected) {
-                _this.getSchools();
-            }
-            localStorage.setItem("networkStatus", _this.connected);
         });
     }
     MyschoolsPage.prototype.ionViewDidEnter = function () {
         var _this = this;
+        this.searchInput = '';
         this.menuCtrl.enable(true);
-        this.checkNetwork();
         this.getSchools();
-        this.connected = localStorage.getItem("networkStatus");
         this.storage.get('userTokens').then(function (data) {
-            var userDetails = jwt_decode__WEBPACK_IMPORTED_MODULE_11__(data.access_token);
+            var userDetails = jwt_decode__WEBPACK_IMPORTED_MODULE_10__(data.access_token);
             _this.storage.set('userDetails', userDetails);
         });
-    };
-    MyschoolsPage.prototype.ngOnInit = function () {
     };
     // get schools list
     MyschoolsPage.prototype.getSchools = function () {
         var _this = this;
-        this.connected = localStorage.getItem("networkStatus");
-        var connected = navigator.onLine;
-        if (connected) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.mySchoolsService.getSchools(parsedData.access_token, _this.count, _this.page).subscribe(function (data) {
-                                _this.mySchools = data.data;
-                            }, function (error) { });
-                        });
-                        //resolve()
-                    }
-                }, function (error) {
-                });
-            });
+        if (this.connected) {
+            this.mySchoolsService.getSchools(this.count, this.page).subscribe(function (data) {
+                _this.mySchools = data.data;
+            }, function (error) { });
         }
         else {
             this.networkService.networkErrorToast();
@@ -216,51 +189,19 @@ var MyschoolsPage = /** @class */ (function () {
             window.open('https://play.google.com/store/apps/details?id=org.shikshalokam.samiksha.staging&hl=en,_system');
         });
     };
-    MyschoolsPage.prototype.checkNetwork = function () {
-        var _this = this;
-        this.platform.ready().then(function () {
-            _this.network.onDisconnect()
-                .subscribe(function () {
-                _this.connected = false;
-                _this.networkService.status(_this.connected);
-                localStorage.setItem("networkStatus", _this.connected);
-            }, function (error) {
-            });
-            _this.network.onConnect()
-                .subscribe(function () {
-                _this.connected = true;
-                _this.networkService.status(_this.connected);
-            });
-            // this.networkSubscriber();
-        });
-    };
     // Search School
     MyschoolsPage.prototype.searchSchool = function (keyword) {
         var _this = this;
         this.connected = localStorage.getItem("networkStatus");
         var connected = navigator.onLine;
         if (connected) {
-            this.storage.get('userTokens').then(function (data) {
-                _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                    var parsedData = JSON.parse(data._body);
-                    if (parsedData && parsedData.access_token) {
-                        var userTokens = {
-                            access_token: parsedData.access_token,
-                            refresh_token: parsedData.refresh_token,
-                        };
-                        _this.storage.set('userTokens', userTokens).then(function (data) {
-                            _this.mySchoolsService.searchScool(parsedData.access_token, keyword).subscribe(function (data) {
-                                _this.mySchools = data.data;
-                                _this.noSchools = false;
-                                if (data.data.length == 0) {
-                                    _this.noSchools = true;
-                                }
-                            });
-                        });
-                        //resolve()
-                    }
-                }, function (error) {
-                });
+            this.mySchoolsService.searchScool(keyword).subscribe(function (data) {
+                _this.mySchools = data.data;
+                _this.noSchools = false;
+                if (data.data.length == 0) {
+                    _this.noSchools = true;
+                }
+            }, function (error) {
             });
         }
         else {
@@ -272,30 +213,16 @@ var MyschoolsPage = /** @class */ (function () {
         var _this = this;
         event.target.complete();
         //getReports(data,limit,page)
-        this.storage.get('userTokens').then(function (data) {
-            _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens_1 = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens_1).then(function (usertoken) {
-                        _this.mySchoolsService.getSchools(userTokens_1.access_token, _this.count, _this.page).subscribe(function (data) {
-                            _this.page = _this.page + 1;
-                            event.target.disabled = true;
-                            _this.mySchools.push(data.data);
-                        }, function (error) {
-                        });
-                    }, function (error) {
-                    });
-                }
-            });
+        this.mySchoolsService.getSchools(this.count, this.page).subscribe(function (data) {
+            _this.page = _this.page + 1;
+            event.target.disabled = true;
+            _this.mySchools.push(data.data);
+        }, function (error) {
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_ionic_angular__WEBPACK_IMPORTED_MODULE_4__["NavController"]),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["NavController"])
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"]),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"])
     ], MyschoolsPage.prototype, "nav", void 0);
     MyschoolsPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -303,7 +230,16 @@ var MyschoolsPage = /** @class */ (function () {
             template: __webpack_require__(/*! ./myschools.page.html */ "./src/app/myschools/myschools.page.html"),
             styles: [__webpack_require__(/*! ./myschools.page.scss */ "./src/app/myschools/myschools.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_network_service__WEBPACK_IMPORTED_MODULE_2__["NetworkService"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["MenuController"], _angular_router__WEBPACK_IMPORTED_MODULE_10__["Router"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["NavController"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_9__["Network"], _api_api__WEBPACK_IMPORTED_MODULE_7__["ApiProvider"], _myschools_service__WEBPACK_IMPORTED_MODULE_6__["MyschoolsService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_8__["Storage"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["Platform"], _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_3__["AppLauncher"], _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_5__["Market"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_network_service__WEBPACK_IMPORTED_MODULE_5__["NetworkService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["MenuController"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_9__["Router"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"],
+            _api_api__WEBPACK_IMPORTED_MODULE_7__["ApiProvider"],
+            _myschools_service__WEBPACK_IMPORTED_MODULE_6__["MyschoolsService"],
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_8__["Storage"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"],
+            _ionic_native_app_launcher_ngx__WEBPACK_IMPORTED_MODULE_2__["AppLauncher"],
+            _ionic_native_market_ngx__WEBPACK_IMPORTED_MODULE_4__["Market"]])
     ], MyschoolsPage);
     return MyschoolsPage;
 }());

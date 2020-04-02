@@ -15,7 +15,9 @@ import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
-import { UpdateProfileService } from '../update-profile/update-profile.service'
+import { UpdateProfileService } from '../update-profile/update-profile.service';
+import { AppConfigs } from '../app.config';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -25,6 +27,8 @@ export class HomePage implements OnInit {
   connected: any = false;
   loggedIn: boolean = false;
   header;
+  appUpdate = '';
+  showCloseButton: boolean = false;
   body;
   button;
   isActionable;
@@ -62,7 +66,7 @@ export class HomePage implements OnInit {
   tiles = [
     { title: "create project", icon: 'assets/images/homeTiles/createproject.png', url: '/project-view/create-project' },
     { title: "library", icon: 'assets/images/homeTiles/library.png', url: '/project-view/library' },
-    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '' }, // /project-view/task-board
+    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '/project-view/task-board' }, // /project-view/task-board
     { title: "reports", icon: 'assets/images/homeTiles/reports.png', url: '/project-view/my-reports/last-month-reports' }
   ]
   activeProjects = [];
@@ -91,6 +95,7 @@ export class HomePage implements OnInit {
     public updateProfile: UpdateProfileService) {
     this.menuCtrl.enable(true);
     // update profile pop handler
+
     homeService.localDataUpdated.subscribe(data => {
       this.getActiveProjects();
     })
@@ -105,7 +110,9 @@ export class HomePage implements OnInit {
         this.button = 'button.update';
         this.isActionable = '/project-view/update-profile';
         this.showUpdatePop = true;
-        let isPopUpShowen = localStorage.getItem('isPopUpShowen');
+
+        this.showCloseButton = true;
+        isPopUpShowen = localStorage.getItem('isPopUpShowen');
       } else {
         this.showUpdatePop = false;
       }
@@ -177,12 +184,6 @@ export class HomePage implements OnInit {
   }
   //navigate to project Details page
   public navigateToDetails(project) {
-    // localStorage.setItem("id", project._id);
-    // this.storage.set('currentProject', project).then(data => {
-    //   localStorage.setItem("from", 'home');
-    //   this.router.navigate(['/project-view/detail', project._id, 'home']);
-    //   this.projectService.setTitle(data.title);
-    // })
     this.storage.set('projectToBeView', project).then(project => {
       this.router.navigate(['/project-view/project-detail', 'home'])
     })
@@ -201,14 +202,19 @@ export class HomePage implements OnInit {
     this.activeProjects = [];
     let ap = []
     let count = 0;
+    let environment = AppConfigs.currentEnvironment;
+    let programId = '';
+    AppConfigs.environments.forEach(env => {
+      if (environment === env.name) {
+        programId = env.programId;
+      }
+    });
     this.storage.get('latestProjects').then(myProjects => {
       this.myProjects = myProjects;
       if (myProjects) {
         myProjects.forEach(programsList => {
           if (programsList) {
-            console.log(programsList.programs, "programs")
-            if (programsList.programs._id == '5e01da0c0c72d5597433ec7a') {
-              console.log(programsList.projects, " programsList.projects");
+            if (programsList.programs && programsList.programs._id == programId) {
               programsList.projects.sort((a, b) => {
                 return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
               });
@@ -261,80 +267,40 @@ export class HomePage implements OnInit {
   }
   // get templates
   getTemplates() {
-    this.storage.get('userTokens').then(data => {
-      this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.categoryViewService.getTemplatesByCategory(userTokens.access_token).subscribe((data: any) => {
-              if (data.data) {
-                this.storage.set('templates', data.data).then(templates => {
-                })
-              }
-            }, error => { })
-          }, error => {
-          })
-        }
-      })
-    })
+    this.categoryViewService.getTemplatesByCategory().subscribe((data: any) => {
+      if (data.data) {
+        this.storage.set('templates', data.data).then(templates => {
+        })
+      }
+    }, error => { })
   }
   // get Projects
   public getProjects() {
-    this.storage.get('userTokens').then(data => {
-      this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.projectsService.getAssignedProjects(usertoken.access_token, this.type).subscribe((resp: any) => {
-              if (resp.status != 'failed') {
-                resp.data.forEach(programs => {
-                  programs.projects.forEach(project => {
-                    project.lastUpdate = project.lastSync;
-                    project.isSync = true;
-                    project.isEdited = false;
-                    project.isNew = false;
-                    if (project.status != 'not yet started' && project.status != 'Not started') {
-                      project.isStarted = true;
-                    }
-                    project.programName = programs.programs.name;
-                  });
-                });
-                this.storage.set('latestProjects', resp.data).then(resp1 => {
-                  this.getActiveProjects();
-                })
-              }
-            })
-          })
-        }
-      })
+    this.projectsService.getAssignedProjects(this.type).subscribe((resp: any) => {
+      if (resp.status != 'failed') {
+        resp.data.forEach(programs => {
+          programs.projects.forEach(project => {
+            project.lastUpdate = project.lastSync;
+            project.isSync = true;
+            project.isEdited = false;
+            project.isNew = false;
+            if (project.status != 'not yet started' && project.status != 'Not started') {
+              project.isStarted = true;
+            }
+            project.programName = programs.programs.name;
+          });
+        });
+        this.storage.set('latestProjects', resp.data).then(resp1 => {
+          this.getActiveProjects();
+        })
+      }
+    },error =>{
     })
   }
   //  get schools
   public getSchools() {
-    this.storage.get('userTokens').then(data => {
-      this.apiProvider.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.mySchoolsService.getSchools(parsedData.access_token, this.count, this.page).subscribe((data: any) => {
-              this.mySchools = data.data;
-            }, error => { })
-          }, error => {
-          })
-        }
-      })
-    })
+    this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
+      this.mySchools = data.data;
+    }, error => { })
   }
 }

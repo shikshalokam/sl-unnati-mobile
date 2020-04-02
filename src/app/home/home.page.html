@@ -22,7 +22,7 @@
   <!-- loader ends here -->
   <div *ngIf="!showSkeleton">
     <div *ngIf="showUpdatePop">
-      <app-custom-popup [header]="header" [body]="body" [button]="button" [showPopup]="true"
+      <app-custom-popup [header]="header" [appUpdate]="appUpdate" [body]="body" [button]="button" [showPopup]="true"
         [isActionable]="isActionable">
       </app-custom-popup>
     </div>

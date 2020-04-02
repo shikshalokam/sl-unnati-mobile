@@ -307,7 +307,7 @@ var SchoolTaskReportPage = /** @class */ (function () {
         this.connected = localStorage.getItem("networkStatus");
         var connected = navigator.onLine;
         if (connected) {
-            this.storage.get('projects').then(function (projects) {
+            this.storage.get('latestProjects').then(function (projects) {
                 if (projects) {
                     if (typeof projects == 'string') {
                         projects = JSON.parse(projects);
@@ -343,7 +343,7 @@ var SchoolTaskReportPage = /** @class */ (function () {
         var connected = navigator.onLine;
         if (connected) {
             // this.router.navigate(['/project-view/detail', id, 'school']);
-            this.storage.get('projects').then(function (projects) {
+            this.storage.get('latestProjects').then(function (projects) {
                 if (projects) {
                     if (typeof projects == 'string') {
                         projects = JSON.parse(projects);
@@ -376,30 +376,33 @@ var SchoolTaskReportPage = /** @class */ (function () {
     // Get projects 
     SchoolTaskReportPage.prototype.getProjectsFromService = function (id, path) {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens).then(function (usertoken) {
-                        var value = {
-                            projectId: id
-                        };
-                        _this.projectService.projectDetails(parsedData.access_token, value).subscribe(function (resp) {
-                            if (resp.status != 'failed') {
-                                resp.data.projects.forEach(function (cp) {
-                                    // this.storage.set('currentProject', cp).then(cpp => {
-                                    //   localStorage.setItem('from', 'school');
-                                    //   if (path == 'details') {
-                                    //     this.router.navigate(['/project-view/detail', id,'school']);
-                                    //   } else {
-                                    //     this.router.navigate(['/project-view/status', id]);
-                                    //   }
-                                    // })
-                                    _this.storage.set('projectToBeView', cp).then(function (project) {
+        var value = {
+            projectId: id
+        };
+        this.projectService.projectDetails(value).subscribe(function (resp) {
+            if (resp.status != 'failed') {
+                resp.data.projects.forEach(function (cp) {
+                    _this.storage.set('projectToBeView', cp).then(function (project) {
+                        if (path == 'details') {
+                            _this.router.navigate(['/project-view/project-detail', 'schools']);
+                        }
+                        else {
+                            _this.router.navigate(['/project-view/status', id]);
+                        }
+                    });
+                });
+                _this.storage.get('latestProjects').then(function (projects) {
+                    if (projects) {
+                        if (typeof projects == 'string') {
+                            projects = JSON.parse(projects);
+                        }
+                        projects.data.forEach(function (prjs) {
+                            prjs.projects.forEach(function (project) {
+                                if (project._id === id) {
+                                    prjs.projects.push(project);
+                                    _this.storage.set('latestProjects', projects).then(function (projects) {
+                                    });
+                                    _this.storage.set('projectToBeView', project).then(function (project) {
                                         if (path == 'details') {
                                             _this.router.navigate(['/project-view/project-detail', 'schools']);
                                         }
@@ -407,72 +410,30 @@ var SchoolTaskReportPage = /** @class */ (function () {
                                             _this.router.navigate(['/project-view/status', id]);
                                         }
                                     });
-                                });
-                                _this.storage.get('projects').then(function (projects) {
-                                    if (projects) {
-                                        if (typeof projects == 'string') {
-                                            projects = JSON.parse(projects);
-                                        }
-                                        // resp.data.projects.forEach(prj => {
-                                        projects.data.forEach(function (prjs) {
-                                            prjs.projects.forEach(function (project) {
-                                                if (project._id === id) {
-                                                    prjs.projects.push(project);
-                                                    _this.storage.set('projects', projects).then(function (projects) {
-                                                    });
-                                                    // this.storage.set('currentProject', project).then(cproject => {
-                                                    //   if (path == 'details') {
-                                                    //     this.router.navigate(['/project-view/detail', id,'details']);
-                                                    //   } else {
-                                                    //     this.router.navigate(['/project-view/status', id]);
-                                                    //   }
-                                                    // })
-                                                    _this.storage.set('projectToBeView', project).then(function (project) {
-                                                        if (path == 'details') {
-                                                            _this.router.navigate(['/project-view/project-detail', 'schools']);
-                                                        }
-                                                        else {
-                                                            _this.router.navigate(['/project-view/status', id]);
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        });
-                                        // })
+                                }
+                            });
+                        });
+                    }
+                    else {
+                        _this.storage.set('latestProjects', resp).then(function (projects) {
+                            resp.data.projects.forEach(function (prj) {
+                                _this.storage.set('projectToBeView', prj).then(function (project) {
+                                    if (path == 'details') {
+                                        _this.router.navigate(['/project-view/project-detail', 'schools']);
                                     }
                                     else {
-                                        _this.storage.set('projects', resp).then(function (projects) {
-                                            resp.data.projects.forEach(function (prj) {
-                                                // this.storage.set('currentProject', prj).then(cpsetup => {
-                                                //   if (path == 'details') {
-                                                //     this.router.navigate(['/project-view/detail', id,'school']);
-                                                //   } else {
-                                                //     this.router.navigate(['/project-view/status', id]);
-                                                //   }
-                                                // })
-                                                _this.storage.set('projectToBeView', prj).then(function (project) {
-                                                    if (path == 'details') {
-                                                        _this.router.navigate(['/project-view/project-detail', 'schools']);
-                                                    }
-                                                    else {
-                                                        _this.router.navigate(['/project-view/status', id]);
-                                                    }
-                                                });
-                                            });
-                                        });
+                                        _this.router.navigate(['/project-view/status', id]);
                                     }
                                 });
-                            }
-                            else {
-                            }
-                        }, function (error) {
-                            // this.showSkeleton = false;
+                            });
                         });
-                    });
-                }
-            }, function (error) {
-                // this.showSkeleton = false;
-            });
+                    }
+                });
+            }
+            else {
+            }
+        }, function (error) {
+            // this.showSkeleton = false;
         });
     };
     //Launch learner App

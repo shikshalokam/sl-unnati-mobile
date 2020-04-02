@@ -158,12 +158,35 @@ var CreateTaskPage = /** @class */ (function () {
     };
     CreateTaskPage.prototype.getCurrentProject = function (id) {
         var _this = this;
-        this.storage.get('projects').then(function (projectList) {
-            projectList[0].projects.forEach(function (project) {
-                if (project._id == id) {
-                    _this.currentMyProject = project;
-                }
-            });
+        var mapped = false;
+        this.storage.get('latestProjects').then(function (projectList) {
+            if (projectList) {
+                projectList.forEach(function (programs) {
+                    programs.projects.forEach(function (project) {
+                        if (project._id == id) {
+                            _this.currentMyProject = project;
+                            mapped = true;
+                        }
+                    });
+                });
+                // projectList.programs.forEach(programs => {
+                //   if (programs.projects) {
+                //     programs.projects.forEach(project => {
+                //       if (project._id == id) {
+                //         this.currentMyProject = project;
+                //         mapped = true;
+                //       }
+                //     });
+                //   }
+                // });
+            }
+            if (!mapped) {
+                projectList[0].projects.forEach(function (project) {
+                    if (project._id == id) {
+                        _this.currentMyProject = project;
+                    }
+                });
+            }
         });
     };
     // set date
@@ -181,6 +204,7 @@ var CreateTaskPage = /** @class */ (function () {
     //  Create new Task
     CreateTaskPage.prototype.create = function () {
         var _this = this;
+        var mapped = false;
         if (!this.task.title) {
             this.markLabelsAsInvalid = true;
         }
@@ -206,18 +230,31 @@ var CreateTaskPage = /** @class */ (function () {
             this.storage.set('newcreatedproject', this.currentMyProject).then(function (cp) {
                 _this.currentMyProject = cp;
                 // if (this.currentMyProject.createdType) {
-                _this.storage.get('projects').then(function (myProjects) {
+                _this.storage.get('latestProjects').then(function (myProjects) {
                     if (myProjects) {
+                        if (myProjects.program)
+                            myProjects.program.forEach(function (programs) {
+                                if (programs.projects) {
+                                    programs.projects.forEach(function (project) {
+                                        if (project._id == cp._id) {
+                                            _this.currentMyProject = project;
+                                            mapped = true;
+                                        }
+                                    });
+                                }
+                            });
+                    }
+                    if (!mapped) {
                         myProjects[0].projects.forEach(function (myProject, i) {
                             if (myProject._id == cp._id) {
                                 myProjects[0].projects[i] = cp;
                             }
                         });
-                        _this.storage.set('projects', myProjects).then(function (success) {
-                            _this.toastService.successToast('message.task_is_created');
-                            _this.homeService.loadActiveProjects();
-                        });
                     }
+                    _this.storage.set('latestProjects', myProjects).then(function (success) {
+                        _this.toastService.successToast('message.task_is_created');
+                        _this.homeService.loadActiveProjects();
+                    });
                 });
             });
             this.task = {};
@@ -283,17 +320,30 @@ var CreateTaskPage = /** @class */ (function () {
         this.currentMyProject.lastUpdate = new Date();
         this.storage.set('newcreatedproject', this.currentMyProject).then(function (cp) {
             _this.currentMyProject = cp;
-            _this.storage.get('projects').then(function (myProjects) {
+            _this.storage.get('latestProjects').then(function (myProjects) {
                 if (myProjects) {
-                    myProjects[0].projects.forEach(function (myProject) {
-                        if (myProject._id == cp._id) {
-                            myProject.title = cp.title;
-                            myProject.tasks = cp.tasks;
-                            _this.storage.set('projects', myProjects).then(function (success) {
-                                _this.homeService.loadActiveProjects();
-                            });
-                        }
-                    });
+                    if (myProjects.program)
+                        myProjects.program.forEach(function (programs) {
+                            if (programs.projects) {
+                                programs.projects.forEach(function (project) {
+                                    if (project._id == cp._id) {
+                                        project = cp;
+                                        _this.storage.set('latestProjects', myProjects).then(function (success) {
+                                            _this.homeService.loadActiveProjects();
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    // myProjects[0].projects.forEach(myProject => {
+                    //   if (myProject._id == cp._id) {
+                    //     myProject.title = cp.title;
+                    //     myProject.tasks = cp.tasks;
+                    //     this.storage.set('latestProjects', myProjects).then(success => {
+                    //       this.homeService.loadActiveProjects();
+                    //     })
+                    //   }
+                    // });
                 }
             });
         });

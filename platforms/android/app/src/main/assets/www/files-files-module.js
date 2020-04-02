@@ -75,7 +75,7 @@ module.exports = "<ion-header>\n  <app-header [title]=\"'file.title' | translate
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".tabs-list {\n  position: fixed;\n  width: 100%;\n  z-index: 999; }\n\n.custom-card {\n  margin: 0px;\n  background: #fff; }\n\n.custom-card ion-card-content {\n    padding: 0px;\n    font-size: 16px;\n    color: #000; }\n\n.custom-tab {\n  width: 50%;\n  background: #fff;\n  color: #000;\n  float: left;\n  padding: 10px;\n  text-align: center;\n  font-size: 18px;\n  border-bottom: 2px solid #b23e33; }\n\n.active-tab {\n  background: #b23e33;\n  color: #fff; }\n\n.image-container {\n  margin-top: 60px; }\n\n.image-container ion-card {\n    border-radius: 1em;\n    color: #000; }\n\n.image-container ion-card ion-card-header {\n      border-bottom: 1px solid #000;\n      margin: 0px 10px;\n      padding: 10px; }\n\n.image-container ion-card ion-card-header h4 {\n        margin-top: 5px;\n        margin-bottom: 5px; }\n\n.image-container ion-card ion-card-content {\n      padding-top: 10px; }\n\n.file-container {\n  margin-top: 60px; }\n\n.file-container .arrow-mark {\n    margin: auto;\n    text-align: right;\n    font-size: 1.5em; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9maWxlcy9maWxlcy5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxlQUFlO0VBQ2YsV0FBVztFQUNYLFlBQVksRUFBQTs7QUFFZDtFQUVFLFdBQVc7RUFDWCxnQkFBZSxFQUFBOztBQUhqQjtJQUtFLFlBQVk7SUFDWixlQUFlO0lBQ2YsV0FBVyxFQUFBOztBQUdiO0VBQ0UsVUFBUztFQUNULGdCQUFlO0VBQ2YsV0FBVztFQUNULFdBQVc7RUFDWCxhQUFhO0VBQ2Isa0JBQWtCO0VBQ2xCLGVBQWU7RUFDZixnQ0FBZ0MsRUFBQTs7QUFFcEM7RUFDRSxtQkFBbUI7RUFDbkIsV0FBVyxFQUFBOztBQUdiO0VBQ0UsZ0JBQWUsRUFBQTs7QUFEakI7SUFHSSxrQkFBa0I7SUFDbEIsV0FBVyxFQUFBOztBQUpmO01BTVEsNkJBQTZCO01BQzdCLGdCQUFnQjtNQUNoQixhQUFhLEVBQUE7O0FBUnJCO1FBVVksZUFBZTtRQUNmLGtCQUFrQixFQUFBOztBQVg5QjtNQWVRLGlCQUFpQixFQUFBOztBQUl6QjtFQUVFLGdCQUFlLEVBQUE7O0FBRmpCO0lBSUksWUFBWTtJQUNaLGlCQUFpQjtJQUNqQixnQkFBZ0IsRUFBQSIsImZpbGUiOiJzcmMvYXBwL2ZpbGVzL2ZpbGVzLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi50YWJzLWxpc3R7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHdpZHRoOiAxMDAlO1xuICAgIHotaW5kZXg6IDk5OTtcbiAgfVxuICAuY3VzdG9tLWNhcmRcbiAge1xuICAgIG1hcmdpbjogMHB4O1xuICAgIGJhY2tncm91bmQ6I2ZmZjtcbiAgICBpb24tY2FyZC1jb250ZW50e1xuICAgIHBhZGRpbmc6IDBweDtcbiAgICBmb250LXNpemU6IDE2cHg7XG4gICAgY29sb3I6ICMwMDA7XG4gICAgfVxuICB9XG4gIC5jdXN0b20tdGFie1xuICAgIHdpZHRoOjUwJTtcbiAgICBiYWNrZ3JvdW5kOiNmZmY7XG4gICAgY29sb3I6ICMwMDA7XG4gICAgICBmbG9hdDogbGVmdDtcbiAgICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgICBmb250LXNpemU6IDE4cHg7XG4gICAgICBib3JkZXItYm90dG9tOiAycHggc29saWQgI2IyM2UzMztcbiAgfVxuICAuYWN0aXZlLXRhYntcbiAgICBiYWNrZ3JvdW5kOiAjYjIzZTMzO1xuICAgIGNvbG9yOiAjZmZmO1xuICB9XG5cbiAgLmltYWdlLWNvbnRhaW5lcntcbiAgICBtYXJnaW4tdG9wOjYwcHg7XG4gICAgaW9uLWNhcmR7XG4gICAgICBib3JkZXItcmFkaXVzOiAxZW07XG4gICAgICBjb2xvcjogIzAwMDtcbiAgICAgIGlvbi1jYXJkLWhlYWRlcntcbiAgICAgICAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgIzAwMDtcbiAgICAgICAgICBtYXJnaW46IDBweCAxMHB4O1xuICAgICAgICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgICAgICAgICBoNHtcbiAgICAgICAgICAgICAgbWFyZ2luLXRvcDogNXB4O1xuICAgICAgICAgICAgICBtYXJnaW4tYm90dG9tOiA1cHg7XG4gICAgICAgICAgICB9XG4gICAgICB9XG4gICAgICBpb24tY2FyZC1jb250ZW50e1xuICAgICAgICAgIHBhZGRpbmctdG9wOiAxMHB4OztcbiAgICAgIH1cbiAgICB9XG4gIH1cbiAgLmZpbGUtY29udGFpbmVyXG4gIHtcbiAgICBtYXJnaW4tdG9wOjYwcHg7XG4gICAgLmFycm93LW1hcmt7XG4gICAgICBtYXJnaW46IGF1dG87XG4gICAgICB0ZXh0LWFsaWduOiByaWdodDtcbiAgICAgIGZvbnQtc2l6ZTogMS41ZW07XG4gICAgfVxuICB9Il19 */"
+module.exports = ".tabs-list {\n  position: fixed;\n  width: 100%;\n  z-index: 999; }\n\n.custom-card {\n  margin: 0px;\n  background: #fff; }\n\n.custom-card ion-card-content {\n    padding: 0px;\n    font-size: 16px;\n    color: #000; }\n\n.custom-tab {\n  width: 50%;\n  background: #fff;\n  color: #000;\n  float: left;\n  padding: 15px;\n  text-align: center;\n  font-size: 18px;\n  border-bottom: 2px solid #b23e33;\n  font-weight: 600; }\n\n.active-tab {\n  background: #b23e33;\n  color: #fff; }\n\n.image-container {\n  margin-top: 60px; }\n\n.image-container ion-card {\n    border-radius: 1em;\n    color: #000; }\n\n.image-container ion-card ion-card-header {\n      border-bottom: 1px solid #000;\n      margin: 0px 10px;\n      padding: 10px; }\n\n.image-container ion-card ion-card-header h4 {\n        margin-top: 5px;\n        margin-bottom: 5px; }\n\n.image-container ion-card ion-card-content {\n      padding-top: 10px; }\n\n.file-container {\n  margin-top: 60px; }\n\n.file-container .arrow-mark {\n    margin: auto;\n    text-align: right;\n    font-size: 1.5em; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9maWxlcy9maWxlcy5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxlQUFlO0VBQ2YsV0FBVztFQUNYLFlBQVksRUFBQTs7QUFFZDtFQUVFLFdBQVc7RUFDWCxnQkFBZSxFQUFBOztBQUhqQjtJQUtFLFlBQVk7SUFDWixlQUFlO0lBQ2YsV0FBVyxFQUFBOztBQUdiO0VBQ0UsVUFBUztFQUNULGdCQUFlO0VBQ2YsV0FBVztFQUNULFdBQVc7RUFDWCxhQUFhO0VBQ2Isa0JBQWtCO0VBQ2xCLGVBQWU7RUFDZixnQ0FBZ0M7RUFDaEMsZ0JBQWdCLEVBQUE7O0FBRXBCO0VBQ0UsbUJBQW1CO0VBQ25CLFdBQVcsRUFBQTs7QUFHYjtFQUNFLGdCQUFlLEVBQUE7O0FBRGpCO0lBR0ksa0JBQWtCO0lBQ2xCLFdBQVcsRUFBQTs7QUFKZjtNQU1RLDZCQUE2QjtNQUM3QixnQkFBZ0I7TUFDaEIsYUFBYSxFQUFBOztBQVJyQjtRQVVZLGVBQWU7UUFDZixrQkFBa0IsRUFBQTs7QUFYOUI7TUFlUSxpQkFBaUIsRUFBQTs7QUFJekI7RUFFRSxnQkFBZSxFQUFBOztBQUZqQjtJQUlJLFlBQVk7SUFDWixpQkFBaUI7SUFDakIsZ0JBQWdCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9maWxlcy9maWxlcy5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIudGFicy1saXN0e1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB3aWR0aDogMTAwJTtcbiAgICB6LWluZGV4OiA5OTk7XG4gIH1cbiAgLmN1c3RvbS1jYXJkXG4gIHtcbiAgICBtYXJnaW46IDBweDtcbiAgICBiYWNrZ3JvdW5kOiNmZmY7XG4gICAgaW9uLWNhcmQtY29udGVudHtcbiAgICBwYWRkaW5nOiAwcHg7XG4gICAgZm9udC1zaXplOiAxNnB4O1xuICAgIGNvbG9yOiAjMDAwO1xuICAgIH1cbiAgfVxuICAuY3VzdG9tLXRhYntcbiAgICB3aWR0aDo1MCU7XG4gICAgYmFja2dyb3VuZDojZmZmO1xuICAgIGNvbG9yOiAjMDAwO1xuICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICBwYWRkaW5nOiAxNXB4O1xuICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgICAgZm9udC1zaXplOiAxOHB4O1xuICAgICAgYm9yZGVyLWJvdHRvbTogMnB4IHNvbGlkICNiMjNlMzM7XG4gICAgICBmb250LXdlaWdodDogNjAwO1xuICB9XG4gIC5hY3RpdmUtdGFie1xuICAgIGJhY2tncm91bmQ6ICNiMjNlMzM7XG4gICAgY29sb3I6ICNmZmY7XG4gIH1cblxuICAuaW1hZ2UtY29udGFpbmVye1xuICAgIG1hcmdpbi10b3A6NjBweDtcbiAgICBpb24tY2FyZHtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDFlbTtcbiAgICAgIGNvbG9yOiAjMDAwO1xuICAgICAgaW9uLWNhcmQtaGVhZGVye1xuICAgICAgICAgIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAjMDAwO1xuICAgICAgICAgIG1hcmdpbjogMHB4IDEwcHg7XG4gICAgICAgICAgcGFkZGluZzogMTBweDtcbiAgICAgICAgICAgIGg0e1xuICAgICAgICAgICAgICBtYXJnaW4tdG9wOiA1cHg7XG4gICAgICAgICAgICAgIG1hcmdpbi1ib3R0b206IDVweDtcbiAgICAgICAgICAgIH1cbiAgICAgIH1cbiAgICAgIGlvbi1jYXJkLWNvbnRlbnR7XG4gICAgICAgICAgcGFkZGluZy10b3A6IDEwcHg7O1xuICAgICAgfVxuICAgIH1cbiAgfVxuICAuZmlsZS1jb250YWluZXJcbiAge1xuICAgIG1hcmdpbi10b3A6NjBweDtcbiAgICAuYXJyb3ctbWFya3tcbiAgICAgIG1hcmdpbjogYXV0bztcbiAgICAgIHRleHQtYWxpZ246IHJpZ2h0O1xuICAgICAgZm9udC1zaXplOiAxLjVlbTtcbiAgICB9XG4gIH0iXX0= */"
 
 /***/ }),
 
@@ -138,19 +138,37 @@ var FilesPage = /** @class */ (function () {
     };
     FilesPage.prototype.getCurrentProject = function (id) {
         var _this = this;
-        this.storage.get('projects').then(function (projectList) {
-            projectList[0].projects.forEach(function (project) {
-                if (project.tasks && project.tasks.length > 0) {
-                    project.tasks.forEach(function (task) {
-                        if (task.imageUrl) {
-                            task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl;
+        this.storage.get('latestProjects').then(function (projectList) {
+            if (projectList.programs) {
+                projectList.programs.forEach(function (programsList) {
+                    programsList.projects.forEach(function (project) {
+                        if (project.tasks && project.tasks.length > 0) {
+                            project.tasks.forEach(function (task) {
+                                if (task.imageUrl) {
+                                    task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl;
+                                }
+                            });
+                        }
+                        if (project._id == id) {
+                            _this.currentMyProject = project;
                         }
                     });
-                }
-                if (project._id == id) {
-                    _this.currentMyProject = project;
-                }
-            });
+                });
+            }
+            else {
+                projectList[0].projects.forEach(function (project) {
+                    if (project.tasks && project.tasks.length > 0) {
+                        project.tasks.forEach(function (task) {
+                            if (task.imageUrl) {
+                                task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl;
+                            }
+                        });
+                    }
+                    if (project._id == id) {
+                        _this.currentMyProject = project;
+                    }
+                });
+            }
         });
     };
     FilesPage.prototype.selectTab = function (type) {
@@ -165,15 +183,11 @@ var FilesPage = /** @class */ (function () {
             task.file.name = decodeURIComponent(task.file.name);
             _this.file.writeFile(_this.appFolderPath, task.file.name, blob, { replace: true }).then(function (res) {
                 _this.fileOpener.open(res.toInternalURL(), 'application/pdf').then(function (res) {
-                    console.log(res, 'sucess');
                 }).catch(function (err) {
-                    console.log(err, 'error');
                 });
             }).catch(function (err) {
-                console.log('error in catch');
             });
         }).catch(function (err) {
-            console.log('error');
         });
     };
     FilesPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

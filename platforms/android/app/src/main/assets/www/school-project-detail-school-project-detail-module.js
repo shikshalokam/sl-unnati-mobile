@@ -129,44 +129,28 @@ var SchoolProjectDetailPage = /** @class */ (function () {
     };
     SchoolProjectDetailPage.prototype.getProjectDetail = function (id) {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.showSkeleton = true;
-            _this.api.refershToken(data.refresh_token).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens).then(function (usertoken) {
-                        _this.showSkeleton = true;
-                        var pid = {
-                            projectId: id
-                        };
-                        _this.showSkeleton = true;
-                        _this.projectService.projectDetails(parsedData.access_token, id).subscribe(function (resp) {
-                            _this.project = [];
-                            _this.showSkeleton = false;
-                            if (resp.status != 'failed') {
-                                if (resp.data) {
-                                    _this.project = resp.data;
-                                }
-                                else {
-                                }
-                                _this.showSkeleton = false;
-                            }
-                            else {
-                                _this.errorToast(resp.message);
-                                _this.showSkeleton = false;
-                            }
-                        }, function (error) {
-                            _this.showSkeleton = false;
-                        });
-                    });
+        this.showSkeleton = true;
+        var pid = {
+            projectId: id
+        };
+        this.showSkeleton = true;
+        this.projectService.projectDetails(id).subscribe(function (resp) {
+            _this.project = [];
+            _this.showSkeleton = false;
+            if (resp.status != 'failed') {
+                if (resp.data) {
+                    _this.project = resp.data;
                 }
-            }, function (error) {
+                else {
+                }
                 _this.showSkeleton = false;
-            });
+            }
+            else {
+                _this.errorToast(resp.message);
+                _this.showSkeleton = false;
+            }
+        }, function (error) {
+            _this.showSkeleton = false;
         });
     };
     // Display error Message
@@ -286,14 +270,14 @@ var SchoolProjectDetailPage = /** @class */ (function () {
                         if (_this.project.status = 'completed') {
                             _this.project.status = 'not yet started';
                         }
-                        _this.projectService.sync(_this.project, data.access_token).subscribe(function (data) {
+                        _this.projectService.sync(_this.project).subscribe(function (data) {
                             _this.showSkeleton = false;
                             if (data.status == "failed") {
                                 _this.errorToast(data.message);
                             }
                             else if (data.status == "succes") {
                                 _this.successToast(data.message);
-                                _this.storage.set('projects', data).then(function (resp1) {
+                                _this.storage.set('latestProjects', data).then(function (resp1) {
                                 }, function (error) { });
                             }
                         }, function (error) {

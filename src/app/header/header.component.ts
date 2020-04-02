@@ -9,6 +9,10 @@ import { HomeService } from '../home/home.service';
 import { Platform } from '@ionic/angular';
 import { UpdateProfileService } from '../update-profile/update-profile.service';
 import { NetworkService } from '../network.service';
+import { AppConfigs } from '../app.config';
+
+// import { AppVersion } from '@ionic-native/app-version';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -35,7 +39,9 @@ export class HeaderComponent implements OnInit {
     public badge: Badge, public api: ApiProvider,
     public homeService: HomeService,
     public updateProfileService: UpdateProfileService,
-    public networkService: NetworkService) {
+    public networkService: NetworkService,
+    // public appVersion: AppVersion
+  ) {
     networkService.emit.subscribe(status => {
       this.connected = status;
     })
@@ -47,46 +53,18 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.storage.set('appUpdateVersions', AppConfigs.appVersion);
     this.isIos = this.platform.is('ios') ? true : false;
-    this.fetchAllNotifications();
+    this.getNotificationCount();
   }
 
-  public fetchAllNotifications(infinateScrollRefrnc?) {
-    this.storage.get('userTokens').then(data => {
-      if (data) {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.storage.set('userTokens', userTokens).then(usertoken => {
-              this.notificationCardService.getAllNotifications(userTokens.access_token, this.page, this.limit).subscribe((data: any) => {
-                if (data.result.data) {
-                  let update: boolean = false;
-                  data.result.data.forEach(notification => {
-                    if (notification.action === 'Update' && !notification.is_read && !update) {
-                      update = true;
-                      this.storage.set('clearNotification', notification).then((data) => {
-                        this.updateProfileService.updateProfile('Update');
-                      });
-                    }
-                  });
-                }
-              }, error => {
-                // intentially left blank
-              })
-              this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data: any) => {
-                this.notificationCardService.getCount(data.result.count);
-              }, error => {
-              })
-            }, error => {
-              // intentially left blank
-            })
-          }
-        })
+  public getNotificationCount(infinateScrollRefrnc?) {
+    this.notificationCardService.checkForNotificationApi().subscribe((data: any) => {
+      if (data.result.data && data.result.data.length) {
+        this.initiatePopup(data.result.data);
       }
+      this.notificationCardService.getCount(data.result.count);
+    }, error => {
     })
   }
   // Navigate to notification screen
@@ -103,5 +81,27 @@ export class HeaderComponent implements OnInit {
   }
   public menuToggle() {
     this.menuController.toggle();
+  }
+
+  public initiatePopup(data) {
+    let isRejected;
+    data.forEach(element => {
+      if (element.action == "versionUpdate") {
+        // this.appVersion.getVersionNumber().then(currentVersion => {
+        if (element.payload.appVersion != parseInt(AppConfigs.appVersion)) {
+          this.storage.get('isRejected').then(data => {
+            isRejected = data;
+          })
+          this.storage.get('appUpdateVersions').then(statusObj => {
+            if (statusObj && element.payload.appVersion != statusObj && !isRejected) {
+              this.notificationCardService.AppupdateEvent(element);
+            }
+          }).catch(error => {
+            this.notificationCardService.AppupdateEvent(element);
+          })
+        }
+        // })
+      }
+    });
   }
 }

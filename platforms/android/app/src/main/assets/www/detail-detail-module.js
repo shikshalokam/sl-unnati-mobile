@@ -331,110 +331,73 @@ var DetailPage = /** @class */ (function () {
     // Sync project
     DetailPage.prototype.syncProject = function () {
         var _this = this;
-        this.storage.get('userTokens').then(function (data) {
-            _this.refreshToken = data.refresh_token;
-            _this.api.refershToken(_this.refreshToken).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens).then(function (data) {
-                        _this.showSkeleton = true;
-                        _this.projectService.sync(_this.project, data.access_token).subscribe(function (data) {
-                            _this.showSkeleton = false;
-                            if (data.status == "failed") {
-                                _this.errorToast(data.message);
-                            }
-                            else if (data.status == "succes") {
-                                _this.successToast(data.message);
-                                _this.showSkeleton = false;
-                                _this.storage.get('projects').then(function (projects) {
-                                    projects.data.forEach(function (project) {
-                                        project.projects.forEach(function (pro) {
-                                            if (pro._id == data.data._id) {
-                                                pro = data.data;
-                                                _this.storage.set('projects', projects).then(function (resp1) {
-                                                    _this.project = resp1.data;
-                                                }, function (error) {
-                                                    _this.showSkeleton = false;
-                                                });
-                                            }
-                                        });
-                                    });
-                                });
-                                _this.storage.get('myProjects').then(function (mp) {
-                                    if (mp.find(function (pro) { return pro._id === data._id; })) {
-                                        data.push(data);
-                                        _this.storage.set('myProjects', data).then(function (data) {
-                                            _this.homeService.loadMyProjects();
-                                        });
-                                    }
+        this.projectService.sync(this.project).subscribe(function (data) {
+            _this.showSkeleton = false;
+            if (data.status == "failed") {
+                _this.errorToast(data.message);
+            }
+            else if (data.status == "succes") {
+                _this.successToast(data.message);
+                _this.showSkeleton = false;
+                _this.storage.get('latestProjects').then(function (projects) {
+                    projects.data.forEach(function (project) {
+                        project.projects.forEach(function (pro) {
+                            if (pro._id == data.data._id) {
+                                pro = data.data;
+                                _this.storage.set('latestProjects', projects).then(function (resp1) {
+                                    _this.project = resp1.data;
+                                }, function (error) {
+                                    _this.showSkeleton = false;
                                 });
                             }
-                        }, function (error) {
-                            _this.showSkeleton = false;
-                            _this.errorToast(error.message);
                         });
                     });
-                }
-            }, function (error) {
-                _this.showSkeleton = false;
-                if (error.status === 0) {
-                    _this.router.navigateByUrl('/login');
-                }
-            });
+                });
+                _this.storage.get('myProjects').then(function (mp) {
+                    if (mp.find(function (pro) { return pro._id === data._id; })) {
+                        data.push(data);
+                        _this.storage.set('myProjects', data).then(function (data) {
+                            _this.homeService.loadMyProjects();
+                        });
+                    }
+                });
+            }
+        }, function (error) {
+            _this.showSkeleton = false;
+            _this.errorToast(error.message);
         });
     };
     // Get projects 
     DetailPage.prototype.getProjectsFromService = function () {
         var _this = this;
         this.project = [];
-        this.storage.get('userTokens').then(function (data) {
-            _this.showSkeleton = true;
-            _this.refreshToken = data.refresh_token;
-            _this.apiProvider.refershToken(_this.refreshToken).subscribe(function (data) {
-                var parsedData = JSON.parse(data._body);
-                if (parsedData && parsedData.access_token) {
-                    var userTokens = {
-                        access_token: parsedData.access_token,
-                        refresh_token: parsedData.refresh_token,
-                    };
-                    _this.storage.set('userTokens', userTokens).then(function (usertoken) {
-                        _this.showSkeleton = true;
-                        var id = {
-                            projectId: _this.pid
-                        };
-                        _this.showSkeleton = true;
-                        _this.projectService.projectDetails(parsedData.access_token, id).subscribe(function (resp) {
-                            _this.project = [];
-                            _this.showSkeleton = false;
-                            if (resp.status != 'failed') {
-                                _this.tasksService.loadProject();
-                                if (resp.data) {
-                                    _this.project = resp.data;
-                                    _this.storage.set('currentProject', _this.project.projects[0]).then(function (cpsetup) {
-                                        _this.project = cpsetup;
-                                        // this.getProject();
-                                    });
-                                }
-                                else {
-                                }
-                                _this.showSkeleton = false;
-                            }
-                            else {
-                                _this.errorToast(resp.message);
-                                _this.showSkeleton = false;
-                            }
-                        }, function (error) {
-                            _this.showSkeleton = false;
-                        });
+        this.showSkeleton = true;
+        var id = {
+            projectId: this.pid
+        };
+        this.showSkeleton = true;
+        this.projectService.projectDetails(id).subscribe(function (resp) {
+            _this.project = [];
+            _this.showSkeleton = false;
+            if (resp.status != 'failed') {
+                _this.tasksService.loadProject();
+                if (resp.data) {
+                    _this.project = resp.data;
+                    _this.storage.set('currentProject', _this.project.projects[0]).then(function (cpsetup) {
+                        _this.project = cpsetup;
+                        // this.getProject();
                     });
                 }
-            }, function (error) {
+                else {
+                }
                 _this.showSkeleton = false;
-            });
+            }
+            else {
+                _this.errorToast(resp.message);
+                _this.showSkeleton = false;
+            }
+        }, function (error) {
+            _this.showSkeleton = false;
         });
     };
     // Display error Message

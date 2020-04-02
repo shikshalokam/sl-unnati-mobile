@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { UpdateProfileService } from './update-profile.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
@@ -8,13 +8,15 @@ import { ToastService } from '../toast.service';
 import * as jwt_decode from "jwt-decode";
 import { NetworkService } from '../network.service';
 import { NotificationCardService } from '../notification-card/notification.service';
-
+import { ModalController } from '@ionic/angular';
+import { GetSubEntitiesPage } from '../get-sub-entities/get-sub-entities.page';
+import { AlertController } from '@ionic/angular';
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.page.html',
   styleUrls: ['./update-profile.page.scss'],
 })
-export class UpdateProfilePage implements OnInit {
+export class UpdateProfilePage {
   profileForm: FormGroup;
   submitAttempt: boolean = false;
   districtList;
@@ -29,13 +31,21 @@ export class UpdateProfilePage implements OnInit {
   blockList;
   zoneList;
   schoolList;
-  profile: any = {};
+  profile = [];
   stateList;
+  appUpdate = '';
+  showCloseButton: boolean = false;
   body = 'message.thankyou_note';
   header = 'message.thankyou';
   button = 'button.continue';
   isActionable = '/project-view/home';
   showUpdatePop: boolean = false;
+  showForm: boolean = false;
+  name = 'Angular';
+  stateSubEntities;
+  profileFormData;
+
+  dynamicForm: FormGroup;
   constructor(
     public formBuilder: FormBuilder,
     public updateProfileService: UpdateProfileService,
@@ -43,340 +53,395 @@ export class UpdateProfilePage implements OnInit {
     public api: ApiProvider,
     public toastService: ToastService,
     public router: Router,
+    public modalController: ModalController,
     public notificationCardService: NotificationCardService,
-    public networkService: NetworkService
+    public networkService: NetworkService,
+    public alertController: AlertController
   ) {
-    networkService.emit.subscribe(status => {
-      this.connected = status;
-    })
+
   }
 
-  ngOnInit() {
+  ionViewDidEnter() {
+    this.showUpdatePop = false;
     this.storage.get('userTokens').then(data => {
       this.userDetails = jwt_decode(data.access_token);
     })
     this.updateProfileService.updateProfile('close');
     localStorage.setItem('isPopUpShowen', 'true');
-    this.prepareForm();
     if (this.connected) {
-      this.getStates();
       this.getProfileData();
     }
   }
   //  Prepare the form
   public prepareForm() {
-    this.profileForm = this.formBuilder.group({
-      fname: ['', Validators.required],
-      emailId: ['', Validators.required],
-      state: ['', Validators.required],
-      district: ['', ''],
-      entity: ['', ''],
-      lname: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
-      zone: ['', ''],
-      taluka: ['', ''],
-      cluster: ['', ''],
-      hub: ['', ''],
-      block: ['', ''],
-      school: ['', ''],
-    })
-  }
-  // get states
-  public getStates() {
-    this.storage.get('userTokens').then(data => {
-      if (data) {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            // this.toastService.startLoader('Loading Please Wait');
-            this.storage.set('userTokens', userTokens).then(data => {
-              this.updateProfileService.getStates(userTokens.access_token).subscribe((states: any) => {
-                this.stateList = states.result;
-                // this.toastService.stopLoader();
-              }, erros => {
-                // this.toastService.stopLoader();
-              }
-              )
-            })
+    const controls = {};
+    this.profileFormData.forEach(res => {
+      const validationsArray = [];
+      if (res.validation) {
+        if (res.validation.required) {
+          res.validation.name = "required",
+            validationsArray.push(
+              Validators.required
+            );
+        }
+        if (res.validation.regex) {
+          res.validation.name = "pattern";
+          if (res.field == "phoneNumber") {
+            res.validation.regex = new RegExp("^[0-9]{10}");
           }
-        })
+          if (res.field == "firstName") {
+            res.validation.regex = new RegExp("^[A-Za-z]+$");
+          }
+          if (res.field == "lastName") {
+            res.validation.regex = new RegExp("^[A-Za-z]+$");
+          }
+          if (res.field == "email") {
+            res.validation.regex = new RegExp("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$");
+          }
+          if (res.field == "state") {
+            delete res.validation.regex
+          }
+          validationsArray.push(
+            Validators.pattern(res.validation.regex)
+          );
+        }
+        controls[res.field] = new FormControl('', validationsArray);
       }
-    })
+    });
+    this.dynamicForm = new FormGroup(
+      controls
+    );
+    this.showForm = true;
   }
-  // immediate children of state
+
+  public getSubEntities(event) {
+    this.getImmediateChildren(event.detail.value);
+  }
   public getImmediateChildren(event) {
     if (this.connected) {
       let id;
-      id = event.detail.value;
-      if (id && this.noData) {
-        this.storage.get('userTokens').then(data => {
-          if (data) {
-            this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-              let parsedData = JSON.parse(data._body);
-              if (parsedData && parsedData.access_token) {
-                let userTokens = {
-                  access_token: parsedData.access_token,
-                  refresh_token: parsedData.refresh_token,
-                };
-                this.toastService.startLoader('Loading Please Wait');
-                this.storage.set('userTokens', userTokens).then(data => {
-                  this.updateProfileService.getImmediateChildren(userTokens.access_token, id).subscribe((entities: any) => {
-                    switch (entities.result.immediateEntityType) {
-                      case 'district': {
-                        this.districtList = entities.result.data;
-                        break;
-                      }
-                      case 'zone': {
-                        this.zoneList = entities.result.data;
-                        break;
-                      }
-                      case 'cluster': {
-                        this.clusterList = entities.result.data;
-                        break;
-                      }
-                      case 'block': {
-                        this.blockList = entities.result.data;
-                        break;
-                      }
-                      case 'school': {
-                        this.schoolList = entities.result.data;
-                        break;
-                      }
-                      case 'hub': {
-                        this.hubList = entities.result.data;
-                        break;
-                      }
-                      case 'taluka': {
-                        this.talukList = entities.result.data;
-                        break;
-                      }
-                    }
-                    this.toastService.stopLoader();
-                  }, erros => {
-                    this.toastService.stopLoader();
-                  })
-                })
+      id = event;
+      if (id) {
+        this.toastService.startLoader('Loading, please wait');
+        this.updateProfileService.getImmediateChildren(id).subscribe((entities: any) => {
+          if (entities.result.data) {
+            let entityData = [];
+            entityData.push(id);
+            let data = {
+              editable: false,
+              dependent: id,
+              field: entities.result.data[0].entityType,
+              input: "multiselect",
+              label: entities.result.data[0].entityType,
+              selectedType: "list",
+              validation: {},
+              options: entities.result.data,
+              visible: true
+            }
+            console.log(entities.result.data, "entities.result.data");
+            let mapped: boolean = false;
+            this.profileFormData.forEach(element => {
+              if (element.field == entities.result.data[0].entityType && !mapped) {
+                element.options = entities.result.data;
+                element.value = [];
+                element.dependent = id;
+                mapped = true;
               }
-            })
-          }
-        })
-      } else {
-        this.noData = true;
-      }
-    }
-  }
-  public getImmediateChildren1(id) {
-    if (this.connected) {
-      if (id && this.noData) {
-        this.storage.get('userTokens').then(data => {
-          if (data) {
-            this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-              let parsedData = JSON.parse(data._body);
-              if (parsedData && parsedData.access_token) {
-                let userTokens = {
-                  access_token: parsedData.access_token,
-                  refresh_token: parsedData.refresh_token,
-                };
-                this.storage.set('userTokens', userTokens).then(data => {
-                  this.updateProfileService.getImmediateChildren(userTokens.access_token, id).subscribe((entities: any) => {
-                    switch (entities.result.immediateEntityType) {
-                      case 'district': {
-                        this.districtList = entities.result.data;
-                        break;
-                      }
-                      case 'zone': {
-                        this.zoneList = entities.result.data;
-                        break;
-                      }
-                      case 'cluster': {
-                        this.clusterList = entities.result.data;
-                        break;
-                      }
-                      case 'block': {
-                        this.blockList = entities.result.data;
-                        break;
-                      }
-                      case 'school': {
-                        this.schoolList = entities.result.data;
-                        break;
-                      }
-                      case 'hub': {
-                        this.hubList = entities.result.data;
-                        break;
-                      }
-                      case 'taluka': {
-                        this.talukList = entities.result.data;
-                        break;
-                      }
-                    }
-                  }, erros => {
-                  })
-                })
+            });
+            if (!mapped) {
+              this.profileFormData.push(data);
+            }
+            let remove = false;
+            let toBeRemove = [];
+            this.stateSubEntities[id].forEach(element => {
+              if (remove) {
+                toBeRemove.push(element);
               }
-            })
+              if (entities.result.data[0].entityType == element) {
+                remove = true;
+              }
+            });
+            const filteredItems = this.profileFormData.filter(item => !toBeRemove.includes(item.field));
+            this.profileFormData = filteredItems;
+          } else {
+            this.profileFormData.forEach(element => {
+              if (element.input == 'multiselect') {
+                const index: number = this.profileFormData.indexOf(element);
+                if (index !== -1) {
+                  this.profileFormData.splice(index, 1);
+                }
+              }
+            });
+            this.profileFormData.forEach(element => {
+              if (element.input == 'multiselect') {
+                const index: number = this.profileFormData.indexOf(element);
+                if (index !== -1) {
+                  this.profileFormData.splice(index, 1);
+                }
+              }
+            });
+            // this.toastService.errorToast('No sub entites found.');
           }
+          this.toastService.stopLoader();
+        }, erros => {
+          // this.toastService.stopLoader();
         })
-      } else {
-        this.noData = true;
       }
     }
   }
 
-  // Save user info
+  // Save user info 
   public saveInfo() {
+    let valid = true;
     if (this.connected) {
-      this.submitAttempt = true;
-
-      if (this.profile.firstName && this.profile.lastName && this.profile.state && (this.profile.emailId || this.profile.phoneNumber)) {
-        if (!this.profile.hub) {
-          delete this.profile.hub;
-        }
-        if (!this.profile.cluster) {
-          delete this.profile.cluster;
-        }
-        if (!this.profile.taluk) {
-          delete this.profile.taluk;
-        }
-        if (!this.profile.block) {
-          delete this.profile.block;
-        }
-        if (!this.profile.district) {
-          delete this.profile.district;
-        }
-        if (!this.profile.zone) {
-          delete this.profile.zone;
-        }
-        if (!this.profile.school) {
-          delete this.profile.school;
-        }
-        if (!this.profile.updatedBy) {
-          delete this.profile.updatedBy;
-        }
-        if (!this.profile.emailId) {
-          delete this.profile.emailId;
-        }
-        if (!this.profile.phoneNumber) {
-          delete this.profile.phoneNumber;
-        }
-        this.submitAttempt = false;
-        this.storage.get('userTokens').then(data => {
-          if (data) {
-            this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-              let parsedData = JSON.parse(data._body);
-              if (parsedData && parsedData.access_token) {
-                let userTokens = {
-                  access_token: parsedData.access_token,
-                  refresh_token: parsedData.refresh_token,
-                };
-                this.toastService.startLoader('Loading Please Wait');
-                this.storage.set('userTokens', userTokens).then(data => {
-                  this.updateProfileService.saveInfo(userTokens.access_token, this.profile).subscribe((data: any) => {
-                    this.storage.get('clearNotification').then((data) => {
-                      // this.markAsRead(data);
-                    });
-                    this.updateProfileService.updateProfile('done');
-                    this.showUpdatePop = true;
-                    console.log(this.showUpdatePop, "this.showUpdatePop");
-                    this.submitAttempt = false;
-                    this.toastService.stopLoader();
-                  }, error => {
-                    this.toastService.stopLoader();
-                  })
-                }, error => {
-                  this.toastService.stopLoader();
-                })
-              }
-            })
+      this.showUpdatePop = false;
+      this.submitAttempt = false;
+      let obj = {
+      }
+      this.profileFormData.forEach(profile => {
+        if (profile.validation.regex) {
+          if (!profile.patternMatch) {
+            valid = false;
           }
+        }
+        if (profile.validation.required) {
+          if (!profile.value) {
+            valid = false;
+          }
+        }
+        if (valid) {
+          this.submitAttempt = false;
+        } else {
+          this.submitAttempt = true;
+          // this.toastService.errorToast('message.fileds_mandatory');
+        }
+        if (profile.field == 'state' && !profile.value.value) {
+          profile.options.forEach(option => {
+            if (option.value == profile.value) {
+              obj[profile.field] = option
+            }
+          });
+        } else {
+          obj[profile.field] = profile.value
+        }
+      });
+
+      let data = {
+        'metaInformation': obj
+      }
+      if (valid) {
+        this.submitAttempt = false;
+        this.toastService.startLoader('Loading,please wait');
+        this.updateProfileService.saveInfo(data).subscribe((data: any) => {
+          this.storage.get('clearNotification').then((data) => {
+            // this.markAsRead(data);
+          });
+          this.updateProfileService.updateProfile('done');
+          this.showUpdatePop = true;
+          this.submitAttempt = false;
+          this.toastService.stopLoader();
+        }, error => {
+          this.toastService.stopLoader();
         })
       }
+
     } else {
       this.toastService.errorToast('message.nerwork_connection_check');
     }
-
   }
   // go back to home page
   public cancel() {
     this.router.navigate(['/project-view/home'])
   }
 
-  public markAsRead(notificationMeta) {
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.notificationCardService.markAsRead(userTokens.access_token, notificationMeta.id).subscribe(data => {
-              notificationMeta.is_read = true;
-              this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
-                this.notificationCardService.getCount(data1.result.count);
-              })
-            })
-          })
+  // get user profile data
+  public getProfileData() {
+    this.toastService.startLoader('Loading, please wait');
+    this.updateProfileService.getProfileData().subscribe((data: any) => {
+      delete data.result.createdAt;
+      delete data.result.createdBy;
+      this.profileFormData = data.result.form;
+      this.stateSubEntities = data.result.statesWithSubEntities;
+      this.profileFormData.forEach(element => {
+        element.patternMatch = true;
+        // if (element.field == 'state') {
+        //   this.getImmediateChildren(element.value.value);
+        // }
+      });
+      console.log('stop 260')
+      this.toastService.stopLoader();
+      this.prepareForm();
+      if (this.profileFormData[this.profileFormData.length - 1].field != 'state') {
+        this.getNextEntities(this.profileFormData[this.profileFormData.length - 1]);
+      }
+    }, error => {
+      this.toastService.stopLoader();
+    })
+  }
+  public radioChecked(data, value) {
+    data.selectedType = value;
+    if (value == 'others') {
+      data.label = 'others'
+    }
+  }
+
+  async selectEntity(data) {
+    console.log(data,"data nnn");
+    if (data.options) {
+      const modal = await this.modalController.create({
+        component: GetSubEntitiesPage,
+        componentProps: {
+          'data': data,
+        }
+      });
+      modal.onDidDismiss().then((data: any) => {
+        if (data.data) {
+          let mapped = false;
+          let toBeRemove = [];
+          this.stateSubEntities[data.data.dependent].forEach(element => {
+            if (mapped) {
+              toBeRemove.push(element);
+            }
+            if (data.data.field == element) {
+              mapped = true;
+            }
+          });
+          const filteredItems = this.profileFormData.filter(item => !toBeRemove.includes(item.field));
+          this.profileFormData = filteredItems;
+          this.getNextEntities(data.data);
         }
       })
+      return await modal.present();
+    }
+  }
+  public getNextEntities(data) {
+    let entity = [];
+    let entities;
+    let type = '';
+    if (data.value && data.value.length > 0) {
+      data.value.forEach(element => {
+        entity.push(element.value);
+      });
+    } else {
+      let mapped = -1;
+      if (this.stateSubEntities[data.dependent]) {
+        this.stateSubEntities[data.dependent].forEach(function (element, i) {
+          if (mapped == i) {
+            type = element;
+            entity.push(data.dependent);
+          }
+          if (element == data.field) {
+            mapped = i + 1;
+          }
+        });
+      }
+    }
+    entities = {
+      entities: entity
+    }
+    this.toastService.startLoader('Loading, please wait');
+    this.updateProfileService.getSubEntities(entities, type).subscribe((entity: any) => {
+      if (entity.result && entity.result.data) {
+        let data1 = {
+          editable: false,
+          dependent: data.dependent,
+          field: entity.result.data[0].entityType,
+          input: "multiselect",
+          label: entity.result.data[0].entityType,
+          selectedType: "list",
+          validation: {
+            regex: '',
+            required: false
+          },
+          visible: true,
+          options: entity.result.data
+        }
+        let mapped: boolean = false;
+        this.profileFormData.forEach(element => {
+          if (element.field == entity.result.data[0].entityType && !mapped) {
+            element.options = entity.result.data;
+            element.dependent = data.dependent;
+            mapped = true;
+          }
+        });
+        if (!mapped) {
+          this.profileFormData.push(data1);
+        }
+        this.toastService.stopLoader();
+      } else {
+        this.toastService.stopLoader();
+      }
+    }, error => {
+      this.toastService.stopLoader();
     })
   }
 
-  // get user profile data
-  public getProfileData() {
-    this.storage.get('userTokens').then(data => {
-      if (data) {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.toastService.startLoader('Loading Please Wait');
-            this.storage.set('userTokens', userTokens).then(data => {
-              this.updateProfileService.getProfileData(userTokens.access_token).subscribe((data: any) => {
-                delete data.result.createdAt;
-                delete data.result.createdBy;
-                if (data.result.state) {
-                  this.getImmediateChildren1(data.result.state);
-                }
-                if (data.result.district) {
-                  this.getImmediateChildren1(data.result.district);
-                }
-                if (data.result.hub) {
-                  this.getImmediateChildren1(data.result.hub);
-                }
-                if (data.result.zone) {
-                  this.getImmediateChildren1(data.result.zone);
-                }
-                if (data.result.cluster) {
-                  this.getImmediateChildren1(data.result.cluster);
-                }
-                if (data.result.block) {
-                  this.getImmediateChildren1(data.result.block);
-                }
-                if (data.result.school) {
-                  this.getImmediateChildren1(data.result.school);
-                }
-                this.profile = data.result;
-                if (this.profile.firstName) {
-                  this.noData = false;
-                } else {
-                  this.noData = true;
-                }
-                this.toastService.stopLoader();
-              }, error => {
-                this.toastService.stopLoader();
-              })
-            })
-          }
-        })
+  public reset(data) {
+    data.others = '';
+  }
+  public submitOthers(data) {
+    data.value = [];
+    if (data.others) {
+      this.getNextEntities(data);
+    } else {
+      this.toastService.errorToast('Please enter ' + data.field + ' name.')
+    }
+  }
+
+  public removeEntity(entity, entityList) {
+    const index: number = entityList.value.indexOf(entity);
+    if (index !== -1) {
+      entityList.value.splice(index, 1);
+
+    }
+    // if (!entityList.value.length) {
+    let mapped = false;
+    let toBeRemove = [];
+    this.stateSubEntities[entityList.dependent].forEach(element => {
+      if (mapped) {
+        toBeRemove.push(element);
       }
-    })
+      if (entityList.field == element) {
+        mapped = true;
+      }
+    });
+    const filteredItems = this.profileFormData.filter(item => !toBeRemove.includes(item.field));
+    this.profileFormData = filteredItems;
+    // } else {
+    if (entityList.value && entityList.value.length > 0) {
+      // this.getNextEntities(entityList);
+    }
+    // }
+  }
+  public checkPatter(data) {
+    if (data.value) {
+      let result = data.validation.regex.test(data.value);
+      data.patternMatch = result;
+    } else {
+      data.patternMatch = true;
+    }
+  }
+
+  async deleteConfirm(entity, entityList) {
+    const alert = await this.alertController.create({
+      header: 'Cofirm!',
+      message: 'Do you want delete ' + entity.label + ' from ' + entityList.label + '?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+          }
+        }, {
+          text: 'Okay',
+          handler: () => {
+            this.removeEntity(entity, entityList);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

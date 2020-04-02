@@ -111,7 +111,7 @@ var ActiveProjectsPage = /** @class */ (function () {
     // }
     ActiveProjectsPage.prototype.getProjects = function () {
         var _this = this;
-        this.storage.get('projects').then(function (projects) {
+        this.storage.get('latestProjects').then(function (projects) {
             _this.projectList = projects;
         });
     };

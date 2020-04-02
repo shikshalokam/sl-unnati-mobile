@@ -27,20 +27,23 @@ export class ProjectViewPage implements OnInit {
   isKeyBoardUp: boolean = false;
   public language: string = this.translate.currentLang;
   constructor(
-      public storage: Storage,
-     public projectService: ProjectService, 
-     public keyboard: Keyboard, 
-     public menuCtrl: MenuController, 
-     public platform: Platform, 
-     public routerOutlet: IonRouterOutlet, 
-     public networkService: NetworkService, 
-     public translate: TranslateService, 
-     public network: Network, 
-     public route: ActivatedRoute, 
-     public router: Router, 
-     public screenOrientation: ScreenOrientation) {
+    public storage: Storage,
+    public projectService: ProjectService,
+    public keyboard: Keyboard,
+    public menuCtrl: MenuController,
+    public platform: Platform,
+    public routerOutlet: IonRouterOutlet,
+    public networkService: NetworkService,
+    public translate: TranslateService,
+    public network: Network,
+    public route: ActivatedRoute,
+    public router: Router,
+    public screenOrientation: ScreenOrientation) {
     this.menuCtrl.enable(true);
     platform.ready().then(() => {
+      networkService.emit.subscribe(status => {
+        this.connected = status;
+      })
       this.keyboard.onKeyboardShow().subscribe(() => { this.isKeyBoardUp = true; });
       this.keyboard.onKeyboardHide().subscribe(() => { this.isKeyBoardUp = false; });
     })
