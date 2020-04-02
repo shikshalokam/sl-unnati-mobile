@@ -150,12 +150,12 @@ export class DetailPage implements OnInit {
               } else if (data.status == "succes") {
                 this.successToast(data.message);
                 this.showSkeleton = false;
-                this.storage.get('projects').then(projects => {
+                this.storage.get('latestProjects').then(projects => {
                   projects.data.forEach(project => {
                     project.projects.forEach(pro => {
                       if (pro._id == data.data._id) {
                         pro = data.data;
-                        this.storage.set('projects', projects).then(resp1 => {
+                        this.storage.set('latestProjects', projects).then(resp1 => {
                           this.project = resp1.data;
                         }, error => {
                           this.showSkeleton = false;
@@ -288,7 +288,7 @@ export class DetailPage implements OnInit {
     //       this.storage.get('currentProject').then(data => {
     //         this.storage.set('currentProject', data).then(response => {
     //           this.project.tasks = response.tasks;
-    //           this.storage.get('projects').then((data: any) => {
+    //           this.storage.get('latestProjects').then((data: any) => {
     //             this.tasksService.loadProject();
     //           })
     //         })

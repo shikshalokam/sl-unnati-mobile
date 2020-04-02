@@ -21,6 +21,18 @@ export class ProjectService {
         })
         return this.http.post(AppConfigs.api_url + '/unnati/api/v1/project/sync', data, { headers: httpHeaders })
     }
+    public syncForPDF(data, token) {
+        let httpHeaders = new HttpHeaders({
+            'x-auth-token': token
+        })
+        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projects/getProjectPdfWithSyc', data, { headers: httpHeaders })
+    }
+    public oldDataSync(data, token) {
+        let httpHeaders = new HttpHeaders({
+            'x-auth-token': token
+        })
+        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projects/syncLocalDataOnUpgradeOfApp', data, { headers: httpHeaders })
+    }
     public loadChart() {
         this.emit.next('load');
     }
