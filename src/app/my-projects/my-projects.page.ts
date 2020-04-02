@@ -8,17 +8,19 @@ import { Router } from '@angular/router';
 })
 export class MyProjectsPage implements OnInit {
   projects;
+  searchProjects;
   constructor(
     public storage: Storage,
     public router: Router
   ) { }
   ionViewDidEnter() {
     this.getMyProjects();
+    this.searchProjects ='';
   }
   ngOnInit() {
   }
   public getMyProjects() {
-    this.storage.get('projects').then(myprojects => {
+    this.storage.get('latestProjects').then(myprojects => {
       this.projects = myprojects;
     });
   }

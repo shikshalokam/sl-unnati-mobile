@@ -18,6 +18,7 @@ import * as jwt_decode from "jwt-decode";
 })
 export class MyschoolsPage implements OnInit {
   @ViewChild(NavController) nav: NavController;
+  searchInput;
   connected: any = localStorage.getItem('networkStatus');
   mySchools;
   back ="project-view/home"
@@ -36,6 +37,7 @@ export class MyschoolsPage implements OnInit {
     });
   }
   ionViewDidEnter() {
+    this.searchInput ='';
     this.menuCtrl.enable(true);
     this.checkNetwork();
     this.getSchools();

@@ -23,7 +23,7 @@ export class ActiveProjectsPage implements OnInit {
   //   });
   // }
   public getProjects() {
-    this.storage.get('projects').then(projects => {
+    this.storage.get('latestProjects').then(projects => {
       this.projectList = projects;
     });
   }

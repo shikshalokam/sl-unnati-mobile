@@ -67,6 +67,7 @@ export class HomePage implements OnInit {
   ]
   activeProjects = [];
   projectList;
+  searchInput;
   showSkeleton: boolean = false;
   skeletons = [{}, {}, {}, {}, {}, {}];
   mySchools;
@@ -90,7 +91,7 @@ export class HomePage implements OnInit {
     public updateProfile: UpdateProfileService) {
     this.menuCtrl.enable(true);
     // update profile pop handler
-    homeService.localDataUpdated.subscribe(data =>{
+    homeService.localDataUpdated.subscribe(data => {
       this.getActiveProjects();
     })
     updateProfile.updatedUser.subscribe((status) => {
@@ -128,6 +129,7 @@ export class HomePage implements OnInit {
     this.menuCtrl.enable(true);
   }
   ionViewDidEnter() {
+    this.searchInput = '';
     if (localStorage.getItem("token") != null) {
       this.menuCtrl.enable(true, 'unnati');
       this.getActiveProjects();
@@ -139,7 +141,7 @@ export class HomePage implements OnInit {
           this.getTemplates();
         }
       })
-      this.storage.get('projects').then(projects => {
+      this.storage.get('latestProjects').then(projects => {
         if (!projects) {
           this.getProjects();
         } else {
@@ -147,9 +149,7 @@ export class HomePage implements OnInit {
         }
       })
       this.getSchools();
-
     }
-
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
     } catch (error) {
@@ -201,17 +201,38 @@ export class HomePage implements OnInit {
     this.activeProjects = [];
     let ap = []
     let count = 0;
-    this.storage.get('projects').then(myProjects => {
+    this.storage.get('latestProjects').then(myProjects => {
       this.myProjects = myProjects;
       if (myProjects) {
-        myProjects[0].projects.forEach(myProject => {
-          if (count < 2) {
-            if ((myProject.createdType == 'by self' || myProject.createdType == 'by reference') && myProject.isStarted && !myProject.isDeleted) {
-              ap.push(myProject);
-              count = count + 1;
+        myProjects.forEach(programsList => {
+          if (programsList) {
+            console.log(programsList.programs, "programs")
+            if (programsList.programs._id == '5e01da0c0c72d5597433ec7a') {
+              console.log(programsList.projects, " programsList.projects");
+              programsList.projects.sort((a, b) => {
+                return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+              });
+              programsList.projects.forEach(myProject => {
+                if (count < 2) {
+                  if ((myProject.createdType == 'by self' || myProject.createdType == 'by reference') && myProject.isStarted && !myProject.isDeleted) {
+                    ap.push(myProject);
+                    count = count + 1;
+                  }
+                }
+              });
             }
           }
         });
+        if (count == 0) {
+          myProjects[0].projects.forEach(myProject => {
+            if (count < 2) {
+              if ((myProject.createdType == 'by self' || myProject.createdType == 'by reference') && myProject.isStarted && !myProject.isDeleted) {
+                ap.push(myProject);
+                count = count + 1;
+              }
+            }
+          });
+        }
         this.activeProjects = ap;
       }
       this.showSkeleton = false;
@@ -286,7 +307,7 @@ export class HomePage implements OnInit {
                     project.programName = programs.programs.name;
                   });
                 });
-                this.storage.set('projects', resp.data).then(resp1 => {
+                this.storage.set('latestProjects', resp.data).then(resp1 => {
                   this.getActiveProjects();
                 })
               }

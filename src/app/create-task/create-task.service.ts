@@ -7,35 +7,66 @@ export class CreateTaskService {
     project;
     constructor(public storage: Storage) { }
     public getProjectById(projectId) {
-        return this.storage.get('projects').then(projectList => {
-            projectList[0].projects.forEach(project => {
-                if (project._id == projectId) {
-                    return this.project = project;
-                }
+        return this.storage.get('latestProjects').then(projectList => {
+            projectList.forEach(programs => {
+                programs.projects.forEach(project => {
+                    if (project._id == projectId) {
+                        return this.project = project;
+                    }
+                });
             });
+
         })
     }
+    // public updateByProjects(updatedProject) {
+    //     this.storage.get('latestProjects').then(projectList => {
+    //         projectList[0].projects.forEach(project => {
+    //             if (project._id == updatedProject._id) {
+    //                 projectList[0].projects = updatedProject;
+    //                 this.storage.set('latestProjects', projectList).then(projects => {
+    //                 })
+    //             }
+    //         });
+    //     })
+    // }
     public updateByProjects(updatedProject) {
-        this.storage.get('projects').then(projectList => {
-            projectList[0].projects.forEach(project => {
-                if (project._id == updatedProject._id) {
-                    projectList[0].projects = updatedProject;
-                    this.storage.set('projects', projectList).then(projects => {
-                    })
+        let mapped: boolean = false;
+        return this.storage.get('latestProjects').then(projectList => {
+            projectList.forEach(projectsPrograms => {
+                if (projectsPrograms) {
+                    projectsPrograms.projects.forEach(function (project, i) {
+                        if (project._id == updatedProject._id) {
+                            updatedProject.isEdited = true;
+                            projectsPrograms.projects[i] = updatedProject;
+                            mapped = true;
+                        }
+                    });
                 }
-            });
+                if (!mapped) {
+                    if (projectList[0].projects) {
+                        projectList[0].projects.push(updatedProject)
+                    } else {
+                        let pro1 = [{
+                            projects: [
+                            ]
+                        }]
+                        pro1[0].projects.push(updatedProject);
+                        projectList = pro1;
+                    }
+                }
+            })
         })
     }
     // add project into my projects
     public insertIntoMyProjects(project) {
-        return this.storage.get('projects').then(projectList => {
+        return this.storage.get('latestProjects').then(projectList => {
             if (projectList[0].projects) {
                 projectList[0].projects.push(project);
-                this.storage.set('projects', projectList).then(projects => {
+                this.storage.set('latestProjects', projectList).then(projects => {
                 })
             } else {
                 projectList[0].projects.push(project);
-                this.storage.set('projects', projectList).then(projects => {
+                this.storage.set('latestProjects', projectList).then(projects => {
                 })
             }
         });
