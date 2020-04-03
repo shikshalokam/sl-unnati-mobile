@@ -65,7 +65,7 @@ var CreateProjectPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <app-header [title]=\"'create_project.create_new_project' | translate\" [showMenu]=\"false\" [showBack]=\"true\"\n    [isGoBack]=\"back\" [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <!-- Error message, if fileds are not filled -->\n  <h5 class=\"required-field\" *ngIf=\"markLabelsAsInvalid\" style=\"padding-left:15px;\">\n    {{'create_project.fileds_mandatory' | translate}}</h5>\n  <!-- Error message ends here-->\n  <!-- Project creation form starts here -->\n  <form [formGroup]=\"createProject\" class=\"create-project\">\n    <!-- Project title start here -->\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\"\n        [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.title}\">\n        {{'create_project.title_of_project' | translate}} </ion-label>\n      <ion-input type=\"text\" [(ngModel)]=\"project.title\" name=\"title\" formControlName=\"title\"\n        placeholder=\"{{'create_project.placeholder_project_title'| translate}}\" maxlength=\"280\"></ion-input>\n    </ion-item>\n    <!-- Project title ends here -->\n    <!-- project goal starts here -->\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\"\n        [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.goal}\">\n        {{'create_project.goal' | translate}}</ion-label>\n      <ion-textarea type=\"text\" [(ngModel)]=\"project.goal\" name=\"goal\" formControlName=\"goal\"\n        placeholder=\"{{'create_project.placeholder_goal'| translate}}\" maxlength=\"1000\"></ion-textarea>\n    </ion-item>\n    <!-- project goal end here -->\n    <!-- Project start and end date start here -->\n    <ion-row>\n      <ion-col size=\"6\">\n        <ion-label class=\"custom-label \" position=\"floating\" style=\" margin-left: 15px; font-size: 18px !important;\">\n          {{'create_project.start_date' | translate}}</ion-label>\n        <ion-item class=\"custom-ion-item\" (click)=\"setDate('sd')\">\n          <ion-input type=\"text\" [(ngModel)]=\"startDate\" name=\"title\" formControlName=\"startDate\"\n            placeholder=\"{{today}}\" class=\"no-rght-brdr-rds\"></ion-input>\n          <ion-icon ios=\"ios-arrow-dropdown\" md=\"md-arrow-dropdown\" slot=\"end\" class=\"right-icon\"></ion-icon>\n        </ion-item>\n      </ion-col>\n      <ion-col size=\"6\">\n        <ion-label class=\"custom-label\" position=\"floating\" style=\" margin-left: 15px; font-size: 18px !important;\"\n          [ngClass]=\"{'required-field':markLabelsAsInvalid && !isValidDate}\">\n          {{'create_project.end_date' | translate}}</ion-label>\n        <ion-item class=\"custom-ion-item\" (click)=\"setDate('ed')\">\n          <ion-input type=\"text\" [(ngModel)]=\"endDate\" name=\"title\" formControlName=\"endDate\" placeholder=\"{{today}}\"\n            class=\"no-rght-brdr-rds\"></ion-input>\n          <ion-icon ios=\"ios-arrow-dropdown\" md=\"md-arrow-dropdown\" slot=\"end\" class=\"right-icon\"></ion-icon>\n        </ion-item>\n      </ion-col>\n    </ion-row>\n    <!-- Project start and end date end here -->\n    <!-- Project improvement areas starts here -->\n    <ion-item class=\"custom-ion-item\" style=\"margin-bottom:50px;\">\n      <ion-label class=\"custom-label text-wrap-overflow\" position=\"floating\"\n        [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.category}\">\n        {{'create_project.areas' | translate}}</ion-label>\n      <ion-textarea type=\"text\" [(ngModel)]=\"project.category\" name=\"category\" formControlName=\"category\"\n        placeholder=\"{{'create_project.placeholder_areas'| translate}}\" maxlength=\"90\"></ion-textarea>\n    </ion-item>\n    <!-- Project improvement areas end here -->\n    <ion-button (click)=\"create()\" color=\"secondary\" class=\"round-corner-btn\" expand=\"block\">\n      {{'button.save_create_task' | translate}}\n    </ion-button>\n  </form>\n  <!-- Project creation form starts here -->\n</ion-content>"
+module.exports = "<ion-header>\n  <app-header [title]=\"'create_project.create_new_project' | translate\" [showMenu]=\"false\" [showBack]=\"true\"\n    [isGoBack]=\"back\" [noBorder]=\"false\">\n  </app-header>\n</ion-header>\n<ion-content class=\"ion-padding\">\n  <!-- Error message, if fileds are not filled -->\n  <h5 class=\"required-field\" *ngIf=\"markLabelsAsInvalid\" style=\"padding-left:15px;\">\n    {{'create_project.fileds_mandatory' | translate}}</h5>\n  <!-- Error message ends here-->\n  <!-- Project creation form starts here -->\n  <form [formGroup]=\"createProject\" class=\"create-project\">\n    <!-- Project title start here -->\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\"\n        [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.title}\">\n        {{'create_project.title_of_project' | translate}} </ion-label>\n      <ion-input type=\"text\" [(ngModel)]=\"project.title\" name=\"title\" formControlName=\"title\"\n        placeholder=\"{{'create_project.placeholder_project_title'| translate}}\" maxlength=\"280\"></ion-input>\n    </ion-item>\n    <!-- Project title ends here -->\n    <!-- project goal starts here -->\n    <ion-item class=\"custom-ion-item\">\n      <ion-label class=\"custom-label\" position=\"floating\"\n        [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.goal}\">\n        {{'create_project.goal' | translate}}</ion-label>\n      <ion-textarea type=\"text\" [(ngModel)]=\"project.goal\" name=\"goal\" formControlName=\"goal\"\n        placeholder=\"{{'create_project.placeholder_goal'| translate}}\" maxlength=\"1000\"></ion-textarea>\n    </ion-item>\n    <!-- project goal end here -->\n    <!-- Project start and end date start here -->\n    <ion-row>\n      <ion-col size=\"6\">\n        <ion-label class=\"custom-label \" position=\"floating\" style=\" margin-left: 15px; font-size: 18px !important;\">\n          {{'create_project.start_date' | translate}}</ion-label>\n        <ion-item class=\"custom-ion-item\" (click)=\"setDate('sd')\">\n          <ion-input type=\"text\" [(ngModel)]=\"startDate\" name=\"title\" formControlName=\"startDate\"\n            placeholder=\"{{today}}\" class=\"no-rght-brdr-rds\"></ion-input>\n          <ion-icon ios=\"ios-arrow-dropdown\" md=\"md-arrow-dropdown\" slot=\"end\" class=\"right-icon\"></ion-icon>\n        </ion-item>\n      </ion-col>\n      <ion-col size=\"6\">\n        <ion-label class=\"custom-label\" position=\"floating\" style=\" margin-left: 15px; font-size: 18px !important;\"\n          [ngClass]=\"{'required-field':markLabelsAsInvalid && !isValidDate}\">\n          {{'create_project.end_date' | translate}}</ion-label>\n        <ion-item class=\"custom-ion-item\" (click)=\"setDate('ed')\">\n          <ion-input type=\"text\" [(ngModel)]=\"endDate\" name=\"title\" formControlName=\"endDate\" placeholder=\"{{today}}\"\n            class=\"no-rght-brdr-rds\"></ion-input>\n          <ion-icon ios=\"ios-arrow-dropdown\" md=\"md-arrow-dropdown\" slot=\"end\" class=\"right-icon\"></ion-icon>\n        </ion-item>\n      </ion-col>\n    </ion-row>\n    <!-- Project start and end date end here -->\n    <!-- Project improvement areas starts here -->\n    <ion-item class=\"custom-ion-item\" style=\"margin-bottom:50px;\">\n      <ion-label class=\"custom-label text-wrap-overflow\" position=\"floating\"\n        [ngClass]=\"{'required-field':markLabelsAsInvalid && !project.category}\">\n        {{'create_project.areas' | translate}}</ion-label>\n      <ion-textarea type=\"text\" [(ngModel)]=\"project.category\" name=\"category\" formControlName=\"category\"\n        placeholder=\"{{'create_project.placeholder_areas'| translate}}\" maxlength=\"90\"></ion-textarea>\n    </ion-item>\n    <!-- Project improvement areas end here -->\n    <ion-button (click)=\"create()\" color=\"secondary\" class=\"round-corner-btn\" expand=\"block\">\n      {{'button.save_create_task' | translate}}\n    </ion-button>\n  </form>\n  <!-- Project creation form starts here -->\n  <div *ngIf=\"projectCreatePopUp && projectCreatePopUp.show\">\n    <app-custom-popup [appUpdate]=\"projectCreatePopUp\" [showUpdatePopup]=\"\" [showPopup]=\"\" [projectCreatePopup]=\"true\">\n    </app-custom-popup>\n  </div>\n</ion-content>"
 
 /***/ }),
 
@@ -127,6 +127,7 @@ var CreateProjectPage = /** @class */ (function () {
         this.back = 'project-view/home';
         this.isValidDate = true;
         this.today = new Date();
+        this.projectCreatePopUp = {};
         this.project = {};
         this.markLabelsAsInvalid = false;
         this.categories = [
@@ -173,6 +174,12 @@ var CreateProjectPage = /** @class */ (function () {
     }
     CreateProjectPage.prototype.ionViewDidEnter = function () {
         this.isValidDate = true;
+        this.projectCreatePopUp = {
+            message: "Your project has been saved, click below to view your project.",
+            button: "View Project",
+            isActionable: '/project-view/project-detail/form',
+            show: false
+        };
     };
     CreateProjectPage.prototype.ngOnInit = function () {
         this.prepareForm();
@@ -288,7 +295,7 @@ var CreateProjectPage = /** @class */ (function () {
                                     _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
                                         _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
                                             _this.toastService.successToast('message.project_is_created');
-                                            _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
+                                            // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                                         });
                                     });
                                 }
@@ -303,7 +310,7 @@ var CreateProjectPage = /** @class */ (function () {
                                             _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
                                                 _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
                                                     _this.toastService.successToast('message.project_is_created');
-                                                    _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
+                                                    // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                                                 });
                                             });
                                         }
@@ -328,7 +335,7 @@ var CreateProjectPage = /** @class */ (function () {
                                 _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
                                     _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
                                         _this.toastService.successToast('message.project_is_created');
-                                        _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
+                                        // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                                     });
                                 });
                             }
@@ -350,7 +357,7 @@ var CreateProjectPage = /** @class */ (function () {
                             _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
                                 _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
                                     _this.toastService.successToast('message.project_is_created');
-                                    _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
+                                    // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                                 });
                             });
                         }
@@ -367,10 +374,18 @@ var CreateProjectPage = /** @class */ (function () {
                     _this.storage.set('latestProjects', projectsList).then(function (myProjects) {
                         _this.storage.set('newcreatedproject', _this.project).then(function (cmp) {
                             _this.toastService.successToast('message.project_is_created');
-                            _this.router.navigate(['/project-view/create-task', _this.project._id, "cp"]);
+                            // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                         });
                     });
                 }
+                _this.projectCreatePopUp = {
+                    message: "Your project has been saved, click below to view your project.",
+                    button: "View Project",
+                    isActionable: '/project-view/project-detail/form',
+                    show: true
+                };
+                _this.storage.set('projectToBeView', _this.project).then(function (project) {
+                });
             });
         }
     };

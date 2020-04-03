@@ -255,6 +255,8 @@ export class AppComponent {
           this.router.navigateByUrl('project-view/home');
         } else if (this.router.url == '/project-view/task-view') {
           this.router.navigateByUrl('project-view/detail');
+        } else if (this.router.url == '/project-view/project-detail/form') {
+          this.router.navigateByUrl('project-view/create-project');
         }
         else if (this.router.url == '/project-view/my-reports/last-month-reports' || this.router.url == '/project-view/my-reports/last-quarter-reports' || this.router.url == '/my-reports/last-month-reports' || this.router.url == '/my-reports/last-quarter-reports') {
           this.router.navigateByUrl('project-view/home');
@@ -620,7 +622,6 @@ export class AppComponent {
                     isPopUpShowen = false;
                   }
                   if (!isPopUpShowen) {
-
                     this.appUpdate.title = 'Confirm your details!';
                     this.appUpdate.text = 'Please update your details. Help us make your experience better.';
                     this.appUpdate.isActionable = '/project-view/update-profile';

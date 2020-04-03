@@ -114,10 +114,10 @@ var NotificationsPage = /** @class */ (function () {
         this.skeletons = [{}, {}, {}, {}, {}, {}];
     }
     NotificationsPage.prototype.ngOnInit = function () {
-        this.fetchAllNotifications();
+        // this.fetchAllNotifications();
     };
     NotificationsPage.prototype.ionViewDidEnter = function () {
-        // this.fetchAllNotifications();
+        this.fetchAllNotifications();
     };
     NotificationsPage.prototype.fetchAllNotifications = function (infinateScrollRefrnc) {
         var _this = this;
@@ -125,7 +125,7 @@ var NotificationsPage = /** @class */ (function () {
         this.notificationCardService.getAllNotifications(this.page, this.limit).subscribe(function (success) {
             _this.totalCount = success.result.count;
             // this.notificationCardService.getCount(this.totalCount);
-            _this.notifications = _this.notifications.concat(success.result.count);
+            _this.notifications = _this.notifications.concat(success.result.data);
             _this.showSkeleton = false;
         }, function (error) {
             _this.showSkeleton = false;

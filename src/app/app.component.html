@@ -42,13 +42,12 @@
             </ion-list>
           </div>
         </ion-list>
-    {{showUpdatePop}} --- fff
       </ion-content>
     </ion-menu>
     <ion-router-outlet main></ion-router-outlet>
   </ion-split-pane>
   <div *ngIf="showUpdatePop">
-    <app-custom-popup [appUpdate]="appUpdate" [showUpdatePopup]="showUpdatePopup" [showPopup]="showPopup">
+    <app-custom-popup [appUpdate]="appUpdate" [showUpdatePopup]="showUpdatePopup" [showPopup]="showPopup" [projectCreatePopup]="false">
     </app-custom-popup>
   </div>
 </ion-app>

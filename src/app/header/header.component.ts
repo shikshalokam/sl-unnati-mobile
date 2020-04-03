@@ -43,15 +43,17 @@ export class HeaderComponent implements OnInit {
     public networkService: NetworkService,
     // public appVersion: AppVersion
   ) {
-    networkService.emit.subscribe(status => {
-      this.connected = status;
+    this.platform.ready().then(() => {
+      networkService.emit.subscribe(status => {
+        this.connected = status;
+      })
+      this.isIos = this.platform.is('ios') ? true : false;
+      notificationCardService.notificationCount.subscribe((count: any) => {
+        this.notificationCount = count;
+        this.badge.set(this.notificationCount);
+      })
+      this.startNotificationPooling();
     })
-    this.isIos = this.platform.is('ios') ? true : false;
-    notificationCardService.notificationCount.subscribe((count: any) => {
-      this.notificationCount = count;
-      this.badge.set(this.notificationCount);
-    })
-    this.startNotificationPooling();
   }
 
   ngOnInit() {
@@ -95,6 +97,8 @@ export class HeaderComponent implements OnInit {
     data.forEach(element => {
       if (element.action == "versionUpdate") {
         if (element.payload.appVersion != AppConfigs.appVersion) {
+          // element.title = 'New Update Available'
+          // element.text = 'A new version of the app is available!'
           this.storage.get('appUpdateVersions').then(statusObj => {
             if (statusObj) {
               if (element.payload.appVersion != statusObj) {
@@ -111,14 +115,17 @@ export class HeaderComponent implements OnInit {
         }
       }
     });
-
   }
   startNotificationPooling() {
     this.timeInterval = setInterval(() => {
       if (this.connected) {
-        this.getNotificationCount();
+        this.storage.get('userTokens').then(data => {
+          if (data) {
+            this.getNotificationCount();
+          }
+        })
       }
-    }, 12000);
+    }, 18000);
     this.getNotificationCount();
   }
 }

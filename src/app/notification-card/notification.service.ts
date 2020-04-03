@@ -28,7 +28,6 @@ export class NotificationCardService {
     }
 
     checkForNotificationApi() {
-        console.log('calling checkForNotificationApi');
         return this.http.get(AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.getUnreadNotificationCount + '?appName=unnati')
     }
     //   getMappedAssessment(notificationMeta) {

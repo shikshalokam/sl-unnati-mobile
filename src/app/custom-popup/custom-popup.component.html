@@ -10,7 +10,7 @@
     </div>
     <ion-row class="pop-btn">
       <ion-col>
-        <ion-button color="primary" (click)="navigateToProfile()" expand="block" style="margin: 0em 3em;">
+        <ion-button color="primary" (click)="navigateTo()" expand="block" style="margin: 0em 3em;">
           {{button}}
         </ion-button>
       </ion-col>
@@ -28,12 +28,12 @@
     <div class="pop-msg">
       <h5 class="bottom-border">{{appUpdate?.title}}</h5>
       <h5> {{appUpdate.text}}</h5>
-      <div *ngIf="releaseNote?.length">
+      <!-- <div *ngIf="releaseNote?.length">
         <p>Release note</p>
         <ul>
           <li *ngFor="let note of releaseNote">{{note}}</li>
         </ul>
-      </div>
+      </div> -->
     </div>
     <ion-row class="pop-btn">
       <ion-col>
@@ -42,5 +42,31 @@
         </ion-button>
       </ion-col>
     </ion-row>
+  </div>
+</div>
+
+<!-- alert modals -->
+<div id="project-create" *ngIf="projectCreatePopup">
+  <div class="custom-popup">
+    <div class="pop-container">
+      <div class="pop-ion" *ngIf="!appUpdate.text">
+        <ion-icon ios='ios-checkmark-circle' md='md-checkmark-circle' color='primary' style='font-size:60px;'>
+        </ion-icon>
+      </div>
+
+      <div class="pop-msg">
+        <h5 class="bottom-border" *ngIf="appUpdate.text">{{appUpdate?.text}}</h5>
+        <h5>{{appUpdate.message}}</h5>
+      </div>
+      <ion-row class="pop-btn">
+        <!-- <ion-col size="6">
+          <ion-button color="primary" (click)="closepopup()"> {{projectCreatePopUp.button}}</ion-button>
+        </ion-col> -->
+        <ion-col style="text-align: center;">
+          <ion-button color="primary" (click)="navigateTo()"> {{appUpdate.button}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
   </div>
 </div>

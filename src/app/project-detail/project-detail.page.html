@@ -109,22 +109,25 @@
       </div>
     </div>
     <div *ngIf="tasksLength == 0 && show && project.isStarted" class="tasks-label">
-      <h5> {{'message.add_tasks_to_project' | translate}} <ion-icon name="add-circle" color="primary"
-          (click)="addTask()" style="font-size:30px;"></ion-icon>
-      </h5>
+      <!-- <h5> {{'message.add_tasks_to_project' | translate}} <ion-icon name="add-circle" color="primary"
+          style="font-size:30px;"></ion-icon>
+      </h5> -->
+      <ion-button (click)="addTask()"> {{'button.add_tasks' | translate}}
+      </ion-button>
     </div>
   </div>
   <ion-button class="round-corner-btn prjdetail-btn" expand="block" color="secondary" (click)="copyTemplate()"
     *ngIf="show && !project.isStarted">
     {{'button.start_project' | translate}}
   </ion-button>
-  <div *ngIf="show && project.isStarted" color="file-container" class="file-container" (click)="navigateToFiles()">
+  <div *ngIf="show && project.isStarted && project.tasks" color="file-container" class="file-container" (click)="navigateToFiles()">
     <div>
       <img src="assets/images/folder.png">
     </div>
     <div>Files</div>
   </div>
-  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;" *ngIf="show && project.isStarted && tasksLength > 0">
+  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;"
+    *ngIf="show && project.isStarted && tasksLength > 0">
     <ion-fab-button (click)="addTask()" style=" margin-bottom: 15px;">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

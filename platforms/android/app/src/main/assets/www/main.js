@@ -1209,7 +1209,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser>\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n            <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n          </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content>\n        <ion-list>\n          <div *ngFor=\"let p of appPages\">\n            <!-- *ngIf=\"p.url\" -->\n            <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.title != 'Settings'\">\n              <ion-item [routerDirection]=\"'root'\" (click)=\"navigate(p.url,p.title)\">\n                <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n                <ion-label>\n                  {{p.title}}\n                </ion-label>\n              </ion-item>\n            </ion-menu-toggle>\n            <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\"\n              detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n              <ion-label>{{ p.title }}</ion-label>\n            </ion-item>\n            <!-- Children List for clicked Item -->\n            <ion-list *ngIf=\"p.open\">\n              <ion-menu-toggle auto-hide=\"false\">\n                <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n                  routerLinkActive=\"active\" style=\"padding-left:30px;\"\n                  (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n                  <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n                  <ion-label>\n                    {{ sub.title }}\n                  </ion-label>\n                </ion-item>\n              </ion-menu-toggle>\n            </ion-list>\n          </div>\n        </ion-list>\n    {{showUpdatePop}} --- fff\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n  <div *ngIf=\"showUpdatePop\">\n    <app-custom-popup [appUpdate]=\"appUpdate\" [showUpdatePopup]=\"showUpdatePopup\" [showPopup]=\"showPopup\">\n    </app-custom-popup>\n  </div>\n</ion-app>"
+module.exports = "<ion-app>\n  <ion-split-pane>\n    <ion-menu [swipeGesture]=loggedInUser>\n      <ion-header>\n        <ion-toolbar style=\"background:#fff\">\n          <ion-title style=\"text-transform: capitalize;\">{{'app_name' | translate}}\n            <img src=\"../assets/icon/unnati-prod.png\" style=\"width:30px;float: right;\">\n          </ion-title>\n        </ion-toolbar>\n      </ion-header>\n      <ion-content>\n        <ion-list>\n          <div *ngFor=\"let p of appPages\">\n            <!-- *ngIf=\"p.url\" -->\n            <ion-menu-toggle auto-hide=\"false\" *ngIf=\"p.title != 'Settings'\">\n              <ion-item [routerDirection]=\"'root'\" (click)=\"navigate(p.url,p.title)\">\n                <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n                <ion-label>\n                  {{p.title}}\n                </ion-label>\n              </ion-item>\n            </ion-menu-toggle>\n            <ion-item button *ngIf=\"p.children?.length > 0\" (click)=\"p.open = !p.open\" [class.parent-active]=\"p.open\"\n              detail=\"false\">\n              <ion-icon slot=\"end\" name=\"ios-arrow-forward\" *ngIf=\"!p.open\"></ion-icon>\n              <ion-icon slot=\"end\" name=\"ios-arrow-down\" *ngIf=\"p.open\"></ion-icon>\n              <ion-icon slot=\"start\" [name]=\"p.icon\"></ion-icon>\n              <ion-label>{{ p.title }}</ion-label>\n            </ion-item>\n            <!-- Children List for clicked Item -->\n            <ion-list *ngIf=\"p.open\">\n              <ion-menu-toggle auto-hide=\"false\">\n                <ion-item *ngFor=\"let sub of p.children\" class=\"sub-item\" routerDirection=\"root\"\n                  routerLinkActive=\"active\" style=\"padding-left:30px;\"\n                  (click)=\"p.open = !p.open;presentAlertCheckbox();\">\n                  <ion-icon [name]=\"sub.icon\" slot=\"start\"></ion-icon>\n                  <ion-label>\n                    {{ sub.title }}\n                  </ion-label>\n                </ion-item>\n              </ion-menu-toggle>\n            </ion-list>\n          </div>\n        </ion-list>\n      </ion-content>\n    </ion-menu>\n    <ion-router-outlet main></ion-router-outlet>\n  </ion-split-pane>\n  <div *ngIf=\"showUpdatePop\">\n    <app-custom-popup [appUpdate]=\"appUpdate\" [showUpdatePopup]=\"showUpdatePopup\" [showPopup]=\"showPopup\" [projectCreatePopup]=\"false\">\n    </app-custom-popup>\n  </div>\n</ion-app>"
 
 /***/ }),
 
@@ -1491,6 +1491,9 @@ var AppComponent = /** @class */ (function () {
                 }
                 else if (_this.router.url == '/project-view/task-view') {
                     _this.router.navigateByUrl('project-view/detail');
+                }
+                else if (_this.router.url == '/project-view/project-detail/form') {
+                    _this.router.navigateByUrl('project-view/create-project');
                 }
                 else if (_this.router.url == '/project-view/my-reports/last-month-reports' || _this.router.url == '/project-view/my-reports/last-quarter-reports' || _this.router.url == '/my-reports/last-month-reports' || _this.router.url == '/my-reports/last-quarter-reports') {
                     _this.router.navigateByUrl('project-view/home');
@@ -2018,18 +2021,20 @@ var AppComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppConfigs", function() { return AppConfigs; });
 var AppConfigs = {
+    //Dev Urls
     appVersion: "2.0.4",
-    appName: "unnati",
-    currentVersion: "20004",
-    currentEnvironment: 'dev',
+    appName: "Unnati",
+    currentEnvironment: 'qa',
     environments: [
         {
             name: 'dev',
             programId: '5dfa1a02ab45a70b9f6c0191'
-        }, {
+        },
+        {
             name: 'qa',
             programId: '5df77a03df3511bcf7f6b899'
-        }, {
+        },
+        {
             name: 'prod',
             programId: '5e01da0c0c72d5597433ec7a'
         }
@@ -2071,11 +2076,11 @@ var AppConfigs = {
     // clientId: "sl-ionic-connect",
     // environment: "Production",
     // notification: {
-    //     kendra_base_url: "https://api.shikshalokam.org/kendra/api/",
-    //     getUnreadNotificationCount: "/notifications/in-app/unReadCount",
-    //     markAsRead: "/notifications/in-app/markAsRead",
+    //     kendra_base_url: "https://api.shikshalokam.org/kendra-service/api/",
+    //     getUnreadNotificationCount: "notifications/in-app/unReadCount",
+    //     markAsRead: "notifications/in-app/markAsRead",
     //     getAllNotifications: "/notifications/in-app/list",
-    //     registerDevice: "/notifications/push/registerDevice"
+    //     registerDevice: "notifications/push/registerDevice"
     // },
     //Staging Urls
     // app_url: "https://dev.shikshalokam.org",
@@ -2657,7 +2662,7 @@ var CurrentUserProvider = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"custom-popup\" *ngIf=\"showPopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"close-btn\" *ngIf=\"appUpdate.actions.showCloseButton\">\n      <ion-icon name=\"close-circle\" style=\"float:right; font-size: 24px;\" (click)=\"cancel()\" style=\" font-size: 1.5em;\">\n      </ion-icon>\n    </div>\n    <div class=\"pop-msg\">\n      <h5 class=\"bottom-border\">{{appUpdate?.title}}</h5>\n      <h5> {{appUpdate.text}}</h5>\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"navigateToProfile()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{button}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>\n\n<!-- App update -->\n<div class=\"custom-popup\" *ngIf=\"showUpdatePopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"close-btn\" *ngIf=\"appUpdate.actions.showCloseButton\">\n      <ion-icon name=\"close-circle\" style=\"float:right; font-size: 24px;\" (click)=\"close()\" style=\" font-size: 1.5em;\">\n      </ion-icon>\n    </div>\n    <div class=\"pop-msg\">\n      <h5 class=\"bottom-border\">{{appUpdate?.title}}</h5>\n      <h5> {{appUpdate.text}}</h5>\n      <div *ngIf=\"releaseNote?.length\">\n        <p>Release note</p>\n        <ul>\n          <li *ngFor=\"let note of releaseNote\">{{note}}</li>\n        </ul>\n      </div>\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"openApp()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{button}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>"
+module.exports = "<div class=\"custom-popup\" *ngIf=\"showPopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"close-btn\" *ngIf=\"appUpdate.actions.showCloseButton\">\n      <ion-icon name=\"close-circle\" style=\"float:right; font-size: 24px;\" (click)=\"cancel()\" style=\" font-size: 1.5em;\">\n      </ion-icon>\n    </div>\n    <div class=\"pop-msg\">\n      <h5 class=\"bottom-border\">{{appUpdate?.title}}</h5>\n      <h5> {{appUpdate.text}}</h5>\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"navigateTo()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{button}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>\n\n<!-- App update -->\n<div class=\"custom-popup\" *ngIf=\"showUpdatePopup\">\n  <div class=\"pop-container border-radius text-center\">\n    <div class=\"close-btn\" *ngIf=\"appUpdate.actions.showCloseButton\">\n      <ion-icon name=\"close-circle\" style=\"float:right; font-size: 24px;\" (click)=\"close()\" style=\" font-size: 1.5em;\">\n      </ion-icon>\n    </div>\n    <div class=\"pop-msg\">\n      <h5 class=\"bottom-border\">{{appUpdate?.title}}</h5>\n      <h5> {{appUpdate.text}}</h5>\n      <!-- <div *ngIf=\"releaseNote?.length\">\n        <p>Release note</p>\n        <ul>\n          <li *ngFor=\"let note of releaseNote\">{{note}}</li>\n        </ul>\n      </div> -->\n    </div>\n    <ion-row class=\"pop-btn\">\n      <ion-col>\n        <ion-button color=\"primary\" (click)=\"openApp()\" expand=\"block\" style=\"margin: 0em 3em;\">\n          {{button}}\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </div>\n</div>\n\n<!-- alert modals -->\n<div id=\"project-create\" *ngIf=\"projectCreatePopup\">\n  <div class=\"custom-popup\">\n    <div class=\"pop-container\">\n      <div class=\"pop-ion\" *ngIf=\"!appUpdate.text\">\n        <ion-icon ios='ios-checkmark-circle' md='md-checkmark-circle' color='primary' style='font-size:60px;'>\n        </ion-icon>\n      </div>\n\n      <div class=\"pop-msg\">\n        <h5 class=\"bottom-border\" *ngIf=\"appUpdate.text\">{{appUpdate?.text}}</h5>\n        <h5>{{appUpdate.message}}</h5>\n      </div>\n      <ion-row class=\"pop-btn\">\n        <!-- <ion-col size=\"6\">\n          <ion-button color=\"primary\" (click)=\"closepopup()\"> {{projectCreatePopUp.button}}</ion-button>\n        </ion-col> -->\n        <ion-col style=\"text-align: center;\">\n          <ion-button color=\"primary\" (click)=\"navigateTo()\"> {{appUpdate.button}}\n          </ion-button>\n        </ion-col>\n      </ion-row>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -2668,7 +2673,7 @@ module.exports = "<div class=\"custom-popup\" *ngIf=\"showPopup\">\n  <div class
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".custom-popup {\n  position: fixed;\n  z-index: 9999;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  top: 0;\n  padding-top: 30%;\n  bottom: 0;\n  background: #7777772b; }\n  .custom-popup .border-radius {\n    border-radius: 1em; }\n  .custom-popup .pop-container {\n    margin: auto;\n    max-width: 80%;\n    box-shadow: 0px 3px 8px 4px #e2e2e2;\n    background: #fff;\n    padding: 10px;\n    margin-top: 30%; }\n  .custom-popup .pop-container .close-btn {\n      text-align: right;\n      margin-right: 5px;\n      margin-bottom: -10px; }\n  .custom-popup .pop-container .pop-ion {\n      text-align: center; }\n  .custom-popup .pop-container .pop-ion ion-icon {\n        font-size: 60px; }\n  .custom-popup .pop-container .pop-msg {\n      margin: 0px 20px; }\n  .custom-popup .pop-container .pop-msg .bottom-border {\n        border-bottom: 1px solid #000;\n        margin-bottom: 0px;\n        padding-bottom: 5px; }\n  .custom-popup .pop-container .pop-btn {\n      margin: 0px 15px; }\n  .custom-popup .pop-container .pop-btn ion-button {\n        text-transform: capitalize;\n        font-family: 'SourceSansPro-Bold' !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9jdXN0b20tcG9wdXAvY3VzdG9tLXBvcHVwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBRUksZUFBZTtFQUNmLGFBQWE7RUFDYixPQUFPO0VBQ1AsV0FBVztFQUNYLFlBQVk7RUFDWixjQUFjO0VBQ2QsTUFBTTtFQUNOLGdCQUFnQjtFQUNoQixTQUFTO0VBQ1QscUJBQXFCLEVBQUE7RUFYekI7SUFhSSxrQkFBa0IsRUFBQTtFQWJ0QjtJQWlCSSxZQUFZO0lBQ1osY0FBYztJQUNkLG1DQUFtQztJQUNuQyxnQkFBZ0I7SUFDaEIsYUFBYTtJQUNiLGVBQWUsRUFBQTtFQXRCbkI7TUF3QlEsaUJBQWlCO01BQ2pCLGlCQUFpQjtNQUNqQixvQkFBb0IsRUFBQTtFQTFCNUI7TUE2QlEsa0JBQWtCLEVBQUE7RUE3QjFCO1FBK0JZLGVBQWMsRUFBQTtFQS9CMUI7TUFvQ0ksZ0JBQWdCLEVBQUE7RUFwQ3BCO1FBc0NRLDZCQUE0QjtRQUM1QixrQkFBa0I7UUFDbEIsbUJBQW1CLEVBQUE7RUF4QzNCO01BNENRLGdCQUFnQixFQUFBO0VBNUN4QjtRQThDWSwwQkFBMEI7UUFDMUIsNENBQTRDLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9jdXN0b20tcG9wdXAvY3VzdG9tLXBvcHVwLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmN1c3RvbS1wb3B1cFxue1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB6LWluZGV4OiA5OTk5O1xuICAgIGxlZnQ6IDA7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgaGVpZ2h0OiAxMDAlO1xuICAgIG92ZXJmbG93OiBhdXRvO1xuICAgIHRvcDogMDtcbiAgICBwYWRkaW5nLXRvcDogMzAlO1xuICAgIGJvdHRvbTogMDtcbiAgICBiYWNrZ3JvdW5kOiAjNzc3Nzc3MmI7XG4uYm9yZGVyLXJhZGl1c3tcbiAgICBib3JkZXItcmFkaXVzOiAxZW07XG59XG4ucG9wLWNvbnRhaW5lclxue1xuICAgIG1hcmdpbjogYXV0bztcbiAgICBtYXgtd2lkdGg6IDgwJTtcbiAgICBib3gtc2hhZG93OiAwcHggM3B4IDhweCA0cHggI2UyZTJlMjtcbiAgICBiYWNrZ3JvdW5kOiAjZmZmO1xuICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgbWFyZ2luLXRvcDogMzAlO1xuICAgIC5jbG9zZS1idG57XG4gICAgICAgIHRleHQtYWxpZ246IHJpZ2h0OyBcbiAgICAgICAgbWFyZ2luLXJpZ2h0OiA1cHg7IFxuICAgICAgICBtYXJnaW4tYm90dG9tOiAtMTBweDtcbiAgICB9XG4gICAgLnBvcC1pb257XG4gICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICAgICAgaW9uLWljb257XG4gICAgICAgICAgICBmb250LXNpemU6NjBweDtcbiAgICAgICAgfVxuICAgIH1cbiAgICAucG9wLW1zZ1xuICAgIHtcbiAgICBtYXJnaW46IDBweCAyMHB4O1xuICAgIC5ib3R0b20tYm9yZGVye1xuICAgICAgICBib3JkZXItYm90dG9tOjFweCBzb2xpZCAjMDAwO1xuICAgICAgICBtYXJnaW4tYm90dG9tOiAwcHg7XG4gICAgICAgIHBhZGRpbmctYm90dG9tOiA1cHg7XG4gICAgfVxuICAgIH1cbiAgICAucG9wLWJ0bntcbiAgICAgICAgbWFyZ2luOiAwcHggMTVweDtcbiAgICAgICAgaW9uLWJ1dHRvbntcbiAgICAgICAgICAgIHRleHQtdHJhbnNmb3JtOiBjYXBpdGFsaXplO1xuICAgICAgICAgICAgZm9udC1mYW1pbHk6ICdTb3VyY2VTYW5zUHJvLUJvbGQnICFpbXBvcnRhbnQ7XG4gICAgICAgIH1cbiAgICB9XG59XG59XG4iXX0= */"
+module.exports = ".custom-popup {\n  position: fixed;\n  z-index: 9999;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  top: 0;\n  padding-top: 30%;\n  bottom: 0;\n  background: #7777772b; }\n  .custom-popup .border-radius {\n    border-radius: 1em; }\n  .custom-popup .pop-container {\n    margin: auto;\n    max-width: 80%;\n    box-shadow: 0px 3px 8px 4px #e2e2e2;\n    background: #fff;\n    padding: 10px;\n    margin-top: 30%; }\n  .custom-popup .pop-container .close-btn {\n      text-align: right;\n      margin-right: 5px;\n      margin-bottom: -10px; }\n  .custom-popup .pop-container .pop-ion {\n      text-align: center; }\n  .custom-popup .pop-container .pop-ion ion-icon {\n        font-size: 60px; }\n  .custom-popup .pop-container .pop-msg {\n      margin: 0px 20px; }\n  .custom-popup .pop-container .pop-msg .bottom-border {\n        border-bottom: 1px solid #000;\n        margin-bottom: 0px;\n        padding-bottom: 5px; }\n  .custom-popup .pop-container .pop-btn {\n      margin: 0px 15px; }\n  .custom-popup .pop-container .pop-btn ion-button {\n        text-transform: capitalize;\n        font-family: 'SourceSansPro-Bold' !important; }\n  #project-create .custom-popup {\n  padding-top: 50%; }\n  #project-create .custom-popup .pop-container {\n    margin: auto;\n    border-radius: 8px;\n    max-width: 80%;\n    box-shadow: 0px 3px 8px 4px #e2e2e2;\n    background: #fff;\n    padding: 10px; }\n  #project-create .custom-popup .pop-container .pop-ion {\n      text-align: center; }\n  #project-create .custom-popup .pop-container .pop-ion ion-icon {\n        font-size: 65px; }\n  #project-create .custom-popup .pop-container .pop-msg {\n      margin: 0px 20px;\n      text-align: center; }\n  #project-create .custom-popup .pop-container .pop-msg .bottom-border {\n        border-bottom: 1px solid #000;\n        margin-bottom: 0px;\n        padding-bottom: 5px; }\n  #project-create .custom-popup .pop-container .pop-btn {\n      margin: 0px 15px; }\n  #project-create .custom-popup .pop-container .pop-btn ion-button {\n        text-transform: capitalize;\n        font-family: 'SourceSansPro-Bold' !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy92aXNod2FuYXRoYmFkaWdlci9Eb2N1bWVudHMvYXBwcy91bm5hdGktbW9iaWxlLWFwcGxpY2F0aW9uL3NsLXVubmF0aS1tb2JpbGUvc3JjL2FwcC9jdXN0b20tcG9wdXAvY3VzdG9tLXBvcHVwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBRUksZUFBZTtFQUNmLGFBQWE7RUFDYixPQUFPO0VBQ1AsV0FBVztFQUNYLFlBQVk7RUFDWixjQUFjO0VBQ2QsTUFBTTtFQUNOLGdCQUFnQjtFQUNoQixTQUFTO0VBQ1QscUJBQXFCLEVBQUE7RUFYekI7SUFhSSxrQkFBa0IsRUFBQTtFQWJ0QjtJQWlCSSxZQUFZO0lBQ1osY0FBYztJQUNkLG1DQUFtQztJQUNuQyxnQkFBZ0I7SUFDaEIsYUFBYTtJQUNiLGVBQWUsRUFBQTtFQXRCbkI7TUF3QlEsaUJBQWlCO01BQ2pCLGlCQUFpQjtNQUNqQixvQkFBb0IsRUFBQTtFQTFCNUI7TUE2QlEsa0JBQWtCLEVBQUE7RUE3QjFCO1FBK0JZLGVBQWMsRUFBQTtFQS9CMUI7TUFvQ0ksZ0JBQWdCLEVBQUE7RUFwQ3BCO1FBc0NRLDZCQUE0QjtRQUM1QixrQkFBa0I7UUFDbEIsbUJBQW1CLEVBQUE7RUF4QzNCO01BNENRLGdCQUFnQixFQUFBO0VBNUN4QjtRQThDWSwwQkFBMEI7UUFDMUIsNENBQTRDLEVBQUE7RUFNeEQ7RUFHSSxnQkFBZ0IsRUFBQTtFQUhwQjtJQU1JLFlBQVk7SUFDWixrQkFBaUI7SUFDakIsY0FBYztJQUNkLG1DQUFtQztJQUNuQyxnQkFBZ0I7SUFDaEIsYUFBYSxFQUFBO0VBWGpCO01BYVEsa0JBQWtCLEVBQUE7RUFiMUI7UUFlWSxlQUFjLEVBQUE7RUFmMUI7TUFvQkksZ0JBQWdCO01BQ2hCLGtCQUFrQixFQUFBO0VBckJ0QjtRQXVCUSw2QkFBNEI7UUFDNUIsa0JBQWtCO1FBQ2xCLG1CQUFtQixFQUFBO0VBekIzQjtNQTZCUSxnQkFBZ0IsRUFBQTtFQTdCeEI7UUErQlksMEJBQTBCO1FBQzFCLDRDQUE0QyxFQUFBIiwiZmlsZSI6InNyYy9hcHAvY3VzdG9tLXBvcHVwL2N1c3RvbS1wb3B1cC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5jdXN0b20tcG9wdXBcbntcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgei1pbmRleDogOTk5OTtcbiAgICBsZWZ0OiAwO1xuICAgIHdpZHRoOiAxMDAlO1xuICAgIGhlaWdodDogMTAwJTtcbiAgICBvdmVyZmxvdzogYXV0bztcbiAgICB0b3A6IDA7XG4gICAgcGFkZGluZy10b3A6IDMwJTtcbiAgICBib3R0b206IDA7XG4gICAgYmFja2dyb3VuZDogIzc3Nzc3NzJiO1xuLmJvcmRlci1yYWRpdXN7XG4gICAgYm9yZGVyLXJhZGl1czogMWVtO1xufVxuLnBvcC1jb250YWluZXJcbntcbiAgICBtYXJnaW46IGF1dG87XG4gICAgbWF4LXdpZHRoOiA4MCU7XG4gICAgYm94LXNoYWRvdzogMHB4IDNweCA4cHggNHB4ICNlMmUyZTI7XG4gICAgYmFja2dyb3VuZDogI2ZmZjtcbiAgICBwYWRkaW5nOiAxMHB4O1xuICAgIG1hcmdpbi10b3A6IDMwJTtcbiAgICAuY2xvc2UtYnRue1xuICAgICAgICB0ZXh0LWFsaWduOiByaWdodDsgXG4gICAgICAgIG1hcmdpbi1yaWdodDogNXB4OyBcbiAgICAgICAgbWFyZ2luLWJvdHRvbTogLTEwcHg7XG4gICAgfVxuICAgIC5wb3AtaW9ue1xuICAgICAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgICAgIGlvbi1pY29ue1xuICAgICAgICAgICAgZm9udC1zaXplOjYwcHg7XG4gICAgICAgIH1cbiAgICB9XG4gICAgLnBvcC1tc2dcbiAgICB7XG4gICAgbWFyZ2luOiAwcHggMjBweDtcbiAgICAuYm90dG9tLWJvcmRlcntcbiAgICAgICAgYm9yZGVyLWJvdHRvbToxcHggc29saWQgIzAwMDtcbiAgICAgICAgbWFyZ2luLWJvdHRvbTogMHB4O1xuICAgICAgICBwYWRkaW5nLWJvdHRvbTogNXB4O1xuICAgIH1cbiAgICB9XG4gICAgLnBvcC1idG57XG4gICAgICAgIG1hcmdpbjogMHB4IDE1cHg7XG4gICAgICAgIGlvbi1idXR0b257XG4gICAgICAgICAgICB0ZXh0LXRyYW5zZm9ybTogY2FwaXRhbGl6ZTtcbiAgICAgICAgICAgIGZvbnQtZmFtaWx5OiAnU291cmNlU2Fuc1Byby1Cb2xkJyAhaW1wb3J0YW50O1xuICAgICAgICB9XG4gICAgfVxufVxufVxuXG4jcHJvamVjdC1jcmVhdGV7XG4uY3VzdG9tLXBvcHVwXG57XG4gICAgcGFkZGluZy10b3A6IDUwJTtcbi5wb3AtY29udGFpbmVyXG57XG4gICAgbWFyZ2luOiBhdXRvO1xuICAgIGJvcmRlci1yYWRpdXM6OHB4O1xuICAgIG1heC13aWR0aDogODAlO1xuICAgIGJveC1zaGFkb3c6IDBweCAzcHggOHB4IDRweCAjZTJlMmUyO1xuICAgIGJhY2tncm91bmQ6ICNmZmY7XG4gICAgcGFkZGluZzogMTBweDtcbiAgICAucG9wLWlvbntcbiAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgICAgICBpb24taWNvbntcbiAgICAgICAgICAgIGZvbnQtc2l6ZTo2NXB4O1xuICAgICAgICB9XG4gICAgfVxuICAgIC5wb3AtbXNnXG4gICAge1xuICAgIG1hcmdpbjogMHB4IDIwcHg7XG4gICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgIC5ib3R0b20tYm9yZGVye1xuICAgICAgICBib3JkZXItYm90dG9tOjFweCBzb2xpZCAjMDAwO1xuICAgICAgICBtYXJnaW4tYm90dG9tOiAwcHg7XG4gICAgICAgIHBhZGRpbmctYm90dG9tOiA1cHg7XG4gICAgfVxuICAgIH1cbiAgICAucG9wLWJ0bntcbiAgICAgICAgbWFyZ2luOiAwcHggMTVweDtcbiAgICAgICAgaW9uLWJ1dHRvbntcbiAgICAgICAgICAgIHRleHQtdHJhbnNmb3JtOiBjYXBpdGFsaXplO1xuICAgICAgICAgICAgZm9udC1mYW1pbHk6ICdTb3VyY2VTYW5zUHJvLUJvbGQnICFpbXBvcnRhbnQ7XG4gICAgICAgIH1cbiAgICB9XG59XG59XG59Il19 */"
 
 /***/ }),
 
@@ -2732,12 +2737,13 @@ var CustomPopupComponent = /** @class */ (function () {
     };
     CustomPopupComponent.prototype.closepopup = function () {
         this.showPopup = false;
+        this.projectCreatePopup = false;
     };
     CustomPopupComponent.prototype.cancel = function () {
         this.closepopup();
         localStorage.setItem('isPopUpShowen', 'true');
     };
-    CustomPopupComponent.prototype.navigateToProfile = function () {
+    CustomPopupComponent.prototype.navigateTo = function () {
         this.closepopup();
         if (this.appUpdate.isActionable) {
             this.router.navigate([this.appUpdate.isActionable]);
@@ -2746,11 +2752,10 @@ var CustomPopupComponent = /** @class */ (function () {
     };
     CustomPopupComponent.prototype.getTranslateKeys = function () {
         var _this = this;
-        if (this.header && this.body && this.button) {
-            this.translate.get([this.header, this.body, this.button]).subscribe(function (text) {
-                _this.header = text[_this.header];
-                _this.body = text[_this.body];
-                _this.button = text[_this.button];
+        if (this.projectCreatePopup) {
+            this.translate.get([this.appUpdate.message, this.appUpdate.button]).subscribe(function (text) {
+                _this.appUpdate.message = text[_this.appUpdate.message];
+                _this.appUpdate.button = text[_this.appUpdate.button];
             });
         }
     };
@@ -2795,14 +2800,6 @@ var CustomPopupComponent = /** @class */ (function () {
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], CustomPopupComponent.prototype, "header", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], CustomPopupComponent.prototype, "body", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
     ], CustomPopupComponent.prototype, "button", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -2824,6 +2821,10 @@ var CustomPopupComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
     ], CustomPopupComponent.prototype, "showCloseButton", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], CustomPopupComponent.prototype, "projectCreatePopup", void 0);
     CustomPopupComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-custom-popup',
@@ -3295,15 +3296,17 @@ var HeaderComponent = /** @class */ (function () {
         this.connected = navigator.onLine;
         this.page = 1;
         this.limit = 20;
-        networkService.emit.subscribe(function (status) {
-            _this.connected = status;
+        this.platform.ready().then(function () {
+            networkService.emit.subscribe(function (status) {
+                _this.connected = status;
+            });
+            _this.isIos = _this.platform.is('ios') ? true : false;
+            notificationCardService.notificationCount.subscribe(function (count) {
+                _this.notificationCount = count;
+                _this.badge.set(_this.notificationCount);
+            });
+            _this.startNotificationPooling();
         });
-        this.isIos = this.platform.is('ios') ? true : false;
-        notificationCardService.notificationCount.subscribe(function (count) {
-            _this.notificationCount = count;
-            _this.badge.set(_this.notificationCount);
-        });
-        this.startNotificationPooling();
     }
     HeaderComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -3347,6 +3350,8 @@ var HeaderComponent = /** @class */ (function () {
         data.forEach(function (element) {
             if (element.action == "versionUpdate") {
                 if (element.payload.appVersion != _app_config__WEBPACK_IMPORTED_MODULE_11__["AppConfigs"].appVersion) {
+                    // element.title = 'New Update Available'
+                    // element.text = 'A new version of the app is available!'
                     _this.storage.get('appUpdateVersions').then(function (statusObj) {
                         if (statusObj) {
                             if (element.payload.appVersion != statusObj) {
@@ -3369,9 +3374,13 @@ var HeaderComponent = /** @class */ (function () {
         var _this = this;
         this.timeInterval = setInterval(function () {
             if (_this.connected) {
-                _this.getNotificationCount();
+                _this.storage.get('userTokens').then(function (data) {
+                    if (data) {
+                        _this.getNotificationCount();
+                    }
+                });
             }
-        }, 12000);
+        }, 18000);
         this.getNotificationCount();
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -3623,37 +3632,36 @@ var TokenInterceptor = /** @class */ (function () {
             return event;
         }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["catchError"])(function (error) {
             if (error.status === 401) {
-                if (!_this.refreshTokenInProgress) {
-                    _this.storage.get('userTokens').then(function (token) {
-                        _this.api.refershToken(token.refresh_token).subscribe(function (data) {
-                            var parsedData = JSON.parse(data._body);
-                            if (parsedData && parsedData.access_token) {
-                                var userTokens = {
-                                    access_token: parsedData.access_token,
-                                    refresh_token: parsedData.refresh_token,
-                                };
-                                _this.storage.set('userTokens', userTokens).then(function (data) {
-                                });
-                                _this.refreshTokenInProgress = true;
-                                request = request.clone({
-                                    setHeaders: {
-                                        'x-auth-token': _this.token.access_token,
-                                        'x-authenticated-user-token': _this.token.access_token,
-                                        'gpsLocation': '0,0',
-                                        'appVersion': _app_config__WEBPACK_IMPORTED_MODULE_8__["AppConfigs"].appVersion,
-                                        'appName': _app_config__WEBPACK_IMPORTED_MODULE_8__["AppConfigs"].appName,
-                                        'appType': "improvement-project",
-                                        'os': _this.platform.is('ios') ? 'ios' : 'android'
-                                    }
-                                });
-                                return next.handle(request);
-                            }
-                        });
-                    });
-                }
-                else {
-                    _this.router.navigate(['login']);
-                }
+                // if (!this.refreshTokenInProgress) {
+                //     this.storage.get('userTokens').then(token => {
+                //         this.api.refershToken(token.refresh_token).subscribe((data: any) => {
+                //             let parsedData = JSON.parse(data._body);
+                //             if (parsedData && parsedData.access_token) {
+                //                 let userTokens = {
+                //                     access_token: parsedData.access_token,
+                //                     refresh_token: parsedData.refresh_token,
+                //                 };
+                //                 this.storage.set('userTokens', userTokens).then(data => {
+                //                 })
+                //                 this.refreshTokenInProgress = true;
+                //                 request = request.clone({
+                //                     setHeaders: {
+                //                         'x-auth-token': this.token.access_token,
+                //                         'x-authenticated-user-token': this.token.access_token,
+                //                         'gpsLocation': '0,0',
+                //                         'appVersion': AppConfigs.appVersion,
+                //                         'appName': AppConfigs.appName,
+                //                         'appType': "improvement-project",
+                //                         'os': this.platform.is('ios') ? 'ios' : 'android'
+                //                     }
+                //                 });
+                //                 return next.handle(request);
+                //             }
+                //         })
+                //     })
+                // } else {
+                //     this.router.navigate(['login']);
+                // }
             }
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(error);
         }));
@@ -4231,7 +4239,6 @@ var NotificationCardService = /** @class */ (function () {
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.markAsRead + id + '?appName=unnati');
     };
     NotificationCardService.prototype.checkForNotificationApi = function () {
-        console.log('calling checkForNotificationApi');
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.kendra_base_url + 'v1' + _app_config__WEBPACK_IMPORTED_MODULE_3__["AppConfigs"].notification.getUnreadNotificationCount + '?appName=unnati');
     };
     //   getMappedAssessment(notificationMeta) {
@@ -5042,7 +5049,7 @@ var UpdateProfileService = /** @class */ (function () {
         return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/entities/subEntityList/' + id + '?type=' + entity + '&search=' + searchText + '&page=' + page + '&limit=' + limit);
     };
     UpdateProfileService.prototype.saveInfo = function (data) {
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/user-profile/update', data);
+        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["AppConfigs"].notification.kendra_base_url + 'v1/user-profile/save', data);
     };
     // event triggers for update popups
     UpdateProfileService.prototype.updateProfile = function (status) {

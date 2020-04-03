@@ -25,7 +25,8 @@
         "mark_complete": "Mark Complete",
         "update": "Update",
         "save_info": "Save info",
-        "post": "Post"
+        "post": "Post",
+        "add_tasks": "Add Tasks"
     },
     "message": {
         "fileds_mandatory": "Please fill Mandatory Fields",
@@ -36,6 +37,7 @@
         "image_uploaded": "Image uploaded successfully.",
         "file_uploaded": "File uploaded successfully.",
         "after_prject_create": "Your project has been saved! View your project or continue to Edit.",
+        "after_prject_create_new_message": "Your project has been saved, click below to view your project",
         "no_data_found": "No data found",
         "heading_complete_task_popup": "Would you like to add a remark or attach an image before you mark your task complete?",
         "add_tasks_to_project": "ADD TASKS TO YOUR PROJECT",
@@ -62,7 +64,7 @@
         "name_require": " Please enter your full name.",
         "email_phonenumber_require": " Please enter your Email id or Phone number.",
         "state_require": " Please select your state.",
-        "thankyou_note": "Thank you for updating your details. We will verify and update it in two weeks.",
+        "thankyou_note": " Thank you Thank you for updating your details. We will verify and update it in two weeks.",
         "thankyou": "Thank you",
         "share_success": "Share your success with others!"
     },
