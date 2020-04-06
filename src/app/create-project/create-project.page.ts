@@ -22,6 +22,7 @@ export class CreateProjectPage implements OnInit {
   startDate;
   endDate;
   today: any = new Date();
+  projectCreatePopUp: any = {};
   project: any = {};
   markLabelsAsInvalid: boolean = false;
   createNewProject: boolean;
@@ -79,6 +80,12 @@ export class CreateProjectPage implements OnInit {
   }
   ionViewDidEnter() {
     this.isValidDate = true;
+    this.projectCreatePopUp = {
+      message: "Your project has been saved, click below to view your project.",
+      button: "View Project",
+      isActionable: '/project-view/project-detail/form',
+      show: false
+    }
   }
   ngOnInit() {
     this.prepareForm();
@@ -189,7 +196,7 @@ export class CreateProjectPage implements OnInit {
                   this.storage.set('latestProjects', projectsList).then(myProjects => {
                     this.storage.set('newcreatedproject', this.project).then(cmp => {
                       this.toastService.successToast('message.project_is_created');
-                      this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
+                      // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                     })
                   })
                 } else if (programsList.programs) {
@@ -203,7 +210,7 @@ export class CreateProjectPage implements OnInit {
                       this.storage.set('latestProjects', projectsList).then(myProjects => {
                         this.storage.set('newcreatedproject', this.project).then(cmp => {
                           this.toastService.successToast('message.project_is_created');
-                          this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
+                          // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                         })
                       })
                     }
@@ -227,7 +234,7 @@ export class CreateProjectPage implements OnInit {
                 this.storage.set('latestProjects', projectsList).then(myProjects => {
                   this.storage.set('newcreatedproject', this.project).then(cmp => {
                     this.toastService.successToast('message.project_is_created');
-                    this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
+                    // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                   })
                 })
               }
@@ -248,7 +255,7 @@ export class CreateProjectPage implements OnInit {
               this.storage.set('latestProjects', projectsList).then(myProjects => {
                 this.storage.set('newcreatedproject', this.project).then(cmp => {
                   this.toastService.successToast('message.project_is_created');
-                  this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
+                  // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                 })
               })
             }
@@ -265,10 +272,18 @@ export class CreateProjectPage implements OnInit {
           this.storage.set('latestProjects', projectsList).then(myProjects => {
             this.storage.set('newcreatedproject', this.project).then(cmp => {
               this.toastService.successToast('message.project_is_created');
-              this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
+              // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
             })
           })
         }
+        this.projectCreatePopUp = {
+          message: "Your project has been saved, click below to view your project.",
+          button: "View Project",
+          isActionable: '/project-view/project-detail/form',
+          show: true
+        }
+        this.storage.set('projectToBeView', this.project).then(project => {
+        })
       })
     }
   }

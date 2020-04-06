@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NewsfeedPage implements OnInit {
   back = 'project-view/home';
-  post:any = {};
+  post: any = {};
   file;
   imageUrl;
   constructor() { }
@@ -33,7 +33,6 @@ export class NewsfeedPage implements OnInit {
     };
     reader.readAsDataURL(file);
   }
-
   public postNews() {
     console.log(this.post, "post");
   }

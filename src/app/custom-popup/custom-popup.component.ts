@@ -5,7 +5,7 @@ import { Market } from '@ionic-native/market/ngx';
 import { Storage } from '@ionic/storage';
 import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
 import { AppConfigs } from '../app.config';
-import{NotificationCardService} from '../notification-card/notification.service';
+import { NotificationCardService } from '../notification-card/notification.service';
 
 @Component({
   selector: 'app-custom-popup',
@@ -13,14 +13,13 @@ import{NotificationCardService} from '../notification-card/notification.service'
   styleUrls: ['./custom-popup.component.scss'],
 })
 export class CustomPopupComponent implements OnInit {
-  @Input() header;
-  @Input() body;
   @Input() button;
   @Input() isActionable;
   @Input() showPopup: boolean;
   @Input() appUpdate;
   @Input() showUpdatePopup;
   @Input() showCloseButton: boolean;
+  @Input() projectCreatePopup;
   currentAppVersionObj;
   releaseNote;
   constructor(
@@ -29,7 +28,7 @@ export class CustomPopupComponent implements OnInit {
     public market: Market,
     public storage: Storage,
     public appLauncher: AppLauncher,
-    public notificationCardService:NotificationCardService
+    public notificationCardService: NotificationCardService
     // public appVersion: AppVersion,
   ) {
     this.storage.get('appUpdateVersions').then(obj => {
@@ -55,12 +54,13 @@ export class CustomPopupComponent implements OnInit {
   }
   closepopup() {
     this.showPopup = false;
+    this.projectCreatePopup = false; 
   }
   cancel() {
     this.closepopup();
     localStorage.setItem('isPopUpShowen', 'true');
   }
-  public navigateToProfile() {
+  public navigateTo() {
     this.closepopup();
     if (this.appUpdate.isActionable) {
       this.router.navigate([this.appUpdate.isActionable]);
@@ -68,11 +68,10 @@ export class CustomPopupComponent implements OnInit {
     this.showPopup = false;
   }
   public getTranslateKeys() {
-    if (this.header && this.body && this.button) {
-      this.translate.get([this.header, this.body, this.button]).subscribe((text: string) => {
-        this.header = text[this.header];
-        this.body = text[this.body];
-        this.button = text[this.button];
+    if (this.projectCreatePopup) {
+      this.translate.get([this.appUpdate.message, this.appUpdate.button]).subscribe((text: string) => {
+        this.appUpdate.message = text[this.appUpdate.message];
+        this.appUpdate.button = text[this.appUpdate.button];
       });
     }
   }

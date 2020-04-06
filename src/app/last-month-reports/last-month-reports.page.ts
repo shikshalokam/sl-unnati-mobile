@@ -23,6 +23,7 @@ export class LastMonthReportsPage implements OnInit {
   chartOptions;
   mySchools: any;
   appFolderPath;
+  showNoReports: boolean = false;
   isIos;
   page: number = 1;
   count: number = 5;
@@ -77,6 +78,8 @@ export class LastMonthReportsPage implements OnInit {
                 this.report = data.data;
                 if (data.status != "failed") {
                   this.setupChart();
+                }else{
+                  this.showNoReports = true;
                 }
                 this.showSkeleton = false;
               })

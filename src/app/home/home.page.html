@@ -21,11 +21,6 @@
   </div>
   <!-- loader ends here -->
   <div *ngIf="!showSkeleton">
-    <!-- <div *ngIf="showUpdatePop">
-      <app-custom-popup [header]="header" [appUpdate]="appUpdate" [body]="body" [button]="button" [showPopup]="true"
-        [isActionable]="isActionable">
-      </app-custom-popup>
-    </div> -->
     <ion-item class="search-bar-custom">
       <ion-icon name="search" item-left color="dark"></ion-icon>
       <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>

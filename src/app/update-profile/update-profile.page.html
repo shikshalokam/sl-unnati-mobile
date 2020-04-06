@@ -4,8 +4,11 @@
 </ion-header>
 <ion-content class="ion-padding">
   <div *ngIf="showUpdatePop">
-    <app-custom-popup [header]="header" [showCloseButton]="showCloseButton" [appUpdate]="appUpdate" [body]="body"
+    <!-- <app-custom-popup [header]="popMsg" [showCloseButton]="showCloseButton" [appUpdate]="appUpdate" [body]="body"
       [button]="button" [isActionable]="isActionable" [showPopup]="true">
+    </app-custom-popup> -->
+
+    <app-custom-popup [appUpdate]="popMsg" [showUpdatePopup]="" [showPopup]="" [projectCreatePopup]="true">
     </app-custom-popup>
   </div>
   <div class="profile-card">
@@ -33,12 +36,12 @@
       <!-- <input [type]="controls.input" [formControlName]="controls.label" /> -->
       <ion-input *ngIf="controls.input == 'text' && controls.visible" [type]="controls.input" name="{{controls.label}}"
         pattern={{controls.validation.regex}} placeholder={{controls.placeholder}} readonly={{!controls.editable}}
-        (ionChange)="checkPatter(controls)" value={{controls.value}} [(ngModel)]="controls.value"
+        (ionChange)="checkPattern(controls)" value={{controls.value}} [(ngModel)]="controls.value"
         [formControlName]="controls.field">
       </ion-input>
 
       <ion-input *ngIf="controls.input == 'number' && controls.visible" [type]="controls.input"
-        (ionChange)="checkPatter(controls)" pattern={{controls.validation.regex}} [(ngModel)]="controls.value"
+        (ionChange)="checkPattern(controls)" pattern={{controls.validation.regex}} [(ngModel)]="controls.value"
         [formControlName]="controls.field" placeholder={{controls.placeholder}} readonly={{!controls.editable}}
         value={{controls.value}} name="{{controls.label}}">
       </ion-input>
@@ -103,7 +106,7 @@
       </ion-grid>
     </ion-item>
     <div class="profile-actions">
-      <ion-button expand="block" (click)="saveInfo()">
+      <ion-button expand="block" (click)="saveInfo()" [disabled]="!profileFormData.canSubmit">
         {{'button.save_info' | translate}}
       </ion-button>
     </div>

@@ -53,7 +53,10 @@ export class ProjectDetailPage {
           this.back = 'project-view/school-task-report/' + this.project.entityId + '/school';
         } else if (this.category == 'home') {
           this.back = 'project-view/home';
-        } else {
+        } else if (this.category == 'form') {
+          this.back = 'project-view/create-project';
+        }
+        else {
           this.back = 'project-view/category/' + this.category;
         }
       } else {
