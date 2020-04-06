@@ -20,6 +20,7 @@ export class LastQuarterReportsPage implements OnInit {
   chartOptions;
   connected: any = navigator.onLine;
   showChart: boolean = false;
+  showNoReports: boolean = false;
   report;
   page: number = 1;
   count: number = 5;
@@ -84,6 +85,8 @@ export class LastQuarterReportsPage implements OnInit {
               this.report = data.data;
               if (data.status != "failed") {
                 this.setupChart();
+              } else {
+                this.showNoReports = true;
               }
               this.showSkeleton = false;
             })
