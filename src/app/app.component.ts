@@ -95,7 +95,6 @@ export class AppComponent {
           }
           this.showUpdatePopup = true;
           this.showUpdatePop = true;
-          this.showPopup = false;
         }
       })
       this.homeService.tobeSync.subscribe(value => {
@@ -201,6 +200,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
         if (data != null) {
+          this.validateToken();
           this.router.navigateByUrl('/project-view/home');
         } else {
           this.router.navigateByUrl('/login');
@@ -275,54 +275,57 @@ export class AppComponent {
           }
         } else if (s[1].path == 'category') {
           this.router.navigateByUrl('/project-view/library');
-        } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "cp")) {
-          this.router.navigateByUrl('project-view/create-project');
-        } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "cp")) {
-          this.router.navigateByUrl('project-view/create-task/' + s[2].path + '/' + s[3].path);
-        }
-        else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd") || s[1].path == "files") {
-          this.router.navigateByUrl('project-view/project-detail');
-        } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "pd")) {
-          this.router.navigateByUrl('project-view/project-detail');
-        } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "category" && s[3].path == "home")) {
-          this.router.navigateByUrl('project-view/home');
-        }
-        else if (this.router.url == "/project-view/project-detail") {
-          this.router.navigateByUrl('/project-view/library');
-        }
-        else if (this.router.url == '/project-view/task-view') {
-          this.modalController.dismiss();
-        } else if (this.router.url == '/project-view/subtasks') {
-          this.router.navigateByUrl('project-view/task-view');
-        } else if (this.router.url == '/project-view/subtask-view') {
-          this.router.navigateByUrl('project-view/subtasks');
-        } else if (this.router.url == '/project-view/subtask-view') {
-          this.modalController.dismiss();
-        } else if (this.router.url == '/project-view/courses') {
-          this.router.navigateByUrl('project-view/detail');
-        }
-        else {
-          if ((s[0].path == 'project-view' && s[1].path == 'status')) {
-            this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
-          } else
-            if ((s[0].path == 'project-view' && s[1].path == 'detail') || this.router.url == '/project-view/detail') {
+        } else
+          if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "my-reports" && s[3].path)) {
+            this.router.navigateByUrl('project-view/my-reports');
+          } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "cp")) {
+            this.router.navigateByUrl('project-view/create-project');
+          } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "cp")) {
+            this.router.navigateByUrl('project-view/create-task/' + s[2].path + '/' + s[3].path);
+          }
+          else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd") || s[1].path == "files") {
+            this.router.navigateByUrl('project-view/project-detail');
+          } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "pd")) {
+            this.router.navigateByUrl('project-view/project-detail');
+          } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "category" && s[3].path == "home")) {
+            this.router.navigateByUrl('project-view/home');
+          }
+          else if (this.router.url == "/project-view/project-detail") {
+            this.router.navigateByUrl('/project-view/library');
+          }
+          else if (this.router.url == '/project-view/task-view') {
+            this.modalController.dismiss();
+          } else if (this.router.url == '/project-view/subtasks') {
+            this.router.navigateByUrl('project-view/task-view');
+          } else if (this.router.url == '/project-view/subtask-view') {
+            this.router.navigateByUrl('project-view/subtasks');
+          } else if (this.router.url == '/project-view/subtask-view') {
+            this.modalController.dismiss();
+          } else if (this.router.url == '/project-view/courses') {
+            this.router.navigateByUrl('project-view/detail');
+          }
+          else {
+            if ((s[0].path == 'project-view' && s[1].path == 'status')) {
+              this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
+            } else
+              if ((s[0].path == 'project-view' && s[1].path == 'detail') || this.router.url == '/project-view/detail') {
 
-              if (localStorage.getItem('from') === 'home') {
-                this.router.navigateByUrl('project-view/home');
-              } else if (localStorage.getItem('from') === 'projects') {
-                this.router.navigateByUrl('project-view/projects');
+                if (localStorage.getItem('from') === 'home') {
+                  this.router.navigateByUrl('project-view/home');
+                } else if (localStorage.getItem('from') === 'projects') {
+                  this.router.navigateByUrl('project-view/projects');
+                }
+                else {
+                  this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
+                }
+              } else if ((s[0].path == 'project-view' && s[1].path == 'school-task-report') || (s[0].path == 'project-view' && s[1].path == 'status')) {
+                if (localStorage.getItem('from1') === 'home') {
+                  this.router.navigateByUrl('project-view/home');
+                } else if (localStorage.getItem('from1') === 'mySchools') {
+                  this.router.navigateByUrl('project-view/my-schools');
+                }
               }
-              else {
-                this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
-              }
-            } else if ((s[0].path == 'project-view' && s[1].path == 'school-task-report') || (s[0].path == 'project-view' && s[1].path == 'status')) {
-              if (localStorage.getItem('from1') === 'home') {
-                this.router.navigateByUrl('project-view/home');
-              } else if (localStorage.getItem('from1') === 'mySchools') {
-                this.router.navigateByUrl('project-view/my-schools');
-              }
-            }
-        }
+          }
       });
       this.hideSplasher();
       // this.splashScreen.hide();
@@ -631,8 +634,7 @@ export class AppComponent {
                       showUpdatePop: true,
                     }
                     this.showUpdatePop = true,
-                      this.showUpdatePopup = false;
-                    this.showPopup = true;
+                      this.showPopup = true;
                     isPopUpShowen = localStorage.getItem('isPopUpShowen');
                   } else {
                     this.showUpdatePop = false;
@@ -685,5 +687,30 @@ export class AppComponent {
         }
       })
     }
+  }
+
+  validateToken() {
+    this.storage.get('currentUser').then(data => {
+      console.log(data, "data");
+      if (data) {
+        console.log(data.expires_in <= (Date.now() / 1000), "data.expires_in <= (Date.now() / 1000)")
+        if (data.expires_in <= (Date.now() / 1000)) {
+          this.api.refershToken(data.refresh_token).subscribe((data: any) => {
+            console.log('new token resp', data);
+            let parsedData = JSON.parse(data._body);
+            if (parsedData && parsedData.access_token) {
+              let userTokens = {
+                access_token: parsedData.access_token,
+                refresh_token: parsedData.refresh_token,
+                expires_in: parsedData.expires_in
+              };
+              this.storage.set('userTokens', userTokens).then(usertoken => {
+              })
+              this.storage.set('currentUser', data).then(data => { })
+            }
+          })
+        }
+      }
+    })
   }
 }

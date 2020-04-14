@@ -1,0 +1,38 @@
+<div id="create-task-popup">
+  <div class="pop-container">
+    <ion-row style="margin-bottom: 10px;">
+      <ion-col size="2">
+        <ion-label position="stacked" style="padding-left: 15px;
+        margin: auto;">
+          For
+        </ion-label>
+      </ion-col>
+      <ion-col size="8">
+        <ion-input placeholder="Assignee Name's" id="popup-input" class="round-corner" [(ngModel)]="task.assignee">
+        </ion-input>
+      </ion-col>
+      <ion-col size="2" class="icons">
+        <ion-icon name="share" (click)="share()"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <div style="background: #f4f4f4f4;
+    padding: 15px;">
+      Task Name
+    </div>
+    <ion-textarea placeholder="" id="popup-input" [(ngModel)]="task.name" style="background: #fff;
+    border: 1px solid #f4f4f4;">
+    </ion-textarea>
+    <div class="attachment-box" style=" background: #f4f4f4;
+    min-height: 40px;">
+      <div class="attach">
+      </div>
+    </div>
+    <div (click)="setDate()" style="background: #f4f4f4f4;
+    padding: 15px;">
+      Due Date <span *ngIf="task.endDate"> : {{task.endDate}} </span>
+    </div>
+    <ion-button expand="block" (click)="add()" color="secondary">
+      Add Task
+    </ion-button>
+  </div>
+</div>

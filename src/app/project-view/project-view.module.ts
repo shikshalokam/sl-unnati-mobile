@@ -15,7 +15,7 @@ const routes: Routes = [
     children: [
       { path: 'home', loadChildren: '../home/home.module#HomePageModule' },
       { path: 'my-schools', loadChildren: '../myschools/myschools.module#MyschoolsPageModule' },
-      { path: 'fullreports/:state', loadChildren: '../fullreports/fullreports.module#FullreportsPageModule' },
+      { path: 'fullreports/:state/:id/:school', loadChildren: '../fullreports/fullreports.module#FullreportsPageModule' },
       { path: 'about', loadChildren: '../about/about.module#AboutPageModule' },
       // { path: 'last-month-reports', loadChildren: '../last-month-reports/last-month-reports.module#LastMonthReportsPageModule' },
       // { path: 'last-quarter-reports', loadChildren: '../last-quarter-reports/last-quarter-reports.module#LastQuarterReportsPageModule' },
@@ -41,6 +41,7 @@ const routes: Routes = [
       { path: 'project-detail', loadChildren: '../project-detail/project-detail.module#ProjectDetailPageModule' },
       { path: 'newsfeed', loadChildren: '../newsfeed/newsfeed.module#NewsfeedPageModule' },
       { path: 'my-reports', loadChildren: '../my-reports/my-reports.module#MyReportsPageModule' },
+      { path: 'my-reports/:id/:school', loadChildren: '../my-reports/my-reports.module#MyReportsPageModule' },
       { path: 'files/:id', loadChildren: '../files/files.module#FilesPageModule' },
       { path: 'notifications', loadChildren: '../notifications/notifications.module#NotificationsPageModule' },
       { path: 'task-board', loadChildren: '../task-board/task-board.module#TaskBoardPageModule' },

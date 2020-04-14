@@ -22,11 +22,13 @@ export class FullreportsPage implements OnInit {
   connected: any = navigator.onLine;
   page: number = 1;
   count: number = 5;
+  entityId;
   highcharts = Highcharts;
   showCharts: boolean = false;
+  mappedSchool;
   chartOptions;
   showSkeleton: boolean = false;
-  skeleton = [{}, {}, {}, {}];
+  skeletons = [{}, {}, {}, {}];
   mySchools;
   back = "/project-view/my-reports/last-month-reports"
   constructor(public activatedRoute: ActivatedRoute,
@@ -44,7 +46,10 @@ export class FullreportsPage implements OnInit {
     });
     activatedRoute.params.subscribe((params: any) => {
       this.state = params.state;
-      this.getSchools();
+      this.mappedSchool = params.school;
+      this.entityId = params.id;
+      this.back = "/project-view/my-reports/" + params.id + '/' + params.school;
+      // this.getSchools();
       this.getReports(params.state);
       try {
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
@@ -55,37 +60,22 @@ export class FullreportsPage implements OnInit {
   ngOnInit() {
   }
   public getReports(state) {
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.showSkeleton = true;
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.myReportsService.getFullReports(userTokens.access_token, state).subscribe((data: any) => {
-              data.data.forEach(report => {
-              });
-              this.reports = data.data;
-              if (this.reports.length > 0) {
-
-                setTimeout(() => {
-                  this.showCharts = true;
-                  this.setUpChart(this.reports[0]);
-                }, 1000);
-              } else {
-                this.showSkeleton = false;
-              }
-            }, error => {
-              this.showSkeleton = false;
-            })
-          }, error => {
-            this.showSkeleton = false;
-          })
+    this.showSkeleton = true;
+    this.myReportsService.getFullReports(state,this.entityId).subscribe((data: any) => {
+      if(data.data){
+        this.reports = data.data;
+        if (this.reports.length > 0) {
+          setTimeout(() => {
+            this.showCharts = true;
+            this.setUpChart(this.reports[0]);
+          }, 1000);
+        } else {
+          this.showSkeleton = false;
         }
-      })
+      }
+      this.showSkeleton = false;
+    }, error => {
+      this.showSkeleton = false;
     })
   }
   public setUpChart(data) {
@@ -122,31 +112,29 @@ export class FullreportsPage implements OnInit {
     }
     this.showSkeleton = false;
   }
-  // go back
-  public goBack() {
-    this.router.navigate(['/project-view/my-reports/last-' + this.state + '-reports']);
-  }
 
-  public getSchools() {
-    if (this.connected) {
-      this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-        if (data.status != 'failed') {
-          this.mySchools = data.data;
-        }
-      }, error => { })
-    } else {
-      this.toastService.errorToast('message.nerwork_connection_check');
-    }
-  }
+  // public getSchools() {
+  //   if (this.connected) {
+  //     this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
+  //       if (data.status != 'failed') {
+  //         this.mySchools = data.data;
+  //       }
+  //     }, error => { })
+  //   } else {
+  //     this.toastService.errorToast('message.nerwork_connection_check');
+  //   }
+  // }
 
   public getReport(type) {
     let obj: any;
     let obj1: any = {};
     if (this.mySchools) {
-      this.mySchools[0].type = type;
-      this.mySchools[0].isFullReport = true;
-      this.mySchools[0].reportType = this.state;
-      obj = this.mySchools[0];
+      this.mySchools.type = type;
+      this.mySchools.isFullReport = true;
+      this.mySchools.reportType = this.state;
+      this.mySchools.name = this.mappedSchool;
+      this.mySchools.entityId = this.entityId;
+      obj = this.mySchools;
     } else {
       obj1.type = type;
       obj1.isFullReport = true;

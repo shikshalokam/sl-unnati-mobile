@@ -72,9 +72,10 @@ export class LastMonthReportsPage implements OnInit {
             let userTokens = {
               access_token: parsedData.access_token,
               refresh_token: parsedData.refresh_token,
+              expires_in:parsedData.expires_in
             };
             this.storage.set('userTokens', userTokens).then(usertoken => {
-              this.myReportsService.getReports(userTokens.access_token, 'lastMonth').subscribe((data: any) => {
+              this.myReportsService.getReports('lastMonth').subscribe((data: any) => {
                 this.report = data.data;
                 if (data.status != "failed") {
                   this.setupChart();
@@ -197,6 +198,6 @@ export class LastMonthReportsPage implements OnInit {
       obj1.entityId = '';
       obj = obj1;
     }
-    this.myReportsService.getReportEvent(obj);
+   // this.myReportsService.getReportEvent(obj);
   }
 }

@@ -15,11 +15,11 @@ export class MyReportsService {
     downloadEvent = new Subject();
     constructor(public api: ApiProvider, public http: HttpClient, public currentUser: CurrentUserProvider, public storage: Storage) {
     }
-    public getReports(data, state) {
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthViseReport?reportType=' + state)
+    public getReports(state, entity?) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthViseReport?reportType=' + state + '?entityId=' + entity)
     }
-    public getFullReports(token, state) {
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getDetailViewReport?reportType=' + state)
+    public getFullReports(state, entity) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getDetailViewReport?reportType=' + state + '?entityId=' + entity)
     }
     public getReportData(entity) {
         return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthlyOrQuarterReportPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
