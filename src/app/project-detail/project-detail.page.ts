@@ -26,6 +26,7 @@ export class ProjectDetailPage {
   editGoal: boolean = false;
   editTitle: boolean = false;
   show: boolean = false;
+  showAddTask: boolean = false;
   statuses = [
     { title: 'Not started' },
     { title: 'In Progress' },
@@ -171,6 +172,7 @@ export class ProjectDetailPage {
     this.router.navigate(['/project-view/courses', this.category]);
   }
   public addTask() {
+    // this.showAddTask = true;
     this.router.navigate(['/project-view/create-task', this.project._id, "pd"]);
   }
   public navigateToFiles() {

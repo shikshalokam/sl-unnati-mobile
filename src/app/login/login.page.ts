@@ -95,6 +95,7 @@ export class LoginPage {
         this.menuCtrl.enable(true);
         this.storage.set('userDetails', userDetails).then(userData => {
         })
+        console.log(success1, "success1");
         this.storage.set('userTokens', success1).then(data => {
           localStorage.setItem('isPopUpShowen', null);
           this.router.navigateByUrl('/project-view/home');
@@ -105,6 +106,8 @@ export class LoginPage {
             this.veryFirstTime = false;
           })
         });
+        this.storage.set('currentUser', success1).then(data => {
+        })
         localStorage.setItem('token', success1);
         this.networkService.status(true);
         this.menuCtrl.enable(true);

@@ -20,7 +20,6 @@ export class LastQuarterReportsPage implements OnInit {
   chartOptions;
   connected: any = navigator.onLine;
   showChart: boolean = false;
-  showNoReports: boolean = false;
   report;
   page: number = 1;
   count: number = 5;
@@ -79,14 +78,13 @@ export class LastQuarterReportsPage implements OnInit {
           let userTokens = {
             access_token: parsedData.access_token,
             refresh_token: parsedData.refresh_token,
+            expires_in:parsedData.expires_in
           };
           this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.myReportsService.getReports(userTokens.access_token, 'lastQuarter').subscribe((data: any) => {
+            this.myReportsService.getReports('lastQuarter').subscribe((data: any) => {
               this.report = data.data;
               if (data.status != "failed") {
                 this.setupChart();
-              } else {
-                this.showNoReports = true;
               }
               this.showSkeleton = false;
             })
@@ -183,7 +181,7 @@ export class LastQuarterReportsPage implements OnInit {
       obj1.entityId = '';
       obj = obj1;
     }
-    this.myReportsService.getReportEvent(obj);
+    // this.myReportsService.getReportEvent(obj);
   }
   public getSchools() {
     if (this.connected) {

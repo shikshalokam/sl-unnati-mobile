@@ -43,8 +43,15 @@ export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 @NgModule({
-  declarations: [AppComponent, PopoverComponent,GetSubEntitiesPage],
-  entryComponents: [PopoverComponent, GetSubEntitiesPage],
+  declarations: [
+    AppComponent,
+    PopoverComponent,
+    GetSubEntitiesPage
+  ],
+  entryComponents: [
+    PopoverComponent,
+    GetSubEntitiesPage
+  ],
   imports: [
     BrowserModule,
     HttpModule,

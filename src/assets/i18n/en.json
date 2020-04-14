@@ -209,7 +209,8 @@
         "last_month": "Last Month",
         "last_quarter": "Last Quarter",
         "tasks_completed": "Tasks Completed",
-        "tasks_pending": "Tasks Pending"
+        "tasks_pending": "Tasks Pending",
+        "school_wise": "School Wise"
     },
     "fullreports": {
         "title": "My Reports",
@@ -252,7 +253,7 @@
         "files": "Files"
     },
     "open_tasks": {
-        "title": "OPEN TASKS",
+        "title": "Open Tasks",
         "ongoing": "Ongoing",
         "past": "Past",
         "number_of_subtask": "Number of sub-tasks"

@@ -53,6 +53,7 @@ export class ReportsPage implements OnInit {
           let userTokens = {
             access_token: parsedData.access_token,
             refresh_token: parsedData.refresh_token,
+            expires_in:parsedData.expires_in
           };
           this.storage.set('userTokens', userTokens).then(usertoken => {
             this.page = this.page + 1;
@@ -78,6 +79,7 @@ export class ReportsPage implements OnInit {
           let userTokens = {
             access_token: parsedData.access_token,
             refresh_token: parsedData.refresh_token,
+            expires_in:parsedData.expires_in
           };
           this.storage.set('userTokens', userTokens).then(usertoken => {
             this.showSkeleton = true;
@@ -108,6 +110,7 @@ export class ReportsPage implements OnInit {
           let userTokens = {
             access_token: parsedData.access_token,
             refresh_token: parsedData.refresh_token,
+            expires_in:parsedData.expires_in
           };
           this.storage.set('userTokens', userTokens).then(usertoken => {
             this.showSkeleton = true;
@@ -157,6 +160,7 @@ export class ReportsPage implements OnInit {
           let userTokens = {
             access_token: parsedData.access_token,
             refresh_token: parsedData.refresh_token,
+            expires_in:parsedData.expires_in
           };
           this.storage.set('userTokens', userTokens).then(usertoken => {
             this.showSkeleton = true;
