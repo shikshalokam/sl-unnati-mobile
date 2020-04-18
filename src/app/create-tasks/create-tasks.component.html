@@ -1,38 +1,72 @@
-<div id="create-task-popup">
-  <div class="pop-container">
-    <ion-row style="margin-bottom: 10px;">
-      <ion-col size="2">
-        <ion-label position="stacked" style="padding-left: 15px;
-        margin: auto;">
-          For
-        </ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <ion-input placeholder="Assignee Name's" id="popup-input" class="round-corner" [(ngModel)]="task.assignee">
-        </ion-input>
-      </ion-col>
-      <ion-col size="2" class="icons">
-        <ion-icon name="share" (click)="share()"></ion-icon>
-      </ion-col>
-    </ion-row>
-    <div style="background: #f4f4f4f4;
-    padding: 15px;">
-      Task Name
-    </div>
-    <ion-textarea placeholder="" id="popup-input" [(ngModel)]="task.name" style="background: #fff;
-    border: 1px solid #f4f4f4;">
-    </ion-textarea>
-    <div class="attachment-box" style=" background: #f4f4f4;
-    min-height: 40px;">
-      <div class="attach">
-      </div>
-    </div>
-    <div (click)="setDate()" style="background: #f4f4f4f4;
-    padding: 15px;">
-      Due Date <span *ngIf="task.endDate"> : {{task.endDate}} </span>
-    </div>
-    <ion-button expand="block" (click)="add()" color="secondary">
-      Add Task
-    </ion-button>
+<div id="create-task-popup" *ngIf="showForm">
+    <div class="pop-container">
+      <form [formGroup]="formContent">
+        <div *ngIf="data.closeIcon">
+          <ion-icon [name]="data.closeIcon.icon" slot="{{data.closeIcon.slot}}" style="font-size: 20px;;"
+            (click)="close()"></ion-icon>
+        </div>
+        <div *ngIf="data.label" class="form-header"> {{data.label}}
+        </div>
+        <div *ngIf="data.formData" class="task-create">
+          <div *ngFor="let data of data.formData">
+            <div *ngIf="data.label"
+              [ngClass]="{'label-margin':data.type != text-area, 'label-top-margin' :data.type == text-area}">
+              <img [src]="data.icon" *ngIf="data.icon" class="label-icon">
+              <ion-icon ios="ios-share" md="md-share" *ngIf="data.share" style="float: right;
+            font-size: 30px;
+            color: #000;
+            margin-top: 5px;" (click)="share()"></ion-icon>
+              <span class="label"
+                [ngClass]="{'required-field':submitAttempt && data.required && !data.value}">{{data.label}} <span
+                  *ngIf="data.required" class="required-field"> * </span></span>
+            </div>
+            <ion-input type="text" *ngIf="data.type == 'text'" placeholder={{data.placeholder}}
+              [formControlName]="data.field" [(ngModel)]="data.value">
+            </ion-input>
+            <ion-input (click)="setDate(data)" [formControlName]="data.field" *ngIf="data.type == 'date'"
+              placeholder={{data.placeholder}} [(ngModel)]="data.value" type="text">
+            </ion-input>
+            <ion-textarea *ngIf="data.type == 'text-area'" [formControlName]="data.field" rows="2"
+              [(ngModel)]="data.value">
+            </ion-textarea>
+            <div *ngIf="data.type == 'attachment'" class="attachments-box">
+              <div>
+                <div *ngIf="files.length > 0">
+                  <p *ngFor="let file of files">
+                    <img src="assets/images/attachment.png" class="img"> {{file.name}}
+                  </p>
+                </div>
+                <div *ngIf="images.length > 0">
+                  <p *ngFor="let file of images">
+                    <img src="assets/images/picture.png" class="img"> {{file.name}}
+                  </p>
+                </div>
+              </div>
+              <ion-row class="file-box">
+                <ion-col size="6" style="margin: auto; font-size: 24px;">
+                  <div *ngIf="files.length == 0 && images.length == 0">
+                    <img src="assets/images/picture.png">
+                    <img src="assets/images/attachment.png">
+                  </div>
+                </ion-col>
+                <ion-col size="6">
+                  <div class="fileUpload">
+                    <a style="color:#6074f9; text-align:right;
+                float: right;
+                margin: 10px 10px; ">Attach</a>
+                    <input #imageInputFile type="file" class="upload" (change)="attachFile(imageInputFile)" />
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+          <div *ngIf="data.buttons">
+            <ion-button *ngFor="let btn of data.buttons" color="{{btn.color}}" expand="{{btn.expand}}"
+              (click)="action(btn.role)">
+              {{btn.label}}
+            </ion-button>
+          </div>
+        </div>
+      </form>
   </div>
 </div>

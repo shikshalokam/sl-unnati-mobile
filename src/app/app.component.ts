@@ -200,7 +200,6 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
         if (data != null) {
-          this.validateToken();
           this.router.navigateByUrl('/project-view/home');
         } else {
           this.router.navigateByUrl('/login');
@@ -687,30 +686,5 @@ export class AppComponent {
         }
       })
     }
-  }
-
-  validateToken() {
-    this.storage.get('currentUser').then(data => {
-      console.log(data, "data");
-      if (data) {
-        console.log(data.expires_in <= (Date.now() / 1000), "data.expires_in <= (Date.now() / 1000)")
-        if (data.expires_in <= (Date.now() / 1000)) {
-          this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-            console.log('new token resp', data);
-            let parsedData = JSON.parse(data._body);
-            if (parsedData && parsedData.access_token) {
-              let userTokens = {
-                access_token: parsedData.access_token,
-                refresh_token: parsedData.refresh_token,
-                expires_in: parsedData.expires_in
-              };
-              this.storage.set('userTokens', userTokens).then(usertoken => {
-              })
-              this.storage.set('currentUser', data).then(data => { })
-            }
-          })
-        }
-      }
-    })
   }
 }

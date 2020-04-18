@@ -16,7 +16,7 @@ export class CurrentTaskViewPage implements OnInit {
   createSubtask: FormGroup;
   back;
   file;
-  imageUrl;
+  imageUrl = [];
   remarks;
   fileUrl;
   from;
@@ -232,7 +232,7 @@ export class CurrentTaskViewPage implements OnInit {
     if (this.task.title) {
       this.editTitle = false;
       this.markLabelsAsInvalid = false;
-    } 
+    }
     if (this.task.goal) {
       this.editGoal = false;
       this.markLabelsAsInvalid = false;
@@ -350,14 +350,22 @@ export class CurrentTaskViewPage implements OnInit {
     reader.onload = (event: any) => {
       value = event.target.result.split(',');
       if (type == 'image') {
-        this.imageUrl = value[1];
-      } else {
-        this.task.file = {
-          url: event.target.result,
-          name: this.file.name
+        let data = {
+          data: value[1],
+          name: this.file.name,
+          type: this.file.type
         }
-        this.toastService.successToast('message.file_uploaded');
+        this.task.attachments.push(data);
+      } else {
+        let data = {
+          data: value[1],
+          name: this.file.name,
+          type: this.file.type
+        }
+        this.task.attachments.push(data);
       }
+
+      this.toastService.successToast('message.file_uploaded');
     };
     reader.readAsDataURL(file);
   }
@@ -372,7 +380,13 @@ export class CurrentTaskViewPage implements OnInit {
       mediaType: this.camera.MediaType.PICTURE
     }
     this.camera.getPicture(options).then((imageData) => {
-      this.task.imageUrl = imageData;
+      let data = {
+        data: imageData,
+        name: '',
+        type: 'image/jpeg'
+      }
+      this.task.attachments.push(data);
+      console.log(this.task, "this.task.");
       this.toastService.successToast('message.image_uploaded');
       let base64Image = 'data:image/jpeg;base64,' + imageData;
     }, (err) => {

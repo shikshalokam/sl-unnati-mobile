@@ -35,7 +35,7 @@
     "@ionic-native/file-chooser": "^5.19.1",
     "@ionic-native/file-opener": "^5.20.0",
     "@ionic-native/file-path": "^5.19.1",
-    "@ionic-native/file-transfer": "^5.19.1",
+    "@ionic-native/file-transfer": "^5.23.0",
     "@ionic-native/in-app-browser": "^5.17.0",
     "@ionic-native/keyboard": "^5.18.0",
     "@ionic-native/local-notifications": "^5.17.0",
