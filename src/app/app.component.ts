@@ -211,7 +211,7 @@ export class AppComponent {
       }
       this.translate.setDefaultLang('en');
       this.translate.use('en');
-      this.networkService.setLang('en');
+      this.networkService.setLang('en'); 
       this.platform.pause.subscribe(() => {
         localStorage.setItem('isPopUpShowen', null);
       });

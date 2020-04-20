@@ -194,6 +194,7 @@ export class LastMonthReportsPage implements OnInit {
       obj1.entityId = '';
       obj = obj1;
     }
+    console.log(obj);
     this.myReportsService.getReportEvent(obj);
   }
 }

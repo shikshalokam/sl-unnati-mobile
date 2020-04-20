@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { switchMap } from 'rxjs/operators';
 import {
     HttpRequest,
     HttpHandler,
@@ -9,7 +10,7 @@ import {
 } from '@angular/common/http';
 import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, from } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import {
     Router
@@ -29,7 +30,7 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        this.storage.get('userTokens').then(token => {
+        this.api.validateToken().then(token => {
             this.token = token
         })
         // this.getFreshToken();
@@ -67,31 +68,22 @@ export class TokenInterceptor implements HttpInterceptor {
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 401) {
                     if (!this.refreshTokenInProgress) {
-                        this.storage.get('userTokens').then(token => {
-                            this.api.refershToken(token.refresh_token).subscribe((data: any) => {
-                                let parsedData = JSON.parse(data._body);
-                                if (parsedData && parsedData.access_token) {
-                                    let userTokens = {
-                                        access_token: parsedData.access_token,
-                                        refresh_token: parsedData.refresh_token,
-                                    };
-                                    this.storage.set('userTokens', userTokens).then(data => {
-                                    })
-                                    this.refreshTokenInProgress = true;
-                                    request = request.clone({
-                                        setHeaders: {
-                                            'x-auth-token': this.token.access_token,
-                                            'x-authenticated-user-token': this.token.access_token,
-                                            'gpsLocation': '0,0',
-                                            'appVersion': AppConfigs.appVersion,
-                                            'appName': AppConfigs.appName,
-                                            'appType': "improvement-project",
-                                            'os': this.platform.is('ios') ? 'ios' : 'android'
-                                        }
-                                    });
-                                    return next.handle(request);
-                                }
-                            })
+                        this.api.validateToken().then(token => {
+                            this.token = token;
+                            if (this.token) {
+                                request = request.clone({
+                                    setHeaders: {
+                                        'x-auth-token': this.token.access_token,
+                                        'x-authenticated-user-token': this.token.access_token,
+                                        'gpsLocation': '0,0',
+                                        'appVersion': AppConfigs.appVersion,
+                                        'appName': AppConfigs.appName,
+                                        'appType': "improvement-project",
+                                        'os': this.platform.is('ios') ? 'ios' : 'android'
+                                    }
+                                });
+                            }
+                            return next.handle(request);
                         })
                     } else {
                         this.router.navigate(['login']);
@@ -99,11 +91,6 @@ export class TokenInterceptor implements HttpInterceptor {
                 }
                 return throwError(error);
             }));
-    }
-
-    public getFreshToken() {
-        console.log('in get token interceptoor');
-
     }
     async presentToast(msg) {
         const toast = await this.toastController.create({

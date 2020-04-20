@@ -12,25 +12,30 @@ export class TaskBoardPage {
   ongoing: any = [];
   past: any = [];
   searchInput;
+  showSkeleton: boolean = true;
+  skeletons = [{}, {}, {}, {}, {}];
   constructor(
     public storage: Storage
   ) { }
 
   ionViewDidEnter() {
     this.searchInput = '';
+    this.activeTab = 'ongoing';
     this.getProjects();
   }
   public getProjects() {
     this.ongoing = [];
     this.past = [];
     this.storage.get('latestProjects').then(projects => {
+      this.showSkeleton = true;
       projects.forEach(programsList => {
         if (programsList.projects) {
           programsList.projects.forEach(project => {
             let count = 0;
             if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
               project.tasks.forEach(task => {
-                if (task.status == 'Completed' || task.status == 'completed') {
+                task.status = task.status.toLowerCase()
+                if (task.status == 'completed') {
                   if (count == 0) {
                     this.ongoing.push(task);
                     count++;
@@ -43,11 +48,15 @@ export class TaskBoardPage {
               });
             }
           });
+          this.showSkeleton = false;
         }
       });
     })
   }
   public selectTab(tab) {
+    this.showSkeleton = true;
     this.activeTab = tab;
+    this.showSkeleton = false;
+
   }
 }

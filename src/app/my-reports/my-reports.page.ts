@@ -42,7 +42,7 @@ export class MyReportsPage {
     public storage: Storage
   ) {
     myReportsService.reportEvent.subscribe((data: any) => {
-      // this.share(data);
+      console.log(data, "data in my reports")
       this.platform.ready().then(() => {
         this.isIos = this.platform.is('ios') ? true : false;
         this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
@@ -68,6 +68,7 @@ export class MyReportsPage {
   public getReport(mySchools: any) {
     if (this.connected) {
       this.myReportsService.getReportData(mySchools).subscribe((data: any) => {
+        console.log(data, "data");
         this.toastService.stopLoader();
         if (data.status != 'failed') {
           if (mySchools.type === 'share') {

@@ -58,6 +58,7 @@ export class HeaderComponent implements OnInit {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
         if (data) {
+          console.log(data, "data");
           this.getNotificationCount();
         }
       })
