@@ -248,7 +248,7 @@ export class ProjectDetailPage {
       ],
       buttons: [
         {
-          label: 'addTask',
+          label: 'add Task',
           role: 'submit',
           expand: 'block',
           color: 'secondary',

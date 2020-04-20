@@ -55,29 +55,27 @@ export class FilesPage implements OnInit {
               if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(task => {
                   if (task.attachments) {
+                    task.imageList = [];
+                    task.fileList = [];
                     task.attachments.forEach(attachment => {
                       let type = attachment.type.split("/");
                       if (type[0] == 'image') {
-                        console.log(attachment.data, "attachment.data 11");
                         let value = attachment.data.split(",");
-                        console.log(value);
                         if (value[1]) {
-                          console.log(value[1], "[1]");
                           attachment.data = 'data:image/jpeg;base64,' + value[1];
                         } else {
-                          console.log(value[0], "[0]");
                           attachment.data = 'data:image/jpeg;base64,' + value[0];
                         }
-                        this.images.push(attachment);
+                        task.imageList.push(attachment);
                       } else {
-                        this.files.push(attachment);
+                        task.fileList.push(attachment);
                       }
                     });
                   }
                 });
               }
               this.currentMyProject = project;
-              console.log(this.currentMyProject, "this.currentMyProject sssss", this.images, this.files);
+              console.log(this.currentMyProject, "this.currentMyProject sssss");
             }
           });
         });
@@ -87,29 +85,27 @@ export class FilesPage implements OnInit {
             if (project.tasks && project.tasks.length > 0) {
               project.tasks.forEach(task => {
                 if (task.attachments) {
+                  task.imageList = [];
+                  task.fileList = [];
                   task.attachments.forEach(attachment => {
                     let type = attachment.type.split("/");
                     if (type[0] == 'image') {
-                      console.log(attachment.data, "attachment.data 11");
                       let value = attachment.data.split(",");
-                      console.log(value);
                       if (value[1]) {
-                        console.log(value[1], "[1]");
                         attachment.data = 'data:image/jpeg;base64,' + value[1];
                       } else {
-                        console.log(value[0], "[0]");
                         attachment.data = 'data:image/jpeg;base64,' + value[0];
                       }
-                      this.images.push(attachment);
+                      task.imageList.push(attachment);
                     } else {
-                      this.files.push(attachment);
+                      task.fileList.push(attachment);
                     }
                   });
                 }
               });
             }
             this.currentMyProject = project;
-            console.log(this.currentMyProject, "this.currentMyProject sssss", this.images, this.files);
+            console.log(this.currentMyProject, "this.currentMyProject sssss");
           }
         });
       }
@@ -119,6 +115,15 @@ export class FilesPage implements OnInit {
     this.activeTab = type;
   }
   downloadFile(task) {
+    // const fileTransfer: FileTransferObject = this.transfer.create();
+
+    // fileTransfer.download(task.data, this.appFolderPath + 'file.pdf').then((entry) => {
+    //   console.log('download complete: ' + entry.toURL());
+    // }, (error) => {
+    //   console.log(error, "console.log");
+    //   // handle error
+    // });
+
     fetch(task.data,
       {
         method: "GET"
@@ -126,6 +131,7 @@ export class FilesPage implements OnInit {
         this.appFolderPath = decodeURIComponent(this.appFolderPath);
         task.name = decodeURIComponent(task.name);
         this.file.writeFile(this.appFolderPath, task.name, blob, { replace: true }).then(res => {
+          console.log(res, "res");
           this.fileOpener.open(
             res.toInternalURL(),
             'application/pdf'
