@@ -5,8 +5,10 @@ import { CreateProjectService } from '../create-project/create-project.service';
 import { CreateTaskService } from '../create-task/create-task.service';
 import * as moment from 'moment';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { DatePipe } from '@angular/common'
-import { ToastService } from '../toast.service'
+import { DatePipe } from '@angular/common';
+import { ToastService } from '../toast.service';
+import { HomeService } from '../home/home.service';
+
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.page.html',
@@ -32,6 +34,9 @@ export class ProjectDetailPage {
     { title: 'In Progress' },
     { title: 'Completed' }
   ];
+
+  taskCreate = {
+  }
   constructor(
     public storage: Storage,
     public route: ActivatedRoute,
@@ -40,8 +45,26 @@ export class ProjectDetailPage {
     public datePicker: DatePicker,
     public datepipe: DatePipe,
     public taskService: CreateTaskService,
-    public toastService: ToastService
+    public toastService: ToastService,
+    public homeService: HomeService
   ) {
+    createProjectService.addNewTask.subscribe((data: any) => {
+      this.showAddTask = false;
+      console.log(data, "ne task");
+      if (this.project.tasks && this.project.tasks.length > 0) {
+        data._id = this.project.tasks.length + 2;
+      } else {
+        data._id = 1;
+      }
+      this.project.tasks.push(data);
+      this.tasksLength = this.project.tasks.length;
+
+      console.log(this.project, "project", this.tasksLength, "this.tasksLength", this.project.tasks.length);
+      this.updateTask();
+    })
+    createProjectService.modalCloseEvent.subscribe(data => {
+      this.showAddTask = false;
+    })
     route.params.subscribe(param => {
       this.editTitle = false;
       this.editGoal = false;
@@ -66,6 +89,7 @@ export class ProjectDetailPage {
     })
   }
   ionViewDidEnter() {
+    this.showAddTask = false;
     this.getProject();
   }
   getProject() {
@@ -172,8 +196,68 @@ export class ProjectDetailPage {
     this.router.navigate(['/project-view/courses', this.category]);
   }
   public addTask() {
-    // this.showAddTask = true;
-    this.router.navigate(['/project-view/create-task', this.project._id, "pd"]);
+    this.taskCreate = {
+      label: 'Add New Task',
+      closeIcon: {
+        slot: 'end',
+        icon: 'close'
+      },
+      projectData: {
+        projectName: this.project.title,
+        goal: this.project.goal,
+        duration: this.project.duration,
+        projectId: this.project._id,
+        tasks: {}
+      },
+      formData: [
+        {
+          type: 'text',
+          label: 'Assigned to',
+          placeholder: '',
+          share: true,
+          required: false,
+          field: 'assigneeName',
+          icon: 'assets/images/task-user.png',
+          value: ''
+        },
+        {
+          type: 'date',
+          label: 'End Date',
+          placeholder: '',
+          required: false,
+          field: 'endDate ',
+          icon: 'assets/images/task-cal.svg',
+          value: ''
+        },
+        {
+          type: 'text-area',
+          label: 'Task Description',
+          placeholder: '',
+          field: 'title',
+          required: true,
+          icon: 'assets/images/task-title.png',
+
+          value: ''
+        },
+        {
+          type: 'attachment',
+          placeholder: '',
+          required: false,
+          value: []
+        }
+      ],
+      buttons: [
+        {
+          label: 'add Task',
+          role: 'submit',
+          expand: 'block',
+          color: 'secondary',
+          border_raduis: '4px',
+        }],
+    }
+    console.log(this.taskCreate, " this.taskCreate")
+    this.showAddTask = true;
+    // this.router.navigate(['/project-view/create-task', this.project._id, "pd"]);
   }
   public navigateToFiles() {
     this.router.navigate(['/project-view/files', this.project._id]);
@@ -336,10 +420,6 @@ export class ProjectDetailPage {
         })
       })
     })
-    // this.storage.set('newcreatedproject', this.project).then(sucess => {
-    //   this.storage.set('projectToBeView', this.project).then(updatedProject => {
-    //   })
-    // })
   }
 
   // navigate to view task
@@ -389,5 +469,37 @@ export class ProjectDetailPage {
       return <any>new Date(a.endDate) - <any>new Date(b.endDate);
     });
     this.project.tasks = tasksWithEndDate.concat(tasksWithoutEndDate);
+  }
+
+  // add created task
+  public addNewTask(task) {
+    this.storage.get('latestProjects').then(myProjects => {
+      let mapped;
+
+      if (myProjects) {
+        if (myProjects.program)
+          myProjects.program.forEach(programs => {
+            if (programs.projects) {
+              programs.projects.forEach(project => {
+                if (project._id == this.project._id) {
+                  project = this.project;
+                  mapped = true;
+                }
+              });
+            }
+          });
+      }
+      if (!mapped) {
+        myProjects[0].projects.forEach(function (myProject, i) {
+          if (myProject._id == this.project._id) {
+            myProjects[0].projects[i] = this.project;
+          }
+        });
+      }
+      this.storage.set('latestProjects', myProjects).then(success => {
+        this.toastService.successToast('message.task_is_created');
+        this.homeService.loadActiveProjects();
+      })
+    })
   }
 }

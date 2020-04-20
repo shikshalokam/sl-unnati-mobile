@@ -13,6 +13,8 @@ export class MyReportsService {
     shareEvent = new Subject();
     reportEvent = new Subject();
     downloadEvent = new Subject();
+    shareTask = new Subject();
+
     constructor(public api: ApiProvider, public http: HttpClient, public currentUser: CurrentUserProvider, public storage: Storage) {
     }
     public getReports(state, entity?) {
@@ -28,12 +30,16 @@ export class MyReportsService {
         return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getFullMonthlyOrQuarterPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
     }
     public share(data) {
-        this.shareEvent.next(data)
+        this.shareEvent.next(data);
     }
     public download(data) {
-        this.downloadEvent.next(data)
+        this.downloadEvent.next(data);
     }
     public getReportEvent(type) {
-        this.reportEvent.next(type)
+        this.reportEvent.next(type);
+    }
+    public shareTaskEvent(data) {
+        console.log(data, "data in cp reports");
+        this.shareTask.next(data);
     }
 }

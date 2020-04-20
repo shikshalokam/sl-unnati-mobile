@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { AppConfigs } from '../app.config';
-
+import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({
     providedIn: 'root'
 })
 export class CreateProjectService {
-    constructor(public storage: Storage) { }
+    modalCloseEvent = new Subject();
+    addNewTask = new Subject();
+    constructor(public storage: Storage,
+        public http: HttpClient) { }
     // Update task in current Project
     public updateCurrentMyProject(createdTask) {
         return this.storage.get('newcreatedproject').then(cmp => {
@@ -67,9 +71,9 @@ export class CreateProjectService {
         let environment = AppConfigs.currentEnvironment;
         let programId = '';
         AppConfigs.environments.forEach(env => {
-          if (environment === env.name) {
-            programId = env.programId;
-          }
+            if (environment === env.name) {
+                programId = env.programId;
+            }
         });
         return this.storage.get('latestProjects').then(projectList => {
             if (projectList) {
@@ -126,4 +130,17 @@ export class CreateProjectService {
             })
         })
     }
+
+    // Close task create modal
+    public closeModal() {
+        this.modalCloseEvent.next();
+    }
+
+    public getTaskPDF(data) {
+        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/reports/shareTaskPdf', data);
+    }
+    public addNewTaskIntoProject(task) {
+        this.addNewTask.next(task);
+    }
+   
 }

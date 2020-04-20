@@ -21,6 +21,8 @@ export class FilesPage implements OnInit {
   activeTab = 'images';
   isIos;
   appFolderPath;
+  files = [];
+  images = [];
   back = 'project-view/project-detail/my_projects';
   constructor(public createTaskService: CreateTaskService,
     public route: ActivatedRoute,
@@ -33,6 +35,7 @@ export class FilesPage implements OnInit {
     public storage: Storage
   ) {
     route.params.subscribe(params => {
+      this.activeTab = 'images';
       this.getCurrentProject(params.id);
     })
   }
@@ -48,29 +51,61 @@ export class FilesPage implements OnInit {
       if (projectList.programs) {
         projectList.programs.forEach(programsList => {
           programsList.projects.forEach(project => {
-            if (project.tasks && project.tasks.length > 0) {
-              project.tasks.forEach(task => {
-                if (task.imageUrl) {
-                  task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
-                }
-              });
-            }
             if (project._id == id) {
+              if (project.tasks && project.tasks.length > 0) {
+                project.tasks.forEach(task => {
+                  if (task.attachments) {
+                    task.imageList = [];
+                    task.fileList = [];
+                    task.attachments.forEach(attachment => {
+                      let type = attachment.type.split("/");
+                      if (type[0] == 'image') {
+                        let value = attachment.data.split(",");
+                        if (value[1]) {
+                          attachment.data = 'data:image/jpeg;base64,' + value[1];
+                        } else {
+                          attachment.data = 'data:image/jpeg;base64,' + value[0];
+                        }
+                        task.imageList.push(attachment);
+                      } else {
+                        task.fileList.push(attachment);
+                      }
+                    });
+                  }
+                });
+              }
               this.currentMyProject = project;
+              console.log(this.currentMyProject, "this.currentMyProject sssss");
             }
           });
         });
       } else {
         projectList[0].projects.forEach(project => {
-          if (project.tasks && project.tasks.length > 0) {
-            project.tasks.forEach(task => {
-              if (task.imageUrl) {
-                task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
-              }
-            });
-          }
           if (project._id == id) {
+            if (project.tasks && project.tasks.length > 0) {
+              project.tasks.forEach(task => {
+                if (task.attachments) {
+                  task.imageList = [];
+                  task.fileList = [];
+                  task.attachments.forEach(attachment => {
+                    let type = attachment.type.split("/");
+                    if (type[0] == 'image') {
+                      let value = attachment.data.split(",");
+                      if (value[1]) {
+                        attachment.data = 'data:image/jpeg;base64,' + value[1];
+                      } else {
+                        attachment.data = 'data:image/jpeg;base64,' + value[0];
+                      }
+                      task.imageList.push(attachment);
+                    } else {
+                      task.fileList.push(attachment);
+                    }
+                  });
+                }
+              });
+            }
             this.currentMyProject = project;
+            console.log(this.currentMyProject, "this.currentMyProject sssss");
           }
         });
       }
@@ -80,13 +115,23 @@ export class FilesPage implements OnInit {
     this.activeTab = type;
   }
   downloadFile(task) {
-    fetch(task.file.url,
+    // const fileTransfer: FileTransferObject = this.transfer.create();
+
+    // fileTransfer.download(task.data, this.appFolderPath + 'file.pdf').then((entry) => {
+    //   console.log('download complete: ' + entry.toURL());
+    // }, (error) => {
+    //   console.log(error, "console.log");
+    //   // handle error
+    // });
+
+    fetch(task.data,
       {
         method: "GET"
       }).then(res => res.blob()).then(blob => {
         this.appFolderPath = decodeURIComponent(this.appFolderPath);
-        task.file.name = decodeURIComponent(task.file.name);
-        this.file.writeFile(this.appFolderPath, task.file.name, blob, { replace: true }).then(res => {
+        task.name = decodeURIComponent(task.name);
+        this.file.writeFile(this.appFolderPath, task.name, blob, { replace: true }).then(res => {
+          console.log(res, "res");
           this.fileOpener.open(
             res.toInternalURL(),
             'application/pdf'

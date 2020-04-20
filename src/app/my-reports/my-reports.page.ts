@@ -73,8 +73,6 @@ export class MyReportsPage {
     public storage: Storage
   ) {
     activatedRoute.params.subscribe((params: any) => {
-      console.log(this.activeTab, "this.activeTab");
-      console.log(params, 'params');
       this.mappedSchool = '';
       if (params.id) {
         this.back = "project-view/my-reports";
