@@ -200,7 +200,14 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
         if (data != null) {
-          this.router.navigateByUrl('/project-view/home');
+          this.storage.get('veryFirstTime').then(veryFirstTime => {
+            console.log(veryFirstTime, "veryFirstTime")
+            if (veryFirstTime) {
+              this.router.navigateByUrl('/app-permissions');
+            } else {
+              this.router.navigateByUrl('/project-view/home');
+            }
+          })
         } else {
           this.router.navigateByUrl('/login');
         }
