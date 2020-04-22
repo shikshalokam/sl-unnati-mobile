@@ -68,7 +68,6 @@ export class MyReportsPage {
   }
   public getReport(mySchools: any) {
     if (this.connected) {
-
       this.myReportsService.getReportData(mySchools).subscribe((data: any) => {
         this.toastService.stopLoader();
         if (data.status != 'failed') {
@@ -136,6 +135,7 @@ export class MyReportsPage {
   }
 
   public download(data) {
+    const fileTransfer: FileTransferObject = this.transfer.create();
     fetch(data.pdfUrl,
       {
         method: "GET"

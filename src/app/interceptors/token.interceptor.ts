@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
 import {
     HttpRequest,
     HttpHandler,

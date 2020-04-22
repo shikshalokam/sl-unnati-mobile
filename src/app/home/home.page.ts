@@ -112,26 +112,30 @@ export class HomePage implements OnInit {
   ionViewDidEnter() {
     this.platform.ready().then(() => {
       this.searchInput = '';
-      if (localStorage.getItem("token") != null) {
-        this.menuCtrl.enable(true, 'unnati');
-        this.getActiveProjects();
-        this.setTitle('home_tab');
-        this.connected = localStorage.getItem("networkStatus");
-        //  this.splashScreen.hide();
-        this.storage.get('templates').then(templates => {
-          if (!templates) {
-            this.getTemplates();
-          }
-        })
-        this.storage.get('latestProjects').then(projects => {
-          if (!projects) {
-            this.getProjects();
-          } else {
-            this.getActiveProjects();
-          }
-        })
-        this.getSchools();
-      }
+      this.storage.get('userTokens').then(data => {
+        if (data) {
+          this.menuCtrl.enable(true, 'unnati');
+          this.getActiveProjects();
+          this.setTitle('home_tab');
+          this.connected = localStorage.getItem("networkStatus");
+          //  this.splashScreen.hide();
+          this.storage.get('templates').then(templates => {
+            if (!templates) {
+              this.getTemplates();
+            }
+          })
+          this.storage.get('latestProjects').then(projects => {
+            if (!projects) {
+              this.getProjects();
+            } else {
+              this.getActiveProjects();
+            }
+          })
+          this.getSchools();
+        } else {
+          this.ionViewDidEnter();
+        }
+      })
       try {
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
       } catch (error) {
@@ -144,7 +148,7 @@ export class HomePage implements OnInit {
   }
   //  Check user
   public checkUser() {
-    this.storage.get('token').then(data => {
+    this.storage.get('userTokens').then(data => {
       if (data) {
         this.loggedIn = true;
         this.menuCtrl.enable(true);
@@ -272,6 +276,7 @@ export class HomePage implements OnInit {
       }
     }, error => {
     })
+
   }
   //  get schools
   public getSchools() {

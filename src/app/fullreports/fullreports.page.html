@@ -42,22 +42,25 @@
       </ion-card-content>
     </ion-card>
   </div>
-  <div *ngIf="showSkeleton == 'true'">
-    <ion-card>
+
+
+  <ion-card *ngIf="reports && reports.length == 0 && !showSkeleton">
+    <h5 style="text-align: center;"> {{'message.no_data_found' |translate}} </h5>
+  </ion-card>
+  <div *ngIf="showSkeleton">
+    <ion-card *ngFor="let skeleton of skeletons">
       <ion-card-content class="skeleton-card-content">
-        <ion-card *ngFor="let skeleton of skeletons">
-          <ion-card-content class="skeleton-card-content">
-            <p>
-              <ion-skeleton-text animated style=" width: 48%;
-                        float: left;height: 200px;
-                        margin-left: 2%;"></ion-skeleton-text>
-              <ion-skeleton-text animated style=" width: 48%;
-                        float: left;
-                        margin-left: 2%;height: 200px;"></ion-skeleton-text>
-              <ion-skeleton-text animated></ion-skeleton-text>
-            </p>
-          </ion-card-content>
-        </ion-card>
+        <p>
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text animated></ion-skeleton-text>
+          <ion-skeleton-text animated></ion-skeleton-text>
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </p>
       </ion-card-content>
     </ion-card>
   </div>

@@ -586,6 +586,7 @@ export class AppComponent {
         sproject.isNew = false;
         sproject.isSync = true;
         sproject.isEdited = false;
+        sproject.lastUpdate = sproject.lastSync;
         if (sproject.tasks && sproject.tasks.length > 0) {
           sproject.tasks.forEach(task => {
             task.isSync = true;

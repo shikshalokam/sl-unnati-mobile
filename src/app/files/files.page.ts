@@ -35,7 +35,6 @@ export class FilesPage implements OnInit {
     public storage: Storage
   ) {
     route.params.subscribe(params => {
-      console.log(params, "params");
       this.getCurrentProject(params.id);
     })
   }
@@ -50,16 +49,13 @@ export class FilesPage implements OnInit {
     this.showSkeleton = true;
     this.storage.get('latestProjects').then(projectList => {
       if (projectList.programs) {
-        console.log('in if');
         projectList.programs.forEach(programsList => {
           programsList.projects.forEach(project => {
-            console.log(project._id, +'===== tttt' + id)
             if (project._id == id) {
               if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(task => {
                   if (task.imageUrl) {
                     let value = task.imageUrl.split(",");
-                    console.log(value, "value");
                     if (value[1]) {
                       task.imageUrl = 'data:image/jpeg;base64,' + value[1];
                     } else {
@@ -73,45 +69,25 @@ export class FilesPage implements OnInit {
           });
         });
       } else {
-        console.log('in else');
         projectList.forEach(projectsList => {
-          console.log(projectsList, "projectsssss ");
           projectsList.projects.forEach(project => {
-            console.log(project._id, "projectsssss ==", id);
             if (project._id == id) {
               if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(task => {
                   if (task.imageUrl) {
                     let value = task.imageUrl.split(",");
-                    console.log(value, "value");
                     if (value[1]) {
                       task.imageUrl = 'data:image/jpeg;base64,' + value[1];
                     } else {
                       task.imageUrl = 'data:image/jpeg;base64,' + value[0];
                     }
                   }
-                  console.log(task, "task", project.title);
-                  // task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
                 });
               }
               this.currentMyProject = project;
             }
           });
         });
-        // projectList[0].projects.forEach(project => {
-        //   console.log(project._id, +'=====' + id)
-        //   if (project._id == id) {
-        //     if (project.tasks && project.tasks.length > 0) {
-        //       project.tasks.forEach(task => {
-        //         if (task.imageUrl) {
-        //           console.log(task, "task", project.title);
-        //           task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
-        //         }
-        //       });
-        //     }
-        //     this.currentMyProject = project;
-        //   }
-        // });
       }
     })
     this.showSkeleton = false;

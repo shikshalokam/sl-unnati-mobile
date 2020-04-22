@@ -26,7 +26,7 @@ export class FullreportsPage implements OnInit {
   showCharts: boolean = false;
   chartOptions;
   showSkeleton: boolean = false;
-  skeleton = [{}, {}, {}, {}];
+  skeletons = [{}, {}, {}, {}];
   mySchools;
   back = "/project-view/my-reports/last-month-reports"
   constructor(public activatedRoute: ActivatedRoute,
