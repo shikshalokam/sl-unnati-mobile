@@ -42,13 +42,14 @@ export class MyReportsPage {
     public storage: Storage
   ) {
     myReportsService.reportEvent.subscribe((data: any) => {
-      console.log(data, "data in my reports")
       this.platform.ready().then(() => {
         this.isIos = this.platform.is('ios') ? true : false;
         this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
         if (data.isFullReport) {
+          this.toastService.startLoader('Loading, please wait.');
           this.getFullReport(data);
         } else {
+          this.toastService.startLoader('Loading, please wait.');
           this.getReport(data);
         }
       })
@@ -67,8 +68,8 @@ export class MyReportsPage {
   }
   public getReport(mySchools: any) {
     if (this.connected) {
+
       this.myReportsService.getReportData(mySchools).subscribe((data: any) => {
-        console.log(data, "data");
         this.toastService.stopLoader();
         if (data.status != 'failed') {
           if (mySchools.type === 'share') {
@@ -77,11 +78,14 @@ export class MyReportsPage {
             this.toastService.stopLoader();
             this.download(data);
           }
+        } else {
+          this.toastService.errorToast(data.message);
         }
       }, error => {
         this.toastService.stopLoader();
       })
     } else {
+      this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
@@ -96,11 +100,14 @@ export class MyReportsPage {
           } else {
             this.download(data);
           }
+        } else {
+          this.toastService.errorToast(data.message);
         }
       }, error => {
         this.toastService.stopLoader();
       })
     } else {
+      this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }

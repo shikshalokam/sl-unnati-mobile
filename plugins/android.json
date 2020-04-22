@@ -79,6 +79,9 @@
     },
     "cordova-plugin-app-version": {
       "PACKAGE_NAME": "org.shikshalokam.unnati.qa"
+    },
+    "cordova-plugin-market": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
     }
   },
   "dependent_plugins": {

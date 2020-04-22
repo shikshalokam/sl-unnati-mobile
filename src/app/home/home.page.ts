@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NetworkService } from '../network.service';
-import { MenuController } from '@ionic/angular';
+import { MenuController, Platform, } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
@@ -70,6 +70,7 @@ export class HomePage implements OnInit {
   constructor(
     public datepipe: DatePipe,
     public storage: Storage,
+    public platform: Platform,
     public apiProvider: ApiProvider,
     public homeService: HomeService,
     public categoryViewService: CategoryViewService,
@@ -109,31 +110,33 @@ export class HomePage implements OnInit {
     this.menuCtrl.enable(true);
   }
   ionViewDidEnter() {
-    this.searchInput = '';
-    if (localStorage.getItem("token") != null) {
-      this.menuCtrl.enable(true, 'unnati');
-      this.getActiveProjects();
-      this.setTitle('home_tab');
-      this.connected = localStorage.getItem("networkStatus");
-      //  this.splashScreen.hide();
-      this.storage.get('templates').then(templates => {
-        if (!templates) {
-          this.getTemplates();
-        }
-      })
-      this.storage.get('latestProjects').then(projects => {
-        if (!projects) {
-          this.getProjects();
-        } else {
-          this.getActiveProjects();
-        }
-      })
-      this.getSchools();
-    }
-    try {
-      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-    } catch (error) {
-    }
+    this.platform.ready().then(() => {
+      this.searchInput = '';
+      if (localStorage.getItem("token") != null) {
+        this.menuCtrl.enable(true, 'unnati');
+        this.getActiveProjects();
+        this.setTitle('home_tab');
+        this.connected = localStorage.getItem("networkStatus");
+        //  this.splashScreen.hide();
+        this.storage.get('templates').then(templates => {
+          if (!templates) {
+            this.getTemplates();
+          }
+        })
+        this.storage.get('latestProjects').then(projects => {
+          if (!projects) {
+            this.getProjects();
+          } else {
+            this.getActiveProjects();
+          }
+        })
+        this.getSchools();
+      }
+      try {
+        this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+      } catch (error) {
+      }
+    })
   }
   ngOnInit() {
     this.login.loggedIn('true');

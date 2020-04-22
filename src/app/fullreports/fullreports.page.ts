@@ -55,37 +55,22 @@ export class FullreportsPage implements OnInit {
   ngOnInit() {
   }
   public getReports(state) {
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.showSkeleton = true;
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.myReportsService.getFullReports(userTokens.access_token, state).subscribe((data: any) => {
-              data.data.forEach(report => {
-              });
-              this.reports = data.data;
-              if (this.reports.length > 0) {
+    this.showSkeleton = true;
+    this.myReportsService.getFullReports(state).subscribe((data: any) => {
+      data.data.forEach(report => {
+      });
+      this.reports = data.data;
+      if (this.reports.length > 0) {
 
-                setTimeout(() => {
-                  this.showCharts = true;
-                  this.setUpChart(this.reports[0]);
-                }, 1000);
-              } else {
-                this.showSkeleton = false;
-              }
-            }, error => {
-              this.showSkeleton = false;
-            })
-          }, error => {
-            this.showSkeleton = false;
-          })
-        }
-      })
+        setTimeout(() => {
+          this.showCharts = true;
+          this.setUpChart(this.reports[0]);
+        }, 1000);
+      } else {
+        this.showSkeleton = false;
+      }
+    }, error => {
+      this.showSkeleton = false;
     })
   }
   public setUpChart(data) {

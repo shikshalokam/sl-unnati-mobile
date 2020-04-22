@@ -33,12 +33,13 @@ export class UpdateProfilePage {
   schoolList;
   profile = [];
   stateList;
-  appUpdate = '';
+  appUpdate: any = {};
   showCloseButton: boolean = false;
-  body = 'message.thankyou_note';
-  header = 'message.thankyou';
-  button = 'button.continue';
-  isActionable = '/project-view/home';
+  // body = 'message.thankyou_note';
+  // header = 'message.thankyou';
+  button = 'Continue';
+  // isActionable = '/project-view/home';
+  showPopup: boolean = false;
   showUpdatePop: boolean = false;
   showForm: boolean = false;
   name = 'Angular';
@@ -58,7 +59,15 @@ export class UpdateProfilePage {
     public networkService: NetworkService,
     public alertController: AlertController
   ) {
-
+    this.appUpdate.title = 'Thank you';
+    this.appUpdate.text = 'Thank you for updating your details. We will verify and update it in two weeks.';
+    this.appUpdate.isActionable = '/project-view/home';
+    this.appUpdate.actions = {
+      showCloseButton: false,
+      showUpdatePopup: true,
+      showUpdatePop: true,
+    }
+    this.showPopup = true;
   }
 
   ionViewDidEnter() {
@@ -138,7 +147,6 @@ export class UpdateProfilePage {
               options: entities.result.data,
               visible: true
             }
-            console.log(entities.result.data, "entities.result.data");
             let mapped: boolean = false;
             this.profileFormData.forEach(element => {
               if (element.field == entities.result.data[0].entityType && !mapped) {
@@ -285,7 +293,6 @@ export class UpdateProfilePage {
   }
 
   async selectEntity(data) {
-    console.log(data, "data nnn");
     if (data.options) {
       const modal = await this.modalController.create({
         component: GetSubEntitiesPage,

@@ -15,10 +15,10 @@ export class MyReportsService {
     downloadEvent = new Subject();
     constructor(public api: ApiProvider, public http: HttpClient, public currentUser: CurrentUserProvider, public storage: Storage) {
     }
-    public getReports(data, state) {
+    public getReports(state) {
         return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthViseReport?reportType=' + state)
     }
-    public getFullReports(token, state) {
+    public getFullReports( state) {
         return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getDetailViewReport?reportType=' + state)
     }
     public getReportData(entity) {

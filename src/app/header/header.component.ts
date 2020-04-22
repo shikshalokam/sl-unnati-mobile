@@ -58,7 +58,6 @@ export class HeaderComponent implements OnInit {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
         if (data) {
-          console.log(data, "data");
           this.getNotificationCount();
         }
       })
@@ -117,9 +116,17 @@ export class HeaderComponent implements OnInit {
   startNotificationPooling() {
     this.timeInterval = setInterval(() => {
       if (this.connected) {
-        this.getNotificationCount();
+        this.storage.get('userTokens').then(data => {
+          if (data) {
+            this.getNotificationCount();
+          }
+        })
       }
-    }, 12000);
+    }, 36000);
     this.getNotificationCount();
+  }
+
+  stopNotificationPooling() {
+
   }
 }

@@ -35,6 +35,5 @@ export class NewsfeedPage implements OnInit {
   }
 
   public postNews() {
-    console.log(this.post, "post");
   }
 }

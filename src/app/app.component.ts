@@ -123,7 +123,7 @@ export class AppComponent {
                   url: '/project-view/tutorial-videos',
                 },
                 {
-                  title: 'Profile Update',
+                  title: 'Profile Update dddd',
                   icon: 'person',
                   url: '/project-view/update-profile',
                 },
@@ -144,7 +144,9 @@ export class AppComponent {
                 }
               ];
             } else {
-              this.getProfileData();
+              setTimeout(() => {
+                this.getProfileData();
+              }, 60000);
             }
           })
           this.subscription = this.interval.subscribe(val => {
@@ -167,11 +169,6 @@ export class AppComponent {
               title: 'Tutorial Video',
               icon: 'play',
               url: '/project-view/tutorial-videos',
-            },
-            {
-              title: 'Profile Update',
-              icon: 'person',
-              url: '/project-view/update-profile',
             },
             {
               title: 'About',
@@ -211,7 +208,7 @@ export class AppComponent {
       }
       this.translate.setDefaultLang('en');
       this.translate.use('en');
-      this.networkService.setLang('en'); 
+      this.networkService.setLang('en');
       this.platform.pause.subscribe(() => {
         localStorage.setItem('isPopUpShowen', null);
       });
@@ -614,13 +611,12 @@ export class AppComponent {
               this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(data => {
               })
               if (data.result) {
-                if (data.result.showPopupForm == false) {
+                if (data.result.showPopupForm) {
                   let isPopUpShowen: any = localStorage.getItem('isPopUpShowen');
                   if (isPopUpShowen == "null") {
                     isPopUpShowen = false;
                   }
                   if (!isPopUpShowen) {
-
                     this.appUpdate.title = 'Confirm your details!';
                     this.appUpdate.text = 'Please update your details. Help us make your experience better.';
                     this.appUpdate.isActionable = '/project-view/update-profile';
@@ -655,7 +651,7 @@ export class AppComponent {
                       url: '/project-view/tutorial-videos',
                     },
                     {
-                      title: 'Profile Update',
+                      title: 'Profile Update   eee',
                       icon: 'person',
                       url: '/project-view/update-profile',
                     },
