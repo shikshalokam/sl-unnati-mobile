@@ -39,6 +39,7 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { SharedModule } from './shared.module';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { GetSubEntitiesPage } from './get-sub-entities/get-sub-entities.page';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -92,6 +93,7 @@ export function createTranslateLoader(http: HttpClient) {
     AppVersion,
     FileOpener,
     Base64,
+    AndroidPermissions,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: HTTP_INTERCEPTORS,

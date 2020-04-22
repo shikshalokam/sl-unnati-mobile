@@ -203,7 +203,7 @@ export class AppComponent {
           this.storage.get('veryFirstTime').then(veryFirstTime => {
             console.log(veryFirstTime, "veryFirstTime")
             if (veryFirstTime) {
-              this.router.navigateByUrl('/app-permissions');
+              // this.router.navigateByUrl('/app-permissions');
             } else {
               this.router.navigateByUrl('/project-view/home');
             }
