@@ -16,6 +16,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
 import { AppConfigs } from '../app.config';
+import * as jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-home',
@@ -145,6 +146,11 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.login.loggedIn('true');
     this.checkUser();
+    this.storage.get('allowProfileUpdateForm').then(data => {
+      if (!data) {
+        this.getProfileData();
+      }
+    })
   }
   //  Check user
   public checkUser() {
@@ -283,5 +289,31 @@ export class HomePage implements OnInit {
     this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
       this.mySchools = data.data;
     }, error => { })
+  }
+
+
+  // get profile data
+  public getProfileData() {
+    // if (this.isConnected) {
+    let userDetails;
+    this.storage.get('userTokens').then(data => {
+      if (data) {
+        userDetails = jwt_decode(data.access_token);
+        this.projectService.getProfileData(userDetails.sub).subscribe((data: any) => {
+          this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(data => {
+          })
+          if (data.result) {
+            if (data.result.showPopupForm) {
+              this.homeService.showProfileUpdate('popup');
+            }
+            if (data.result.allowProfileUpdateForm) {
+              this.homeService.showProfileUpdate('inmenu');
+            }
+          }
+        })
+      } else {
+        this.getProfileData();
+      }
+    })
   }
 }

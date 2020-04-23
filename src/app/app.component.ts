@@ -83,6 +83,68 @@ export class AppComponent {
     public notificationCardService: NotificationCardService
   ) {
     this.platform.ready().then(() => {
+      this.homeService.profileUpdateEvent.subscribe(data => {
+        if (data == 'inmenu') {
+          this.appPages = [
+            {
+              title: 'Home',
+              url: '/project-view/home',
+              icon: 'home'
+            },
+            {
+              title: 'Sync',
+              icon: 'sync',
+              url: '',
+            },
+            {
+              title: 'Tutorial Video',
+              icon: 'play',
+              url: '/project-view/tutorial-videos',
+            },
+            {
+              title: 'Profile Update',
+              icon: 'person',
+              url: '/project-view/update-profile',
+            },
+            {
+              title: 'About',
+              url: '/project-view/about',
+              icon: 'information-circle'
+            },
+            {
+              title: 'Settings',
+              icon: 'md-settings',
+              children: [
+                {
+                  title: 'Languages',
+                  icon: 'globe'
+                },
+              ]
+            }
+          ];
+        } else if (data == 'popup') {
+          let isPopUpShowen: any = localStorage.getItem('isPopUpShowen');
+          if (isPopUpShowen == "null") {
+            isPopUpShowen = false;
+          }
+          if (!isPopUpShowen) {
+            this.appUpdate.title = 'Confirm your details!';
+            this.appUpdate.text = 'Please update your details. Help us make your experience better.';
+            this.appUpdate.isActionable = '/project-view/update-profile';
+            this.appUpdate.actions = {
+              showCloseButton: true,
+              showUpdatePopup: true,
+              showUpdatePop: true,
+            }
+            this.showUpdatePop = true,
+              this.showUpdatePopup = false;
+            this.showPopup = true;
+            isPopUpShowen = localStorage.getItem('isPopUpShowen');
+          } else {
+            this.showUpdatePop = false;
+          }
+        }
+      })
       this.notificationCardService.appUpdatePopUp.subscribe(data => {
         this.showUpdatePop = false;
       })
@@ -104,51 +166,6 @@ export class AppComponent {
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
-          this.storage.get('allowProfileUpdateForm').then(data => {
-            if (data) {
-              this.appPages = [
-                {
-                  title: 'Home',
-                  url: '/project-view/home',
-                  icon: 'home'
-                },
-                {
-                  title: 'Sync',
-                  icon: 'sync',
-                  url: '',
-                },
-                {
-                  title: 'Tutorial Video',
-                  icon: 'play',
-                  url: '/project-view/tutorial-videos',
-                },
-                {
-                  title: 'Profile Update dddd',
-                  icon: 'person',
-                  url: '/project-view/update-profile',
-                },
-                {
-                  title: 'About',
-                  url: '/project-view/about',
-                  icon: 'information-circle'
-                },
-                {
-                  title: 'Settings',
-                  icon: 'md-settings',
-                  children: [
-                    {
-                      title: 'Languages',
-                      icon: 'globe'
-                    },
-                  ]
-                }
-              ];
-            } else {
-              setTimeout(() => {
-                this.getProfileData();
-              }, 60000);
-            }
-          })
           this.subscription = this.interval.subscribe(val => {
             this.prepareMappedProjectToSync();
           });
@@ -234,6 +251,47 @@ export class AppComponent {
         });
       if (this.isConnected) {
         this.getOldDataToSync();
+        this.storage.get('allowProfileUpdateForm').then(data => {
+          if (data) {
+            this.appPages = [
+              {
+                title: 'Home',
+                url: '/project-view/home',
+                icon: 'home'
+              },
+              {
+                title: 'Sync',
+                icon: 'sync',
+                url: '',
+              },
+              {
+                title: 'Tutorial Video',
+                icon: 'play',
+                url: '/project-view/tutorial-videos',
+              },
+              {
+                title: 'Profile Update',
+                icon: 'person',
+                url: '/project-view/update-profile',
+              },
+              {
+                title: 'About',
+                url: '/project-view/about',
+                icon: 'information-circle'
+              },
+              {
+                title: 'Settings',
+                icon: 'md-settings',
+                children: [
+                  {
+                    title: 'Languages',
+                    icon: 'globe'
+                  },
+                ]
+              }
+            ];
+          }
+        })
       }
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
@@ -598,88 +656,5 @@ export class AppComponent {
       this.toastService.successToast('message.sync_success');
       this.homeService.syncUpdated();
     })
-  }
-
-  // get profile data
-  public getProfileData() {
-    if (this.isConnected) {
-      this.storage.get('userTokens').then(data => {
-        if (data) {
-          let userDetails;
-          this.storage.get('userTokens').then(data => {
-            userDetails = jwt_decode(data.access_token);
-            this.projectService.getProfileData(userDetails.sub).subscribe((data: any) => {
-              this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(data => {
-              })
-              if (data.result) {
-                if (data.result.showPopupForm) {
-                  let isPopUpShowen: any = localStorage.getItem('isPopUpShowen');
-                  if (isPopUpShowen == "null") {
-                    isPopUpShowen = false;
-                  }
-                  if (!isPopUpShowen) {
-                    this.appUpdate.title = 'Confirm your details!';
-                    this.appUpdate.text = 'Please update your details. Help us make your experience better.';
-                    this.appUpdate.isActionable = '/project-view/update-profile';
-                    this.appUpdate.actions = {
-                      showCloseButton: true,
-                      showUpdatePopup: true,
-                      showUpdatePop: true,
-                    }
-                    this.showUpdatePop = true,
-                      this.showUpdatePopup = false;
-                    this.showPopup = true;
-                    isPopUpShowen = localStorage.getItem('isPopUpShowen');
-                  } else {
-                    this.showUpdatePop = false;
-                  }
-                }
-                if (data.result.allowProfileUpdateForm) {
-                  this.appPages = [
-                    {
-                      title: 'Home',
-                      url: '/project-view/home',
-                      icon: 'home'
-                    },
-                    {
-                      title: 'Sync',
-                      icon: 'sync',
-                      url: '',
-                    },
-                    {
-                      title: 'Tutorial Video',
-                      icon: 'play',
-                      url: '/project-view/tutorial-videos',
-                    },
-                    {
-                      title: 'Profile Update   eee',
-                      icon: 'person',
-                      url: '/project-view/update-profile',
-                    },
-                    {
-                      title: 'About',
-                      url: '/project-view/about',
-                      icon: 'information-circle'
-                    },
-                    {
-                      title: 'Settings',
-                      icon: 'md-settings',
-                      children: [
-                        {
-                          title: 'Languages',
-                          icon: 'globe'
-                        },
-                      ]
-                    }
-                  ];
-                }
-              }
-            })
-          })
-        } else {
-          this.router.navigateByUrl('/login');
-        }
-      })
-    }
   }
 }
