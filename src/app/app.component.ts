@@ -10,7 +10,6 @@ import { Router, ActivatedRoute, UrlTree, UrlSegmentGroup, UrlSegment, PRIMARY_O
 import { CategoryViewService } from './category-view/category.view.service';
 import { AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { ProjectsService } from './projects/projects.service';
 import { MyschoolsService } from './myschools/myschools.service';
 import { ModalController } from '@ionic/angular';
 import { interval, Subscription } from 'rxjs';
@@ -35,10 +34,7 @@ export class AppComponent {
   body;
   button;
   appUpdate: any = {}
-  showPopup: boolean = false;
   showUpdatePopup: boolean = false;
-  isActionable = ''
-
   mappedProjectsToSync;
   myProjectsToSync;
   projectsToSync = [];
@@ -60,7 +56,6 @@ export class AppComponent {
   constructor(
     public storage: Storage,
     public fcm: FcmProvider,
-    public projectsService: ProjectsService,
     public alertController: AlertController,
     public router: Router,
     public menuCtrl: MenuController,
@@ -82,6 +77,10 @@ export class AppComponent {
     public categoryViewService: CategoryViewService,
     public notificationCardService: NotificationCardService
   ) {
+
+    toastService.popClose.subscribe(data => {
+      this.showUpdatePop = false;
+    })
     this.platform.ready().then(() => {
       this.notificationCardService.appUpdatePopUp.subscribe(data => {
         this.showUpdatePop = false;
@@ -93,6 +92,13 @@ export class AppComponent {
             showCloseButton: true,
             showUpdatePopup: true,
           }
+          this.appUpdate.showCloseButton = true,
+            this.appUpdate.type = "appUpdate"
+          this.appUpdate.buttons = [{
+            title: 'Update',
+            color: 'primary',
+            isActionable: 'submit'
+          }]
           this.showUpdatePopup = true;
           this.showUpdatePop = true;
         }
@@ -200,14 +206,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
         if (data != null) {
-          this.storage.get('veryFirstTime').then(veryFirstTime => {
-            console.log(veryFirstTime, "veryFirstTime")
-            if (veryFirstTime) {
-              // this.router.navigateByUrl('/app-permissions');
-            } else {
-              this.router.navigateByUrl('/project-view/home');
-            }
-          })
+          this.router.navigateByUrl('/app-permissions');
         } else {
           this.router.navigateByUrl('/login');
         }
@@ -631,16 +630,28 @@ export class AppComponent {
                     isPopUpShowen = false;
                   }
                   if (!isPopUpShowen) {
-                    this.appUpdate.title = 'Confirm your details!';
-                    this.appUpdate.text = 'Please update your details. Help us make your experience better.';
-                    this.appUpdate.isActionable = '/project-view/update-profile';
-                    this.appUpdate.actions = {
+                    this.appUpdate = {
+                      type: 'profileUpdate',
+                      title: 'Confirm your details!',
+                      text: 'Please update your details. Help us make your experience better.',
                       showCloseButton: true,
-                      showUpdatePopup: true,
-                      showUpdatePop: true,
+                      titleCss: {
+                        fontSize: '24px',
+                        color: '#000',
+                        bottomBorder: true
+                      },
+                      textCss: {
+                        fontSize: '16px',
+                        color: '#000;'
+                      },
+                      buttons: [
+                        {
+                          title: 'Update',
+                          color: 'primary',
+                          isActionable: '/project-view/update-profile',
+                        }]
                     }
-                    this.showUpdatePop = true,
-                      this.showPopup = true;
+                    this.showUpdatePop = true;
                     isPopUpShowen = localStorage.getItem('isPopUpShowen');
                   } else {
                     this.showUpdatePop = false;

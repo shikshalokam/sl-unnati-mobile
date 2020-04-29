@@ -81,10 +81,22 @@ export class CreateProjectPage implements OnInit {
   ionViewDidEnter() {
     this.isValidDate = true;
     this.projectCreatePopUp = {
-      message: "Your project has been saved, click below to view your project.",
-      button: "View Project",
-      isActionable: '/project-view/project-detail/form',
-      show: false
+      type: 'newProject',
+      title: '',
+      text: 'Your project has been saved, click below to view your project.',
+      showCloseButton: false,
+      titleCss: {
+      },
+      textCss: {
+        fontSize: '16px',
+        color: '#b23e33;'
+      },
+      buttons: [
+        {
+          title: 'View Project',
+          color: 'primary',
+          isActionable: '/project-view/project-detail/form',
+        }]
     }
   }
   ngOnInit() {

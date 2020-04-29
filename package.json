@@ -28,7 +28,7 @@
     "@ionic-native/base64": "^5.19.1",
     "@ionic-native/camera": "^5.20.0",
     "@ionic-native/chooser": "^5.23.0",
-    "@ionic-native/core": "^5.15.0",
+    "@ionic-native/core": "^5.15.0-beta.14",
     "@ionic-native/date-picker": "^5.17.0",
     "@ionic-native/device": "^4.20.0",
     "@ionic-native/fcm": "^5.22.0",
@@ -53,9 +53,8 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "com-badrit-base64": "^0.2.0",
     "com.lampa.startapp": "git+https://github.com/lampaa/com.lampa.startapp.git",
-    "cordova-android": "8.1.0",
+    "cordova-android": "^8.1.0",
     "cordova-browser": "^6.0.0",
-    "cordova-ios": "^5.1.0",
     "cordova-plugin-android-permissions": "^1.0.2",
     "cordova-plugin-app-launcher": "^0.4.0",
     "cordova-plugin-app-version": "^0.1.9",
@@ -87,6 +86,7 @@
     "rxjs": "^6.5.3",
     "rxjs-compat": "^6.5.3",
     "tslib": "^1.9.0",
+    "xcode": "^3.0.0",
     "zone.js": "~0.8.29"
   },
   "devDependencies": {
@@ -161,9 +161,6 @@
       "cordova-plugin-chooser": {},
       "cordova-plugin-android-permissions": {}
     },
-    "platforms": [
-      "android",
-      "ios"
-    ]
+    "platforms": []
   }
 }

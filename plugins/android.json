@@ -96,6 +96,12 @@
     }
   },
   "dependent_plugins": {
+    "cordova-plugin-add-swift-support": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati.dev"
+    },
+    "cordova-plugin-market": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati.dev"
+    },
     "es6-promise-plugin": {
       "PACKAGE_NAME": "org.shikshalokam.unnati.dev"
     }

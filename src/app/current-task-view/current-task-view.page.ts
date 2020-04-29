@@ -59,6 +59,9 @@ export class CurrentTaskViewPage implements OnInit {
   getTask() {
     this.storage.get('cTask').then(task => {
       this.enableMarkTaskComplete(task);
+      if (!task.attachments) {
+        task.attachments = [];
+      }
       this.task = task;
       if (this.from == 'pd') {
         this.back = "project-view/project-detail";

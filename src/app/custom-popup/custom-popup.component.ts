@@ -4,23 +4,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { Market } from '@ionic-native/market/ngx';
 import { Storage } from '@ionic/storage';
 import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
-import { AppConfigs } from '../app.config';
 import { NotificationCardService } from '../notification-card/notification.service';
-
+import { ToastService } from '../toast.service';
 @Component({
   selector: 'app-custom-popup',
   templateUrl: './custom-popup.component.html',
   styleUrls: ['./custom-popup.component.scss'],
 })
 export class CustomPopupComponent implements OnInit {
-  @Input() button;
-  @Input() isActionable;
   @Input() showPopup: boolean;
-  @Input() appUpdate;
-  @Input() showUpdatePopup;
-  @Input() showCloseButton: boolean;
-  @Input() projectCreatePopup;
+  @Input() content;
   currentAppVersionObj;
+  isBorder: boolean;
   releaseNote;
   constructor(
     public router: Router,
@@ -28,7 +23,8 @@ export class CustomPopupComponent implements OnInit {
     public market: Market,
     public storage: Storage,
     public appLauncher: AppLauncher,
-    public notificationCardService: NotificationCardService
+    public notificationCardService: NotificationCardService,
+    public toastService: ToastService
     // public appVersion: AppVersion,
   ) {
     this.storage.get('appUpdateVersions').then(obj => {
@@ -37,42 +33,43 @@ export class CustomPopupComponent implements OnInit {
       this.currentAppVersionObj = {};
     })
   }
-
   ngOnInit() {
-    if (this.appUpdate) {
-      if (this.appUpdate.payload && this.appUpdate.payload.releaseNotes) {
-        this.releaseNote = this.appUpdate.payload.releaseNotes.includes('.') ?
-          this.appUpdate.payload.releaseNotes.split('.') :
-          [this.appUpdate.payload.releaseNotes]
-      }
-      this.button = 'button.update';
-      this.translate.get([this.button]).subscribe((text: string) => {
-        this.button = text[this.button];
-      });
+    if (this.content.titleCss.bottomBorder) {
+      this.isBorder = this.content.titleCss.bottomBorder;
     }
-    this.getTranslateKeys();
   }
+
   closepopup() {
+
     this.showPopup = false;
-    this.projectCreatePopup = false; 
+    this.toastService.popUpClose();
+    // this.projectCreatePopup = false;
   }
   cancel() {
+    if (this.content.type == 'appUpdate') {
+      this.notificationCardService.popClose();
+      // this.showUpdatePopup = false;
+      this.currentAppVersionObj = this.content.payload.appVersion;
+      this.storage.set('appUpdateVersions', this.currentAppVersionObj);
+      this.storage.set('isRejected', true).then(data => {
+      })
+    }
     this.closepopup();
     localStorage.setItem('isPopUpShowen', 'true');
   }
-  public navigateTo() {
+  public navigateTo(url) {
     this.closepopup();
-    if (this.appUpdate.isActionable) {
-      this.router.navigate([this.appUpdate.isActionable]);
+    if (this.content.type != 'appUpdate') {
+      console.log(url, "url");
+      if (url) {
+        this.router.navigate([url]);
+      }
+      this.showPopup = false;
+    } else {
+      this.openApp();
     }
-    this.showPopup = false;
-  }
-  public getTranslateKeys() {
-    if (this.projectCreatePopup) {
-      this.translate.get([this.appUpdate.message, this.appUpdate.button]).subscribe((text: string) => {
-        this.appUpdate.message = text[this.appUpdate.message];
-        this.appUpdate.button = text[this.appUpdate.button];
-      });
+    if (this.content.type == 'permissions') {
+      this.toastService.getPermissions();
     }
   }
 
@@ -83,7 +80,7 @@ export class CustomPopupComponent implements OnInit {
     }
     this.appLauncher.canLaunch(options).then((canLaunch: boolean) => {
       if (canLaunch) {
-        this.currentAppVersionObj = this.appUpdate.payload.appVersion;
+        this.currentAppVersionObj = this.content.payload.appVersion;
         this.storage.set('appUpdateVersions', this.currentAppVersionObj);
         this.storage.set('isRejected', false).then(data => {
 
@@ -106,11 +103,6 @@ export class CustomPopupComponent implements OnInit {
     })
   }
   close() {
-    this.notificationCardService.popClose();
-    this.showUpdatePopup = false;
-    this.currentAppVersionObj = this.appUpdate.payload.appVersion;
-    this.storage.set('appUpdateVersions', this.currentAppVersionObj);
-    this.storage.set('isRejected', true).then(data => {
-    })
+
   }
 }

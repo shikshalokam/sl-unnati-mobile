@@ -56,7 +56,7 @@ export function createTranslateLoader(http: HttpClient) {
   imports: [
     BrowserModule,
     HttpModule,
-    HttpClientModule,
+    HttpClientModule, 
     FormsModule,
     ReactiveFormsModule,
     IonicModule.forRoot(),
