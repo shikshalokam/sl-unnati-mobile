@@ -9,7 +9,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
-  {
+  {  
     path: '',
     component: ProjectViewPage,
     children: [
@@ -17,18 +17,14 @@ const routes: Routes = [
       { path: 'my-schools', loadChildren: '../myschools/myschools.module#MyschoolsPageModule' },
       { path: 'fullreports/:state', loadChildren: '../fullreports/fullreports.module#FullreportsPageModule' },
       { path: 'about', loadChildren: '../about/about.module#AboutPageModule' },
-      // { path: 'detail', loadChildren: '../detail/detail.module#DetailPageModule' },
-      // { path: 'detail/:id/:from', loadChildren: '../detail/detail.module#DetailPageModule' },
+      // { path: 'last-month-reports', loadChildren: '../last-month-reports/last-month-reports.module#LastMonthReportsPageModule' },
+      // { path: 'last-quarter-reports', loadChildren: '../last-quarter-reports/last-quarter-reports.module#LastQuarterReportsPageModule' },
       { path: 'school-project-detail/:id', loadChildren: '../school-project-detail/school-project-detail.module#SchoolProjectDetailPageModule' },
       { path: 'projects', loadChildren: '../projects/projects.module#ProjectsPageModule' },
       { path: 'projects/:type', loadChildren: '../projects/projects.module#ProjectsPageModule' },
       { path: 'reports', loadChildren: '../reports/reports.module#ReportsPageModule' },
       { path: 'my-schools', loadChildren: '../myschools/myschools.module#MyschoolsPageModule' },
       { path: 'school-task-report/:id/:name', loadChildren: '../school-task-report/school-task-report.module#SchoolTaskReportPageModule' },
-      // { path: 'task-view', loadChildren: '../task-view/task-view.module#TaskViewPageModule' },
-      // { path: 'task-view/:projectId/:taskId/:from', loadChildren: '../task-view/task-view.module#TaskViewPageModule' },
-      // { path: 'subtasks', loadChildren: '../subtasks/subtasks.module#SubtasksPageModule' },
-      // { path: 'subtasks', loadChildren: '../subtasks/subtasks.module#SubtasksPageModule' },
       { path: 'subtask-status', loadChildren: '../subtask-status/subtask-status.module#SubtaskStatusPageModule' },
       { path: 'courses', loadChildren: '../courses/courses.module#CoursesPageModule' },
       { path: 'courses/:cat', loadChildren: '../courses/courses.module#CoursesPageModule' },

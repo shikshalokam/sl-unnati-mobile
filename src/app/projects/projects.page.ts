@@ -12,6 +12,8 @@ import { Network } from '@ionic-native/network/ngx';
 import { ProjectService } from '../project-view/project.service';
 import { HomeService } from '../home/home.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { AppConfigs } from '../app.config';
+
 //import { trigger, state, style, animate, transition } from '@angular/animations';
 @Component({
   selector: 'app-projects',
@@ -27,7 +29,9 @@ export class ProjectsPage {
   showSkeleton: boolean = false;
   showNoDataCard = '';
   myProjects;
-  searchProjects;
+  environment;
+  programId;
+  searchInput;
   showHardcodedMyprojects: boolean = true;
   //public projects:any =[];
   constructor(public currentUser: CurrentUserProvider,
@@ -57,7 +61,13 @@ export class ProjectsPage {
   }
 
   ionViewDidEnter() {
-    this.searchProjects = '';
+    this.environment = AppConfigs.currentEnvironment;
+    AppConfigs.environments.forEach(env => {
+      if (this.environment === env.name) {
+        this.programId = env.programId;
+      }
+    });
+    this.searchInput = '';
     this.connected = localStorage.getItem("networkStatus");
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
@@ -68,28 +78,19 @@ export class ProjectsPage {
 
   public getActiveProjects() {
     this.showSkeleton = true;
+ 
     this.storage.get('latestProjects').then(projects => {
       if (projects) {
-        // projects[0].projects.sort((a, b) => {
-        //   return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
-        // });
-        console.log(this.projectList, "this.projectList");
-        if (projects) {
-          projects.forEach(programsList => {
-            if (programsList.programs) {
-              if (programsList.programs._id == "5e01da0c0c72d5597433ec7a") {
-                this.showHardcodedMyprojects = false;
-                console.log(this.showHardcodedMyprojects, "this.showHardcodedMyprojects");
-              }
-              console.log(programsList.projects, "programsList.projects before");
-              programsList.projects.sort((a, b) => {
-                return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
-              });
-              console.log(programsList.projects, "programsList.projects after");
+        projects.forEach(programsList => {
+          if (programsList.programs) {
+            if (programsList.programs._id == this.programId) {
+              this.showHardcodedMyprojects = false;
             }
-          });
-        }
-
+            programsList.projects.sort((a, b) => {
+              return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+            });
+          }
+        });
         this.projectList = projects;
         this.showSkeleton = false;
       } else {
