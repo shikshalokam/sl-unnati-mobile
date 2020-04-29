@@ -24,11 +24,8 @@ export class CategoryViewService {
     })
   }
   //  get projects by category
-  public getTemplatesByCategory(data) {
-    let httpHeaders = new HttpHeaders({
-      'x-auth-token': data
-    })
-    return this.http.get(AppConfigs.api_url + '/unnati/api/v1/template/all', { headers: httpHeaders })
+  public getTemplatesByCategory() {
+    return this.http.get(AppConfigs.api_url + '/unnati/api/v1/template/all')
   }
 
   //  delete project event
@@ -37,11 +34,7 @@ export class CategoryViewService {
   }
 
   // get pdf of project
-  public getPDF(data,token)
-  {
-    let httpHeaders = new HttpHeaders({
-      'x-auth-token': token
-    })
-    return this.http.post(AppConfigs.api_url + '/unnati/api/v1/getProjectPdf',data, { headers: httpHeaders })
+  public getPDF(data) {
+    return this.http.post(AppConfigs.api_url + '/unnati/api/v1/getProjectPdf', data)
   }
 }

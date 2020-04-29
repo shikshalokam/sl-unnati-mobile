@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage'
+import { Storage } from '@ionic/storage';
+import { AppConfigs } from '../app.config';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -15,7 +17,6 @@ export class CreateProjectService {
                     cmp.isEdited = true;
                 }
             });
-            console.log(cmp, "cmp");
             this.storage.set('newcreatedproject', cmp).then(updatedProject => {
                 this.storage.set('projectToBeView', cmp).then(updatedProject => {
                     this.updateByProjects(updatedProject);
@@ -33,7 +34,6 @@ export class CreateProjectService {
                         if (project._id == updatedProject._id) {
                             updatedProject.isEdited = true;
                             projectsPrograms.projects[i] = updatedProject;
-                            console.log('mapped', projectsPrograms.projects[i]);
                             mapped = true;
                         }
                     });
@@ -51,7 +51,6 @@ export class CreateProjectService {
                     }]
                     pro1[0].projects.push(updatedProject);
                     projectList = pro1;
-                    console.log(projectList, 'in last else');
                 }
             }
             this.storage.set('newcreatedproject', updatedProject).then(sucess => {
@@ -65,26 +64,27 @@ export class CreateProjectService {
     // add new project into my projects.
     public insertIntoMyProjects(project) {
         let mapped: boolean = false;
+        let environment = AppConfigs.currentEnvironment;
+        let programId = '';
+        AppConfigs.environments.forEach(env => {
+          if (environment === env.name) {
+            programId = env.programId;
+          }
+        });
         return this.storage.get('latestProjects').then(projectList => {
-            console.log(projectList, "projectList projectList");
             if (projectList) {
                 projectList.forEach(projectsPrograms => {
-                    console.log(projectsPrograms, "projectsPrograms");
                     if (projectsPrograms.programs) {
-                        console.log(projectsPrograms.programs._id, " projectsPrograms.programs._id")
-                        if (projectsPrograms.programs._id == "5e01da0c0c72d5597433ec7a") {
+                        if (projectsPrograms.programs._id == programId) {
                             projectsPrograms.projects.push(project);
                             mapped = true;
                         }
                     }
                 })
                 if (!mapped) {
-                    console.log('in mapped false', mapped, "projectsPrograms.projects ===", projectList.projects);
                     if (projectList.projects) {
-                        console.log('pushing into projectsPrograms', projectList);
                         projectList.projects.push(project)
                     } else {
-                        console.log('in else')
                         let pro1 = [{
                             projects: [
                             ]
@@ -94,9 +94,7 @@ export class CreateProjectService {
                     }
                 }
             } else {
-                console.log('in outer else');
                 if (projectList.projects) {
-                    console.log(projectList, "projectList projectList");
                     project._id = projectList.projects.length + 1;
                     projectList.projects.push(project)
                 } else {
@@ -109,7 +107,6 @@ export class CreateProjectService {
                     projectList = pro1;
                 }
             }
-            console.log('syncing in insert project into', projectList);
             this.storage.set('latestProjects', projectList).then(projects => {
             })
         });

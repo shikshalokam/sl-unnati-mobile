@@ -9,16 +9,15 @@ import { ApiProvider } from '../api/api';
     providedIn: 'root',
 })
 export class ProjectsService {
-    constructor(public api: ApiProvider, public http: HttpClient, public currentUser: CurrentUserProvider, public storage: Storage) {
+    constructor(public api: ApiProvider, 
+        public http: HttpClient, 
+        public currentUser: CurrentUserProvider, 
+        public storage: Storage) {
     }
     public getProjects() {
         return this.storage.get('projectsList');
     }
-    public getAssignedProjects(data, type?) {
-        let httpHeaders = new HttpHeaders({
-            //'x-auth-token': this.currentUser.curretUser.accessToken
-            'x-auth-token': data
-        })
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/all?type=' + type, { headers: httpHeaders })
+    public getAssignedProjects(type?) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/all?type=' + type)
     }
 }

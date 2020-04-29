@@ -25,19 +25,19 @@ export class SchoolTaskReportPage implements OnInit {
   public school;
   public back = 'project-view/my-schools';
   public skeletons = [{}, {}, {}, {}, {}, {}];
-  constructor(public platform: Platform, 
-    public homeservice: HomeService, 
-    public screenOrientation: ScreenOrientation, 
-    public projectService: ProjectService, 
-    public toastController: ToastController, 
+  constructor(public platform: Platform,
+    public homeservice: HomeService,
+    public screenOrientation: ScreenOrientation,
+    public projectService: ProjectService,
+    public toastController: ToastController,
     public appLauncher: AppLauncher,
     public router: Router,
-    public market: Market, 
-    public networkService: NetworkService, 
-    public route: ActivatedRoute, 
-    public currentUser: CurrentUserProvider, 
+    public market: Market,
+    public networkService: NetworkService,
+    public route: ActivatedRoute,
+    public currentUser: CurrentUserProvider,
     public api: ApiProvider,
-    public storage: Storage, 
+    public storage: Storage,
     public schoolTaskService: SchoolTaskService) {
     this.route.params.subscribe(params => {
       this.school = params;
@@ -74,32 +74,19 @@ export class SchoolTaskReportPage implements OnInit {
   }
   // School task reports
   public getSchoolTaskReport() {
-    this.connected = localStorage.getItem("networkStatus");
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(data => {
-            this.showSkeleton = true;
-            this.schoolTaskService.getSchoolTaskReport(parsedData.access_token, this.school.id).subscribe((data: any) => {
-              this.showfailedCard = false;
-              this.showSkeleton = false;
-              if (data.status != 'failed') {
-                this.schoolTaskReport = data.data;
-              } else {
-                this.showfailedCard = true;
-                this.showSkeleton = false;
-                this.errorToast(data.message);
-              }
-            }, error => { })
-          })
-        }
-      }, error => {
-      })
+    this.showSkeleton = true;
+    this.schoolTaskService.getSchoolTaskReport(this.school.id).subscribe((data: any) => {
+      this.showfailedCard = false;
+      this.showSkeleton = false;
+      if (data.status != 'failed') {
+        this.schoolTaskReport = data.data;
+      } else {
+        this.showfailedCard = true;
+        this.showSkeleton = false;
+        this.errorToast(data.message);
+      }
+    }, error => { 
+      this.showSkeleton = false;
     })
   }
 
@@ -182,99 +169,60 @@ export class SchoolTaskReportPage implements OnInit {
 
   // Get projects 
   public getProjectsFromService(id, path) {
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            let value = {
-              projectId: id
+    let value = {
+      projectId: id
+    }
+    this.projectService.projectDetails(value).subscribe((resp: any) => {
+      if (resp.status != 'failed') {
+        resp.data.projects.forEach(cp => {
+          this.storage.set('projectToBeView', cp).then(project => {
+            if (path == 'details') {
+              this.router.navigate(['/project-view/project-detail', 'schools'])
+            } else {
+              this.router.navigate(['/project-view/status', id]);
             }
-            this.projectService.projectDetails(parsedData.access_token, value).subscribe((resp: any) => {
-              if (resp.status != 'failed') {
-                resp.data.projects.forEach(cp => {
-                  // this.storage.set('currentProject', cp).then(cpp => {
-                  //   localStorage.setItem('from', 'school');
-                  //   if (path == 'details') {
-                  //     this.router.navigate(['/project-view/detail', id,'school']);
-                  //   } else {
-                  //     this.router.navigate(['/project-view/status', id]);
-                  //   }
-                  // })
-                  this.storage.set('projectToBeView', cp).then(project => {
+          })
+        });
+        this.storage.get('latestProjects').then((projects: any) => {
+          if (projects) {
+            if (typeof projects == 'string') {
+              projects = JSON.parse(projects);
+            }
+            projects.data.forEach(prjs => {
+              prjs.projects.forEach(project => {
+                if (project._id === id) {
+                  prjs.projects.push(project);
+                  this.storage.set('latestProjects', projects).then(projects => {
+                  })
+                  this.storage.set('projectToBeView', project).then(project => {
                     if (path == 'details') {
                       this.router.navigate(['/project-view/project-detail', 'schools'])
                     } else {
                       this.router.navigate(['/project-view/status', id]);
                     }
                   })
-                });
-                this.storage.get('latestProjects').then((projects: any) => {
-                  if (projects) {
-                    if (typeof projects == 'string') {
-                      projects = JSON.parse(projects);
-                    }
-                    // resp.data.projects.forEach(prj => {
-                    projects.data.forEach(prjs => {
-                      prjs.projects.forEach(project => {
-                        if (project._id === id) {
-                          prjs.projects.push(project);
-                          this.storage.set('latestProjects', projects).then(projects => {
-                          })
-                          // this.storage.set('currentProject', project).then(cproject => {
-                          //   if (path == 'details') {
-                          //     this.router.navigate(['/project-view/detail', id,'details']);
-                          //   } else {
-                          //     this.router.navigate(['/project-view/status', id]);
-                          //   }
-                          // })
-                          this.storage.set('projectToBeView', project).then(project => {
-                            if (path == 'details') {
-                              this.router.navigate(['/project-view/project-detail', 'schools'])
-                            } else {
-                              this.router.navigate(['/project-view/status', id]);
-                            }
-                          })
-                        }
-                      });
-                    });
-                    // })
+                }
+              });
+            });
+          } else {
+            this.storage.set('latestProjects', resp).then(projects => {
+              resp.data.projects.forEach(prj => {
+                this.storage.set('projectToBeView', prj).then(project => {
+                  if (path == 'details') {
+                    this.router.navigate(['/project-view/project-detail', 'schools'])
                   } else {
-                    this.storage.set('latestProjects', resp).then(projects => {
-                      resp.data.projects.forEach(prj => {
-                        // this.storage.set('currentProject', prj).then(cpsetup => {
-                        //   if (path == 'details') {
-                        //     this.router.navigate(['/project-view/detail', id,'school']);
-                        //   } else {
-                        //     this.router.navigate(['/project-view/status', id]);
-                        //   }
-                        // })
-                        this.storage.set('projectToBeView', prj).then(project => {
-                          if (path == 'details') {
-                            this.router.navigate(['/project-view/project-detail', 'schools'])
-                          } else {
-                            this.router.navigate(['/project-view/status', id]);
-                          }
-                        })
-                      })
-                    })
+                    this.router.navigate(['/project-view/status', id]);
                   }
                 })
-              } else {
-
-              }
-            }, error => {
-              // this.showSkeleton = false;
+              })
             })
-          })
-        }
-      }, error => {
-        // this.showSkeleton = false;
-      })
+          }
+        })
+      } else {
+
+      }
+    }, error => {
+      // this.showSkeleton = false;
     })
   }
   //Launch learner App

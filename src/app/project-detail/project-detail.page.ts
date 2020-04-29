@@ -120,9 +120,7 @@ export class ProjectDetailPage {
       this.project.status = 'In Progress';
     }
     this.project.startDate = new Date();
-    console.log(this.category, "this.category")
     if (this.category != 'my_projects' && this.category != 'projectsList') {
-      console.log('reference', this.category);
       this.project.createdType = "by reference";
       this.project.lastUpdate = new Date();
       this.project.isNew = true;
@@ -149,12 +147,9 @@ export class ProjectDetailPage {
           }
         })
       }
-      console.log('in by reference', this.project);
       this.storage.set('projectToBeView', this.project).then(project => {
         this.project = project;
-        console.log('mapping projects', this.project)
         this.storage.get('latestProjects').then(p => {
-          console.log(p, "ppppp");
         })
         this.createProjectService.insertIntoMyProjects(this.project).then(data => {
           this.project.isStarted = true;
@@ -163,7 +158,6 @@ export class ProjectDetailPage {
       })
     } else {
       this.project.lastUpdate = new Date();
-      console.log('calling updateByProjects 163', this.category);
       this.createProjectService.updateByProjects(this.project);
       this.storage.set('projectToBeView', this.project).then(project => {
         this.project = project;
@@ -204,7 +198,6 @@ export class ProjectDetailPage {
             this.checkDate();
           }
         }
-        console.log('calling updateByProjects 205');
         this.createProjectService.updateByProjects(this.project);
       },
       err => console.log('Error occurred while getting date: ', err)
@@ -297,28 +290,23 @@ export class ProjectDetailPage {
   }
   // update the task
   public updateTask() {
-    console.log(this.project, "this.project");
     let cp = this.project
     cp.isEdited = true;
     cp.lastUpdate = new Date();
-    console.log('calling updateByProjects 300');
     //  this.createProjectService.updateByProjects(this.project);
     let mapped: boolean = false;
     return this.storage.get('latestProjects').then(projectList => {
       projectList.forEach(projectsPrograms => {
         if (projectsPrograms) {
           projectsPrograms.projects.forEach(function (project, i) {
-            console.log(cp, "cp");
             if (project._id == cp._id) {
               cp.isEdited = true;
               projectsPrograms.projects[i] = cp;
-              console.log('mapped', projectsPrograms.projects[i]);
               mapped = true;
             }
           });
         }
         if (!mapped) {
-          console.log('in mapped');
           if (projectList[0].projects) {
             projectList[0].projects.forEach(function (project, i) {
               if (project._id == cp._id) {
@@ -333,11 +321,9 @@ export class ProjectDetailPage {
             }]
             pro1[0].projects.push(this.project);
             projectList = pro1;
-            console.log(projectList, 'in last else');
           }
         }
       })
-      console.log('going to sync', projectList);
       this.storage.set('latestProjects', projectList).then(projects => {
         this.storage.set('newcreatedproject', this.project).then(sucess => {
           this.storage.set('projectToBeView', this.project).then(updatedProject => {
@@ -377,7 +363,6 @@ export class ProjectDetailPage {
   public updateCurrentProject(ct) {
     this.project.lastUpdate = new Date();
     this.project.isEdited = true;
-    console.log('calling updateByProjects 330');
     this.createProjectService.updateByProjects(this.project);
   }
   public sortTasks() {

@@ -5,6 +5,8 @@ import { URLSearchParams, Http } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { CurrentUserProvider } from './current-user'
 import { Subject } from 'rxjs';
+import{Storage} from '@ionic/storage';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -19,7 +21,9 @@ export class Login {
   base_url: string;
 
   logout_redirect_url: string;
-  constructor(public http: Http, public currentUser: CurrentUserProvider) { }
+  constructor(public http: Http, 
+    public currentUser: CurrentUserProvider,
+    public storage:Storage) { }
   doLogin() {
     // var ref = (<any>window).cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
     this.base_url = AppConfigs.app_url;
@@ -44,7 +48,6 @@ export class Login {
           }
         }
       });
-
     });
   }
 
@@ -77,8 +80,6 @@ export class Login {
     // alert(tokens + "data in checkForCurrentUserLocalData");
     const loggedinUserId = this.currentUser.getDecodedAccessToken(tokens.access_token).sub;
     const currentUserId = this.currentUser.getCurrentUserData() ? this.currentUser.getCurrentUserData().sub : null;
-    // alert(loggedinUserId + "loggedinUserId")
-    // alert(currentUserId + "currentUserId")
     if (loggedinUserId === currentUserId || !currentUserId) {
       // alert("In IF");
       let userTokens = {
@@ -88,10 +89,6 @@ export class Login {
         isDeactivated: false
       };
       this.currentUser.setCurrentUserDetails(userTokens);
-      //let nav = this.app.getActiveNav();
-      //nav.setRoot(TabsPage);
-      // this.confirmPreviousUserName('as1@shikshalokamdev', tokens);
-
     } else {
       // this.confirmPreviousUserName(this.currentUser.getCurrentUserData().preferred_username, tokens);
     }
@@ -110,9 +107,9 @@ export class Login {
           resolve()
         }
       });
-
     });
   }
+
   doOAuthStepTwo(token: string): Promise<any> {
     return new Promise(resolve => {
       const body = new URLSearchParams();
