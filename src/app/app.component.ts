@@ -83,74 +83,8 @@ export class AppComponent {
     public notificationCardService: NotificationCardService
   ) {
     this.platform.ready().then(() => {
-      this.notificationCardService.appUpdatePopUp.subscribe(data => {
-        this.showUpdatePop = false;
-      })
-      this.notificationCardService.appUpdate.subscribe(payload => {
-        if (payload) {
-          this.appUpdate = payload;
-          this.appUpdate.actions = {
-            showCloseButton: true,
-            showUpdatePopup: true,
-          }
-          this.showUpdatePopup = true;
-          this.showUpdatePop = true;
-        }
-      })
-      this.homeService.tobeSync.subscribe(value => {
-        this.prepareMappedProjectToSync();
-      })
-      this.loginService.emit.subscribe(value => {
-        this.loggedInUser = value;
-        if (this.loggedInUser) {
-          this.storage.get('allowProfileUpdateForm').then(data => {
-            if (data) {
-              this.appPages = [
-                {
-                  title: 'Home',
-                  url: '/project-view/home',
-                  icon: 'home'
-                },
-                {
-                  title: 'Sync',
-                  icon: 'sync',
-                  url: '',
-                },
-                {
-                  title: 'Tutorial Video',
-                  icon: 'play',
-                  url: '/project-view/tutorial-videos',
-                },
-                {
-                  title: 'Profile Update',
-                  icon: 'person',
-                  url: '/project-view/update-profile',
-                },
-                {
-                  title: 'About',
-                  url: '/project-view/about',
-                  icon: 'information-circle'
-                },
-                {
-                  title: 'Settings',
-                  icon: 'md-settings',
-                  children: [
-                    {
-                      title: 'Languages',
-                      icon: 'globe'
-                    },
-                  ]
-                }
-              ];
-            } else {
-              this.getProfileData();
-            }
-          })
-          this.subscription = this.interval.subscribe(val => {
-            this.prepareMappedProjectToSync();
-          });
-          this.menuCtrl.enable(true, 'unnati');
-          this.loggedInUser = value;
+      this.homeService.profileUpdateEvent.subscribe(data => {
+        if (data == 'inmenu') {
           this.appPages = [
             {
               title: 'Home',
@@ -171,6 +105,86 @@ export class AppComponent {
               title: 'Profile Update',
               icon: 'person',
               url: '/project-view/update-profile',
+            },
+            {
+              title: 'About',
+              url: '/project-view/about',
+              icon: 'information-circle'
+            },
+            {
+              title: 'Settings',
+              icon: 'md-settings',
+              children: [
+                {
+                  title: 'Languages',
+                  icon: 'globe'
+                },
+              ]
+            }
+          ];
+        } else if (data == 'popup') {
+          let isPopUpShowen: any = localStorage.getItem('isPopUpShowen');
+          if (isPopUpShowen == "null") {
+            isPopUpShowen = false;
+          }
+          if (!isPopUpShowen) {
+            this.appUpdate.title = 'Confirm your details!';
+            this.appUpdate.text = 'Please update your details. Help us make your experience better.';
+            this.appUpdate.isActionable = '/project-view/update-profile';
+            this.appUpdate.actions = {
+              showCloseButton: true,
+              showUpdatePopup: true,
+              showUpdatePop: true,
+            }
+            this.showUpdatePop = true,
+              this.showUpdatePopup = false;
+            this.showPopup = true;
+            isPopUpShowen = localStorage.getItem('isPopUpShowen');
+          } else {
+            this.showUpdatePop = false;
+          }
+        }
+      })
+      this.notificationCardService.appUpdatePopUp.subscribe(data => {
+        this.showUpdatePop = false;
+      })
+      this.notificationCardService.appUpdate.subscribe(payload => {
+        if (payload) {
+          this.appUpdate = payload;
+          this.appUpdate.actions = {
+            showCloseButton: true,
+            showUpdatePopup: true,
+          }
+          this.showUpdatePopup = true;
+          this.showUpdatePop = true;
+        }
+      })
+      this.homeService.tobeSync.subscribe(value => {
+        this.prepareMappedProjectToSync();
+      })
+      this.loginService.emit.subscribe(value => {
+        this.loggedInUser = value;
+        if (this.loggedInUser) {
+          this.subscription = this.interval.subscribe(val => {
+            this.prepareMappedProjectToSync();
+          });
+          this.menuCtrl.enable(true, 'unnati');
+          this.loggedInUser = value;
+          this.appPages = [
+            {
+              title: 'Home',
+              url: '/project-view/home',
+              icon: 'home'
+            },
+            {
+              title: 'Sync',
+              icon: 'sync',
+              url: '',
+            },
+            {
+              title: 'Tutorial Video',
+              icon: 'play',
+              url: '/project-view/tutorial-videos',
             },
             {
               title: 'About',
@@ -236,6 +250,47 @@ export class AppComponent {
         });
       if (this.isConnected) {
         this.getOldDataToSync();
+        this.storage.get('allowProfileUpdateForm').then(data => {
+          if (data) {
+            this.appPages = [
+              {
+                title: 'Home',
+                url: '/project-view/home',
+                icon: 'home'
+              },
+              {
+                title: 'Sync',
+                icon: 'sync',
+                url: '',
+              },
+              {
+                title: 'Tutorial Video',
+                icon: 'play',
+                url: '/project-view/tutorial-videos',
+              },
+              {
+                title: 'Profile Update',
+                icon: 'person',
+                url: '/project-view/update-profile',
+              },
+              {
+                title: 'About',
+                url: '/project-view/about',
+                icon: 'information-circle'
+              },
+              {
+                title: 'Settings',
+                icon: 'md-settings',
+                children: [
+                  {
+                    title: 'Languages',
+                    icon: 'globe'
+                  },
+                ]
+              }
+            ];
+          }
+        })
       }
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
@@ -593,6 +648,7 @@ export class AppComponent {
         sproject.isNew = false;
         sproject.isSync = true;
         sproject.isEdited = false;
+        sproject.lastUpdate = sproject.lastSync;
         if (sproject.tasks && sproject.tasks.length > 0) {
           sproject.tasks.forEach(task => {
             task.isSync = true;

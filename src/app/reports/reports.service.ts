@@ -11,24 +11,17 @@ import { ApiProvider } from '../api/api';
 export class ReportsService {
     constructor(public api: ApiProvider, public http: HttpClient, public currentUser: CurrentUserProvider, public storage: Storage) {
     }
-    public getReports(data, limit, page) {
-        let httpHeaders = new HttpHeaders({
-            'x-auth-token': data
-        })
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/reportsList?limit=100&page=0&search=' + limit + '&page=' + page, { headers: httpHeaders })
+    public getReports(limit, page) {
+      
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/reportsList?limit=100&page=0&search=' + limit + '&page=' + page)
     }
 
-    public getReportFile(data, id) {
-        let httpHeaders = new HttpHeaders({
-            'x-auth-token': data
-        })
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getObservationReport?observationId=' + id, { headers: httpHeaders })
+    public getReportFile(id) {
+       
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getObservationReport?observationId=' + id)
     }
     //  search reports
-    public searchReports(data, keyword) {
-        let httpHeaders = new HttpHeaders({
-            'x-auth-token': data
-        })
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/reportsList?limit=100&page=0&search=' + keyword, { headers: httpHeaders })
+    public searchReports(keyword) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/reportsList?limit=100&page=0&search=' + keyword)
     }
 }

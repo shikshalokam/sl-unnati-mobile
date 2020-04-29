@@ -85,7 +85,7 @@ export class SchoolProjectDetailPage implements OnInit {
           text: '✓',
           cssClass: 'secondary',
           handler: () => {
-            this.syncProject();
+            // this.syncProject();
           }
         }
       ],
@@ -123,47 +123,5 @@ export class SchoolProjectDetailPage implements OnInit {
         });
       }
     });
-  }
-
-  // Sync project
-  public syncProject() {
-    this.storage.get('userTokens').then(data => {
-      this.showSkeleton = true;
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-            expires_in:parsedData.expires_in
-          };
-          this.storage.set('userTokens', userTokens).then(data => {
-            this.showSkeleton = true;
-            if (this.project.status = 'completed') {
-              this.project.status = 'not yet started';
-            }
-            this.projectService.sync(this.project).subscribe((data: any) => {
-              this.showSkeleton = false;
-              if (data.status == "failed") {
-                this.errorToast(data.message);
-              } else if (data.status == "succes") {
-                this.successToast(data.message);
-                this.storage.set('latestProjects', data).then(resp1 => {
-                }, error => { }
-                )
-              }
-            }, error => {
-              this.showSkeleton = false;
-              this.errorToast(error.message);
-            })
-          })
-        }
-      }, error => {
-        this.showSkeleton = false;
-        if (error.status === 0) {
-          this.router.navigateByUrl('/login');
-        }
-      })
-    })
   }
 }

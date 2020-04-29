@@ -46,141 +46,80 @@ export class ReportsPage implements OnInit {
   loadData(event) {
     event.target.complete();
     //getReports(data,limit,page)
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-            expires_in:parsedData.expires_in
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.page = this.page + 1;
-            this.reportsService.getReports(userTokens.access_token, 2, this.page).subscribe((data: any) => {
-              event.target.disabled = true;
-              // this.reports.push(data.data);
-              this.reports = data.data;
-              this.showSkeleton = false;
-            }, error => {
-            })
-          }, error => {
-          })
-        }
-      })
+    this.showSkeleton = true;
+    this.page = this.page + 1;
+    this.reportsService.getReports(10, this.page).subscribe((data: any) => {
+      event.target.disabled = true;
+      // this.reports.push(data.data);
+      this.reports = data.data;
+      this.showSkeleton = false;
+    }, error => {
+      this.showSkeleton = false;
     })
   }
   // Get reports
   public getReports() {
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-            expires_in:parsedData.expires_in
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.showSkeleton = true;
-            this.page = this.page + 1;
-            this.reportsService.getReports(userTokens.access_token, 2, this.page).subscribe((data: any) => {
-              if (data.data) {
-
-                this.reports = data.data;
-              }
-              this.showSkeleton = false;
-            }, error => {
-              this.showSkeleton = false;
-            })
-          }, error => {
-            this.showSkeleton = false;
-          })
-        }
-      })
+    this.showSkeleton = true;
+    this.page = this.page + 1;
+    this.reportsService.getReports(10, this.page).subscribe((data: any) => {
+      if (data.data) {
+        this.reports = data.data;
+      }
+      this.showSkeleton = false;
+    }, error => {
+      this.showSkeleton = false;
     })
   }
 
   // get report file
   public getReportFile(id, title) {
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-            expires_in:parsedData.expires_in
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.showSkeleton = true;
-            this.reportsService.getReportFile(userTokens.access_token, id).subscribe((data: any) => {
-              //  window.open(data.pdfUrl)
-              let report = {
-                title: title,
-                id: id
-              }
-              this.storage.get('myReports').then(rprts => {
-                if (rprts) {
-                  if (rprts.find((pro) => pro.id === report.id) === undefined) {
-                    rprts.push(report);
-                    this.storage.set('myReports', rprts).then((uprep: any) => {
-                      this.homeService.loadMyProjects();
-                    });
-                  }
-                } else {
-                  let data1: any = [];
-                  data1.push(report);
-                  this.storage.set('myReports', data1).then((data: any) => {
-                    this.homeService.loadMyProjects();
-                  });
-                }
-              })
-
-              var link = document.createElement('a');
-              link.href = data.pdfUrl;
-              link.download = "report.pdf";
-              link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-              this.showSkeleton = false;
-            }, error => {
-              this.showSkeleton = false;
-            })
-          }, error => {
-          })
+    this.showSkeleton = true;
+    this.reportsService.getReportFile(id).subscribe((data: any) => {
+      //  window.open(data.pdfUrl)
+      let report = {
+        title: title,
+        id: id
+      }
+      this.storage.get('myReports').then(rprts => {
+        if (rprts) {
+          if (rprts.find((pro) => pro.id === report.id) === undefined) {
+            rprts.push(report);
+            this.storage.set('myReports', rprts).then((uprep: any) => {
+              this.homeService.loadMyProjects();
+            });
+          }
+        } else {
+          let data1: any = [];
+          data1.push(report);
+          this.storage.set('myReports', data1).then((data: any) => {
+            this.homeService.loadMyProjects();
+          });
         }
       })
-    });
+
+      var link = document.createElement('a');
+      link.href = data.pdfUrl;
+      link.download = "report.pdf";
+      link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      this.showSkeleton = false;
+    }, error => {
+      this.showSkeleton = false;
+    })
   }
   // Search School
   public searchReport(keyword) {
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-            expires_in:parsedData.expires_in
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.showSkeleton = true;
-            this.page = this.page + 1;
-            this.reportsService.searchReports(userTokens.access_token, keyword).subscribe((data: any) => {
-              if (data.data) {
-                this.reports = data.data;
-              }
-              if (data.data.length == 0) {
-                this.noReports = true;
-              }
-              this.showSkeleton = false;
-            }, error => {
-              this.showSkeleton = false;
-            })
-          }, error => {
-            this.showSkeleton = false;
-          })
-        }
-      })
+    this.showSkeleton = true;
+    this.page = this.page + 1;
+    this.reportsService.searchReports(keyword).subscribe((data: any) => {
+      if (data.data) {
+        this.reports = data.data;
+      }
+      if (data.data.length == 0) {
+        this.noReports = true;
+      }
+      this.showSkeleton = false;
+    }, error => {
+      this.showSkeleton = false;
     })
   }
   public goBack() {

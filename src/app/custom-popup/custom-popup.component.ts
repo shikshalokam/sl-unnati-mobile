@@ -6,7 +6,7 @@ import { Storage } from '@ionic/storage';
 import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
 import { AppConfigs } from '../app.config';
 import { NotificationCardService } from '../notification-card/notification.service';
-
+import { AppVersion } from '@ionic-native/app-version/ngx';
 @Component({
   selector: 'app-custom-popup',
   templateUrl: './custom-popup.component.html',
@@ -28,6 +28,7 @@ export class CustomPopupComponent implements OnInit {
     public market: Market,
     public storage: Storage,
     public appLauncher: AppLauncher,
+    private appVersion: AppVersion,
     public notificationCardService: NotificationCardService
     // public appVersion: AppVersion,
   ) {
@@ -45,10 +46,13 @@ export class CustomPopupComponent implements OnInit {
           this.appUpdate.payload.releaseNotes.split('.') :
           [this.appUpdate.payload.releaseNotes]
       }
-      this.button = 'button.update';
-      this.translate.get([this.button]).subscribe((text: string) => {
-        this.button = text[this.button];
-      });
+      if (!this.button) {
+        this.button = 'button.update';
+        this.translate.get([this.button]).subscribe((text: string) => {
+          this.button = text[this.button];
+        });
+      }
+
     }
     this.getTranslateKeys();
   }
@@ -78,31 +82,40 @@ export class CustomPopupComponent implements OnInit {
 
   public openApp() {
     // org.shikshalokam.app://community.shikshalokam.org/learn
-    const options: AppLauncherOptions = {
-      packageName: 'org.shikshalokam.unnati',
-    }
-    this.appLauncher.canLaunch(options).then((canLaunch: boolean) => {
-      if (canLaunch) {
-        this.currentAppVersionObj = this.appUpdate.payload.appVersion;
-        this.storage.set('appUpdateVersions', this.currentAppVersionObj);
-        this.storage.set('isRejected', false).then(data => {
+    // const options: AppLauncherOptions = {
+    //   packageName: 'org.shikshalokam.unnati',
+    // }
+    // this.appLauncher.canLaunch(options).then((canLaunch: boolean) => {
+    //   if (canLaunch) {
+    //     this.currentAppVersionObj = this.appUpdate.payload.appVersion;
+    //     this.storage.set('appUpdateVersions', this.currentAppVersionObj);
+    //     this.storage.set('isRejected', false).then(data => {
 
-        })
-        this.appLauncher.launch(options).then(() => {
-        }, (err) => {
-          if (navigator.onLine) {
-            window.open('https://play.google.com/store/apps/details?id=org.shikshalokam.unnati&hl=en', '_system')
-          }
-        })
-      } else {
-        if (navigator.onLine) {
-          window.open('https://play.google.com/store/apps/details?id=org.shikshalokam.unnati&hl=en', '_system')
-        }
-      }
-    }, error => {
-      if (navigator.onLine) {
-        window.open('https://play.google.com/store/apps/details?id=org.shikshalokam.unnati&hl=en', '_system')
-      }
+    //     })
+    //     this.appLauncher.launch(options).then(() => {
+    //     }, (err) => {
+    //       if (navigator.onLine) {
+    //         window.open('https://play.google.com/store/apps/details?id=org.shikshalokam.unnati&hl=en', '_system')
+    //       }
+    //     })
+    //   } else {
+    //     if (navigator.onLine) {
+    //       window.open('https://play.google.com/store/apps/details?id=org.shikshalokam.unnati&hl=en', '_system')
+    //     }
+    //   }
+    // }, error => {
+    //   if (navigator.onLine) {
+    //     window.open('https://play.google.com/store/apps/details?id=org.shikshalokam.unnati&hl=en', '_system')
+    //   }
+    // })
+
+    this.appVersion.getPackageName().then(success => {
+      this.currentAppVersionObj = this.appUpdate.payload.appVersion;
+      this.storage.set('appUpdateVersions', this.currentAppVersionObj);
+      this.storage.set('isRejected', false).then(data => {
+      })
+      this.showUpdatePopup = false;
+      this.market.open(success)
     })
   }
   close() {

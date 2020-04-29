@@ -1,4 +1,3 @@
-
 import { URLSearchParams, Headers, RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { CurrentUserProvider } from '../current-user';

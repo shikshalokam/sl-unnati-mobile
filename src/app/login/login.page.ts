@@ -98,13 +98,13 @@ export class LoginPage {
         console.log(success1, "success1");
         this.storage.set('userTokens', success1).then(data => {
           localStorage.setItem('isPopUpShowen', null);
-          this.router.navigateByUrl('/project-view/home');
           this.fcm.initializeFCM();
           this.login.loggedIn('true');
           this.menuCtrl.enable(true);
           this.storage.set('veryFirstTime', 'false').then(data => {
             this.veryFirstTime = false;
           })
+          this.router.navigateByUrl('/project-view/home');
         });
         this.storage.set('currentUser', success1).then(data => {
         })

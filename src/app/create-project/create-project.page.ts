@@ -189,6 +189,7 @@ export class CreateProjectPage implements OnInit {
             // already basic structure is there in local
             if (programsList) {
               if (programsList.programs && programsList.programs._id == programId) {
+                mapped = true
                 // programsList.projects.forEach(program => {
                 if (this.createNewProject) {
                   this.project._id = programsList.projects.length + 1;
@@ -262,6 +263,7 @@ export class CreateProjectPage implements OnInit {
           });
         } else {
           // if there is no basic structure is in local
+          mapped = true;
           this.project._id = 1;
           let pro1 = [{
             projects: [

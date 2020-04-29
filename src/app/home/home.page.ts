@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NetworkService } from '../network.service';
-import { MenuController } from '@ionic/angular';
+import { MenuController, Platform, } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
@@ -16,6 +16,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
 import { AppConfigs } from '../app.config';
+import * as jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-home',
@@ -70,6 +71,7 @@ export class HomePage implements OnInit {
   constructor(
     public datepipe: DatePipe,
     public storage: Storage,
+    public platform: Platform,
     public apiProvider: ApiProvider,
     public homeService: HomeService,
     public categoryViewService: CategoryViewService,
@@ -109,39 +111,50 @@ export class HomePage implements OnInit {
     this.menuCtrl.enable(true);
   }
   ionViewDidEnter() {
-    this.searchInput = '';
-    if (localStorage.getItem("token") != null) {
-      this.menuCtrl.enable(true, 'unnati');
-      this.getActiveProjects();
-      this.setTitle('home_tab');
-      this.connected = localStorage.getItem("networkStatus");
-      //  this.splashScreen.hide();
-      this.storage.get('templates').then(templates => {
-        if (!templates) {
-          this.getTemplates();
-        }
-      })
-      this.storage.get('latestProjects').then(projects => {
-        if (!projects) {
-          this.getProjects();
-        } else {
+    this.platform.ready().then(() => {
+      this.searchInput = '';
+      this.storage.get('userTokens').then(data => {
+        if (data) {
+          this.menuCtrl.enable(true, 'unnati');
           this.getActiveProjects();
+          this.setTitle('home_tab');
+          this.connected = localStorage.getItem("networkStatus");
+          //  this.splashScreen.hide();
+          this.storage.get('templates').then(templates => {
+            if (!templates) {
+              this.getTemplates();
+            }
+          })
+          this.storage.get('latestProjects').then(projects => {
+            if (!projects) {
+              this.getProjects();
+            } else {
+              this.getActiveProjects();
+            }
+          })
+          this.getSchools();
+        } else {
+          this.ionViewDidEnter();
         }
       })
-      this.getSchools();
-    }
-    try {
-      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-    } catch (error) {
-    }
+      try {
+        this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+      } catch (error) {
+      }
+    })
   }
   ngOnInit() {
     this.login.loggedIn('true');
     this.checkUser();
+    this.storage.get('allowProfileUpdateForm').then(data => {
+      if (!data) {
+        this.getProfileData();
+      }
+    })
   }
   //  Check user
   public checkUser() {
-    this.storage.get('token').then(data => {
+    this.storage.get('userTokens').then(data => {
       if (data) {
         this.loggedIn = true;
         this.menuCtrl.enable(true);
@@ -269,11 +282,38 @@ export class HomePage implements OnInit {
       }
     }, error => {
     })
+
   }
   //  get schools
   public getSchools() {
     this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
       this.mySchools = data.data;
     }, error => { })
+  }
+
+
+  // get profile data
+  public getProfileData() {
+    // if (this.isConnected) {
+    let userDetails;
+    this.storage.get('userTokens').then(data => {
+      if (data) {
+        userDetails = jwt_decode(data.access_token);
+        this.projectService.getProfileData(userDetails.sub).subscribe((data: any) => {
+          this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(data => {
+          })
+          if (data.result) {
+            if (data.result.showPopupForm) {
+              this.homeService.showProfileUpdate('popup');
+            }
+            if (data.result.allowProfileUpdateForm) {
+              this.homeService.showProfileUpdate('inmenu');
+            }
+          }
+        })
+      } else {
+        this.getProfileData();
+      }
+    })
   }
 }

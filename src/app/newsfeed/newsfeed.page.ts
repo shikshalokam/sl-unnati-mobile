@@ -34,6 +34,5 @@ export class NewsfeedPage implements OnInit {
     reader.readAsDataURL(file);
   }
   public postNews() {
-    console.log(this.post, "post");
   }
 }

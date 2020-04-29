@@ -38,6 +38,6 @@ export class ProjectService {
         return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projectsDetailsById', data)
     }
     public getProfileData(profileId) {
-        return this.http.get(AppConfigs.api_url + '/kendra-service/api/v1/user-extension/getProfile/' + profileId)
+        return this.http.get(AppConfigs.notification.kendra_base_url + 'v1/' + AppConfigs.notification.getProfile + profileId)
     }
 }
