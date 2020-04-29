@@ -18,17 +18,6 @@ export class CreateTaskService {
 
         })
     }
-    // public updateByProjects(updatedProject) {
-    //     this.storage.get('latestProjects').then(projectList => {
-    //         projectList[0].projects.forEach(project => {
-    //             if (project._id == updatedProject._id) {
-    //                 projectList[0].projects = updatedProject;
-    //                 this.storage.set('latestProjects', projectList).then(projects => {
-    //                 })
-    //             }
-    //         });
-    //     })
-    // }
     public updateByProjects(updatedProject) {
         let mapped: boolean = false;
         return this.storage.get('latestProjects').then(projectList => {

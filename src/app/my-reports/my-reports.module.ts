@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { MyReportsPage } from './my-reports.page';
-import {SharedModule} from '../shared.module';
+import { SharedModule } from '../shared.module';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 const routes: Routes = [
@@ -21,7 +21,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule,SharedModule,
+    CommonModule, SharedModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
@@ -29,6 +29,6 @@ const routes: Routes = [
     })
   ],
   declarations: [MyReportsPage],
-  providers:[ScreenOrientation]
+  providers: [ScreenOrientation]
 })
 export class MyReportsPageModule { }

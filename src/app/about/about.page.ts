@@ -73,7 +73,7 @@ export class AboutPage implements OnInit {
       this.login.loggedIn('false');
       this.router.navigateByUrl('/login');
     }, error => {
-      //  alert(error + "Logout error")
+      //  alert(error + "Logout error") 
     })
     if (!localStorage.getItem("token")) {
       this.router.navigateByUrl('/login');
@@ -85,7 +85,7 @@ export class AboutPage implements OnInit {
 
   async showConfirmAlert() {
     let alertTexts;
-    this.translateService.get(['message.local_data_changes'], ['message.please_syc_before_logout']).subscribe((texts: string) => {
+    this.translateService.get(['message.local_data_changes'], ['message.please_sync_before_logout']).subscribe((texts: string) => {
       alertTexts = texts;
     });
     const alert = await this.alertController.create({

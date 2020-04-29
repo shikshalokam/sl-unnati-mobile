@@ -14,10 +14,6 @@ import * as moment from 'moment';
 export class NotificationCardComponent implements OnInit {
   ngOnInit() {
   }
-  // text: string;
-  // page = 1;
-  // limit = 5;
-  // totalCount;
   @Input() notifications;
   @Input() showViewMore;
   public skeletons = [{}, {}, {}, {}, {}, {}];
@@ -30,7 +26,6 @@ export class NotificationCardComponent implements OnInit {
     public router: Router,
     public api: ApiProvider,
     public storage: Storage) {
-
   }
 
   goToAllNotifications() {
@@ -76,35 +71,18 @@ export class NotificationCardComponent implements OnInit {
    */
   public markAsRead(notificationMeta) {
     if (navigator.onLine) {
-      this.storage.get('userTokens').then(data => {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.showSkeleton = true;
-            this.storage.set('userTokens', userTokens).then(usertoken => {
-              this.notificationCardService.markAsRead(userTokens.access_token, notificationMeta.id).subscribe(data => {
-                notificationMeta.is_read = true;
-                this.showSkeleton = false;
-                this.notificationCardService.checkForNotificationApi(userTokens.access_token).subscribe((data1: any) => {
-                  // this.fetchAllNotifications();
-                  this.showSkeleton = false;
-                  this.notificationCardService.getCount(data1.result.count);
-                }, error => {
-                  this.showSkeleton = false;
-                })
-              }, error => {
-
-                this.showSkeleton = false;
-              })
-            }, error => {
-              this.showSkeleton = false;
-            })
-          }
+      this.notificationCardService.markAsRead(notificationMeta.id).subscribe(data => {
+        notificationMeta.is_read = true;
+        this.showSkeleton = false;
+        this.notificationCardService.checkForNotificationApi().subscribe((data1: any) => {
+          // this.fetchAllNotifications();
+          this.showSkeleton = false;
+          this.notificationCardService.getCount(data1.result.count);
+        }, error => {
+          this.showSkeleton = false;
         })
+      }, error => {
+        this.showSkeleton = false;
       })
     } else {
       this.errorToast('Please check your internet connection.');

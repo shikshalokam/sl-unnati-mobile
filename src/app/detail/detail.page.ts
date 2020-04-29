@@ -33,7 +33,7 @@ export class DetailPage implements OnInit {
   public pfrom;
   public back;
   public language: string = this.translateService.currentLang;
-  constructor(public tasksService: TasksService, public storage: Storage, public homeService:HomeService, public screenOrientation: ScreenOrientation, public location: Location, public translate: TranslateService, public modalController: ModalController, public apiProvider: ApiProvider,
+  constructor(public tasksService: TasksService, public storage: Storage, public homeService: HomeService, public screenOrientation: ScreenOrientation, public location: Location, public translate: TranslateService, public modalController: ModalController, public apiProvider: ApiProvider,
     public projectsService: ProjectsService, public api: ApiProvider, public alertController: AlertController, public toastController: ToastController, public translateService: TranslateService, public projectService: ProjectService, public networkService: NetworkService, public route: ActivatedRoute, public router: Router) {
     this.tasksService.emit.subscribe(value => {
       if (this.pfrom != 'goBack' && this.back && this.back != '/notifications') {
@@ -93,7 +93,7 @@ export class DetailPage implements OnInit {
   }
   // get projects
   public getProject() {
-    let notYetStarted = 0,inProgress = 0, completed = 0;
+    let notYetStarted = 0, inProgress = 0, completed = 0;
     this.storage.get('currentProject').then(data => {
       if (data) {
         this.showSkeleton = true;
@@ -132,108 +132,71 @@ export class DetailPage implements OnInit {
   }
   // Sync project
   public syncProject() {
-    this.storage.get('userTokens').then(data => {
-      this.refreshToken = data.refresh_token;
-      this.api.refershToken(this.refreshToken).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(data => {
-            this.showSkeleton = true;
-            this.projectService.sync(this.project, data.access_token).subscribe((data: any) => {
-              this.showSkeleton = false;
-              if (data.status == "failed") {
-                this.errorToast(data.message);
-              } else if (data.status == "succes") {
-                this.successToast(data.message);
-                this.showSkeleton = false;
-                this.storage.get('latestProjects').then(projects => {
-                  projects.data.forEach(project => {
-                    project.projects.forEach(pro => {
-                      if (pro._id == data.data._id) {
-                        pro = data.data;
-                        this.storage.set('latestProjects', projects).then(resp1 => {
-                          this.project = resp1.data;
-                        }, error => {
-                          this.showSkeleton = false;
-                        })
-                      }
-                    });
-                  });
-                })
-
-                this.storage.get('myProjects').then(mp => {
-                  if (mp.find((pro) => pro._id === data._id)) {
-                    data.push(data);
-                    this.storage.set('myProjects', data).then((data: any) => {
-                      this.homeService.loadMyProjects();
-                    });
-                  }
+    this.projectService.sync(this.project).subscribe((data: any) => {
+      this.showSkeleton = false;
+      if (data.status == "failed") {
+        this.errorToast(data.message);
+      } else if (data.status == "succes") {
+        this.successToast(data.message);
+        this.showSkeleton = false;
+        this.storage.get('latestProjects').then(projects => {
+          projects.data.forEach(project => {
+            project.projects.forEach(pro => {
+              if (pro._id == data.data._id) {
+                pro = data.data;
+                this.storage.set('latestProjects', projects).then(resp1 => {
+                  this.project = resp1.data;
+                }, error => {
+                  this.showSkeleton = false;
                 })
               }
-            }, error => {
-              this.showSkeleton = false;
-              this.errorToast(error.message);
-            })
-          })
-        }
-      }, error => {
-        this.showSkeleton = false;
-        if (error.status === 0) {
-          this.router.navigateByUrl('/login');
-        }
-      })
+            });
+          });
+        })
+
+        this.storage.get('myProjects').then(mp => {
+          if (mp.find((pro) => pro._id === data._id)) {
+            data.push(data);
+            this.storage.set('myProjects', data).then((data: any) => {
+              this.homeService.loadMyProjects();
+            });
+          }
+        })
+      }
+    }, error => {
+      this.showSkeleton = false;
+      this.errorToast(error.message);
     })
   }
   // Get projects 
   public getProjectsFromService() {
     this.project = [];
-    this.storage.get('userTokens').then(data => {
-      this.showSkeleton = true;
-      this.refreshToken = data.refresh_token;
-      this.apiProvider.refershToken(this.refreshToken).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.showSkeleton = true;
-            let id = {
-              projectId: this.pid
-            }
-            this.showSkeleton = true;
-            this.projectService.projectDetails(parsedData.access_token, id).subscribe((resp: any) => {
-              this.project = [];
-              this.showSkeleton = false;
-              if (resp.status != 'failed') {
-                this.tasksService.loadProject();
-                if (resp.data) {
-                  this.project = resp.data;
-                  this.storage.set('currentProject', this.project.projects[0]).then(cpsetup => {
-                    this.project = cpsetup;
-                    // this.getProject();
-                  })
-                } else {
-                }
-
-                this.showSkeleton = false;
-              } else {
-                this.errorToast(resp.message);
-                this.showSkeleton = false;
-              }
-            }, error => {
-              this.showSkeleton = false;
-            })
+    this.showSkeleton = true;
+    let id = {
+      projectId: this.pid
+    }
+    this.showSkeleton = true;
+    this.projectService.projectDetails(id).subscribe((resp: any) => {
+      this.project = [];
+      this.showSkeleton = false;
+      if (resp.status != 'failed') {
+        this.tasksService.loadProject();
+        if (resp.data) {
+          this.project = resp.data;
+          this.storage.set('currentProject', this.project.projects[0]).then(cpsetup => {
+            this.project = cpsetup;
+            // this.getProject();
           })
+        } else {
         }
-      }, error => {
+
         this.showSkeleton = false;
-      })
+      } else {
+        this.errorToast(resp.message);
+        this.showSkeleton = false;
+      }
+    }, error => {
+      this.showSkeleton = false;
     })
   }
   // Display error Message

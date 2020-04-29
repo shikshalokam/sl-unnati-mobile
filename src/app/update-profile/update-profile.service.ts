@@ -14,36 +14,33 @@ export class UpdateProfileService {
 
   // get States
   public getStates(token) {
-    let httpHeaders = new HttpHeaders({
-      'X-authenticated-user-token': token
-    })
-    return this.http.get(AppConfigs.notification.kendra_base_url + 'v1/entities/listByEntityType/state', { headers: httpHeaders });
+    return this.http.get(AppConfigs.notification.kendra_base_url + 'v1/entities/listByEntityType/state');
   }
 
   // get immediate Children
-  public getImmediateChildren(token, id) {
-    let httpHeaders = new HttpHeaders({
-      'X-authenticated-user-token': token
-    })
-    return this.http.get(AppConfigs.notification.kendra_base_url + 'v1/entities/immediateEntities/' + id, { headers: httpHeaders });
-    //return this.http.get(AppConfigs.api_url + '/unnati/api/v1/getSubTaskDetails/5dcd367997dccf453772b8f6/5dcd367997dccf453772b8f5', { headers: httpHeaders });
+  public getImmediateChildren(id) {
+    // return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/entities/subEntityList?type='+entity+'&search=&page=&limit=',data);
+    return this.http.get(AppConfigs.notification.kendra_base_url + 'v1/entities/subEntityList/' + id);
   }
-
-  public saveInfo(token, data) {
-    let httpHeaders = new HttpHeaders({
-      'X-authenticated-user-token': token
-    })
-    return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/user-profile/update', data, { headers: httpHeaders });
+  // public getSubEntities(data) {
+  //   return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/entities/subEntityList?type='+entity+'&search='+searchText+'&page='+page+'&limit='+limit,data);
+  // }
+  public searchEntities(id, entity, searchText, page, limit) {
+    return this.http.get(AppConfigs.notification.kendra_base_url + 'v1/entities/subEntityList/' + id + '?type=' + entity + '&search=' + searchText + '&page=' + page + '&limit=' + limit);
+  }
+  public saveInfo(data) {
+    return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/user-profile/save', data);
   }
   // event triggers for update popups
   public updateProfile(status) {
     this.updatedUser.next(status);
   }
 
-  public getProfileData(token) {
-    let httpHeaders = new HttpHeaders({
-      'X-authenticated-user-token': token
-    })
-    return this.http.get(AppConfigs.notification.kendra_base_url + 'v1/user-profile/details', { headers: httpHeaders });
+  public getProfileData() {
+    return this.http.get(AppConfigs.notification.kendra_base_url + 'v1/user-profile/getForm');
+  }
+
+  public getSubEntities(data, type) {
+    return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/entities/subEntityList?type=' + type + '&search=&page=&limit=', data);
   }
 }

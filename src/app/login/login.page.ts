@@ -97,13 +97,13 @@ export class LoginPage {
         })
         this.storage.set('userTokens', success1).then(data => {
           localStorage.setItem('isPopUpShowen', null);
-          this.router.navigateByUrl('/project-view/home');
           this.fcm.initializeFCM();
           this.login.loggedIn('true');
           this.menuCtrl.enable(true);
           this.storage.set('veryFirstTime', 'false').then(data => {
             this.veryFirstTime = false;
           })
+          this.router.navigateByUrl('/project-view/home');
         });
         localStorage.setItem('token', success1);
         this.networkService.status(true);
