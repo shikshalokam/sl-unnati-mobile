@@ -11,6 +11,7 @@ import { NotificationCardService } from '../notification-card/notification.servi
 import { ModalController } from '@ionic/angular';
 import { GetSubEntitiesPage } from '../get-sub-entities/get-sub-entities.page';
 import { AlertController } from '@ionic/angular';
+import { __core_private_testing_placeholder__ } from '@angular/core/testing';
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.page.html',
@@ -29,22 +30,19 @@ export class UpdateProfilePage {
   hubList;
   back = "project-view/home"
   blockList;
+  button = 'Continue';
   zoneList;
+  stateId;
   schoolList;
   profile = [];
   stateList;
-  appUpdate = '';
-  showCloseButton: boolean = false;
-  body = 'message.thankyou_note';
-  header = 'message.thankyou';
-  button = 'button.continue';
-  isActionable = '/project-view/home';
+  popMsg: any = {};
   showUpdatePop: boolean = false;
   showForm: boolean = false;
-  name = 'Angular';
   stateSubEntities;
   profileFormData;
-
+  showPopup;
+  appUpdate: any = {};
   dynamicForm: FormGroup;
   constructor(
     public formBuilder: FormBuilder,
@@ -62,7 +60,16 @@ export class UpdateProfilePage {
   }
 
   ionViewDidEnter() {
-    this.showUpdatePop = false;
+
+    this.appUpdate.title = 'Thank you';
+    this.appUpdate.text = 'Thank you for updating your details. We will verify and update it in two weeks.';
+    this.appUpdate.isActionable = '/project-view/home';
+    this.appUpdate.actions = {
+      showCloseButton: false,
+      showUpdatePopup: true,
+      showUpdatePop: true,
+    }
+    this.showPopup = true;
     this.storage.get('userTokens').then(data => {
       this.userDetails = jwt_decode(data.access_token);
     })
@@ -99,6 +106,11 @@ export class UpdateProfilePage {
             res.validation.regex = new RegExp("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$");
           }
           if (res.field == "state") {
+            if (res.value.value) {
+              this.stateId = res.value.value;
+            } else {
+              this.stateId = res.value;
+            }
             delete res.validation.regex
           }
           validationsArray.push(
@@ -114,7 +126,8 @@ export class UpdateProfilePage {
     this.showForm = true;
   }
 
-  public getSubEntities(event) {
+  public getSubEntities(event, field) {
+    this.removeEntity(field);
     this.getImmediateChildren(event.detail.value);
   }
   public getImmediateChildren(event) {
@@ -138,7 +151,6 @@ export class UpdateProfilePage {
               options: entities.result.data,
               visible: true
             }
-            console.log(entities.result.data, "entities.result.data");
             let mapped: boolean = false;
             this.profileFormData.forEach(element => {
               if (element.field == entities.result.data[0].entityType && !mapped) {
@@ -184,7 +196,7 @@ export class UpdateProfilePage {
           }
           this.toastService.stopLoader();
         }, erros => {
-          // this.toastService.stopLoader();
+          this.toastService.stopLoader();
         })
       }
     }
@@ -227,7 +239,7 @@ export class UpdateProfilePage {
       });
 
       let data = {
-        'metaInformation': obj
+        'data': obj
       }
       if (valid) {
         this.submitAttempt = false;
@@ -279,22 +291,54 @@ export class UpdateProfilePage {
   }
   public radioChecked(data, value) {
     data.selectedType = value;
-    if (value == 'others') {
-      data.label = 'others'
-    }
   }
 
+  public getOptions(data) {
+    let tempData = this.profileFormData;
+    let entity = [];
+    let entities;
+    let type = ''
+    tempData.forEach(function (profile, i) {
+      if (profile.field == data.field) {
+        if (tempData[i - 1].value.length > 0) {
+          tempData[i - 1].value.forEach(element => {
+            entity.push(element.value);
+          });
+        } else {
+          entity.push(tempData[i - 1].value.value);
+        }
+        entities = {
+          entities: entity
+        }
+      }
+    });
+    if (entities.entities.length) {
+      this.updateProfileService.getSubEntities(entities, type).subscribe((entity: any) => {
+        this.toastService.stopLoader();
+        if (entity.result && entity.result.data) {
+          data.options = entity.result.data;
+          this.selectEntity(data);
+        }
+
+      }, error => {
+        this.toastService.stopLoader();
+      })
+    }
+  }
   async selectEntity(data) {
-    console.log(data, "data nnn");
-    if (data.options) {
+    this.toastService.startLoader('Loading, please wait.');
+    if (!data.options) {
+      this.getOptions(data);
+    } else {
       const modal = await this.modalController.create({
         component: GetSubEntitiesPage,
         componentProps: {
           'data': data,
         }
       });
+      this.toastService.stopLoader();
       modal.onDidDismiss().then((data: any) => {
-        if (data.data) {
+        if (data.data && data.data.dependent) {
           let mapped = false;
           let toBeRemove = [];
           this.stateSubEntities[data.data.dependent].forEach(element => {
@@ -307,8 +351,10 @@ export class UpdateProfilePage {
           });
           const filteredItems = this.profileFormData.filter(item => !toBeRemove.includes(item.field));
           this.profileFormData = filteredItems;
-          this.getNextEntities(data.data);
+        } else {
+          this.removeEntity(data);
         }
+        this.getNextEntities(data.data);
       })
       return await modal.present();
     }
@@ -333,6 +379,8 @@ export class UpdateProfilePage {
             mapped = i + 1;
           }
         });
+      } else {
+        this.removeEntity(data);
       }
     }
     entities = {
@@ -359,6 +407,7 @@ export class UpdateProfilePage {
         this.profileFormData.forEach(element => {
           if (element.field == entity.result.data[0].entityType && !mapped) {
             element.options = entity.result.data;
+            element.value = [];
             element.dependent = data.dependent;
             mapped = true;
           }
@@ -380,39 +429,37 @@ export class UpdateProfilePage {
   }
   public submitOthers(data) {
     data.value = [];
+    // data.label = 'others';
+    // data.value = 'others'
     if (data.others) {
-      this.getNextEntities(data);
+      this.removeEntity(data);
+      if (data.dependent) {
+        this.getNextEntities(data);
+      } else {
+        data.dependent = this.stateId;
+
+        this.getNextEntities(data);
+      }
     } else {
       this.toastService.errorToast('Please enter ' + data.field + ' name.')
     }
   }
 
-  public removeEntity(entity, entityList) {
-    const index: number = entityList.value.indexOf(entity);
-    if (index !== -1) {
-      entityList.value.splice(index, 1);
-
-    }
-    // if (!entityList.value.length) {
-    let mapped = false;
-    let toBeRemove = [];
-    this.stateSubEntities[entityList.dependent].forEach(element => {
-      if (mapped) {
-        toBeRemove.push(element);
+  public removeEntity(entityList) {
+    let matched = [];
+    let found = false;
+    this.profileFormData.forEach(profile => {
+      if (!found) {
+        matched.push(profile);
       }
-      if (entityList.field == element) {
-        mapped = true;
+      if (profile.field == entityList.field) {
+        found = true;
       }
     });
-    const filteredItems = this.profileFormData.filter(item => !toBeRemove.includes(item.field));
-    this.profileFormData = filteredItems;
-    // } else {
-    if (entityList.value && entityList.value.length > 0) {
-      // this.getNextEntities(entityList);
-    }
-    // }
+    this.profileFormData = matched;
   }
-  public checkPatter(data) {
+
+  public checkPattern(data) {
     if (data.value) {
       let result = data.validation.regex.test(data.value);
       data.patternMatch = result;
@@ -435,12 +482,15 @@ export class UpdateProfilePage {
         }, {
           text: 'Okay',
           handler: () => {
-            this.removeEntity(entity, entityList);
+            const index: number = entityList.value.indexOf(entity);
+            if (index !== -1) {
+              entityList.value.splice(index, 1);
+            }
+            this.removeEntity(entityList);
           }
         }
       ]
     });
-
     await alert.present();
   }
 }

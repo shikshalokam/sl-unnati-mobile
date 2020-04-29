@@ -29,7 +29,7 @@ export class UpdateProfileService {
     return this.http.get(AppConfigs.notification.kendra_base_url + 'v1/entities/subEntityList/' + id + '?type=' + entity + '&search=' + searchText + '&page=' + page + '&limit=' + limit);
   }
   public saveInfo(data) {
-    return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/user-profile/update', data);
+    return this.http.post(AppConfigs.notification.kendra_base_url + 'v1/user-profile/save', data);
   }
   // event triggers for update popups
   public updateProfile(status) {

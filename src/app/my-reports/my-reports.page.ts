@@ -42,13 +42,14 @@ export class MyReportsPage {
     public storage: Storage
   ) {
     myReportsService.reportEvent.subscribe((data: any) => {
-      // this.share(data);
       this.platform.ready().then(() => {
         this.isIos = this.platform.is('ios') ? true : false;
         this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
         if (data.isFullReport) {
+          this.toastService.startLoader('Loading, please wait.');
           this.getFullReport(data);
         } else {
+          this.toastService.startLoader('Loading, please wait.');
           this.getReport(data);
         }
       })
@@ -76,11 +77,14 @@ export class MyReportsPage {
             this.toastService.stopLoader();
             this.download(data);
           }
+        } else {
+          this.toastService.errorToast(data.message);
         }
       }, error => {
         this.toastService.stopLoader();
       })
     } else {
+      this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
@@ -95,11 +99,14 @@ export class MyReportsPage {
           } else {
             this.download(data);
           }
+        } else {
+          this.toastService.errorToast(data.message);
         }
       }, error => {
         this.toastService.stopLoader();
       })
     } else {
+      this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
@@ -128,6 +135,7 @@ export class MyReportsPage {
   }
 
   public download(data) {
+    const fileTransfer: FileTransferObject = this.transfer.create();
     fetch(data.pdfUrl,
       {
         method: "GET"

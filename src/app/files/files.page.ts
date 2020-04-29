@@ -21,6 +21,8 @@ export class FilesPage implements OnInit {
   activeTab = 'images';
   isIos;
   appFolderPath;
+  showSkeleton: boolean = false;
+  skeletons = [{}, {}, {}, {}, {}, {}];
   back = 'project-view/project-detail/my_projects';
   constructor(public createTaskService: CreateTaskService,
     public route: ActivatedRoute,
@@ -44,37 +46,52 @@ export class FilesPage implements OnInit {
     })
   }
   public getCurrentProject(id) {
+    this.showSkeleton = true;
     this.storage.get('latestProjects').then(projectList => {
       if (projectList.programs) {
         projectList.programs.forEach(programsList => {
           programsList.projects.forEach(project => {
-            if (project.tasks && project.tasks.length > 0) {
-              project.tasks.forEach(task => {
-                if (task.imageUrl) {
-                  task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
-                }
-              });
-            }
             if (project._id == id) {
+              if (project.tasks && project.tasks.length > 0) {
+                project.tasks.forEach(task => {
+                  if (task.imageUrl) {
+                    let value = task.imageUrl.split(",");
+                    if (value[1]) {
+                      task.imageUrl = 'data:image/jpeg;base64,' + value[1];
+                    } else {
+                      task.imageUrl = 'data:image/jpeg;base64,' + value[0];
+                    }
+                  }
+                });
+              }
               this.currentMyProject = project;
             }
           });
         });
       } else {
-        projectList[0].projects.forEach(project => {
-          if (project.tasks && project.tasks.length > 0) {
-            project.tasks.forEach(task => {
-              if (task.imageUrl) {
-                task.imageUrl = 'data:image/jpeg;base64,' + task.imageUrl
+        projectList.forEach(projectsList => {
+          projectsList.projects.forEach(project => {
+            if (project._id == id) {
+              if (project.tasks && project.tasks.length > 0) {
+                project.tasks.forEach(task => {
+                  if (task.imageUrl) {
+                    let value = task.imageUrl.split(",");
+                    if (value[1]) {
+                      task.imageUrl = 'data:image/jpeg;base64,' + value[1];
+                    } else {
+                      task.imageUrl = 'data:image/jpeg;base64,' + value[0];
+                    }
+                  }
+                });
               }
-            });
-          }
-          if (project._id == id) {
-            this.currentMyProject = project;
-          }
+              this.currentMyProject = project;
+            }
+          });
         });
       }
     })
+    this.showSkeleton = false;
+
   }
   public selectTab(type) {
     this.activeTab = type;

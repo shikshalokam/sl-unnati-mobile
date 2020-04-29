@@ -116,9 +116,17 @@ export class HeaderComponent implements OnInit {
   startNotificationPooling() {
     this.timeInterval = setInterval(() => {
       if (this.connected) {
-        this.getNotificationCount();
+        this.storage.get('userTokens').then(data => {
+          if (data) {
+            this.getNotificationCount();
+          }
+        })
       }
-    }, 12000);
+    }, 36000);
     this.getNotificationCount();
+  }
+
+  stopNotificationPooling() {
+
   }
 }

@@ -63,30 +63,15 @@ export class LastMonthReportsPage implements OnInit {
   }
   public getData() {
     if (this.connected) {
-      this.storage.get('userTokens').then(data => {
-        this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-          this.showSkeleton = true;
-          let parsedData = JSON.parse(data._body);
-          if (parsedData && parsedData.access_token) {
-            let userTokens = {
-              access_token: parsedData.access_token,
-              refresh_token: parsedData.refresh_token,
-            };
-            this.storage.set('userTokens', userTokens).then(usertoken => {
-              this.myReportsService.getReports(userTokens.access_token, 'lastMonth').subscribe((data: any) => {
-                this.report = data.data;
-                if (data.status != "failed") {
-                  this.setupChart();
-                }
-                this.showSkeleton = false;
-              })
-            }, error => {
-              this.showSkeleton = false;
-            })
-          }
-        }, error => {
-          this.showSkeleton = false;
-        })
+      this.showSkeleton = true;
+      this.myReportsService.getReports('lastMonth').subscribe((data: any) => {
+        this.report = data.data;
+        if (data.status != "failed") {
+          this.setupChart();
+        }
+        this.showSkeleton = false;
+      }, error => {
+        this.showSkeleton = false;
       })
     } else {
       this.toastService.errorToast('message.nerwork_connection_check');

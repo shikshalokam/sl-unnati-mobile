@@ -4,8 +4,8 @@
 </ion-header>
 <ion-content class="ion-padding">
   <div *ngIf="showUpdatePop">
-    <app-custom-popup [header]="header" [showCloseButton]="showCloseButton" [appUpdate]="appUpdate" [body]="body"
-      [button]="button" [isActionable]="isActionable" [showPopup]="true">
+    <app-custom-popup [appUpdate]="appUpdate" [showUpdatePopup]="showUpdatePopup" [showPopup]="showPopup"
+      [button]="button">
     </app-custom-popup>
   </div>
   <div class="profile-card">
@@ -22,7 +22,7 @@
     </div>
   </div>
   <!-- <h5 class="required-field" *ngIf="submitAttempt" style="padding-left:15px;">
-    {{'create_project.fileds_mandatory' | translate}}</h5> -->
+      {{'create_project.fileds_mandatory' | translate}}</h5> -->
   <form [formGroup]="dynamicForm" *ngIf="showForm && profileFormData" style="    margin-bottom: 10%;">
     <ion-item class="custom-ion-item" *ngFor="let controls of profileFormData">
       <ion-label class="custom-label" position="floating"
@@ -33,18 +33,18 @@
       <!-- <input [type]="controls.input" [formControlName]="controls.label" /> -->
       <ion-input *ngIf="controls.input == 'text' && controls.visible" [type]="controls.input" name="{{controls.label}}"
         pattern={{controls.validation.regex}} placeholder={{controls.placeholder}} readonly={{!controls.editable}}
-        (ionChange)="checkPatter(controls)" value={{controls.value}} [(ngModel)]="controls.value"
+        (ionChange)="checkPattern(controls)" value={{controls.value}} [(ngModel)]="controls.value"
         [formControlName]="controls.field">
       </ion-input>
 
       <ion-input *ngIf="controls.input == 'number' && controls.visible" [type]="controls.input"
-        (ionChange)="checkPatter(controls)" pattern={{controls.validation.regex}} [(ngModel)]="controls.value"
+        (ionChange)="checkPattern(controls)" pattern={{controls.validation.regex}} [(ngModel)]="controls.value"
         [formControlName]="controls.field" placeholder={{controls.placeholder}} readonly={{!controls.editable}}
         value={{controls.value}} name="{{controls.label}}">
       </ion-input>
       <ion-select class="custom-select-box" *ngIf="controls.input == 'select' && controls.visible"
         [(ngModel)]="controls.value" name="{{controls.label}}" [formControlName]="controls.field"
-        placeholder={{controls.value?.label}} (ionChange)="getSubEntities($event)">
+        placeholder={{controls.value?.label}} (ionChange)="getSubEntities($event,controls)">
         <ion-select-option *ngFor="let state of controls.options" value="{{state.value}}"
           selected="state.value === controls.value.value">
           {{state.label}}</ion-select-option>
@@ -62,7 +62,7 @@
       </ng-container>
       <ion-grid *ngIf="controls.input == 'multiselect'">
         <span style="font-size: 16px;
-        font-weight: 600; text-transform: capitalize;">{{controls.label}} </span>
+          font-weight: 600; text-transform: capitalize;">{{controls.label}} </span>
         <ion-row *ngIf="controls.input == 'multiselect' && controls.visible" class="radio-grp">
           <ion-radio-group value="list">
             <ion-col size="6">
@@ -97,13 +97,13 @@
           <ion-icon name="checkmark" slot="end" (click)="submitOthers(controls)"></ion-icon>
         </ion-item>
         <!-- <ion-item *ngIf="controls.selectedType == 'list' && !controls.value" (click)="selectEntity(controls)">
-          <ion-input type="text" placeholder="Enter here..." readonly>
-          </ion-input>
-        </ion-item> -->
+            <ion-input type="text" placeholder="Enter here..." readonly>
+            </ion-input>
+          </ion-item> -->
       </ion-grid>
     </ion-item>
     <div class="profile-actions">
-      <ion-button expand="block" (click)="saveInfo()">
+      <ion-button expand="block" (click)="saveInfo()" [disabled]="!profileFormData.canSubmit">
         {{'button.save_info' | translate}}
       </ion-button>
     </div>
