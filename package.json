@@ -79,7 +79,7 @@
     "highcharts": "^7.2.1",
     "highcharts-angular": "^2.4.0",
     "ion2-calendar": "^2.2.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
     "rxjs": "^6.5.3",
