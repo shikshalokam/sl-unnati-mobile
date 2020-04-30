@@ -74,33 +74,18 @@ export class SchoolTaskReportPage implements OnInit {
   }
   // School task reports
   public getSchoolTaskReport() {
-    this.connected = localStorage.getItem("networkStatus");
-    this.storage.get('userTokens').then(data => {
-      this.api.refershToken(data.refresh_token).subscribe((data: any) => {
-        let parsedData = JSON.parse(data._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(data => {
-            this.showSkeleton = true;
-            this.schoolTaskService.getSchoolTaskReport(parsedData.access_token, this.school.id).subscribe((data: any) => {
-              this.showfailedCard = false;
-              this.showSkeleton = false;
-              if (data.status != 'failed') {
-                this.schoolTaskReport = data.data;
-              } else {
-                this.showfailedCard = true;
-                this.showSkeleton = false;
-                this.errorToast(data.message);
-              }
-            }, error => { })
-          })
-        }
-      }, error => {
-      })
-    })
+    this.showSkeleton = true;
+    this.schoolTaskService.getSchoolTaskReport(this.school.id).subscribe((data: any) => {
+      this.showfailedCard = false;
+      this.showSkeleton = false;
+      if (data.status != 'failed') {
+        this.schoolTaskReport = data.data;
+      } else {
+        this.showfailedCard = true;
+        this.showSkeleton = false;
+        this.errorToast(data.message);
+      }
+    }, error => { })
   }
 
   // Error Toast message
@@ -222,7 +207,7 @@ export class SchoolTaskReportPage implements OnInit {
               resp.data.projects.forEach(prj => {
                 this.storage.set('projectToBeView', prj).then(project => {
                   if (path == 'details') {
-                    this.router.navigate(['/project-view/project-detail', 'schools'])
+                    this.router.navigate(['/project-view/project-detail', 'schools'])  
                   } else {
                     this.router.navigate(['/project-view/status', id]);
                   }
@@ -232,7 +217,6 @@ export class SchoolTaskReportPage implements OnInit {
           }
         })
       } else {
-
       }
     }, error => {
       // this.showSkeleton = false;

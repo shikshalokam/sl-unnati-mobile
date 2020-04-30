@@ -70,7 +70,6 @@ export class ToastService {
         this.popClose.next();
     }
     public getPermissions() {
-        console.log('in get permision taost service');
         this.requestPermissions.next();
     }
 }

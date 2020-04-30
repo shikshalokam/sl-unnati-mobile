@@ -1,5 +1,10 @@
 <div class="custom-popup" *ngIf="showPopup">
-  <div class="pop-container border-radius text-center">
+  <div class="pop-container  text-center"
+    [ngClass]="{'border-radius': content.type != 'permissions' && content.type != 'newProject'}">
+    <div class="pop-ion" *ngIf="content.type == 'newProject't">
+      <ion-icon ios='ios-checkmark-circle' md='md-checkmark-circle' color='primary' style='font-size:60px;'>
+      </ion-icon>
+    </div>
     <div class="close-btn" *ngIf="content.showCloseButton">
       <ion-icon name="close-circle" style="float:right; font-size: 24px;" (click)="cancel()" style=" font-size: 1.5em;">
       </ion-icon>

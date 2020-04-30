@@ -71,9 +71,9 @@ export class CreateProjectService {
         let environment = AppConfigs.currentEnvironment;
         let programId = '';
         AppConfigs.environments.forEach(env => {
-            if (environment === env.name) {
-                programId = env.programId;
-            }
+          if (environment === env.name) {
+            programId = env.programId;
+          }
         });
         return this.storage.get('latestProjects').then(projectList => {
             if (projectList) {
@@ -115,7 +115,6 @@ export class CreateProjectService {
             })
         });
     }
-
     // update task in project after marking as delete. 
     public UpdateCurrentMyProjectByTask(createdTask) {
         return this.storage.get('projectToBeView').then(cmp => {

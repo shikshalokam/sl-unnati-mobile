@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Router } from '@angular/router';
 import { ToastService } from '../toast.service';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+
 @Component({
   selector: 'app-app-permissions',
   templateUrl: './app-permissions.page.html',
@@ -49,30 +51,28 @@ export class AppPermissionsPage implements OnInit {
     isChecked: false,
     id: this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
   },
-  {
-    icon: '../assets/images/notifications.svg',
-    title: 'Notifications',
-    subTitle: 'Allows app to send you information',
-    isChecked: false,
-    id: this.androidPermissions.PERMISSION.ACCESS_NOTIFICATION_POLICY
-  }
+  // {
+  //   icon: '../assets/images/notifications.svg',
+  //   title: 'Notifications',
+  //   subTitle: 'Allows app to send you information',
+  //   isChecked: false,
+  //   id: [this.androidPermissions.PERMISSION.ACCESS_NOTIFICATION_POLICY]
+  // }
   ]
   requests = [];
   constructor(
     private androidPermissions: AndroidPermissions,
     private toastService: ToastService,
     public router: Router,
+    public iab: InAppBrowser,
   ) {
     toastService.popClose.subscribe(data => {
       this.showWarning = false;
     })
     toastService.requestPermissions.subscribe(data => {
-      console.log('in requestPermissions');
       this.showWarning = false;
-      console.log(this.requests, " this.requests");
       this.getPermissions();
     })
-    // this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)
   }
 
 
@@ -80,7 +80,6 @@ export class AppPermissionsPage implements OnInit {
   }
   public permissionGivenTo(request) {
     this.disableBtn = true;
-    console.log(request);
     if (this.requests.length > 0) {
       let data = this.requests.find(ob => ob.title === request.title);
       if (!data) {
@@ -129,16 +128,17 @@ export class AppPermissionsPage implements OnInit {
     request.forEach(element => {
       this.androidPermissions.checkPermission(element).then(
         result => {
-          // code where you call camera directive
-          console.log('Has permission?', result.hasPermission);
           if (!result.hasPermission) {
             this.androidPermissions.requestPermission(element).then(resp => {
-              console.log(resp, 'resp');
             }, error => { console.log(error, "error") })
             this.router.navigate(['/project-view/home'])
           }
         },
         err => this.androidPermissions.requestPermission(element))
     });
+  }
+
+  public openTermsAndPolicy() {
+    (<any>window).cordova.InAppBrowser.open('https://shikshalokam.org/wp-content/uploads/2019/05/Final-ShikshaLokam-Terms-of-Use-MCM-08052019-Clean-copy-1.html', "_system", "zoom=no");
   }
 }

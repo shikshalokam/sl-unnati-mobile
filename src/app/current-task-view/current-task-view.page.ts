@@ -389,7 +389,6 @@ export class CurrentTaskViewPage implements OnInit {
         type: 'image/jpeg'
       }
       this.task.attachments.push(data);
-      console.log(this.task, "this.task.");
       this.toastService.successToast('message.image_uploaded');
       let base64Image = 'data:image/jpeg;base64,' + imageData;
     }, (err) => {

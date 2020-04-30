@@ -130,11 +130,8 @@ export class CategoryViewPage {
     this.showSkeleton = true;
     this.storage.get('latestProjects').then(projects => {
       if (projects) {
-        // projects = projects[0].projects.sort((a, b) => {
-        //   <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
-        // });
         projects.forEach(programsList => {
-          programsList.projects.sort((a, b) => {
+          return programsList.projects.sort((a, b) => {
             return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
           });
         })
@@ -146,11 +143,7 @@ export class CategoryViewPage {
       this.showSkeleton = false;
     })
   }
-  // getSortData(myProjects) {
-  //   return myProjects.sort((a, b) => {
-  //     return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
-  //   });
-  // }
+  
   public projectView(project) {
     this.storage.set('projectToBeView', project).then(project => {
       this.router.navigate(['/project-view/project-detail', this.catType])

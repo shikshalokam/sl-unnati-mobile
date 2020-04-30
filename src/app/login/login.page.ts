@@ -95,7 +95,6 @@ export class LoginPage {
         this.menuCtrl.enable(true);
         this.storage.set('userDetails', userDetails).then(userData => {
         })
-        console.log(success1, "success1");
         this.storage.set('userTokens', success1).then(data => {
           localStorage.setItem('isPopUpShowen', null);
           if (this.veryFirstTime) {

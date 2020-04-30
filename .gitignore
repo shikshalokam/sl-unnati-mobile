@@ -22,11 +22,9 @@ node_modules/
 tmp/
 temp/
 hooks/
-platforms/
-plugins/
-plugins/android.json
-plugins/ios.json
-www/
+platforms/*
+plugins/*
+www/*
 $RECYCLE.BIN/
 google-services.json
 GoogleService*.plist
@@ -35,7 +33,6 @@ package-lock.json
 .sourcemaps/
 
 src/app/app.config.ts
-config.xml
 google-services.json
 .DS_Store
 Thumbs.db

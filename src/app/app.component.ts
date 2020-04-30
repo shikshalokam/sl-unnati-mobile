@@ -174,11 +174,6 @@ export class AppComponent {
               url: '/project-view/tutorial-videos',
             },
             {
-              title: 'Profile Update',
-              icon: 'person',
-              url: '/project-view/update-profile',
-            },
-            {
               title: 'About',
               url: '/project-view/about',
               icon: 'information-circle'
@@ -206,7 +201,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
         if (data != null) {
-          this.router.navigateByUrl('/app-permissions');
+          this.router.navigateByUrl('/project-view/home');
         } else {
           this.router.navigateByUrl('/login');
         }
@@ -624,7 +619,7 @@ export class AppComponent {
               this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(data => {
               })
               if (data.result) {
-                if (data.result.showPopupForm == false) {
+                if (data.result.showPopupForm) {
                   let isPopUpShowen: any = localStorage.getItem('isPopUpShowen');
                   if (isPopUpShowen == "null") {
                     isPopUpShowen = false;

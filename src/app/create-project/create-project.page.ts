@@ -20,6 +20,8 @@ export class CreateProjectPage implements OnInit {
   withinGoalLimit;
   createProject: FormGroup;
   startDate;
+
+  popupshow: boolean = false;
   endDate;
   today: any = new Date();
   projectCreatePopUp: any = {};
@@ -45,6 +47,9 @@ export class CreateProjectPage implements OnInit {
     public homeService: HomeService,
     public toastService: ToastService
   ) {
+    toastService.popClose.subscribe(data => {
+      this.popupshow = false;
+    })
     this.homeService.clearMyProject.subscribe(data => {
       this.prepareForm();
       this.createNewProject = true;
@@ -80,24 +85,6 @@ export class CreateProjectPage implements OnInit {
   }
   ionViewDidEnter() {
     this.isValidDate = true;
-    this.projectCreatePopUp = {
-      type: 'newProject',
-      title: '',
-      text: 'Your project has been saved, click below to view your project.',
-      showCloseButton: false,
-      titleCss: {
-      },
-      textCss: {
-        fontSize: '16px',
-        color: '#b23e33;'
-      },
-      buttons: [
-        {
-          title: 'View Project',
-          color: 'primary',
-          isActionable: '/project-view/project-detail/form',
-        }]
-    }
   }
   ngOnInit() {
     this.prepareForm();
@@ -201,6 +188,7 @@ export class CreateProjectPage implements OnInit {
             // already basic structure is there in local
             if (programsList) {
               if (programsList.programs && programsList.programs._id == programId) {
+                mapped = true
                 // programsList.projects.forEach(program => {
                 if (this.createNewProject) {
                   this.project._id = programsList.projects.length + 1;
@@ -229,51 +217,12 @@ export class CreateProjectPage implements OnInit {
                   });
                 }
                 // });
-              } else {
-                // if there is no basic structure is in local
-                if (programsList.projects) {
-                  this.project._id = programsList.projects.length + 1;
-                  programsList.projects.push(this.project)
-                } else {
-                  this.project._id = 1;
-                  let pro1 = [{
-                    projects: [
-                    ]
-                  }]
-                  pro1[0].projects.push(this.project);
-                  projectsList = pro1;
-                }
-                this.storage.set('latestProjects', projectsList).then(myProjects => {
-                  this.storage.set('newcreatedproject', this.project).then(cmp => {
-                    this.toastService.successToast('message.project_is_created');
-                    // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
-                  })
-                })
               }
-            } else {
-              // if there is no basic structure is in local
-              if (programsList[0].projects) {
-                this.project._id = programsList.projects.length + 1;
-                programsList[0].projects.push(this.project)
-              } else {
-                this.project._id = 1;
-                let pro1 = [{
-                  projects: [
-                  ]
-                }]
-                pro1[0].projects.push(this.project);
-                projectsList = pro1;
-              }
-              this.storage.set('latestProjects', projectsList).then(myProjects => {
-                this.storage.set('newcreatedproject', this.project).then(cmp => {
-                  this.toastService.successToast('message.project_is_created');
-                  // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
-                })
-              })
             }
           });
         } else {
           // if there is no basic structure is in local
+          mapped = true;
           this.project._id = 1;
           let pro1 = [{
             projects: [
@@ -288,11 +237,25 @@ export class CreateProjectPage implements OnInit {
             })
           })
         }
+        console.log('popupshow', this.popupshow);
+        this.popupshow = true;
         this.projectCreatePopUp = {
-          message: "Your project has been saved, click below to view your project.",
-          button: "View Project",
-          isActionable: '/project-view/project-detail/form',
-          show: true
+          type: 'newProject',
+          title: '',
+          text: 'Your project has been saved, click below to view your project.',
+          showCloseButton: false,
+          titleCss: {
+          },
+          textCss: {
+            fontSize: '16px',
+            color: '#b23e33;'
+          },
+          buttons: [
+            {
+              title: 'View Project',
+              color: 'primary',
+              isActionable: '/project-view/project-detail/form',
+            }]
         }
         this.storage.set('projectToBeView', this.project).then(project => {
         })

@@ -1,35 +1,38 @@
 {
-  "_from": "cordova-plugin-x-socialsharing",
+  "_args": [
+    [
+      "cordova-plugin-x-socialsharing@5.6.3",
+      "/Users/vishwanathbadiger/Documents/apps/unnati-mobile-application/sl-unnati-mobile"
+    ]
+  ],
+  "_from": "cordova-plugin-x-socialsharing@5.6.3",
   "_id": "cordova-plugin-x-socialsharing@5.6.3",
   "_inBundle": false,
   "_integrity": "sha512-veAoIOgviGL9RCUyol9e6BxBRpyPV5OWaAmFKglbLjF2uGvj73k+jPe2+2p39ySPetxC8KERAz+1I6tfjk42Zg==",
   "_location": "/cordova-plugin-x-socialsharing",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "version",
     "registry": true,
-    "raw": "cordova-plugin-x-socialsharing",
+    "raw": "cordova-plugin-x-socialsharing@5.6.3",
     "name": "cordova-plugin-x-socialsharing",
     "escapedName": "cordova-plugin-x-socialsharing",
-    "rawSpec": "",
+    "rawSpec": "5.6.3",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "5.6.3"
   },
   "_requiredBy": [
-    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-x-socialsharing/-/cordova-plugin-x-socialsharing-5.6.3.tgz",
-  "_shasum": "7a8ce277a361b6c36bf22e0a23986bce0685d2be",
-  "_spec": "cordova-plugin-x-socialsharing",
-  "_where": "/Users/vishwanathbadiger/Documents/apps/sl-unnati/Unnati/sl-unnati-mobile",
+  "_spec": "5.6.3",
+  "_where": "/Users/vishwanathbadiger/Documents/apps/unnati-mobile-application/sl-unnati-mobile",
   "author": {
     "name": "Eddy Verbruggen - @EddyVerbruggen"
   },
   "bugs": {
     "url": "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin/issues"
   },
-  "bundleDependencies": false,
   "cordova": {
     "id": "cordova-plugin-x-socialsharing",
     "platforms": [
@@ -40,7 +43,6 @@
       "web"
     ]
   },
-  "deprecated": false,
   "description": "Share text, images (and other files), or a link via the native sharing widget of your device. Android is fully supported, as well as iOS 6 and up. WP8 has somewhat limited support.",
   "engines": [
     {

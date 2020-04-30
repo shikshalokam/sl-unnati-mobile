@@ -116,6 +116,9 @@ export class HomePage implements OnInit {
       this.setTitle('home_tab');
       this.connected = localStorage.getItem("networkStatus");
       //  this.splashScreen.hide();
+      if (!this.mySchools) {
+        this.getSchools();
+      }
       this.storage.get('templates').then(templates => {
         if (!templates) {
           this.getTemplates();
@@ -128,7 +131,6 @@ export class HomePage implements OnInit {
           this.getActiveProjects();
         }
       })
-      this.getSchools();
     }
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);

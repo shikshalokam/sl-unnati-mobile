@@ -31,10 +31,14 @@ export class TokenInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         this.api.validateToken().then(token => {
-            this.token = token
+            this.token = token;
         })
         // this.getFreshToken();
-        if (this.token) {
+        if (!this.token) {
+            this.storage.get('userTokens').then(token => {
+                this.token = token;
+            })
+        } else {
             request = request.clone({
                 setHeaders: {
                     'x-auth-token': this.token.access_token,

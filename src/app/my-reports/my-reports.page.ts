@@ -173,7 +173,6 @@ export class MyReportsPage {
         this.schools = this.schools.concat(data.data);
         this.page = this.page + 1;
       } else {
-        console.log("schools in else");
         this.schools = [];
         this.tabs = [
           {
@@ -207,13 +206,15 @@ export class MyReportsPage {
       console.log(tempData, "data");
       this.myReportsService.getReportData(tempData).subscribe((data: any) => {
         this.toastService.stopLoader();
-        if (data.status != 'failed' || data.data.status) {
+        if (data.status != 'failed') {
           if (tempData.type === 'share') {
             this.share(data);
           } else {
             this.toastService.stopLoader();
             this.download(data);
           }
+        } else {
+          this.toastService.errorToast(data.message);
         }
       }, error => {
         this.toastService.stopLoader();
@@ -238,13 +239,15 @@ export class MyReportsPage {
       console.log(tempData, "data");
       this.myReportsService.getFullReportData(tempData).subscribe((data: any) => {
         this.toastService.stopLoader();
-        if (data.status != 'failed' || data.data.status) {
+        if (data.status != 'failed') {
           if (tempData.type === 'share') {
             this.share(data);
           } else {
             this.toastService.stopLoader();
             this.download(data);
           }
+        } else {
+          this.toastService.errorToast(data.message);
         }
       }, error => {
         this.toastService.stopLoader();
