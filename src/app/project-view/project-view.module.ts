@@ -9,7 +9,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
-  {
+  {  
     path: '',
     component: ProjectViewPage,
     children: [

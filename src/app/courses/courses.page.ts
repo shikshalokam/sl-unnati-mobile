@@ -115,7 +115,6 @@ export class CoursesPage implements OnInit {
     this.route
       .queryParams
       .subscribe(params => {
-        console.log('Query param : ', params);
       });
     this.networkService.emit.subscribe(value => {
       this.connected = value;

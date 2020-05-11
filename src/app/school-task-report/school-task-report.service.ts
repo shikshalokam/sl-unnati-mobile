@@ -13,13 +13,10 @@ export class SchoolTaskService {
         }
         return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projectsByEntity', data)
     }
-    public getProjectDetail(token, id) {
-        let httpHeaders = new HttpHeaders({
-            'x-auth-token': token
-        })
+    public getProjectDetail(id) {
         let data = {
             projectId: id
         }
-        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projectsDetailsById', data, { headers: httpHeaders })
+        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projectsDetailsById', data)
     }
 }

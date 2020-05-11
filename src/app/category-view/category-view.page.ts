@@ -35,6 +35,12 @@ export class CategoryViewPage {
           if (myProjects) {
             myProjects.forEach(programsList => {
               programsList.projects.sort((a, b) => {
+                if (!b.lastUpdate) {
+                  b.lastUpdate = b.lastSync;
+                }
+                if (!a.lastUpdate) {
+                  a.lastUpdate = a.lastSync;
+                }
                 return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
               });
             });
@@ -47,6 +53,7 @@ export class CategoryViewPage {
     })
     rout.params.subscribe(param => {
       this.searchProjects = '';
+      this.searchInput = '';
       this.catType = param.cat;
       if (param.from) {
         this.from = param.from;

@@ -15,7 +15,7 @@ export class MyProjectsPage implements OnInit {
   ) { }
   ionViewDidEnter() {
     this.getMyProjects();
-    this.searchProjects ='';
+    this.searchProjects = '';
   }
   ngOnInit() {
   }
@@ -24,6 +24,7 @@ export class MyProjectsPage implements OnInit {
       this.projects = myprojects;
     });
   }
+
   public projectView(project) {
     this.storage.set('projectToBeView', project).then(project => {
       this.router.navigate(['/project-view/project-detail', 'my-projects'])

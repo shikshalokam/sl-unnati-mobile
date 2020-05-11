@@ -123,49 +123,6 @@ export class AppComponent {
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
-          this.storage.get('allowProfileUpdateForm').then(data => {
-            if (data) {
-              this.appPages = [
-                {
-                  title: 'Home',
-                  url: '/project-view/home',
-                  icon: 'home'
-                },
-                {
-                  title: 'Sync',
-                  icon: 'sync',
-                  url: '',
-                },
-                {
-                  title: 'Tutorial Video',
-                  icon: 'play',
-                  url: '/project-view/tutorial-videos',
-                },
-                {
-                  title: 'Profile Update',
-                  icon: 'person',
-                  url: '/project-view/update-profile',
-                },
-                {
-                  title: 'About',
-                  url: '/project-view/about',
-                  icon: 'information-circle'
-                },
-                {
-                  title: 'Settings',
-                  icon: 'md-settings',
-                  children: [
-                    {
-                      title: 'Languages',
-                      icon: 'globe'
-                    },
-                  ]
-                }
-              ];
-            } else {
-              this.getProfileData();
-            }
-          })
           this.subscription = this.interval.subscribe(val => {
             this.prepareMappedProjectToSync();
           });
@@ -638,6 +595,7 @@ export class AppComponent {
         sproject.isNew = false;
         sproject.isSync = true;
         sproject.isEdited = false;
+        sproject.lastUpdate = sproject.lastSync;
         if (sproject.tasks && sproject.tasks.length > 0) {
           sproject.tasks.forEach(task => {
             task.isSync = true;

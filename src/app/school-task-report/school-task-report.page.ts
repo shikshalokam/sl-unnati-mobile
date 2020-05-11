@@ -85,7 +85,9 @@ export class SchoolTaskReportPage implements OnInit {
         this.showSkeleton = false;
         this.errorToast(data.message);
       }
-    }, error => { })
+    }, error => { 
+      this.showSkeleton = false;
+    })
   }
 
   // Error Toast message

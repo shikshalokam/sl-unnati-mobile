@@ -18,7 +18,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
-import { Market } from '@ionic-native/market/ngx';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { ApiProvider } from '../app/api/api';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
@@ -41,6 +40,8 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { GetSubEntitiesPage } from './get-sub-entities/get-sub-entities.page';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import { Market } from '@ionic-native/market/ngx';
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }

@@ -9,6 +9,7 @@ export class HomeService {
   public myProject = new Subject();
   public clearMyProject = new Subject();
   public tobeSync = new Subject();
+  public profileUpdateEvent = new Subject();
   public isSyncing = new Subject();
   public activeProjectLoad = new Subject();
   public searcResultsOfPrjcts = new Subject();
@@ -39,5 +40,9 @@ export class HomeService {
   }
   public syncProjects() {
     this.tobeSync.next();
+  }
+
+  public showProfileUpdate(data) {
+    this.profileUpdateEvent.next(data);
   }
 }

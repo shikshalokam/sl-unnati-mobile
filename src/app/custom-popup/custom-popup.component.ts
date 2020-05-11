@@ -83,5 +83,4 @@ export class CustomPopupComponent implements OnInit {
       this.market.open(success)
     })
   }
-
 }

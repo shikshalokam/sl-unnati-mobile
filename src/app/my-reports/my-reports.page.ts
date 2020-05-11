@@ -220,6 +220,7 @@ export class MyReportsPage {
         this.toastService.stopLoader();
       })
     } else {
+      this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
@@ -253,6 +254,7 @@ export class MyReportsPage {
         this.toastService.stopLoader();
       })
     } else {
+      this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
@@ -283,6 +285,7 @@ export class MyReportsPage {
 
   // Download the reports
   public download(data) {
+    const fileTransfer: FileTransferObject = this.transfer.create();
     fetch(data.pdfUrl,
       {
         method: "GET"

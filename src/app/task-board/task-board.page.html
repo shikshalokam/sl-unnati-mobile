@@ -5,11 +5,11 @@
 </ion-header>
 
 <ion-content>
-  <div class="tabs-list">
-    <div class="custom-tab" (click)="selectTab('ongoing')" [ngClass]="{'active-tab': activeTab == 'ongoing'}">
-      {{ "open_tasks.ongoing" | translate }}</div>
-    <div class="custom-tab" (click)="selectTab('past')" [ngClass]="{'active-tab':  activeTab == 'past'}">
-      {{ "open_tasks.past" | translate }}
+  <div class="tabs-list">
+    <div class="custom-tab" (click)="selectTab('ongoing')" [ngClass]="{'active-tab': activeTab == 'ongoing'}">
+      {{ "open_tasks.ongoing" | translate }}</div>
+    <div class="custom-tab" (click)="selectTab('past')" [ngClass]="{'active-tab':  activeTab == 'past'}">
+      {{ "open_tasks.past" | translate }}
     </div>
   </div>
   <div *ngIf="showSkeleton == true">

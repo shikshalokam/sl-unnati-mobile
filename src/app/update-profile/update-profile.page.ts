@@ -11,6 +11,7 @@ import { NotificationCardService } from '../notification-card/notification.servi
 import { ModalController } from '@ionic/angular';
 import { GetSubEntitiesPage } from '../get-sub-entities/get-sub-entities.page';
 import { AlertController } from '@ionic/angular';
+import { __core_private_testing_placeholder__ } from '@angular/core/testing';
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.page.html',
@@ -29,18 +30,19 @@ export class UpdateProfilePage {
   hubList;
   back = "project-view/home"
   blockList;
+  button = 'Continue';
   zoneList;
   stateId;
   schoolList;
   profile = [];
   stateList;
-  appUpdate = '';
   popMsg: any = {};
   showUpdatePop: boolean = false;
   showForm: boolean = false;
   stateSubEntities;
   profileFormData;
-
+  showPopup;
+  appUpdate: any = {};
   dynamicForm: FormGroup;
   constructor(
     public formBuilder: FormBuilder,
@@ -138,7 +140,8 @@ export class UpdateProfilePage {
     this.showForm = true;
   }
 
-  public getSubEntities(event) {
+  public getSubEntities(event, field) {
+    this.removeEntity(field);
     this.getImmediateChildren(event.detail.value);
   }
   public getImmediateChildren(event) {
@@ -207,7 +210,7 @@ export class UpdateProfilePage {
           }
           this.toastService.stopLoader();
         }, erros => {
-          // this.toastService.stopLoader();
+          this.toastService.stopLoader();
         })
       }
     }

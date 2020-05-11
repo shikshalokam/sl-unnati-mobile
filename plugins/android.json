@@ -101,12 +101,12 @@
       "DEEPLINK_5_SCHEME": " ",
       "DEEPLINK_5_HOST": " ",
       "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati.qa"
     }
   },
   "dependent_plugins": {
-    "cordova-plugin-file": {
-      "PACKAGE_NAME": "org.shikshalokam.unnati.qa"
-    },
     "es6-promise-plugin": {
       "PACKAGE_NAME": "org.shikshalokam.unnati.qa"
     }

@@ -21,7 +21,7 @@
     </div>
   </div>
   <!-- <h5 class="required-field" *ngIf="submitAttempt" style="padding-left:15px;">
-    {{'create_project.fileds_mandatory' | translate}}</h5> -->
+      {{'create_project.fileds_mandatory' | translate}}</h5> -->
   <form [formGroup]="dynamicForm" *ngIf="showForm && profileFormData" style="    margin-bottom: 10%;">
     <ion-item class="custom-ion-item" *ngFor="let controls of profileFormData">
       <ion-label class="custom-label" position="floating"
@@ -43,7 +43,7 @@
       </ion-input>
       <ion-select class="custom-select-box" *ngIf="controls.input == 'select' && controls.visible"
         [(ngModel)]="controls.value" name="{{controls.label}}" [formControlName]="controls.field"
-        placeholder={{controls.value?.label}} (ionChange)="getSubEntities($event)">
+        placeholder={{controls.value?.label}} (ionChange)="getSubEntities($event,controls)">
         <ion-select-option *ngFor="let state of controls.options" value="{{state.value}}"
           selected="state.value === controls.value.value">
           {{state.label}}</ion-select-option>
@@ -61,7 +61,7 @@
       </ng-container>
       <ion-grid *ngIf="controls.input == 'multiselect'">
         <span style="font-size: 16px;
-        font-weight: 600; text-transform: capitalize;">{{controls.label}} </span>
+          font-weight: 600; text-transform: capitalize;">{{controls.label}} </span>
         <ion-row *ngIf="controls.input == 'multiselect' && controls.visible" class="radio-grp">
           <ion-radio-group value="list">
             <ion-col size="6">
@@ -96,9 +96,9 @@
           <ion-icon name="checkmark" slot="end" (click)="submitOthers(controls)"></ion-icon>
         </ion-item>
         <!-- <ion-item *ngIf="controls.selectedType == 'list' && !controls.value" (click)="selectEntity(controls)">
-          <ion-input type="text" placeholder="Enter here..." readonly>
-          </ion-input>
-        </ion-item> -->
+            <ion-input type="text" placeholder="Enter here..." readonly>
+            </ion-input>
+          </ion-item> -->
       </ion-grid>
     </ion-item>
     <div class="profile-actions">
