@@ -30,6 +30,7 @@
     "@ionic-native/chooser": "^5.23.0",
     "@ionic-native/core": "^5.15.0-beta.14",
     "@ionic-native/date-picker": "^5.17.0",
+    "@ionic-native/deeplinks": "^5.24.0",
     "@ionic-native/device": "^4.20.0",
     "@ionic-native/fcm": "^5.24.0",
     "@ionic-native/file": "^5.19.1",
@@ -55,6 +56,7 @@
     "com.lampa.startapp": "git+https://github.com/lampaa/com.lampa.startapp.git",
     "cordova-android": "^8.1.0",
     "cordova-browser": "^6.0.0",
+    "cordova-ios": "^5.1.1",
     "cordova-plugin-android-permissions": "^1.0.2",
     "cordova-plugin-app-launcher": "^0.4.0",
     "cordova-plugin-app-version": "^0.1.9",
@@ -79,6 +81,7 @@
     "highcharts": "^7.2.1",
     "highcharts-angular": "^2.4.0",
     "ion2-calendar": "^2.2.0",
+    "ionic-plugin-deeplinks": "^1.0.20",
     "jquery": "^3.4.1",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
@@ -158,10 +161,29 @@
       },
       "cordova-plugin-app-version": {},
       "cordova-plugin-chooser": {},
-      "cordova-plugin-android-permissions": {}
+      "cordova-plugin-android-permissions": {},
+      "ionic-plugin-deeplinks": {
+        "URL_SCHEME": "unnati",
+        "DEEPLINK_SCHEME": "https",
+        "DEEPLINK_HOST": "shikshalokam.org",
+        "ANDROID_PATH_PREFIX": "/",
+        "ANDROID_2_PATH_PREFIX": "/",
+        "ANDROID_3_PATH_PREFIX": "/",
+        "ANDROID_4_PATH_PREFIX": "/",
+        "ANDROID_5_PATH_PREFIX": "/",
+        "DEEPLINK_2_SCHEME": " ",
+        "DEEPLINK_2_HOST": " ",
+        "DEEPLINK_3_SCHEME": " ",
+        "DEEPLINK_3_HOST": " ",
+        "DEEPLINK_4_SCHEME": " ",
+        "DEEPLINK_4_HOST": " ",
+        "DEEPLINK_5_SCHEME": " ",
+        "DEEPLINK_5_HOST": " "
+      }
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }

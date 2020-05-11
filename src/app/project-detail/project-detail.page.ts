@@ -18,6 +18,7 @@ export class ProjectDetailPage {
   project;
   back;
   category;
+  addTaskButton: boolean;
   files: any;
   startDate;
   isValidDate;
@@ -76,6 +77,7 @@ export class ProjectDetailPage {
           this.back = 'project-view/home';
         } else if (this.category == 'form') {
           this.back = 'project-view/create-project';
+
         }
         else {
           this.back = 'project-view/category/' + this.category;
@@ -83,9 +85,16 @@ export class ProjectDetailPage {
       } else {
         this.back = 'project-view/category/my_projects';
       }
+
+
     })
   }
   ionViewDidEnter() {
+    if (this.category == 'my_projects' || this.category == 'form') {
+      this.addTaskButton = true;
+    } else {
+      this.addTaskButton = false;
+    }
     this.showAddTask = false;
     this.getProject();
   }
@@ -141,6 +150,7 @@ export class ProjectDetailPage {
   public copyTemplate() {
     this.projectId = '';
     this.project.isStarted = true;
+    this.addTaskButton = true;
     if (this.project.status == 'Not started' || this.project.status == 'not yet started') {
       this.project.status = 'In Progress';
     }

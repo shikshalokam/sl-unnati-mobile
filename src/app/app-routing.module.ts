@@ -45,6 +45,7 @@ const routes: Routes = [
   { path: 'tutorial-videos', loadChildren: './tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
   { path: 'get-sub-entities', loadChildren: './get-sub-entities/get-sub-entities.module#GetSubEntitiesPageModule' },
   { path: 'app-permissions', loadChildren: './app-permissions/app-permissions.module#AppPermissionsPageModule' },
+  { path: 'template-view', loadChildren: './template-view/template-view.module#TemplateViewPageModule' },
 ];
 
 @NgModule({

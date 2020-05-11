@@ -3,6 +3,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Router } from '@angular/router';
 import { ToastService } from '../toast.service';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-app-permissions',
@@ -51,13 +52,13 @@ export class AppPermissionsPage implements OnInit {
     isChecked: false,
     id: this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
   },
-  // {
-  //   icon: '../assets/images/notifications.svg',
-  //   title: 'Notifications',
-  //   subTitle: 'Allows app to send you information',
-  //   isChecked: false,
-  //   id: [this.androidPermissions.PERMISSION.ACCESS_NOTIFICATION_POLICY]
-  // }
+    // {
+    //   icon: '../assets/images/notifications.svg',
+    //   title: 'Notifications',
+    //   subTitle: 'Allows app to send you information',
+    //   isChecked: false,
+    //   id: [this.androidPermissions.PERMISSION.ACCESS_NOTIFICATION_POLICY]
+    // }
   ]
   requests = [];
   constructor(
@@ -65,18 +66,21 @@ export class AppPermissionsPage implements OnInit {
     private toastService: ToastService,
     public router: Router,
     public iab: InAppBrowser,
+    public menuController: MenuController,
   ) {
     toastService.popClose.subscribe(data => {
       this.showWarning = false;
     })
     toastService.requestPermissions.subscribe(data => {
       this.showWarning = false;
+      menuController.enable(true);
       this.getPermissions();
     })
   }
 
 
   ngOnInit() {
+    this.menuController.enable(false);
   }
   public permissionGivenTo(request) {
     this.disableBtn = true;
@@ -116,9 +120,10 @@ export class AppPermissionsPage implements OnInit {
     } else {
       this.showWarning = true;
     }
-
   }
   public getPermissions() {
+
+
     let request: any = [];
     this.requests.forEach(element => {
       if (element.isChecked) {

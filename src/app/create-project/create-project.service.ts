@@ -71,9 +71,9 @@ export class CreateProjectService {
         let environment = AppConfigs.currentEnvironment;
         let programId = '';
         AppConfigs.environments.forEach(env => {
-          if (environment === env.name) {
-            programId = env.programId;
-          }
+            if (environment === env.name) {
+                programId = env.programId;
+            }
         });
         return this.storage.get('latestProjects').then(projectList => {
             if (projectList) {
@@ -141,5 +141,8 @@ export class CreateProjectService {
     public addNewTaskIntoProject(task) {
         this.addNewTask.next(task);
     }
-   
+
+    public getTemplate(templateId) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/template/getTemplateDetailsById/' + templateId)
+    }
 }

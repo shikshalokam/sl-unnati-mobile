@@ -40,4 +40,11 @@ export class ProjectService {
     public getProfileData(profileId) {
         return this.http.get(AppConfigs.api_url + '/kendra-service/api/v1/user-extension/getProfile/' + profileId)
     }
+    public getStorageUrl(data) {
+        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projects/getFileUploadUrl', data)
+    }
+    public storeInBucket(base64, url) {
+        return this.http.put(url, base64)
+
+    }
 }

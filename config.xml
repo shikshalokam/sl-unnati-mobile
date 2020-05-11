@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="org.shikshalokam.unnati.qa" version="2.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Unnati.qa</name>
+    <name>Unnati.QA</name>
     <description>Unnati</description>
-    <author email="vishubadiger33@gmail.com" href="http://ionicframework.com/">Bachi</author>
+    <author email="bachi@shikshalokam.org" href="http://ionicframework.com/">Bachi</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="*" />
@@ -93,6 +93,24 @@
     <plugin name="cordova-plugin-inappbrowser" spec="~3.0.0" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.2" />
     <plugin name="cordova-plugin-appavailability" spec="^0.4.2" />
+    <plugin name="ionic-plugin-deeplinks" spec="^1.0.20">
+        <variable name="URL_SCHEME" value="unnati" />
+        <variable name="DEEPLINK_SCHEME" value="https" />
+        <variable name="DEEPLINK_HOST" value="shikshalokam.org" />
+        <variable name="ANDROID_PATH_PREFIX" value="/" />
+        <variable name="ANDROID_2_PATH_PREFIX" value="/" />
+        <variable name="ANDROID_3_PATH_PREFIX" value="/" />
+        <variable name="ANDROID_4_PATH_PREFIX" value="/" />
+        <variable name="ANDROID_5_PATH_PREFIX" value="/" />
+        <variable name="DEEPLINK_2_SCHEME" value=" " />
+        <variable name="DEEPLINK_2_HOST" value=" " />
+        <variable name="DEEPLINK_3_SCHEME" value=" " />
+        <variable name="DEEPLINK_3_HOST" value=" " />
+        <variable name="DEEPLINK_4_SCHEME" value=" " />
+        <variable name="DEEPLINK_4_HOST" value=" " />
+        <variable name="DEEPLINK_5_SCHEME" value=" " />
+        <variable name="DEEPLINK_5_HOST" value=" " />
+    </plugin>
     <plugin name="cordova-plugin-app-launcher" spec="^0.4.0" />
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.2" />
     <plugin name="cordova-plugin-datepicker" spec="^0.9.3" />

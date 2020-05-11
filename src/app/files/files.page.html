@@ -13,14 +13,14 @@
   </div>
   <div *ngIf="currentMyProject" class="image-container">
     <div *ngFor="let task of currentMyProject.tasks">
-      <ion-card *ngIf="activeTab == 'images' && (task.remarks || task.imageList.length > 0)">
+      <ion-card *ngIf="activeTab == 'images' && (task.remarks || task.imageList && task.imageList.length > 0)">
         <ion-card-header>
           <h4 style="text-transform: capitalize;"> {{task.title}} </h4>
         </ion-card-header>
-        <ion-card-content *ngIf="task.remarks && task.imageList.length == 0">
+        <ion-card-content *ngIf="task.remarks && task.imageList && task.imageList.length == 0">
           {{task.remarks}}
         </ion-card-content>
-        <ion-card-content *ngIf="task.remarks && task.imageList.length > 0">
+        <ion-card-content *ngIf="task.remarks && task.imageList && task.imageList.length > 0">
           <ion-row>
             <ion-col size="6">
               {{task.remarks}}
@@ -30,7 +30,7 @@
             </ion-col>
           </ion-row>
         </ion-card-content>
-        <ion-card-content *ngIf="!task.remarks && task.imageList.length > 0">
+        <ion-card-content *ngIf="!task.remarks && task.imageList && task.imageList.length > 0">
           <ion-row>
             <ion-col size="6" *ngFor="let image of task.imageList">
               <img src="{{image.data}}" style="    max-height: 160px;

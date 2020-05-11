@@ -143,7 +143,7 @@ export class CategoryViewPage {
       this.showSkeleton = false;
     })
   }
-  
+
   public projectView(project) {
     this.storage.set('projectToBeView', project).then(project => {
       this.router.navigate(['/project-view/project-detail', this.catType])

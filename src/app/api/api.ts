@@ -58,7 +58,7 @@ export class ApiProvider {
     this.currentUser.deactivateActivateSession(true);
   }
 
-  validateToken() {
+   validateToken() {
     return new Promise(resolve => {
       return this.storage.get('userDetails').then(data => {
         if (data) {
@@ -75,7 +75,8 @@ export class ApiProvider {
                   let userDetails = jwt_decode(userTokens.access_token);
                   this.storage.set('userDetails', userDetails).then(userData => {
                   })
-                  this.storage.set('userTokens', userTokens).then(usertoken => {
+
+                  this.storage.set('userTokens', userTokens).then(data => {
                     resolve(userTokens);
                   })
                   this.storage.set('currentUser', data).then(data => { })

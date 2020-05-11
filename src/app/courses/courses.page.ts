@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 import { Network } from '@ionic-native/network/ngx';
 import { Storage } from '@ionic/storage';
 import { ToastController } from '@ionic/angular';
-import {ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.page.html',
@@ -93,16 +93,30 @@ export class CoursesPage implements OnInit {
     public storage: Storage,
     public location: Location,
     public appLauncher: AppLauncher,
-    public toastController: ToastController, 
-    public route:ActivatedRoute) {
-      route.params.subscribe(param =>{
-        if(param.cat){
+    public toastController: ToastController,
+    public route: ActivatedRoute) {
+    route.params.subscribe(param => {
+      if (param.cat) {
+        if (param.cat == 'template-view') {
+          if (param.programId) {
+            this.back = 'project-view/template-view/' + param.projectId + '/' + param.programId;
+          } else {
+            this.back = 'project-view/template-view/' + param.projectId;
+          }
+        } else {
           this.parameter = param.cat;
-          this.back='project-view/project-detail';
-        }else{
-          this.back ='project-view/detail';
+          this.back = 'project-view/project-detail';
         }
-      })
+      } else {
+        this.parameter = param.cat;
+        this.back = 'project-view/detail';
+      }
+    })
+    this.route
+      .queryParams
+      .subscribe(params => {
+        console.log('Query param : ', params);
+      });
     this.networkService.emit.subscribe(value => {
       this.connected = value;
       this.checkNetwork();

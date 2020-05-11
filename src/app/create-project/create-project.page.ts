@@ -237,7 +237,6 @@ export class CreateProjectPage implements OnInit {
             })
           })
         }
-        console.log('popupshow', this.popupshow);
         this.popupshow = true;
         this.projectCreatePopUp = {
           type: 'newProject',
