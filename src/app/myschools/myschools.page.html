@@ -23,7 +23,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-item class="search-bar-custom" *ngIf="mySchools">
+  <ion-item class="search-bar-custom" *ngIf="mySchools && !noSchools">
     <ion-input type="text" placeholder="Search" [(ngModel)]="searchInput" (keyup)="searchSchool(searchInput)">
     </ion-input>
     <ion-icon name="search" item-right></ion-icon>

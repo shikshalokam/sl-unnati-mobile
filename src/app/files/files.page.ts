@@ -66,7 +66,6 @@ export class FilesPage implements OnInit {
                 });
               }
               this.currentMyProject = project;
-              console.log(this.currentMyProject, "this.currentMyProject sssss");
             }
           });
         });
@@ -99,15 +98,6 @@ export class FilesPage implements OnInit {
     this.activeTab = type;
   }
   downloadFile(task) {
-    // const fileTransfer: FileTransferObject = this.transfer.create();
-
-    // fileTransfer.download(task.data, this.appFolderPath + 'file.pdf').then((entry) => {
-    //   console.log('download complete: ' + entry.toURL());
-    // }, (error) => {
-    //   console.log(error, "console.log");
-    //   // handle error
-    // });
-
     fetch(task.data,
       {
         method: "GET"
@@ -115,7 +105,6 @@ export class FilesPage implements OnInit {
         this.appFolderPath = decodeURIComponent(this.appFolderPath);
         task.name = decodeURIComponent(task.name);
         this.file.writeFile(this.appFolderPath, task.name, blob, { replace: true }).then(res => {
-          console.log(res, "res");
           this.fileOpener.open(
             res.toInternalURL(),
             'application/pdf'

@@ -28,6 +28,8 @@ const routes: Routes = [
       { path: 'subtask-status', loadChildren: '../subtask-status/subtask-status.module#SubtaskStatusPageModule' },
       { path: 'courses', loadChildren: '../courses/courses.module#CoursesPageModule' },
       { path: 'courses/:cat', loadChildren: '../courses/courses.module#CoursesPageModule' },
+      { path: 'courses/:cat/:projectId', loadChildren: '../courses/courses.module#CoursesPageModule' },
+      { path: 'courses/:cat/:projectId/:programId', loadChildren: '../courses/courses.module#CoursesPageModule' },
       { path: 'status/:id', loadChildren: '../charts/charts.module#ChartsPageModule' },
       { path: 'create-project', loadChildren: '../create-project/create-project.module#CreateProjectPageModule' },
       { path: 'create-project/:clearData', loadChildren: '../create-project/create-project.module#CreateProjectPageModule' },
@@ -47,6 +49,8 @@ const routes: Routes = [
       { path: 'task-board', loadChildren: '../task-board/task-board.module#TaskBoardPageModule' },
       { path: 'update-profile', loadChildren: '../update-profile/update-profile.module#UpdateProfilePageModule' },
       { path: 'tutorial-videos', loadChildren: '../tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
+      { path: 'template-view/:templateId', loadChildren: '../template-view/template-view.module#TemplateViewPageModule' },
+      { path: 'template-view/:templateId/:programId', loadChildren: '../template-view/template-view.module#TemplateViewPageModule' },
     ]
   }
 ]

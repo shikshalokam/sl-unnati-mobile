@@ -4,11 +4,7 @@
 </ion-header>
 <ion-content class="ion-padding">
   <div *ngIf="showUpdatePop">
-    <!-- <app-custom-popup [header]="popMsg" [showCloseButton]="showCloseButton" [appUpdate]="appUpdate" [body]="body"
-      [button]="button" [isActionable]="isActionable" [showPopup]="true">
-    </app-custom-popup> -->
-
-    <app-custom-popup [appUpdate]="popMsg" [showUpdatePopup]="" [showPopup]="" [projectCreatePopup]="true">
+    <app-custom-popup [content]="popMsg" [showPopup]="true">
     </app-custom-popup>
   </div>
   <div class="profile-card">

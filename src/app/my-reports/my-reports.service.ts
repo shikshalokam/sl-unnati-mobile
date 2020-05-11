@@ -39,7 +39,6 @@ export class MyReportsService {
         this.reportEvent.next(type);
     }
     public shareTaskEvent(data) {
-        console.log(data, "data in cp reports");
         this.shareTask.next(data);
     }
 }

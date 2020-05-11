@@ -17,9 +17,9 @@ export class MyschoolsPage {
   @ViewChild(NavController) nav: NavController;
   searchInput;
   connected: any = localStorage.getItem('networkStatus');
-  mySchools=[];
+  mySchools = [];
   back = "project-view/home"
-  noSchools: boolean = false;
+  noSchools: boolean = true;
   page: number = 1;
   count: number = 5;
   skeletons = [{}, {}, {}, {}, {}, {}];
@@ -52,10 +52,13 @@ export class MyschoolsPage {
     if (this.connected) {
       // event.target.complete();
       this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-        if (data.data) {
+        if (data.data && data.status != 'failed') {
           this.mySchools = this.mySchools.concat(data.data);
           this.page = this.page + 1;
+          this.noSchools = false;
           // event.target.disabled = true;
+        } else {
+          this.noSchools = true;
         }
       }, error => { })
     } else {

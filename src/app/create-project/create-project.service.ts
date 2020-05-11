@@ -115,7 +115,6 @@ export class CreateProjectService {
             })
         });
     }
-
     // update task in project after marking as delete. 
     public UpdateCurrentMyProjectByTask(createdTask) {
         return this.storage.get('projectToBeView').then(cmp => {
@@ -142,5 +141,8 @@ export class CreateProjectService {
     public addNewTaskIntoProject(task) {
         this.addNewTask.next(task);
     }
-   
+
+    public getTemplate(templateId) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/template/getTemplateDetailsById/' + templateId)
+    }
 }

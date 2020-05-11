@@ -209,7 +209,7 @@ export class SchoolTaskReportPage implements OnInit {
               resp.data.projects.forEach(prj => {
                 this.storage.set('projectToBeView', prj).then(project => {
                   if (path == 'details') {
-                    this.router.navigate(['/project-view/project-detail', 'schools'])
+                    this.router.navigate(['/project-view/project-detail', 'schools'])  
                   } else {
                     this.router.navigate(['/project-view/status', id]);
                   }
@@ -219,7 +219,6 @@ export class SchoolTaskReportPage implements OnInit {
           }
         })
       } else {
-
       }
     }, error => {
       // this.showSkeleton = false;

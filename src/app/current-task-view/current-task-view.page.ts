@@ -7,6 +7,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CreateProjectService } from '../create-project/create-project.service';
 import { ToastService } from '../toast.service'
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { File } from '@ionic-native/file/ngx';
+declare var cordova: any;
+
 @Component({
   selector: 'app-current-task-view',
   templateUrl: './current-task-view.page.html',
@@ -27,6 +30,8 @@ export class CurrentTaskViewPage implements OnInit {
   editGoal;
   subTaskTitle;
   editTitle;
+  isIos;
+  appFolderPath: string;
   markLabelsAsInvalid: boolean = false;
   statuses = [
     { title: 'Not started' },
@@ -40,6 +45,7 @@ export class CurrentTaskViewPage implements OnInit {
     public datepipe: DatePipe,
     public datePicker: DatePicker,
     public router: Router,
+    private files: File,
     public route: ActivatedRoute,
     public createProjectService: CreateProjectService,
     public toastService: ToastService,
@@ -55,10 +61,14 @@ export class CurrentTaskViewPage implements OnInit {
     this.enableMarkButton = false;
   }
   ngOnInit() {
+    this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
   }
   getTask() {
     this.storage.get('cTask').then(task => {
       this.enableMarkTaskComplete(task);
+      if (!task.attachments) {
+        task.attachments = [];
+      }
       this.task = task;
       if (this.from == 'pd') {
         this.back = "project-view/project-detail";
@@ -344,8 +354,8 @@ export class CurrentTaskViewPage implements OnInit {
   //  Converting Attachments into Base64
   selectedFile(imageInput: any, type) {
     let value;
-    const file: File = imageInput.files[0];
-    this.file = file;
+    const files = imageInput.files[0];
+    this.file = files;
     const reader = new FileReader();
     reader.onload = (event: any) => {
       value = event.target.result.split(',');
@@ -364,10 +374,9 @@ export class CurrentTaskViewPage implements OnInit {
         }
         this.task.attachments.push(data);
       }
-
       this.toastService.successToast('message.file_uploaded');
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(files);
   }
 
   openCamera() {
@@ -380,15 +389,20 @@ export class CurrentTaskViewPage implements OnInit {
       mediaType: this.camera.MediaType.PICTURE
     }
     this.camera.getPicture(options).then((imageData) => {
+      let currentName = imageData.substr(imageData.lastIndexOf('/') + 1);
+      let currentPath = imageData.substr(0, imageData.lastIndexOf('/') + 1);
+      let d = new Date(),
+        n = d.getTime(),
+        newFileName = n + ".jpg";
       let data = {
         data: imageData,
-        name: '',
+        name: newFileName,
         type: 'image/jpeg'
       }
       this.task.attachments.push(data);
-      console.log(this.task, "this.task.");
       this.toastService.successToast('message.image_uploaded');
       let base64Image = 'data:image/jpeg;base64,' + imageData;
+
     }, (err) => {
       // Handle error
     });

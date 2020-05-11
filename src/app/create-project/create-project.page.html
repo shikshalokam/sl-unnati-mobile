@@ -65,8 +65,8 @@
     </ion-button>
   </form>
   <!-- Project creation form starts here -->
-  <div *ngIf="projectCreatePopUp && projectCreatePopUp.show">
-    <app-custom-popup [appUpdate]="projectCreatePopUp" [showUpdatePopup]="" [showPopup]="" [projectCreatePopup]="true">
+  <div *ngIf="popupshow">
+    <app-custom-popup [content]="projectCreatePopUp" [showPopup]="true">
     </app-custom-popup>
   </div>
 </ion-content>

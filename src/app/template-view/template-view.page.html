@@ -75,7 +75,7 @@
         </ion-col>
       </ion-row>
       <ion-button class="round-corner-btn prjdetail-btn" expand="block" color="secondary"
-        (click)="navigateToResources()" *ngIf="category != 'my_projects' &&  category != 'form' ">
+        (click)="navigateToResources()" *ngIf="category != 'my_projects'">
         {{'button.learning_resources' | translate}}
       </ion-button>
     </div>
@@ -112,7 +112,7 @@
       <app-create-tasks [data]="taskCreate">
       </app-create-tasks>
     </div>
-    <div *ngIf="tasksLength == 0 && show && addTaskButton " class="tasks-label">
+    <div *ngIf="tasksLength == 0 && show && project.isStarted " class="tasks-label">
       <!-- && project.isStarted -->
       <!-- <h5> {{'message.add_tasks_to_project' | translate}} <ion-icon name="add-circle" color="primary"
           style="font-size:30px;"></ion-icon>
@@ -132,8 +132,7 @@
     </div>
     <div>Files</div>
   </div>
-  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;"
-    *ngIf="show && addTaskButton  && tasksLength > 0 ">
+  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;" *ngIf="show && project.isStarted && tasksLength > 0">
     <ion-fab-button (click)="addTask()" style=" margin-bottom: 15px;">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

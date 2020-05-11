@@ -92,12 +92,12 @@ export class PopoverComponent implements OnInit {
     this.project.isDeleted = true;
     let projectData = this.project;
     this.storage.get('latestProjects').then(myProjects => {
-      if (myProjects.programs) {
-        myProjects.programs.forEach(programsList => {
-          programsList.projects.forEach(function (project, i) {
+      if (myProjects) {
+        myProjects.forEach(programs => {
+          programs.projects.forEach(function (project, i) {
             if (project._id == projectData._id) {
               projectData.isEdited = true;
-              programsList.projects[i] = projectData;
+              programs.projects[i] = projectData;
             }
           });
           this.storage.set('latestProjects', myProjects).then(project => {

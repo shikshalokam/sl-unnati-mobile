@@ -18,6 +18,7 @@ export class ProjectDetailPage {
   project;
   back;
   category;
+  addTaskButton: boolean;
   files: any;
   startDate;
   isValidDate;
@@ -50,7 +51,6 @@ export class ProjectDetailPage {
   ) {
     createProjectService.addNewTask.subscribe((data: any) => {
       this.showAddTask = false;
-      console.log(data, "ne task");
       if (this.project.tasks && this.project.tasks.length > 0) {
         data._id = this.project.tasks.length + 2;
       } else {
@@ -58,8 +58,6 @@ export class ProjectDetailPage {
       }
       this.project.tasks.push(data);
       this.tasksLength = this.project.tasks.length;
-
-      console.log(this.project, "project", this.tasksLength, "this.tasksLength", this.project.tasks.length);
       this.updateTask();
     })
     createProjectService.modalCloseEvent.subscribe(data => {
@@ -79,6 +77,7 @@ export class ProjectDetailPage {
           this.back = 'project-view/home';
         } else if (this.category == 'form') {
           this.back = 'project-view/create-project';
+
         }
         else {
           this.back = 'project-view/category/' + this.category;
@@ -86,9 +85,16 @@ export class ProjectDetailPage {
       } else {
         this.back = 'project-view/category/my_projects';
       }
+
+
     })
   }
   ionViewDidEnter() {
+    if (this.category == 'my_projects' || this.category == 'form') {
+      this.addTaskButton = true;
+    } else {
+      this.addTaskButton = false;
+    }
     this.showAddTask = false;
     this.getProject();
   }
@@ -144,11 +150,12 @@ export class ProjectDetailPage {
   public copyTemplate() {
     this.projectId = '';
     this.project.isStarted = true;
+    this.addTaskButton = true;
     if (this.project.status == 'Not started' || this.project.status == 'not yet started') {
       this.project.status = 'In Progress';
     }
     this.project.startDate = new Date();
-    if (this.category != 'my_projects' && this.category != 'projectsList') {
+    if (this.category != 'my_projects' && this.category != 'projectsList' && this.category != 'form') {
       this.project.createdType = "by reference";
       this.project.lastUpdate = new Date();
       this.project.isNew = true;
@@ -255,13 +262,11 @@ export class ProjectDetailPage {
           border_raduis: '4px',
         }],
     }
-    console.log(this.taskCreate, " this.taskCreate")
     this.showAddTask = true;
     // this.router.navigate(['/project-view/create-task', this.project._id, "pd"]);
   }
   public navigateToFiles() {
     this.router.navigate(['/project-view/files', this.project._id]);
-
   }
   // set date
   public setDate(type) {

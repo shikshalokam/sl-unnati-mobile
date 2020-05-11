@@ -10,7 +10,6 @@ import { Router, ActivatedRoute, UrlTree, UrlSegmentGroup, UrlSegment, PRIMARY_O
 import { CategoryViewService } from './category-view/category.view.service';
 import { AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { ProjectsService } from './projects/projects.service';
 import { MyschoolsService } from './myschools/myschools.service';
 import { ModalController } from '@ionic/angular';
 import { interval, Subscription } from 'rxjs';
@@ -22,6 +21,15 @@ import { LoadingController } from '@ionic/angular';
 import { FcmProvider } from './fcm';
 import * as jwt_decode from "jwt-decode";
 import { NotificationCardService } from './notification-card/notification.service';
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import { AboutPage } from './about/about.page';
+import { ProjectDetailPage } from './project-detail/project-detail.page';
+import { TemplateViewPage } from './template-view/template-view.page';
+import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-native/file-transfer/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { NgZone } from '@angular/core';
+declare var cordova: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -35,14 +43,12 @@ export class AppComponent {
   body;
   button;
   appUpdate: any = {}
-  showPopup: boolean = false;
   showUpdatePopup: boolean = false;
-  isActionable = ''
-
   mappedProjectsToSync;
   myProjectsToSync;
   projectsToSync = [];
   oldProjectsToSync = [];
+  files = [];
   subscription: Subscription;
   loading;
   type = 'quarter';
@@ -58,9 +64,10 @@ export class AppComponent {
   public isConnected: any = localStorage.getItem('networkStatus');
   public loggedInUser;
   constructor(
+    private zone: NgZone,
     public storage: Storage,
     public fcm: FcmProvider,
-    public projectsService: ProjectsService,
+    public navController: NavController,
     public alertController: AlertController,
     public router: Router,
     public menuCtrl: MenuController,
@@ -80,70 +87,14 @@ export class AppComponent {
     public loadingController: LoadingController,
     public toastService: ToastService,
     public categoryViewService: CategoryViewService,
-    public notificationCardService: NotificationCardService
+    public notificationCardService: NotificationCardService,
+    private deeplinks: Deeplinks,
+    private file: File,
+    private fileTransfer: FileTransfer,
   ) {
     this.platform.ready().then(() => {
-      this.homeService.profileUpdateEvent.subscribe(data => {
-        if (data == 'inmenu') {
-          this.appPages = [
-            {
-              title: 'Home',
-              url: '/project-view/home',
-              icon: 'home'
-            },
-            {
-              title: 'Sync',
-              icon: 'sync',
-              url: '',
-            },
-            {
-              title: 'Tutorial Video',
-              icon: 'play',
-              url: '/project-view/tutorial-videos',
-            },
-            {
-              title: 'Profile Update',
-              icon: 'person',
-              url: '/project-view/update-profile',
-            },
-            {
-              title: 'About',
-              url: '/project-view/about',
-              icon: 'information-circle'
-            },
-            {
-              title: 'Settings',
-              icon: 'md-settings',
-              children: [
-                {
-                  title: 'Languages',
-                  icon: 'globe'
-                },
-              ]
-            }
-          ];
-        } else if (data == 'popup') {
-          let isPopUpShowen: any = localStorage.getItem('isPopUpShowen');
-          if (isPopUpShowen == "null") {
-            isPopUpShowen = false;
-          }
-          if (!isPopUpShowen) {
-            this.appUpdate.title = 'Confirm your details!';
-            this.appUpdate.text = 'Please update your details. Help us make your experience better.';
-            this.appUpdate.isActionable = '/project-view/update-profile';
-            this.appUpdate.actions = {
-              showCloseButton: true,
-              showUpdatePopup: true,
-              showUpdatePop: true,
-            }
-            this.showUpdatePop = true,
-              this.showUpdatePopup = false;
-            this.showPopup = true;
-            isPopUpShowen = localStorage.getItem('isPopUpShowen');
-          } else {
-            this.showUpdatePop = false;
-          }
-        }
+      toastService.popClose.subscribe(data => {
+        this.showUpdatePop = false;
       })
       this.notificationCardService.appUpdatePopUp.subscribe(data => {
         this.showUpdatePop = false;
@@ -155,6 +106,13 @@ export class AppComponent {
             showCloseButton: true,
             showUpdatePopup: true,
           }
+          this.appUpdate.showCloseButton = true,
+            this.appUpdate.type = "appUpdate"
+          this.appUpdate.buttons = [{
+            title: 'Update',
+            color: 'primary',
+            isActionable: 'submit'
+          }]
           this.showUpdatePopup = true;
           this.showUpdatePop = true;
         }
@@ -213,7 +171,19 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
+        this.deeplinks.routeWithNavController(this.navController, {
+          '/about': AboutPage,
+          '/project-view/template-view/:templateId': TemplateViewPage
+        }).subscribe(match => {
+          this.zone.run(() => {
+            this.router.navigate([match.$link.path], { queryParams: { programId: match.$link.queryString } });
+          })
+        }, nomatch => {
+        });
         if (data != null) {
+          if (this.isConnected) {
+            this.api.validateToken().then(token => { })
+          }
           this.router.navigateByUrl('/project-view/home');
         } else {
           this.router.navigateByUrl('/login');
@@ -249,48 +219,7 @@ export class AppComponent {
           localStorage.setItem("networkStatus", this.isConnected);
         });
       if (this.isConnected) {
-        this.getOldDataToSync();
-        this.storage.get('allowProfileUpdateForm').then(data => {
-          if (data) {
-            this.appPages = [
-              {
-                title: 'Home',
-                url: '/project-view/home',
-                icon: 'home'
-              },
-              {
-                title: 'Sync',
-                icon: 'sync',
-                url: '',
-              },
-              {
-                title: 'Tutorial Video',
-                icon: 'play',
-                url: '/project-view/tutorial-videos',
-              },
-              {
-                title: 'Profile Update',
-                icon: 'person',
-                url: '/project-view/update-profile',
-              },
-              {
-                title: 'About',
-                url: '/project-view/about',
-                icon: 'information-circle'
-              },
-              {
-                title: 'Settings',
-                icon: 'md-settings',
-                children: [
-                  {
-                    title: 'Languages',
-                    icon: 'globe'
-                  },
-                ]
-              }
-            ];
-          }
-        })
+        // this.getOldDataToSync();
       }
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
@@ -311,6 +240,14 @@ export class AppComponent {
           this.router.navigateByUrl('project-view/detail');
         } else if (this.router.url == '/project-view/project-detail/form') {
           this.router.navigateByUrl('project-view/create-project');
+        } else if (s[1].path == 'courses' && s[2].path == 'template-view') {
+          if (s.length == 5) {
+            this.router.navigateByUrl('project-view/template-view/' + s[3].path + '/' + s[4].path);
+          } else {
+            this.router.navigateByUrl('project-view/template-view/' + s[3].path);
+          }
+        } else if (s.length == 3 && s[0].path == 'project-view' && s[1].path == 'template-view') {
+          this.router.navigateByUrl('project-view/home');
         }
         else if (this.router.url == '/project-view/my-reports/last-month-reports' || this.router.url == '/project-view/my-reports/last-quarter-reports' || this.router.url == '/my-reports/last-month-reports' || this.router.url == '/my-reports/last-quarter-reports') {
           this.router.navigateByUrl('project-view/home');
@@ -416,6 +353,7 @@ export class AppComponent {
 
   public navigate(url, title) {
     if (title == 'Sync') {
+      this.files = [];
       this.prepareMappedProjectToSync();
       this.getOldDataToSync();
     } else if (url) {
@@ -519,6 +457,15 @@ export class AppComponent {
         }
       }
     })
+  }
+
+  pathForImage(img) {
+    if (img === null) {
+      return '';
+    } else {
+      const path = this.platform.is('ios') ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory
+      return path + img;
+    }
   }
   // auto sync
   public autoSync() {
@@ -674,22 +621,34 @@ export class AppComponent {
               this.storage.set('allowProfileUpdateForm', data.result.allowProfileUpdateForm).then(data => {
               })
               if (data.result) {
-                if (data.result.showPopupForm == false) {
+                if (data.result.showPopupForm) {
                   let isPopUpShowen: any = localStorage.getItem('isPopUpShowen');
                   if (isPopUpShowen == "null") {
                     isPopUpShowen = false;
                   }
                   if (!isPopUpShowen) {
-                    this.appUpdate.title = 'Confirm your details!';
-                    this.appUpdate.text = 'Please update your details. Help us make your experience better.';
-                    this.appUpdate.isActionable = '/project-view/update-profile';
-                    this.appUpdate.actions = {
+                    this.appUpdate = {
+                      type: 'profileUpdate',
+                      title: 'Confirm your details!',
+                      text: 'Please update your details. Help us make your experience better.',
                       showCloseButton: true,
-                      showUpdatePopup: true,
-                      showUpdatePop: true,
+                      titleCss: {
+                        fontSize: '24px',
+                        color: '#000',
+                        bottomBorder: true
+                      },
+                      textCss: {
+                        fontSize: '16px',
+                        color: '#000;'
+                      },
+                      buttons: [
+                        {
+                          title: 'Update',
+                          color: 'primary',
+                          isActionable: '/project-view/update-profile',
+                        }]
                     }
-                    this.showUpdatePop = true,
-                      this.showPopup = true;
+                    this.showUpdatePop = true;
                     isPopUpShowen = localStorage.getItem('isPopUpShowen');
                   } else {
                     this.showUpdatePop = false;
