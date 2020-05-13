@@ -14,6 +14,7 @@ export class CreateProjectService {
     // Update task in current Project
     public updateCurrentMyProject(createdTask) {
         return this.storage.get('newcreatedproject').then(cmp => {
+            cmp.isEdited = true;
             cmp.tasks.forEach(function (task, i) {
                 if (task._id == createdTask._id) {
                     cmp.lastUpdate = new Date();

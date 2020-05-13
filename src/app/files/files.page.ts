@@ -55,14 +55,17 @@ export class FilesPage implements OnInit {
             if (project._id == id) {
               if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(task => {
-                  if (task.imageUrl) {
-                    let value = task.imageUrl.split(",");
-                    if (value[1]) {
-                      task.imageUrl = 'data:image/jpeg;base64,' + value[1];
-                    } else {
-                      task.imageUrl = 'data:image/jpeg;base64,' + value[0];
-                    }
+                  if (task.attachments && task.attachments.length > 0) {
+
                   }
+                  // if (task.imageUrl) {
+                  //   let value = task.imageUrl.split(",");
+                  //   if (value[1]) {
+                  //     task.imageUrl = 'data:image/jpeg;base64,' + value[1];
+                  //   } else {
+                  //     task.imageUrl = 'data:image/jpeg;base64,' + value[0];
+                  //   }
+                  // }
                 });
               }
               this.currentMyProject = project;

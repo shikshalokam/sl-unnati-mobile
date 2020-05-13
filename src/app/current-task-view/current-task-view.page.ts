@@ -7,7 +7,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CreateProjectService } from '../create-project/create-project.service';
 import { ToastService } from '../toast.service'
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { Platform } from '@ionic/angular'
 declare var cordova: any;
 
 @Component({
@@ -40,13 +43,17 @@ export class CurrentTaskViewPage implements OnInit {
   ];
   task;
   subtask: any = {}
+
   constructor(
     public storage: Storage,
     public datepipe: DatePipe,
     public datePicker: DatePicker,
     public router: Router,
     private files: File,
+    private fileTransfer: FileTransfer,
     public route: ActivatedRoute,
+    private filePath: FilePath,
+    public platform: Platform,
     public createProjectService: CreateProjectService,
     public toastService: ToastService,
     public camera: Camera) {
@@ -61,6 +68,7 @@ export class CurrentTaskViewPage implements OnInit {
     this.enableMarkButton = false;
   }
   ngOnInit() {
+    this.isIos = this.platform.is('ios') ? true : false;
     this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
   }
   getTask() {
@@ -370,7 +378,8 @@ export class CurrentTaskViewPage implements OnInit {
         let data = {
           data: value[1],
           name: this.file.name,
-          type: this.file.type
+          type: this.file.type,
+          isNew: true
         }
         this.task.attachments.push(data);
       }
@@ -384,27 +393,59 @@ export class CurrentTaskViewPage implements OnInit {
       quality: 20,
       targetWidth: 600,
       targetHeight: 600,
-      destinationType: this.camera.DestinationType.DATA_URL,
+      destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE
+      mediaType: this.camera.MediaType.PICTURE,
+      sourceType: this.camera.PictureSourceType.CAMERA
     }
     this.camera.getPicture(options).then((imageData) => {
-      let currentName = imageData.substr(imageData.lastIndexOf('/') + 1);
-      let currentPath = imageData.substr(0, imageData.lastIndexOf('/') + 1);
       let d = new Date(),
         n = d.getTime(),
         newFileName = n + ".jpg";
+   
+      let correctPath = imageData.substr(0, imageData.lastIndexOf('/') + 1).toString();
+      let currentName = imageData.substring(imageData.lastIndexOf('/') + 1, imageData.length).toString();
+      this.saveFile(correctPath, currentName, newFileName);
       let data = {
         data: imageData,
         name: newFileName,
-        type: 'image/jpeg'
+        type: 'image/jpeg',
+        isNew: true
       }
       this.task.attachments.push(data);
       this.toastService.successToast('message.image_uploaded');
       let base64Image = 'data:image/jpeg;base64,' + imageData;
-
     }, (err) => {
       // Handle error
     });
+  }
+
+  public saveFile(currentPath, currentName, newFileName) {
+    if (this.isIos) {
+      this.files.checkDir(this.files.documentsDirectory, 'attachments').then(_ => {
+        this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
+        }, error => {
+          console.log(error, "error");
+        });
+      }).catch(err => {
+        this.files.createDir(this.files.documentsDirectory, 'attachments', false).then(response => {
+        }).catch(err => {
+        });
+      });
+    } else {
+      this.files.checkDir(this.files.dataDirectory, 'attachments').then(_ => {
+        this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
+        }, error => {
+          console.log(error, "error");
+        });
+      }).catch(err => {
+        this.files.createDir(this.files.dataDirectory, 'attachments', false).then(response => {
+          this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
+          }, error => {
+          });
+        }).catch(err => {
+        });
+      });
+    }
   }
 }
