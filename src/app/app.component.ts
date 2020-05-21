@@ -28,6 +28,8 @@ import { TemplateViewPage } from './template-view/template-view.page';
 import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
+import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
+
 declare var cordova: any;
 
 @Component({
@@ -176,21 +178,21 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
-        this.isIos = this.platform.is('ios') ? true : false;
-        this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
-        this.deeplinks.routeWithNavController(this.navController, {
-          '/about': AboutPage,
-          '/project-view/template-view/:templateId': TemplateViewPage
-        }).subscribe(match => {
-          this.zone.run(() => {
-            this.router.navigate([match.$link.path], { queryParams: { programId: match.$link.queryString } });
-          })
-        }, nomatch => {
-        });
         if (data != null) {
-          if (this.isConnected) {
-            this.api.validateToken().then(token => { })
-          }
+          this.isIos = this.platform.is('ios') ? true : false;
+          this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
+          this.deeplinks.routeWithNavController(this.navController, {
+            '/about': AboutPage,
+            '/project-view/template-view/:templateId': TemplateViewPage
+          }).subscribe(match => {
+            this.zone.run(() => {
+              this.router.navigate([match.$link.path], { queryParams: { programId: match.$link.queryString } });
+            })
+          }, nomatch => {
+          });
+          this.translate.setDefaultLang('en');
+          this.translate.use('en');
+          this.networkService.setLang('en');
           this.router.navigateByUrl('/project-view/home');
         } else {
           this.router.navigateByUrl('/login');
@@ -199,9 +201,7 @@ export class AppComponent {
       if (!this.isConnected && !navigator.onLine) {
         this.networkService.networkErrorToast();
       }
-      this.translate.setDefaultLang('en');
-      this.translate.use('en');
-      this.networkService.setLang('en');
+
       this.platform.pause.subscribe(() => {
         localStorage.setItem('isPopUpShowen', null);
       });
@@ -446,6 +446,7 @@ export class AppComponent {
                   }
                 });
               }
+              console.log(project, "adding to projectsToSync 452");
               this.projectsToSync.push(project);
             } else {
               // intentially left blank
@@ -714,37 +715,38 @@ export class AppComponent {
   public getAttachments() {
     let filesList = [];
     this.attachmentsList = [];
+    this.projectsToSync = [];
     this.storage.get('latestProjects').then(myProjects => {
       if (myProjects) {
         myProjects.forEach(projectList => {
           projectList.projects.forEach(project => {
             project.share = false;
             if (project.isEdited || project.isNew) {
-              if (project.tasks && project.tasks.length > 0) {
-                project.tasks.forEach(task => {
-                  if (task.attachments) {
-                    console.log(task.attachments, "attachments");
-                    task.attachments.forEach(attachment => {
-                      console.log(attachment, "attachment");
-                      if (attachment.isNew) {
-                        let data = {
-                          taskId: task._id,
-                          data: attachment.data,
-                          name: attachment.name,
-                          type: attachment.type,
-                          isUploaded: false
+              if (!project.isDeleted) {
+                if (project.tasks && project.tasks.length > 0) {
+                  project.tasks.forEach(task => {
+                    if (task.attachments) {
+                      task.attachments.forEach(attachment => {
+                        if (attachment.isNew) {
+                          let data = {
+                            taskId: task._id,
+                            data: attachment.data,
+                            name: attachment.name,
+                            type: attachment.type,
+                            isUploaded: false
+                          }
+                          this.attachmentsList.push(data);
+                          filesList.push(attachment.name)
                         }
-                        this.attachmentsList.push(data);
-                        filesList.push(attachment.name)
-                      }
-                    });
-                  }
-                });
+                      });
+                    }
+                  });
+                }
               }
             }
           });
         })
-        console.log(this.attachmentsList, "attachmentsList attachmentsList");
+
         if (this.attachmentsList.length > 0) {
           this.getUploadUrl(this.attachmentsList, filesList);
         } else {
@@ -752,22 +754,22 @@ export class AppComponent {
         }
       }
     })
+
   }
   public getUploadUrl(attachmentsList, filesList) {
+    this.toastService.startLoader('Loading, Please wait');
     this.fileIndex = 0;
-    console.log(filesList, "attachmentsList[index].name", attachmentsList[this.fileIndex].name);
     let fileNames = { fileNames: filesList }
     this.projectService.getStorageUrl(fileNames).subscribe((data: any) => {
-      console.log(data, "response");
       if (data.status == 200) {
         // let correctPath = attachmentsList[index].data.substr(0, attachmentsList[index].data.lastIndexOf('/') + 1);
         this.storageUrls = data.result;
-        console.log(attachmentsList[this.fileIndex].name, "====", this.storageUrls[this.fileIndex].file);
         this.uploadToGC(attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
-        // this.projectService.storeInBucket(correctPath, data.result[0].url).subscribe(data => {
-        //   console.log(data, "data");
-        // })
+      } else {
+        this.toastService.stopLoader();
       }
+    }, error => {
+      this.toastService.stopLoader();
     })
   }
 
@@ -786,60 +788,83 @@ export class AppComponent {
     let targetPath = this.pathForImage(attachment.name);
     let fileTrns: FileTransferObject = this.transfer.create();
     this.file.checkFile((this.platform.is('ios') ? this.file.documentsDirectory : this.file.externalDataDirectory) + 'attachments/', attachment.name).then(success => {
-      console.log('success checkfile', success)
       fileTrns.upload(targetPath, result.url, options)
         .then((data) => {
           // success
+          this.attachmentsList[this.fileIndex]
           this.attachmentsList[this.fileIndex].gcUrl = result.payload.sourcePath;
           if (this.fileIndex < this.attachmentsList.length - 1) {
             this.fileIndex = this.fileIndex + 1;
-            console.log(this.fileIndex, 'this.attachmentsList[this.fileIndex] === ', this.attachmentsList[this.fileIndex], 'this.storageUrls[this.fileIndex]', this.storageUrls[this.fileIndex]);
             this.uploadToGC(this.attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
           } else {
-            this.storage.get('latestProjects').then(myProjects => {
-              if (myProjects) {
-                myProjects.forEach(projectList => {
-                  projectList.projects.forEach(project => {
-                    if (project.isNew || project.isEdited) {
-                      if (project.tasks && project.tasks.length > 0) {
-                        project.tasks.forEach(task => {
-                          if (task.attachments && task.attachments.length > 0) {
-                            console.log('looping', task)
-                            this.attachmentsList.forEach(attachment => {
-                              if (task._id == attachment.taskId) {
-                                task.attachments.forEach(function (ta, i) {
-                                  console.log(ta, "tatata ", ta.name, '==', attachment.name)
-                                  if (ta.isNew && ta.name == attachment.name) {
-                                    ta.sourcePath = attachment.gcUrl;
-                                    ta.isUploaded = false;
-                                    console.log(ta,"attached ta");
-                                  }
-                                });
-                                console.log('looped', task)
-                              }
-                            });
+            this.mapAttachments();
+          }
+        }, (err) => {
+          this.toastService.stopLoader();
+        }).catch(err => {
+        })
+    }, error => {
+      this.attachmentsList[this.fileIndex]
+      this.attachmentsList[this.fileIndex].gcUrl = result.payload.sourcePath;
+      if (this.fileIndex < this.attachmentsList.length - 1) {
+        this.fileIndex = this.fileIndex + 1;
+        this.uploadToGC(this.attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
+      } else {
+        this.mapAttachments();
+      }
+    })
+  }
+  // map attachments to task and sync
+  mapAttachments() {
+    this.storage.get('latestProjects').then(myProjects => {
+      if (myProjects) {
+        myProjects.forEach(projectList => {
+          projectList.projects.forEach(project => {
+            if (project.isNew || project.isEdited) {
+              if (project.isNew) {
+                delete project._id;
+              }
+              if (project.tasks && project.tasks.length > 0) {
+                project.tasks.forEach(task => {
+                  if (task.attachments && task.attachments.length > 0) {
+                    this.attachmentsList.forEach(attachment => {
+                      if (task._id == attachment.taskId) {
+                        task.attachments.forEach(function (ta, i) {
+                          if (ta.isNew && ta.name == attachment.name) {
+                            ta.sourcePath = attachment.gcUrl;
+                            ta.isUploaded = true;
+                            ta.isNew = false;
                           }
                         });
                       }
-                      console.log('adding into projectsToSync', project);
-                      this.projectsToSync.push(project);
-                    }
-                  });
+                    });
+                  }
+                  if (task.subTasks && task.subTasks.length > 0) {
+                    task.subTasks.forEach(subtasks => {
+                      if (subtasks.isNew && subtasks._id) {
+                        delete subtasks._id;
+                      }
+                    })
+                  }
+                  if (task.isNew && task._id) {
+                    delete task._id;
+                  }
+                  if (task.isSync) {
+                    task.isNew = false;
+                  }
                 });
               }
-              console.log('going call sync');
-              if (this.isConnected) {
-                this.autoSync();
-              }
+              console.log(project, "adding to projectsToSync 856");
+              this.projectsToSync.push(project);
             }
-            )
-          }
-        }, (err) => {
-          // error
-          console.log(err, "error");
-        }).catch(err => {
-          console.log(err, "catch ßerror");
-        })
-    })
+          });
+        });
+      }
+      this.toastService.stopLoader();
+      if (this.isConnected) {
+        this.autoSync();
+      }
+    }
+    )
   }
 }

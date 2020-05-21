@@ -29,8 +29,9 @@ import { FcmProvider } from './fcm';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { Badge } from '@ionic-native/badge/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { FileTransfer, FileTransferObject,FileUploadOptions } from '@ionic-native/file-transfer/ngx';
+import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
@@ -41,6 +42,7 @@ import { GetSubEntitiesPage } from './get-sub-entities/get-sub-entities.page';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { Market } from '@ionic-native/market/ngx';
+import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -58,7 +60,7 @@ export function createTranslateLoader(http: HttpClient) {
   imports: [
     BrowserModule,
     HttpModule,
-    HttpClientModule, 
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     IonicModule.forRoot(),
@@ -97,6 +99,8 @@ export function createTranslateLoader(http: HttpClient) {
     Base64,
     AndroidPermissions,
     Deeplinks,
+    IOSFilePicker,
+    DocumentViewer,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: HTTP_INTERCEPTORS,

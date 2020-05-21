@@ -105,7 +105,7 @@ export class HomePage implements OnInit {
       this.menuCtrl.enable(true);
     })
 
-    this.networkService.emit.subscribe((value: any) => {
+    this.networkService.langEmit.subscribe((value: any) => {
       translate.use(value);
     });
     this.menuCtrl.enable(true);
@@ -151,6 +151,9 @@ export class HomePage implements OnInit {
         this.getProfileData();
       }
     })
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
+    this.networkService.setLang('en');
   }
   //  Check user
   public checkUser() {

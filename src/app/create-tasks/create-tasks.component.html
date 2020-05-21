@@ -31,31 +31,28 @@
           </ion-textarea>
           <div *ngIf="data.type == 'attachment'" class="attachments-box">
             <div>
-              <div *ngIf="files.length > 0">
-                <p *ngFor="let file of files">
+              <div *ngIf="attachments.length > 0">
+                <p *ngFor="let file of attachments">
                   <img src="assets/images/attachment.png" class="img"> {{file.name}}
                 </p>
               </div>
-              <div *ngIf="images.length > 0">
+              <!-- <div *ngIf="images.length > 0">
                 <p *ngFor="let file of images">
                   <img src="assets/images/picture.png" class="img"> {{file.name}}
                 </p>
-              </div>
+              </div> -->
             </div>
             <ion-row class="file-box">
               <ion-col size="6" style="margin: auto; font-size: 24px;">
-                <div *ngIf="files.length == 0 && images.length == 0">
+                <div *ngIf="attachments.length == 0">
                   <img src="assets/images/picture.png">
                   <img src="assets/images/attachment.png">
                 </div>
               </ion-col>
               <ion-col size="6">
-                <div class="fileUpload">
-                  <a style="color:#6074f9; text-align:right;
+                <a style="color:#6074f9; text-align:right;
                 float: right;
-                margin: 10px 10px; ">Attach</a>
-                  <input #imageInputFile type="file" class="upload" (change)="attachFile(imageInputFile)" />
-                </div>
+                margin: 10px 10px; " (click)="chooseFile()">Attach</a>
               </ion-col>
             </ion-row>
           </div>

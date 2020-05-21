@@ -75,7 +75,8 @@
         </ion-col>
       </ion-row>
       <ion-button class="round-corner-btn prjdetail-btn" expand="block" color="secondary"
-        (click)="navigateToResources()" *ngIf="category != 'my_projects' &&  category != 'form' ">
+        (click)="navigateToResources()"
+        *ngIf="category != 'my_projects' &&  category != 'form' &&  category != 'home' ">
         {{'button.learning_resources' | translate}}
       </ion-button>
     </div>

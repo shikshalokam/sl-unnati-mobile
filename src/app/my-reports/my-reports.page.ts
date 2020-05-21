@@ -108,20 +108,16 @@ export class MyReportsPage {
           id: 'lastQuarter',
           isActive: false
         }];
-        console.log('calling school');
-
         this.selectTab('school');
       }
     })
     myReportsService.reportEvent.subscribe((data: any) => {
       // this.share(data);
-      console.log(data, "in constructor");
       this.platform.ready().then(() => {
         this.isIos = this.platform.is('ios') ? true : false;
         this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'projects' : cordova.file.externalDataDirectory + 'projects';
       })
       if (data.isFullReport) {
-        console.log(data, "data calling ");
         data.isFullReport = !data.isFullReport;
         this.getFullReport(data);
       }
@@ -130,7 +126,6 @@ export class MyReportsPage {
 
 
   ionViewDidEnter() {
-    console.log(this.activeTab, "this.activeTab in ionViewDidEnter");
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
     } catch (error) {
@@ -154,13 +149,11 @@ export class MyReportsPage {
         element.isActive = false;
       }
     });
-    console.log(tab, "selected", this.activeTab);
     if (this.activeTab != 'school') {
       this.getData();
     } else {
       this.schools = [];
       this.page = 1;
-      console.log('getSchools');
       this.getSchools();
     }
   }
@@ -168,7 +161,6 @@ export class MyReportsPage {
   public getSchools(event?) {
     this.showSkeleton = true;
     this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-      console.log(data, "data hhhhhggg")
       if (data.data && data.data.length > 0 && data.status != 'failed') {
         this.schools = this.schools.concat(data.data);
         this.page = this.page + 1;
@@ -203,7 +195,6 @@ export class MyReportsPage {
         name: this.mappedSchool,
         isFullReport: false
       }
-      console.log(tempData, "data");
       this.myReportsService.getReportData(tempData).subscribe((data: any) => {
         this.toastService.stopLoader();
         if (data.status != 'failed') {
@@ -228,7 +219,6 @@ export class MyReportsPage {
   // download and Share Full Reports
   public getFullReport(type: any) {
     if (this.connected) {
-      console.log(type, "typeee in full reports");
       this.toastService.startLoader('Loading, Please wait');
       let tempData = {
         type: type.type,
@@ -237,7 +227,6 @@ export class MyReportsPage {
         name: this.mappedSchool,
         isFullReport: type.isFullReport
       }
-      console.log(tempData, "data");
       this.myReportsService.getFullReportData(tempData).subscribe((data: any) => {
         this.toastService.stopLoader();
         if (data.status != 'failed') {
@@ -284,32 +273,35 @@ export class MyReportsPage {
   }
 
   // Download the reports
-  public download(data) {
+  // public download(data) {
+  //   const fileTransfer: FileTransferObject = this.transfer.create();
+  //   fetch(data.pdfUrl,
+  //     {
+  //       method: "GET"
+  //     }).then(res => res.blob()).then(blob => {
+  //       this.appFolderPath = decodeURIComponent(this.appFolderPath);
+  //       let filename = decodeURIComponent('Report');
+  //       this.file.writeFile(this.appFolderPath, 'Report', blob, { replace: true }).then(res => {
+  //         this.fileOpener.open(
+  //           res.toInternalURL(),
+  //           'application/pdf'
+  //         ).then((res) => {
+  //         }).catch(err => {
+  //         });
+  //       }).catch(err => {
+  //         console.log("error", err);
+  //       });
+  //     }).catch(err => {
+  //     });
+  // }
+  download(data) {
+    this.toastService.presentLoading('Downloading, Please wait');
     const fileTransfer: FileTransferObject = this.transfer.create();
-    fetch(data.pdfUrl,
-      {
-        method: "GET"
-      }).then(res => res.blob()).then(blob => {
-        console.log(this.appFolderPath, "this.appFolderPath in download")
-        this.appFolderPath = decodeURIComponent(this.appFolderPath);
-        let filename = decodeURIComponent('Report');
-        this.file.writeFile(this.appFolderPath, 'Report', blob, { replace: true }).then(res => {
-          this.fileOpener.open(
-            res.toInternalURL(),
-            'application/pdf'
-          ).then((res) => {
-            console.log('sucess', res);
-          }).catch(err => {
-            console.log("error 2222", err);
-
-          });
-        }).catch(err => {
-          console.log("error", err);
-        });
-      }).catch(err => {
-      });
+    fileTransfer.download(data.pdfUrl, this.appFolderPath + '/' + 'Report.pdf').then(success => {
+    }).catch(error => {
+      console.log(error, 'download pdf');
+    });
   }
-
   public getData() {
     this.showSkeleton = true;
     this.myReportsService.getReports(this.activeTab, this.entityId).subscribe((data: any) => {

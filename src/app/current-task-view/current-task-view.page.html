@@ -118,13 +118,9 @@
             </div>
           </ion-col>
           <ion-col size="3" class="pop-action">
-            <form class="icon-attch" [ngClass]="{'isHaveData': task.file?.name}">
-              <div class="fileUpload">
-                <img src="assets/images/attach_file.svg" style="width: 1.8em;">
-                <input #imageInputFile type="file" class="upload"
-                  (change)="selectedFile(imageInputFile,'file')" />
-              </div>
-            </form>
+            <div class="icon-attch" [ngClass]="{'isHaveData': task.file?.name}" (click)="selectFile()">
+              <img src="assets/images/attach_file.svg" style="width: 1.8em;">
+            </div>
           </ion-col>
         </ion-row>
       </div>

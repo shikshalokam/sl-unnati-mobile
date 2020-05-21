@@ -72,4 +72,15 @@ export class ToastService {
     public getPermissions() {
         this.requestPermissions.next();
     }
+
+    async presentLoading(msg) {
+        const loading = await this.loadingController.create({
+          message: msg,
+          duration: 2000
+        });
+        await loading.present();
+    
+        const { role, data } = await loading.onDidDismiss();
+        console.log('Loading dismissed!');
+      }
 }

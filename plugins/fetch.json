@@ -144,9 +144,9 @@
   "cordova-plugin-file": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-file@^6.0.2"
+      "id": "cordova-plugin-file@>=5.0.0"
     },
-    "is_top_level": true,
+    "is_top_level": false,
     "variables": {}
   },
   "cordova-plugin-filechooser": {
@@ -189,9 +189,7 @@
       "id": "cordova-plugin-file-opener2@^3.0.0"
     },
     "is_top_level": true,
-    "variables": {
-      "ANDROID_SUPPORT_V4_VERSION": "27.+"
-    }
+    "variables": {}
   },
   "cordova-plugin-app-version": {
     "source": {
@@ -212,10 +210,35 @@
   "cordova-plugin-android-permissions": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-chooser@^1.2.7"
+      "id": "cordova-plugin-android-permissions"
     },
     "is_top_level": true,
     "variables": {}
+  },
+  "ionic-plugin-deeplinks": {
+    "source": {
+      "type": "registry",
+      "id": "ionic-plugin-deeplinks@^1.0.20"
+    },
+    "is_top_level": true,
+    "variables": {
+      "URL_SCHEME": "unnati",
+      "DEEPLINK_SCHEME": "https",
+      "DEEPLINK_HOST": "shikshalokam.org",
+      "ANDROID_PATH_PREFIX": "/",
+      "ANDROID_2_PATH_PREFIX": "/",
+      "ANDROID_3_PATH_PREFIX": "/",
+      "ANDROID_4_PATH_PREFIX": "/",
+      "ANDROID_5_PATH_PREFIX": "/",
+      "DEEPLINK_2_SCHEME": " ",
+      "DEEPLINK_2_HOST": " ",
+      "DEEPLINK_3_SCHEME": " ",
+      "DEEPLINK_3_HOST": " ",
+      "DEEPLINK_4_SCHEME": " ",
+      "DEEPLINK_4_HOST": " ",
+      "DEEPLINK_5_SCHEME": " ",
+      "DEEPLINK_5_HOST": " "
+    }
   },
   "cordova-plugin-market": {
     "source": {
@@ -225,17 +248,20 @@
     "is_top_level": true,
     "variables": {}
   },
-  "ionic-plugin-deeplinks": {
+  "cordova-plugin-filepicker": {
     "source": {
       "type": "registry",
-      "id": "ionic-plugin-deeplinks"
+      "id": "cordova-plugin-filepicker@^1.1.6"
     },
     "is_top_level": true,
-    "variables": {
-      "URL_SCHEME": "unnati",
-      "DEEPLINK_SCHEME": "https",
-      "DEEPLINK_HOST": "shikshalokam.org",
-      "ANDROID_PATH_PREFIX": "/"
-    }
+    "variables": {}
+  },
+  "cordova-plugin-document-viewer": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-document-viewer@0.9.13"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }
