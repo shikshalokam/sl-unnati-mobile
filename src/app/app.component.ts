@@ -446,7 +446,6 @@ export class AppComponent {
                   }
                 });
               }
-              console.log(project, "adding to projectsToSync 452");
               this.projectsToSync.push(project);
             } else {
               // intentially left blank
@@ -854,7 +853,6 @@ export class AppComponent {
                   }
                 });
               }
-              console.log(project, "adding to projectsToSync 856");
               this.projectsToSync.push(project);
             }
           });

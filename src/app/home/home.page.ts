@@ -87,16 +87,6 @@ export class HomePage implements OnInit {
     public mySchoolsService: MyschoolsService,
     public toastService: ToastService) {
     this.menuCtrl.enable(true);
-    // update profile pop handler
-
-    homeService.localDataUpdated.subscribe(data => {
-      this.getActiveProjects();
-    })
-    homeService.activeProjectLoad.subscribe(data => {
-      if (data == 'activeProjectLoad') {
-        this.getActiveProjects();
-      }
-    })
     this.networkService.emit.subscribe(value => {
       this.connected = value;
       this.connected = localStorage.getItem("networkStatus");
@@ -116,7 +106,6 @@ export class HomePage implements OnInit {
       this.storage.get('userTokens').then(data => {
         if (data) {
           this.menuCtrl.enable(true, 'unnati');
-          this.getActiveProjects();
           this.setTitle('home_tab');
           this.connected = localStorage.getItem("networkStatus");
           //  this.splashScreen.hide();
@@ -132,7 +121,13 @@ export class HomePage implements OnInit {
               this.getActiveProjects();
             }
           })
-          this.getSchools();
+          this.storage.get('mySchools').then(schools => {
+            if (!schools) {
+              this.getSchools();
+            } else {
+              this.mySchools = schools;
+            }
+          })
         } else {
           this.ionViewDidEnter();
         }
@@ -291,6 +286,7 @@ export class HomePage implements OnInit {
   public getSchools() {
     this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
       this.mySchools = data.data;
+      this.storage.set('mySchools', this.mySchools).then(data => { })
     }, error => { })
   }
 

@@ -275,9 +275,7 @@ export class PopoverComponent implements OnInit {
           }
         }, (err) => {
           this.toastService.stopLoader();
-          console.log(err, "error");
         }).catch(err => {
-          console.log(err, "catch ßerror");
         })
     }, error => {
       this.attachmentsList[this.fileIndex]

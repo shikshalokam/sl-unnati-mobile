@@ -5,13 +5,27 @@
 </ion-header>
 
 <ion-content>
-  <div class="tabs-list">
+  <!-- <div class="tabs-list">
     <div class="custom-tab" (click)="selectTab('ongoing')" [ngClass]="{'active-tab': activeTab == 'ongoing'}">
       {{ "open_tasks.ongoing" | translate }}</div>
     <div class="custom-tab" (click)="selectTab('past')" [ngClass]="{'active-tab':  activeTab == 'past'}">
       {{ "open_tasks.past" | translate }}
     </div>
-  </div>
+  </div> -->
+
+  <ion-tabs>
+    <ion-tab-bar slot="top">
+      <ion-tab-button class="custom-tab" (click)="selectTab('ongoing')"
+        [ngClass]="{'active-tab': activeTab == 'ongoing'}">
+        <ion-label> {{ "open_tasks.ongoing" | translate }}</ion-label>
+      </ion-tab-button>
+      <ion-tab-button class="custom-tab" (click)="selectTab('past')" [ngClass]="{'active-tab':  activeTab == 'past'}">
+        <ion-label> {{ "open_tasks.past" | translate }}</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+
+
   <div *ngIf="showSkeleton == true">
     <div class="skeleton-card-content">
       <ion-card *ngFor="let skeleton of skeletons">

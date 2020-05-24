@@ -170,7 +170,6 @@ export class FilesPage implements OnInit {
             attachment.name = attachment.name.replace(/ /g, "_");
             this.file.checkFile(this.appFolderPath, attachment.name).then(success => {
             }, error => {
-              console.log(error, "success file check");
               attachment.notInLocal = true;
             })
           })
@@ -182,7 +181,6 @@ export class FilesPage implements OnInit {
         this.file.checkFile(this.appFolderPath + '/', attachment.name).then(success => {
           attachment.notInLocal = false;
         }, error => {
-          console.log(error, "success file check");
           attachment.notInLocal = true;
         })
       }).catch(err => {
@@ -190,7 +188,6 @@ export class FilesPage implements OnInit {
           this.file.checkFile(this.appFolderPath + '/', attachment.name).then(success => {
             attachment.notInLocal = false;
           }, error => {
-            console.log(error, "success file check");
             attachment.notInLocal = true;
           })
         }).catch(err => {

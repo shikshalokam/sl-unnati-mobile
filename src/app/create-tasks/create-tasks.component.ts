@@ -179,7 +179,6 @@ export class CreateTasksComponent implements OnInit {
     });
   }
   chooseFile() {
-    console.log(this.attachments.length, "this.attachments.length");
     if (this.attachments.length < 4) {
       this.isIos ? this.filePickerForIOS() : this.openFilePicker();
     } else {
@@ -251,7 +250,6 @@ export class CreateTasksComponent implements OnInit {
           this.attachments.push(newAttachment);
           this.toastService.successToast('message.image_uploaded');
         }, error => {
-          console.log(error, "error");
           this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
         });
       }).catch(err => {
@@ -260,7 +258,6 @@ export class CreateTasksComponent implements OnInit {
             this.attachments.push(newAttachment);
             this.toastService.successToast('message.image_uploaded');
           }, error => {
-            console.log(error, "error");
             this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
           });
         }).catch(err => {
@@ -272,7 +269,6 @@ export class CreateTasksComponent implements OnInit {
           this.attachments.push(newAttachment);
           this.toastService.successToast('message.image_uploaded');
         }, error => {
-          console.log(error, "error copyFile");
           this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
         });
       }).catch(err => {
@@ -281,11 +277,9 @@ export class CreateTasksComponent implements OnInit {
             this.attachments.push(newAttachment);
             this.toastService.successToast('message.image_uploaded');
           }, error => {
-            console.log(error, "error copyFile");
             this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
           });
         }).catch(err => {
-          console.log(err, "createDir check");
         });
       });
     }
@@ -301,7 +295,6 @@ export class CreateTasksComponent implements OnInit {
       this.file.checkFile(currentPath, currentName).then(success => {
         this.saveFile(file, name, newAttachment);
       }, error => {
-        console.log(error, "success file check");
         this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
       })
     })

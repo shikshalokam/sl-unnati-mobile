@@ -11,7 +11,8 @@ import { PopoverComponent } from './popover/popover.component';
 import { CurrentUserProvider } from './current-user';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS, } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS, HttpBackend } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
 import { HttpModule } from '@angular/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -44,7 +45,13 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { Market } from '@ionic-native/market/ngx';
 import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 
-export function createTranslateLoader(http: HttpClient) {
+// export function createTranslateLoader(http:Http ) {
+//   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+// }
+export function HttpLoaderFactory(handler: HttpBackend) {
+
+  const http = new HttpClient(handler);
+
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 @NgModule({
@@ -68,11 +75,16 @@ export function createTranslateLoader(http: HttpClient) {
     AppRoutingModule,
     IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
+      // loader: {
+      //   provide: TranslateLoader,
+      //   useFactory: (createTranslateLoader),
+      //   deps: [HttpClient]
+      // }
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
+        useFactory: (HttpLoaderFactory),
+        deps: [HttpBackend],
+      },
     })
   ],
   providers: [
@@ -114,7 +126,10 @@ export function createTranslateLoader(http: HttpClient) {
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(public statusBar: StatusBar) {
+  constructor(public statusBar: StatusBar,
+    public translate: TranslateService) {
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
     this.statusBar.overlaysWebView(false);
     this.statusBar.backgroundColorByHexString('#fff');
   }

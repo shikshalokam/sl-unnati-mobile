@@ -297,9 +297,16 @@ export class MyReportsPage {
   download(data) {
     this.toastService.presentLoading('Downloading, Please wait');
     const fileTransfer: FileTransferObject = this.transfer.create();
-    fileTransfer.download(data.pdfUrl, this.appFolderPath + '/' + 'Report.pdf').then(success => {
+    let d = new Date(),
+      n = d.getTime(),
+      newFileName = n + ".pdf";
+    fileTransfer.download(data.pdfUrl, this.appFolderPath + '/' + newFileName).then(success => {
+      console.log(success, "success download");
+      this.fileOpener.open(this.appFolderPath + '/' + newFileName, 'application/pdf')
+        .then(() => console.log('File is opened'))
+        .catch(e => console.log('Error opening file', e));
     }).catch(error => {
-      console.log(error, 'download pdf');
+      console.log(error, "error download");
     });
   }
   public getData() {

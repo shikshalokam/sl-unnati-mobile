@@ -81,6 +81,5 @@ export class ToastService {
         await loading.present();
     
         const { role, data } = await loading.onDidDismiss();
-        console.log('Loading dismissed!');
       }
 }
