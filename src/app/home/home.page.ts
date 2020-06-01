@@ -92,7 +92,20 @@ export class HomePage implements OnInit {
       this.connected = localStorage.getItem("networkStatus");
     });
     this.login.emit.subscribe((data: any) => {
-      this.menuCtrl.enable(true);
+      if (data == true) {
+        this.menuCtrl.enable(true);
+        this.activeProjects = [];
+        this.storage.get('latestProjects').then(projects => {
+          if (!projects) {
+            this.getProjects();
+          } else {
+            this.getActiveProjects();
+          }
+        })
+      }
+    })
+    this.homeService.localDataUpdated.subscribe(value => {
+      this.getActiveProjects();
     })
 
     this.networkService.langEmit.subscribe((value: any) => {

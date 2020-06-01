@@ -9,6 +9,7 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { Storage } from '@ionic/storage';
 import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
 import { ToastService } from '../toast.service';
+import { DomSanitizer } from "@angular/platform-browser";
 declare var cordova: any;
 
 @Component({
@@ -24,6 +25,7 @@ export class FilesPage implements OnInit {
   showSkeleton: boolean = false;
   skeletons = [{}, {}, {}, {}, {}, {}];
   back = 'project-view/project-detail/my_projects';
+  private win: any = window;
   constructor(public createTaskService: CreateTaskService,
     public route: ActivatedRoute,
     public platform: Platform,
@@ -33,7 +35,8 @@ export class FilesPage implements OnInit {
     public fileOpener: FileOpener,
     public storage: Storage,
     private document: DocumentViewer,
-    public toastService: ToastService
+    public toastService: ToastService,
+    private sanitize: DomSanitizer
   ) {
     route.params.subscribe(params => {
       this.activeTab = 'images';
@@ -49,6 +52,7 @@ export class FilesPage implements OnInit {
   }
   public getCurrentProject(id) {
     this.showSkeleton = true;
+    let win: any = window;
     this.storage.get('latestProjects').then(projectList => {
       if (projectList.programs) {
         projectList.programs.forEach(programsList => {
@@ -60,22 +64,34 @@ export class FilesPage implements OnInit {
                     task.imageList = [];
                     task.fileList = [];
                     task.attachments.forEach(attachment => {
+                      let isInLocal = this.checkFileInLocal(attachment);
                       if (attachment.isNew && !attachment.isUploaded) {
                         if (attachment.type == 'application/pdf') {
                           attachment.url = this.appFolderPath + '/' + attachment.name;
                           task.fileList.push(attachment);
                         } else {
-                          let win: any = window;
-                          attachment.url = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          if (this.isIos) {
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          } else {
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                          }
                           task.imageList.push(attachment);
                         }
                       } else {
+                        attachment.notInLocal = true;
                         if (attachment.type == 'application/pdf') {
-                          attachment.url = this.appFolderPath + '/' + attachment.name;
+                          // attachment.url = this.appFolderPath + '/' + attachment.name
                           task.fileList.push(attachment);
                         } else {
-                          let win: any = window;
-                          attachment.url = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          if (this.isIos) {
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          } else {
+                            let win: any = window;
+                            // attachment.url = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          }
                           task.imageList.push(attachment);
                         }
                       }
@@ -103,18 +119,27 @@ export class FilesPage implements OnInit {
                           attachment.url = this.appFolderPath + '/' + attachment.name;
                           task.fileList.push(attachment);
                         } else {
-                          let win: any = window;
-                          attachment.url = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          if (this.isIos) {
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          } else {
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                          }
                           task.imageList.push(attachment);
                         }
                       } else {
-                        attachment.notInLocal = true;
                         if (attachment.type == 'application/pdf') {
-                          // attachment.url = this.appFolderPath + '/' + attachment.name;
+                          // attachment.url = this.appFolderPath + '/' + attachment.name
                           task.fileList.push(attachment);
                         } else {
-                          // let win: any = window;
-                          // attachment.url = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          // if (this.isIos) {
+                          //   attachment.url = this.file.documentsDirectory + '/' + attachment.name;
+                          // } else {
+                          //   let win: any = window;
+                          //   // attachment.url = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          // }
+                          attachment.imgurl = attachment.url;
                           task.imageList.push(attachment);
                         }
                       }
@@ -144,14 +169,25 @@ export class FilesPage implements OnInit {
         .catch(e => console.log('Error opening file', e));
     }
   }
+
+
+
   downloadFile(attachment) {
     this.toastService.presentLoading('Downloading, Please wait');
     const fileTransfer: FileTransferObject = this.transfer.create();
+    // attachment.url = encodeURI(attachment.url);
+    let win: any = window;
+    // attachment.url = this.sanitize.bypassSecurityTrustResourceUrl(win.Ionic.WebView.convertFileSrc(attachment.url));
     fileTransfer.download(attachment.url, this.appFolderPath + '/' + attachment.name).then(success => {
       attachment.notInLocal = false;
+      // this.viewDocument(attachment);
     }).catch(error => {
     });
   }
+
+
+
+
 
   checkFileInLocal(attachment) {
     if (this.isIos) {
@@ -179,16 +215,16 @@ export class FilesPage implements OnInit {
     } else {
       this.file.checkDir(this.file.dataDirectory, 'attachments').then(_ => {
         this.file.checkFile(this.appFolderPath + '/', attachment.name).then(success => {
-          attachment.notInLocal = false;
+          return attachment.notInLocal = false;
         }, error => {
-          attachment.notInLocal = true;
+          return attachment.notInLocal = true;
         })
       }).catch(err => {
         this.file.createDir(this.file.dataDirectory, 'attachments', false).then(response => {
           this.file.checkFile(this.appFolderPath + '/', attachment.name).then(success => {
-            attachment.notInLocal = false;
+            return attachment.notInLocal = false;
           }, error => {
-            attachment.notInLocal = true;
+            return attachment.notInLocal = true;
           })
         }).catch(err => {
         });

@@ -24,7 +24,7 @@
             [formControlName]="data.field" [(ngModel)]="data.value">
           </ion-input>
           <ion-input (click)="setDate(data)" [formControlName]="data.field" *ngIf="data.type == 'date'"
-            placeholder={{data.placeholder}} [(ngModel)]="data.value" type="text">
+            placeholder={{data.placeholder}} [(ngModel)]="data.value" type="text" readonly>
           </ion-input>
           <ion-textarea *ngIf="data.type == 'text-area'" [formControlName]="data.field" rows="2"
             [(ngModel)]="data.value">

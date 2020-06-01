@@ -69,7 +69,6 @@ export class AppComponent {
   public isConnected: any = localStorage.getItem('networkStatus');
   public loggedInUser;
   public attachmentsList = [];
-
   constructor(
     private zone: NgZone,
     public storage: Storage,
@@ -181,6 +180,7 @@ export class AppComponent {
         if (data != null) {
           this.isIos = this.platform.is('ios') ? true : false;
           this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
+          this.checkDir();
           this.deeplinks.routeWithNavController(this.navController, {
             '/about': AboutPage,
             '/project-view/template-view/:templateId': TemplateViewPage
@@ -792,6 +792,8 @@ export class AppComponent {
           // success
           this.attachmentsList[this.fileIndex]
           this.attachmentsList[this.fileIndex].gcUrl = result.payload.sourcePath;
+          this.attachmentsList[this.fileIndex].isNew = false;
+          this.attachmentsList[this.fileIndex].isUploaded = true;
           if (this.fileIndex < this.attachmentsList.length - 1) {
             this.fileIndex = this.fileIndex + 1;
             this.uploadToGC(this.attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
@@ -825,6 +827,12 @@ export class AppComponent {
               }
               if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(task => {
+                  if (task.imageUrl) {
+                    delete task.imageUrl;
+                  }
+                  if (task.file) {
+                    delete task.file;
+                  }
                   if (task.attachments && task.attachments.length > 0) {
                     this.attachmentsList.forEach(attachment => {
                       if (task._id == attachment.taskId) {
@@ -832,7 +840,6 @@ export class AppComponent {
                           if (ta.isNew && ta.name == attachment.name) {
                             ta.sourcePath = attachment.gcUrl;
                             ta.isUploaded = true;
-                            ta.isNew = false;
                           }
                         });
                       }
@@ -864,5 +871,24 @@ export class AppComponent {
       }
     }
     )
+  }
+
+  checkDir() {
+    if (this.isIos) {
+      this.file.checkDir(this.file.documentsDirectory, 'attachments').then(_ => {
+      }).catch(err => {
+        this.file.createDir(this.file.documentsDirectory, 'attachments', false).then(response => {
+        }).catch(err => {
+        });
+      });
+    } else {
+      this.file.checkDir(this.file.dataDirectory, 'attachments').then(_ => {
+
+      }).catch(err => {
+        this.file.createDir(this.file.dataDirectory, 'attachments', false).then(response => {
+        }).catch(err => {
+        });
+      });
+    }
   }
 }

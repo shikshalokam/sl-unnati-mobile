@@ -368,7 +368,6 @@ export class CurrentTaskViewPage implements OnInit {
 
   filePickerForIOS() {
     this.iosFilePicker.pickFile().then(data => {
-      console.log(data, "dafilePickerForIOSta ");
       let correctPath = data.substr(0, data.lastIndexOf('/') + 1);
       let currentName = data.substring(data.lastIndexOf('/') + 1);
       let fileMIMEType = this.getMIMEtype(currentName.substring(currentName.lastIndexOf('.') + 1))
@@ -383,8 +382,6 @@ export class CurrentTaskViewPage implements OnInit {
         this.toastService.errorToast('Sorry,Please attach image or pdf.')
       }
     }).catch(error => {
-      console.log(error, "dafilePickerForIOSta  error");
-
     })
   }
 
@@ -408,7 +405,6 @@ export class CurrentTaskViewPage implements OnInit {
             this.toastService.errorToast('Sorry,Please attach image or pdf.')
           }
         }).catch(err => {
-          console.log(err, "er openFilePicker");
         })
       })
       .catch(e => console.log(e));
@@ -456,7 +452,6 @@ export class CurrentTaskViewPage implements OnInit {
 
 
   public saveFile(imageData, newFileName, newAttachment) {
-    console.log(imageData, newFileName, newAttachment, "imageData, newFileName, newAttachment")
     let currentPath = imageData.substr(0, imageData.lastIndexOf('/') + 1).toString();
     let currentName = imageData.substring(imageData.lastIndexOf('/') + 1, imageData.length).toString();
     if (this.isIos) {
@@ -465,23 +460,17 @@ export class CurrentTaskViewPage implements OnInit {
           this.task.attachments.push(newAttachment);
           this.toastService.successToast('message.image_uploaded');
         }, error => {
-          console.log(error, "error");
           this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
         });
       }).catch(err => {
-        console.log('checkDir ', err);
         this.files.createDir(cordova.file.documentsDirectory, 'attachments', false).then(response => {
-          console.log('createDir response', response);
           this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
-            console.log(success, "copyFile success");
             this.task.attachments.push(newAttachment);
             this.toastService.successToast('message.image_uploaded');
           }, error => {
-            console.log(error, "copyFile errr");
             this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
           });
         }).catch(err => {
-          console.log('createDir ', err);
         });
       });
     } else {
@@ -509,8 +498,6 @@ export class CurrentTaskViewPage implements OnInit {
     let currentPath = file.substr(0, file.lastIndexOf('/') + 1).toString();
     let currentName = file.substring(file.lastIndexOf('/') + 1, file.length).toString();
     this.files.checkFile(currentPath, currentName).then(success => {
-      console.log(file, name, newAttachment, "sending save");
-
       this.saveFile(file, name, newAttachment);
     }, error => {
       currentName = currentName.trim();
@@ -518,7 +505,6 @@ export class CurrentTaskViewPage implements OnInit {
       this.files.checkFile(currentPath, currentName).then(success => {
         this.saveFile(file, name, newAttachment);
       }, error => {
-        console.log(error, "success file check");
         this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
       })
     })

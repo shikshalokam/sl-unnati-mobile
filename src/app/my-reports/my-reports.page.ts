@@ -301,12 +301,10 @@ export class MyReportsPage {
       n = d.getTime(),
       newFileName = n + ".pdf";
     fileTransfer.download(data.pdfUrl, this.appFolderPath + '/' + newFileName).then(success => {
-      console.log(success, "success download");
       this.fileOpener.open(this.appFolderPath + '/' + newFileName, 'application/pdf')
         .then(() => console.log('File is opened'))
         .catch(e => console.log('Error opening file', e));
     }).catch(error => {
-      console.log(error, "error download");
     });
   }
   public getData() {

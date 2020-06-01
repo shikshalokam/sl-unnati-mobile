@@ -158,7 +158,7 @@ export class CreateTasksComponent implements OnInit {
 
   public sharePdf(data) {
     this.toastService.startLoader('Loading Please wait');
-    const fileName = 'Report';
+    const fileName = 'Unnati Task';
     const fileTransfer: FileTransferObject = this.transfer.create();
     const url = data.pdfUrl;
     fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {

@@ -101,13 +101,13 @@ export class MyschoolsPage {
     let connected = navigator.onLine;
     if (connected) {
       this.mySchoolsService.searchScool(keyword).subscribe((data: any) => {
-        if(data.status !='failed'){
+        if (data.status != 'failed') {
           this.mySchools = data.data;
           this.noSchools = false;
           if (data.data.length == 0) {
             this.noSchools = true;
           }
-        }else {
+        } else {
           this.noSchools = false;
         }
       }, error => {
