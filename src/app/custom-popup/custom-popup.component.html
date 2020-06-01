@@ -1,44 +1,24 @@
 <div class="custom-popup" *ngIf="showPopup">
-  <div class="pop-container border-radius text-center">
-    <div class="close-btn" *ngIf="appUpdate.actions.showCloseButton">
+  <div class="pop-container  text-center"
+    [ngClass]="{'border-radius': content.type != 'permissions' && content.type != 'newProject'}">
+    <div class="pop-ion" *ngIf="content.type == 'newProject't">
+      <ion-icon ios='ios-checkmark-circle' md='md-checkmark-circle' color='primary' style='font-size:60px;'>
+      </ion-icon>
+    </div>
+    <div class="close-btn" *ngIf="content.showCloseButton">
       <ion-icon name="close-circle" style="float:right; font-size: 24px;" (click)="cancel()" style=" font-size: 1.5em;">
       </ion-icon>
     </div>
-    <div class="pop-msg">
-      <h5 class="bottom-border">{{appUpdate?.title}}</h5>
-      <h5> {{appUpdate.text}}</h5>
+    <div class="pop-msg" [ngClass]="{'color-primary': content.type =='permissions'}">
+      <h4 [ngClass]="{'bottom-border': isBorder}" *ngIf="content.title">
+        {{content?.title}}</h4>
+      <h5> {{content.text}}
+      </h5>
     </div>
     <ion-row class="pop-btn">
-      <ion-col>
-        <ion-button color="primary" (click)="navigateToProfile()" expand="block" style="margin: 0em 3em;">
-          {{button}}
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </div>
-</div>
-
-<!-- App update -->
-<div class="custom-popup" *ngIf="showUpdatePopup">
-  <div class="pop-container border-radius text-center">
-    <div class="close-btn" *ngIf="appUpdate.actions.showCloseButton">
-      <ion-icon name="close-circle" style="float:right; font-size: 24px;" (click)="close()" style=" font-size: 1.5em;">
-      </ion-icon>
-    </div>
-    <div class="pop-msg">
-      <h5 class="bottom-border">{{appUpdate?.title}}</h5>
-      <h5> {{appUpdate.text}}</h5>
-      <!-- <div *ngIf="releaseNote?.length">
-        <p>Release note</p>
-        <ul>
-          <li *ngFor="let note of releaseNote">{{note}}</li>
-        </ul>
-      </div> -->
-    </div>
-    <ion-row class="pop-btn">
-      <ion-col>
-        <ion-button color="primary" (click)="openApp()" expand="block" style="margin: 0em 3em;">
-          {{button}}
+      <ion-col *ngFor="let btn of content.buttons">
+        <ion-button color="{{btn.color}}" (click)="navigateTo(btn.isActionable)" expand="block">
+          {{btn.title}}
         </ion-button>
       </ion-col>
     </ion-row>

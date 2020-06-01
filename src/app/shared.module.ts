@@ -11,6 +11,8 @@ import { FilterPipe } from './home/search.filter';
 import { SearchEntities } from './get-sub-entities/search-entities.filter';
 import { TaskBoardPipe } from './task-board/task-board.filter';
 import { CustomPopupComponent } from './custom-popup/custom-popup.component';
+import { CreateTasksComponent } from './create-tasks/create-tasks.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -25,6 +27,7 @@ import { CustomPopupComponent } from './custom-popup/custom-popup.component';
     SearchSchool, 
     FilterPipe, 
     CustomPopupComponent, 
+    CreateTasksComponent,
     TaskBoardPipe, 
     SearchEntities
   ],
@@ -35,6 +38,7 @@ import { CustomPopupComponent } from './custom-popup/custom-popup.component';
     SearchSchool, 
     FilterPipe, 
     CustomPopupComponent, 
+    CreateTasksComponent,
     TaskBoardPipe, 
     SearchEntities
   ]

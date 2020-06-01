@@ -13,13 +13,15 @@ export class MyReportsService {
     shareEvent = new Subject();
     reportEvent = new Subject();
     downloadEvent = new Subject();
+    shareTask = new Subject();
+
     constructor(public api: ApiProvider, public http: HttpClient, public currentUser: CurrentUserProvider, public storage: Storage) {
     }
-    public getReports(state) {
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthViseReport?reportType=' + state)
+    public getReports(state, entity?) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthViseReport?reportType=' + state + '?entityId=' + entity)
     }
-    public getFullReports( state) {
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getDetailViewReport?reportType=' + state)
+    public getFullReports(state, entity) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getDetailViewReport?reportType=' + state + '?entityId=' + entity)
     }
     public getReportData(entity) {
         return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getMonthlyOrQuarterReportPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
@@ -28,12 +30,15 @@ export class MyReportsService {
         return this.http.get(AppConfigs.api_url + '/unnati/api/v1/reports/getFullMonthlyOrQuarterPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
     }
     public share(data) {
-        this.shareEvent.next(data)
+        this.shareEvent.next(data);
     }
     public download(data) {
-        this.downloadEvent.next(data)
+        this.downloadEvent.next(data);
     }
     public getReportEvent(type) {
-        this.reportEvent.next(type)
+        this.reportEvent.next(type);
+    }
+    public shareTaskEvent(data) {
+        this.shareTask.next(data);
     }
 }

@@ -12,13 +12,13 @@
 {
     text-transform: capitalize;
     margin-right: 15px;
-    font-family: 'SourceSansPro-Bold';
+    // font-family: 'SourceSansPro-Bold';
     font-size: 16px;
     font-weight: 600;
     float: right;
 }
 ion-label{
-    font-family: 'SourceSansPro-Bold';
+    // font-family: 'SourceSansPro-Bold';
     text-transform: uppercase;
     font-size: 22px;
     font-weight: 600;
@@ -34,7 +34,7 @@ ion-label{
      ion-card-header
      {
         padding: 5px 15px;
-        font-family: 'SourceSansPro-Bold' !important;
+        // font-family: 'SourceSansPro-Bold' !important;
         h4{
             margin: 0px;
             color: #000;
@@ -73,39 +73,3 @@ ion-label{
     }
      }
  }
- 
-    .custom-popup
-    {
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 30%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    .pop-container
-    {
-        margin: auto;
-        max-width: 80%;
-        box-shadow: 0px 3px 8px 4px #e2e2e2;
-        background: #fff;
-        padding: 10px;
-        .pop-ion{
-            text-align: center;
-            ion-icon{
-                font-size:60px;
-            }
-        }
-        .pop-msg
-        {
-        margin: 0px 20px;
-        }
-        .pop-btn{
-            margin: 0px 15px;
-            ion-button{
-                text-transform: capitalize;
-                font-family: 'SourceSansPro-Bold' !important;
-            }
-        }
-    }
-    }

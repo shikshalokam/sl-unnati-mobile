@@ -1,22 +1,172 @@
-<ion-tabs>
-    <ion-header
-      style="position: initial; z-index: auto;"
-    >
-      <app-header
-        [title]="'myreports.title' | translate"
-        [showMenu]="false"
-        [showBack]="true"
-        [noBorder]="true"
-      [isGoBack]="back"
-      >
-      </app-header>
-      <ion-tab-bar slot="top" style=" border-bottom:2px solid #b23e33;">
-        <ion-tab-button tab="last-month-reports" style="max-width: 50%;">
-          <ion-label>{{ "myreports.last_month" | translate }}</ion-label>
-        </ion-tab-button>
-        <ion-tab-button tab="last-quarter-reports" style="max-width: 50%;">
-          <ion-label>{{ "myreports.last_quarter" | translate }}</ion-label>
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-header>
-  </ion-tabs>
+<ion-header style="position: initial; z-index: auto;">
+  <app-header [title]="'myreports.title' | translate" [showMenu]="false" [showBack]="true" [noBorder]="true"
+    [isGoBack]="back">
+  </app-header>
+</ion-header>
+<ion-content>
+  <div class="tabs-list" *ngIf="!showSkeleton">
+    <div class="custom-tab" (click)="selectTab(tab.id)"
+      [ngClass]="{'active-tab': tab.isActive, 'tab-width':tabs.length == 3 }" *ngFor="let tab of tabs">
+      {{ tab.title }}</div>
+  </div>
+  <div *ngIf="!showSkeleton" class="ion-padding" style="margin-top:50px;">
+
+    <div *ngIf="activeTab == 'school'">
+      <div *ngIf="schools">
+        <ion-card *ngFor="let school of schools" (click)="getReportsBySchool(school.entityId,school.name)"
+          class="card-custom">
+          <ion-row>
+            <ion-col size="10">
+              {{school.name}}
+            </ion-col>
+            <ion-col size="2" style="margin: auto; text-align: center;">
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </div>
+      <ion-card *ngIf="!schools">
+        <h5 style="text-align: center;"> {{'message.no_data_found' |translate}} </h5>
+      </ion-card>
+    </div>
+    <div *ngIf="activeTab != 'school'">
+      <ion-card *ngIf="showNoReports && !showSkeleton">
+        <h5 style="text-align: center;"> {{'message.no_data_found' |translate}} </h5>
+      </ion-card>
+      <div *ngIf="report">
+        <ion-fab vertical="top" horizontal="end" style="margin-top: 55px;">
+          <ion-fab-button size="small">
+            <ion-icon ios="ios-more" md="md-more"></ion-icon>
+          </ion-fab-button>
+          <ion-fab-list side="start">
+            <ion-fab-button color="medium" (click)="getReport('share')">
+              <ion-icon ios="ios-share" md="md-share" style="color: #000;"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button color="medium" (click)="getReport('download')">
+              <ion-icon ios="ios-download" md="md-download" style="color: #000;"></ion-icon>
+            </ion-fab-button>
+          </ion-fab-list>
+        </ion-fab>
+        <div style="width: 59%; min-height: 25px;">
+          <h5>
+            {{mappedSchool}}
+          </h5>
+        </div>
+        <div style="margin-top: 2.5em;" *ngIf="activeTab == 'lastQuarter'" style="width: 90%;">
+          <h5>
+            {{ "last_quarter_report.projects_cmpltd_lstqrtr" | translate }}
+          </h5>
+        </div>
+        <div style=" margin-top: 2.5em;" *ngIf="activeTab == 'lastMonth'" style="width: 90%;">
+          <h5>
+            {{ "last_month_report.projects_cmpltd_lstmnth" | translate }}
+          </h5>
+        </div>
+        <div *ngIf="activeTab == 'lastMonth'"> {{ report?.startMonth }} </div>
+        <div *ngIf="activeTab == 'lastQuarter'">{{ report?.startMonth }} - {{ report?.endMonth }}</div>
+        <ion-grid style="padding: 0px;
+          margin-top: 2.5em;" *ngIf="activeTab == 'lastQuarter'">
+          <ion-row>
+            <ion-col class="status-card task-completed-box">
+              <h3>{{ "last_month_report.completed" | translate }}</h3>
+              <h1>
+                <span *ngIf="report.projectsCompleted <= 9">
+                  0{{ report.projectsCompleted }} &nbsp;</span>
+                <span *ngIf="report.projectsCompleted >= 10">
+                  {{ report.projectsCompleted }} &nbsp;</span>
+              </h1>
+            </ion-col>
+            <ion-col class="status-card task-pending-box">
+              <h3>{{ "last_month_report.pending" | translate }}</h3>
+              <h1>
+                <span *ngIf="report.projectsPending <= 9">
+                  0{{ report.projectsPending }} &nbsp;</span>
+                <span *ngIf="report.projectsPending >= 10">
+                  {{ report.projectsPending }} &nbsp;</span>
+              </h1>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <div *ngIf="activeTab == 'lastQuarter'">
+          <div class="action-item" (click)="viewFullReport()">
+            {{ "last_quarter_report.view_full_reports" | translate }}
+          </div>
+          <!-- <div class="action-item"></div> -->
+          <h5>
+            {{ "last_quarter_report.tasks_cmpltd_lstmnth" | translate }}
+          </h5>
+          <div>{{ report?.startMonth }} - {{ report?.endMonth }}</div>
+        </div>
+
+
+
+        <ion-grid style="padding: 0px;
+        margin-top: 2.5em;" *ngIf="activeTab == 'lastMonth'">
+          <ion-row>
+            <ion-col class="status-card task-completed-box">
+              <h3>{{ "last_month_report.completed" | translate }}</h3>
+              <h1>
+                <span *ngIf="report.projectsCompleted <= 9">
+                  0{{ report.projectsCompleted }} &nbsp;</span>
+                <span *ngIf="report.projectsCompleted >= 10">
+                  {{ report.projectsCompleted }} &nbsp;</span>
+              </h1>
+            </ion-col>
+            <ion-col class="status-card task-pending-box">
+              <h3>{{ "last_month_report.pending" | translate }}</h3>
+              <h1>
+                <span *ngIf="report.projectsPending <= 9">
+                  0{{ report.projectsPending }} &nbsp;</span>
+                <span *ngIf="report.projectsPending >= 10">
+                  {{ report.projectsPending }} &nbsp;</span>
+              </h1>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <div *ngIf="activeTab == 'lastMonth'">
+          <div class="action-item" (click)="viewFullReport('lastMonth')">
+            {{ "last_month_report.view_full_reports" | translate }}
+          </div>
+          <h5>
+            {{ "last_month_report.tasks_cmpltd_lstmnth" | translate }}
+          </h5>
+          <div>{{ report?.startMonth }}</div>
+        </div>
+
+        <div *ngIf="chartOptions">
+          <highcharts-chart [Highcharts]="highcharts" [options]="chartOptions"
+            style="width: 100%; height: 400px; display: block;">
+          </highcharts-chart>
+        </div>
+        <ion-row>
+          <ion-col class="legend-left">
+            <span class="dot-pending"> &nbsp; </span> {{'myreports.tasks_pending' | translate}} <br />
+            <span style="font-size:24px; ">{{ report.tasksPending }}</span>
+          </ion-col>
+          <ion-col class="legend-right">
+            <span class="dot-completed"> &nbsp; </span> {{'myreports.tasks_completed' | translate}} <br />
+            <span style="font-size:24px; "> {{ report.tasksCompleted }} </span>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showSkeleton">
+    <div class="skeleton-card-content">
+      <ion-card *ngFor="let skeleton of skeletons">
+        <ion-card-content class="skeleton-card-content">
+          <p>
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated></ion-skeleton-text>
+            <ion-skeleton-text animated></ion-skeleton-text>
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

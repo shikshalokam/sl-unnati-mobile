@@ -1,0 +1,32 @@
+<ion-content class="ion-padding" style="--background: #f2f2f2;">
+    <div *ngIf="showWarning">
+        <app-custom-popup [content]="popMsg" [showPopup]="true">
+        </app-custom-popup>
+    </div>
+    <div class="content-body">
+        <h4>Permissions Requested </h4>
+        <p> Dear user,
+        </p>
+        <p> Welcome to Unnati. Kindly give us access to the following to help us improve your experience of the App.
+            Thank
+            You. </p>
+    </div>
+    <div style="min-height: 20%;">
+        <ion-item *ngFor="let request of requiredPermissions" class="permission-rqst-card">
+            <img [src]="request.icon">
+            <ion-label>
+                <div class="title">{{request.title}}</div>
+                <div class="sub-title">{{request.subTitle}}</div>
+            </ion-label>
+            <ion-checkbox [(ngModel)]="request.isChecked" class="custom-checkBoxes"
+                (ionChange)="permissionGivenTo(request)"></ion-checkbox>
+        </ion-item>
+    </div>
+    <div style="text-align: center;margin: 10% 0px;">
+        <div (click)="openTermsAndPolicy()"> Privacy Policy <span style="border-right: 1px solid #000;
+        margin: 0px 5px;"></span> Terms of Use</div>
+    </div>
+    <ion-button expand="block" [disabled]="disableBtn" (click)="submit()" color="secondary" class="permission-btn">
+        Accept
+    </ion-button>
+</ion-content>

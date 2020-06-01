@@ -7,6 +7,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CreateProjectService } from '../create-project/create-project.service';
 import { ToastService } from '../toast.service'
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { Platform } from '@ionic/angular';
+import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+
+declare var cordova: any;
+
 @Component({
   selector: 'app-current-task-view',
   templateUrl: './current-task-view.page.html',
@@ -16,9 +25,7 @@ export class CurrentTaskViewPage implements OnInit {
   createSubtask: FormGroup;
   back;
   file;
-  imageUrl;
   remarks;
-  fileUrl;
   from;
   showpopup: boolean = false;
   enableMarkButton: boolean = false;
@@ -27,6 +34,8 @@ export class CurrentTaskViewPage implements OnInit {
   editGoal;
   subTaskTitle;
   editTitle;
+  isIos;
+  appFolderPath: string;
   markLabelsAsInvalid: boolean = false;
   statuses = [
     { title: 'Not started' },
@@ -35,14 +44,22 @@ export class CurrentTaskViewPage implements OnInit {
   ];
   task;
   subtask: any = {}
+
   constructor(
     public storage: Storage,
     public datepipe: DatePipe,
+    private iosFilePicker: IOSFilePicker,
     public datePicker: DatePicker,
     public router: Router,
+    private files: File,
+    private fileTransfer: FileTransfer,
     public route: ActivatedRoute,
+    private filePath: FilePath,
+    public platform: Platform,
     public createProjectService: CreateProjectService,
     public toastService: ToastService,
+    public fileChooser: FileChooser,
+
     public camera: Camera) {
     route.params.subscribe(param => {
       this.from = param.from;
@@ -55,10 +72,15 @@ export class CurrentTaskViewPage implements OnInit {
     this.enableMarkButton = false;
   }
   ngOnInit() {
+    this.isIos = this.platform.is('ios') ? true : false;
+    this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
   }
   getTask() {
     this.storage.get('cTask').then(task => {
       this.enableMarkTaskComplete(task);
+      if (!task.attachments) {
+        task.attachments = [];
+      }
       this.task = task;
       if (this.from == 'pd') {
         this.back = "project-view/project-detail";
@@ -232,7 +254,7 @@ export class CurrentTaskViewPage implements OnInit {
     if (this.task.title) {
       this.editTitle = false;
       this.markLabelsAsInvalid = false;
-    } 
+    }
     if (this.task.goal) {
       this.editGoal = false;
       this.markLabelsAsInvalid = false;
@@ -340,43 +362,151 @@ export class CurrentTaskViewPage implements OnInit {
   openPopup() {
     this.showpopup = true;
   }
-
-  //  Converting Attachments into Base64
-  selectedFile(imageInput: any, type) {
-    let value;
-    const file: File = imageInput.files[0];
-    this.file = file;
-    const reader = new FileReader();
-    reader.onload = (event: any) => {
-      value = event.target.result.split(',');
-      if (type == 'image') {
-        this.imageUrl = value[1];
-      } else {
-        this.task.file = {
-          url: event.target.result,
-          name: this.file.name
-        }
-        this.toastService.successToast('message.file_uploaded');
-      }
-    };
-    reader.readAsDataURL(file);
+  selectFile() {
+    this.isIos ? this.filePickerForIOS() : this.openFilePicker();
   }
 
+  filePickerForIOS() {
+    this.iosFilePicker.pickFile().then(data => {
+      let correctPath = data.substr(0, data.lastIndexOf('/') + 1);
+      let currentName = data.substring(data.lastIndexOf('/') + 1);
+      let fileMIMEType = this.getMIMEtype(currentName.substring(currentName.lastIndexOf('.') + 1))
+      if (fileMIMEType) {
+        let fileData = {
+          name: currentName,
+          type: fileMIMEType,
+          isNew: true
+        }
+        this.checkInLocal("file://" + data, currentName, fileData);
+      } else {
+        this.toastService.errorToast('Sorry,Please attach image or pdf.')
+      }
+    }).catch(error => {
+    })
+  }
+
+  // For android
+  openFilePicker() {
+    this.fileChooser.open()
+      .then(filePath => {
+        this.filePath.resolveNativePath(filePath).then(imageData => {
+          let correctPath = imageData.substr(0, imageData.lastIndexOf('/') + 1);
+          let currentName = imageData.substring(imageData.lastIndexOf('/') + 1);
+          let fileMIMEType = this.getMIMEtype(currentName.substring(currentName.lastIndexOf('.') + 1))
+          if (fileMIMEType) {
+            let fileData = {
+              name: currentName,
+              type: fileMIMEType,
+              isNew: true
+            }
+
+            this.checkInLocal(imageData, currentName, fileData);
+          } else {
+            this.toastService.errorToast('Sorry,Please attach image or pdf.')
+          }
+        }).catch(err => {
+        })
+      })
+      .catch(e => console.log(e));
+  }
+
+  getMIMEtype(extn) {
+    let ext = extn.toLowerCase();
+    let MIMETypes = {
+      'pdf': 'application/pdf',
+      'jpg': 'image/jpeg',
+      'bmp': 'image/bmp',
+      'png': 'image/png',
+      'jpeg': 'image/jpeg',
+      'gif': 'image/gif'
+    }
+    return MIMETypes[ext];
+  }
   openCamera() {
     const options: CameraOptions = {
       quality: 20,
       targetWidth: 600,
       targetHeight: 600,
-      destinationType: this.camera.DestinationType.DATA_URL,
+      destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE
+      mediaType: this.camera.MediaType.PICTURE,
+      sourceType: this.camera.PictureSourceType.CAMERA
     }
     this.camera.getPicture(options).then((imageData) => {
-      this.task.imageUrl = imageData;
-      this.toastService.successToast('message.image_uploaded');
-      let base64Image = 'data:image/jpeg;base64,' + imageData;
+      let d = new Date(),
+        n = d.getTime(),
+        newFileName = n + ".jpg";
+
+      let data = {
+        data: imageData,
+        name: newFileName,
+        type: 'image/jpeg',
+        isNew: true
+      }
+      this.checkInLocal(imageData, newFileName, data);
     }, (err) => {
       // Handle error
     });
+  }
+
+
+
+  public saveFile(imageData, newFileName, newAttachment) {
+    let currentPath = imageData.substr(0, imageData.lastIndexOf('/') + 1).toString();
+    let currentName = imageData.substring(imageData.lastIndexOf('/') + 1, imageData.length).toString();
+    if (this.isIos) {
+      this.files.checkDir(this.files.documentsDirectory, 'attachments').then(_ => {
+        this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
+          this.task.attachments.push(newAttachment);
+          this.toastService.successToast('message.image_uploaded');
+        }, error => {
+          this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
+        });
+      }).catch(err => {
+        this.files.createDir(cordova.file.documentsDirectory, 'attachments', false).then(response => {
+          this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
+            this.task.attachments.push(newAttachment);
+            this.toastService.successToast('message.image_uploaded');
+          }, error => {
+            this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
+          });
+        }).catch(err => {
+        });
+      });
+    } else {
+      this.files.checkDir(this.files.externalDataDirectory, 'attachments').then(_ => {
+        this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
+          this.task.attachments.push(newAttachment);
+          this.toastService.successToast('message.image_uploaded');
+        }, error => {
+          this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
+        });
+      }).catch(err => {
+        this.files.createDir(cordova.file.externalDataDirectory, 'attachments', false).then(response => {
+          this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
+            this.task.attachments.push(newAttachment);
+            this.toastService.successToast('message.image_uploaded');
+          }, error => {
+            this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
+          });
+        }).catch(err => {
+        });
+      });
+    }
+  }
+  checkInLocal(file, name, newAttachment) {
+    let currentPath = file.substr(0, file.lastIndexOf('/') + 1).toString();
+    let currentName = file.substring(file.lastIndexOf('/') + 1, file.length).toString();
+    this.files.checkFile(currentPath, currentName).then(success => {
+      this.saveFile(file, name, newAttachment);
+    }, error => {
+      currentName = currentName.trim();
+      currentName = currentName.replace(/ /g, "_");
+      this.files.checkFile(currentPath, currentName).then(success => {
+        this.saveFile(file, name, newAttachment);
+      }, error => {
+        this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
+      })
+    })
   }
 }

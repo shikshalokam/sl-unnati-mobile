@@ -11,7 +11,6 @@ export class HomeService {
   public tobeSync = new Subject();
   public profileUpdateEvent = new Subject();
   public isSyncing = new Subject();
-  public activeProjectLoad = new Subject();
   public searcResultsOfPrjcts = new Subject();
   constructor() {
   }
@@ -29,9 +28,7 @@ export class HomeService {
       this.searcResultsOfPrjcts.next('show');
     }
   }
-  public loadActiveProjects() {
-    this.activeProjectLoad.next('activeProjectLoad');
-  }
+
   public clearData() {
     this.clearMyProject.next();
   }
