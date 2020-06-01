@@ -1,11 +1,11 @@
-<ion-header [ngStyle]="{'--background':bg,'border-bottom': noBorder ? '2px solid #fff' : '2px solid #b23e33' }">
+<ion-header [ngStyle]="{'--background':bg,'border-bottom': noBorder ? '0px solid #fff' : '2px solid #b23e33' }">
   <ion-toolbar>
     <ion-icon name="menu" class="header-action-icons" *ngIf="showMenu" (click)="menuToggle()">
     </ion-icon>
-    <span *ngIf="showMenu" style="margin: 20px 10px;
-    font-size: 16px;
+    <span *ngIf="showMenu" style="margin: 18px 10px;
+    font-size: 14px;
     left: 0px;
-    position: absolute;" (click)="menuToggle()"> MENU </span>
+    position: absolute" (click)="menuToggle()"> MENU </span>
     <ion-icon ios="ios-arrow-back" md="md-arrow-back" color="primary" class="header-action-icons"
       *ngIf="showBack && !isGoBack">
     </ion-icon>

@@ -44,6 +44,9 @@ export class ProjectService {
         return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projects/getFileUploadUrl', data)
     }
     public storeInBucket(base64, url) {
+        let httpHeaders = new HttpHeaders({
+            'Content-Type': 'multipart/form-data'
+        })
         return this.http.put(url, base64)
 
     }

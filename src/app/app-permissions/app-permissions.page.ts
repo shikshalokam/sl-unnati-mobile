@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastService } from '../toast.service';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { MenuController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-app-permissions',
@@ -13,7 +14,8 @@ import { MenuController } from '@ionic/angular';
 export class AppPermissionsPage implements OnInit {
 
   disableBtn: boolean = true;
-  showWarning: boolean = false
+  showWarning: boolean = false;
+  isIos;
   popMsg = {
     type: 'permissions',
     title: 'Warning !',
@@ -67,6 +69,7 @@ export class AppPermissionsPage implements OnInit {
     public router: Router,
     public iab: InAppBrowser,
     public menuController: MenuController,
+    public platform: Platform,
   ) {
     toastService.popClose.subscribe(data => {
       this.showWarning = false;
@@ -80,6 +83,7 @@ export class AppPermissionsPage implements OnInit {
 
 
   ngOnInit() {
+    this.isIos = this.platform.is('ios') ? true : false;
     this.menuController.enable(false);
   }
   public permissionGivenTo(request) {
@@ -116,14 +120,16 @@ export class AppPermissionsPage implements OnInit {
       }
     });
     if (request.length == this.requiredPermissions.length) {
-      this.getPermissions();
+      if (!this.isIos) {
+        this.getPermissions();
+      } else {
+        this.router.navigate(['/project-view/home']);
+      }
     } else {
       this.showWarning = true;
     }
   }
   public getPermissions() {
-
-
     let request: any = [];
     this.requests.forEach(element => {
       if (element.isChecked) {
@@ -136,7 +142,7 @@ export class AppPermissionsPage implements OnInit {
           if (!result.hasPermission) {
             this.androidPermissions.requestPermission(element).then(resp => {
             }, error => { console.log(error, "error") })
-            this.router.navigate(['/project-view/home'])
+            this.router.navigate(['/project-view/home']);
           }
         },
         err => this.androidPermissions.requestPermission(element))

@@ -28,6 +28,8 @@ import { TemplateViewPage } from './template-view/template-view.page';
 import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
+import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
+
 declare var cordova: any;
 
 @Component({
@@ -57,12 +59,16 @@ export class AppComponent {
   showUpdatePop: boolean = false;
   interval = interval(3600000);
   public title;
-
+  isIos;
+  appFolderPath: string;
+  fileIndex;
+  storageUrls;
   public loggedIn: boolean = false;
   public appPages = [];
   public history = [];
   public isConnected: any = localStorage.getItem('networkStatus');
   public loggedInUser;
+  public attachmentsList = [];
   constructor(
     private zone: NgZone,
     public storage: Storage,
@@ -90,7 +96,7 @@ export class AppComponent {
     public notificationCardService: NotificationCardService,
     private deeplinks: Deeplinks,
     private file: File,
-    private fileTransfer: FileTransfer,
+    private transfer: FileTransfer,
   ) {
     this.platform.ready().then(() => {
       toastService.popClose.subscribe(data => {
@@ -171,19 +177,22 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.storage.get('userTokens').then(data => {
-        this.deeplinks.routeWithNavController(this.navController, {
-          '/about': AboutPage,
-          '/project-view/template-view/:templateId': TemplateViewPage
-        }).subscribe(match => {
-          this.zone.run(() => {
-            this.router.navigate([match.$link.path], { queryParams: { programId: match.$link.queryString } });
-          })
-        }, nomatch => {
-        });
         if (data != null) {
-          if (this.isConnected) {
-            this.api.validateToken().then(token => { })
-          }
+          this.isIos = this.platform.is('ios') ? true : false;
+          this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
+          this.checkDir();
+          this.deeplinks.routeWithNavController(this.navController, {
+            '/about': AboutPage,
+            '/project-view/template-view/:templateId': TemplateViewPage
+          }).subscribe(match => {
+            this.zone.run(() => {
+              this.router.navigate([match.$link.path], { queryParams: { programId: match.$link.queryString } });
+            })
+          }, nomatch => {
+          });
+          this.translate.setDefaultLang('en');
+          this.translate.use('en');
+          this.networkService.setLang('en');
           this.router.navigateByUrl('/project-view/home');
         } else {
           this.router.navigateByUrl('/login');
@@ -192,9 +201,7 @@ export class AppComponent {
       if (!this.isConnected && !navigator.onLine) {
         this.networkService.networkErrorToast();
       }
-      this.translate.setDefaultLang('en');
-      this.translate.use('en');
-      this.networkService.setLang('en');
+
       this.platform.pause.subscribe(() => {
         localStorage.setItem('isPopUpShowen', null);
       });
@@ -354,8 +361,9 @@ export class AppComponent {
   public navigate(url, title) {
     if (title == 'Sync') {
       this.files = [];
-      this.prepareMappedProjectToSync();
-      this.getOldDataToSync();
+      // this.prepareMappedProjectToSync();
+      // this.getOldDataToSync();
+      this.getAttachments();
     } else if (url) {
       this.router.navigate([url]);
     }
@@ -464,7 +472,7 @@ export class AppComponent {
       return '';
     } else {
       const path = this.platform.is('ios') ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory
-      return path + img;
+      return path + 'attachments/' + img;
     }
   }
   // auto sync
@@ -700,6 +708,187 @@ export class AppComponent {
           this.router.navigateByUrl('/login');
         }
       })
+    }
+  }
+
+  public getAttachments() {
+    let filesList = [];
+    this.attachmentsList = [];
+    this.projectsToSync = [];
+    this.storage.get('latestProjects').then(myProjects => {
+      if (myProjects) {
+        myProjects.forEach(projectList => {
+          projectList.projects.forEach(project => {
+            project.share = false;
+            if (project.isEdited || project.isNew) {
+              if (!project.isDeleted) {
+                if (project.tasks && project.tasks.length > 0) {
+                  project.tasks.forEach(task => {
+                    if (task.attachments) {
+                      task.attachments.forEach(attachment => {
+                        if (attachment.isNew) {
+                          let data = {
+                            taskId: task._id,
+                            data: attachment.data,
+                            name: attachment.name,
+                            type: attachment.type,
+                            isUploaded: false
+                          }
+                          this.attachmentsList.push(data);
+                          filesList.push(attachment.name)
+                        }
+                      });
+                    }
+                  });
+                }
+              }
+            }
+          });
+        })
+
+        if (this.attachmentsList.length > 0) {
+          this.getUploadUrl(this.attachmentsList, filesList);
+        } else {
+          this.prepareMappedProjectToSync();
+        }
+      }
+    })
+
+  }
+  public getUploadUrl(attachmentsList, filesList) {
+    this.toastService.startLoader('Loading, Please wait');
+    this.fileIndex = 0;
+    let fileNames = { fileNames: filesList }
+    this.projectService.getStorageUrl(fileNames).subscribe((data: any) => {
+      if (data.status == 200) {
+        // let correctPath = attachmentsList[index].data.substr(0, attachmentsList[index].data.lastIndexOf('/') + 1);
+        this.storageUrls = data.result;
+        this.uploadToGC(attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
+      } else {
+        this.toastService.stopLoader();
+      }
+    }, error => {
+      this.toastService.stopLoader();
+    })
+  }
+
+  public uploadToGC(attachment, result) {
+    let options: FileUploadOptions = {
+      fileKey: 'file',
+      fileName: attachment.name,
+      chunkedMode: false,
+      mimeType: attachment.type,
+      headers: {
+        "Content-Type": 'multipart/form-data',
+        "x-ms-blob-type": (result.cloudStorage && result.cloudStorage === 'GC') ? "BlockBlob" : null
+      },
+      httpMethod: 'PUT',
+    }
+    let targetPath = this.pathForImage(attachment.name);
+    let fileTrns: FileTransferObject = this.transfer.create();
+    this.file.checkFile((this.platform.is('ios') ? this.file.documentsDirectory : this.file.externalDataDirectory) + 'attachments/', attachment.name).then(success => {
+      fileTrns.upload(targetPath, result.url, options)
+        .then((data) => {
+          // success
+          this.attachmentsList[this.fileIndex]
+          this.attachmentsList[this.fileIndex].gcUrl = result.payload.sourcePath;
+          this.attachmentsList[this.fileIndex].isNew = false;
+          this.attachmentsList[this.fileIndex].isUploaded = true;
+          if (this.fileIndex < this.attachmentsList.length - 1) {
+            this.fileIndex = this.fileIndex + 1;
+            this.uploadToGC(this.attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
+          } else {
+            this.mapAttachments();
+          }
+        }, (err) => {
+          this.toastService.stopLoader();
+        }).catch(err => {
+        })
+    }, error => {
+      this.attachmentsList[this.fileIndex]
+      this.attachmentsList[this.fileIndex].gcUrl = result.payload.sourcePath;
+      if (this.fileIndex < this.attachmentsList.length - 1) {
+        this.fileIndex = this.fileIndex + 1;
+        this.uploadToGC(this.attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
+      } else {
+        this.mapAttachments();
+      }
+    })
+  }
+  // map attachments to task and sync
+  mapAttachments() {
+    this.storage.get('latestProjects').then(myProjects => {
+      if (myProjects) {
+        myProjects.forEach(projectList => {
+          projectList.projects.forEach(project => {
+            if (project.isNew || project.isEdited) {
+              if (project.isNew) {
+                delete project._id;
+              }
+              if (project.tasks && project.tasks.length > 0) {
+                project.tasks.forEach(task => {
+                  if (task.imageUrl) {
+                    delete task.imageUrl;
+                  }
+                  if (task.file) {
+                    delete task.file;
+                  }
+                  if (task.attachments && task.attachments.length > 0) {
+                    this.attachmentsList.forEach(attachment => {
+                      if (task._id == attachment.taskId) {
+                        task.attachments.forEach(function (ta, i) {
+                          if (ta.isNew && ta.name == attachment.name) {
+                            ta.sourcePath = attachment.gcUrl;
+                            ta.isUploaded = true;
+                          }
+                        });
+                      }
+                    });
+                  }
+                  if (task.subTasks && task.subTasks.length > 0) {
+                    task.subTasks.forEach(subtasks => {
+                      if (subtasks.isNew && subtasks._id) {
+                        delete subtasks._id;
+                      }
+                    })
+                  }
+                  if (task.isNew && task._id) {
+                    delete task._id;
+                  }
+                  if (task.isSync) {
+                    task.isNew = false;
+                  }
+                });
+              }
+              this.projectsToSync.push(project);
+            }
+          });
+        });
+      }
+      this.toastService.stopLoader();
+      if (this.isConnected) {
+        this.autoSync();
+      }
+    }
+    )
+  }
+
+  checkDir() {
+    if (this.isIos) {
+      this.file.checkDir(this.file.documentsDirectory, 'attachments').then(_ => {
+      }).catch(err => {
+        this.file.createDir(this.file.documentsDirectory, 'attachments', false).then(response => {
+        }).catch(err => {
+        });
+      });
+    } else {
+      this.file.checkDir(this.file.dataDirectory, 'attachments').then(_ => {
+
+      }).catch(err => {
+        this.file.createDir(this.file.dataDirectory, 'attachments', false).then(response => {
+        }).catch(err => {
+        });
+      });
     }
   }
 }

@@ -75,7 +75,8 @@
         </ion-col>
       </ion-row>
       <ion-button class="round-corner-btn prjdetail-btn" expand="block" color="secondary"
-        (click)="navigateToResources()" *ngIf="category != 'my_projects' &&  category != 'form' ">
+        (click)="navigateToResources()"
+        *ngIf="category != 'my_projects' &&  category != 'form' &&  category != 'home' && category !='projectsList'">
         {{'button.learning_resources' | translate}}
       </ion-button>
     </div>
@@ -132,9 +133,9 @@
     </div>
     <div>Files</div>
   </div>
-  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;"
+  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;" mode='ios'
     *ngIf="show && addTaskButton  && tasksLength > 0 ">
-    <ion-fab-button (click)="addTask()" style=" margin-bottom: 15px;">
+    <ion-fab-button (click)="addTask()" style=" margin-bottom: 20%;">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

@@ -9,12 +9,13 @@ import { AlertController } from '@ionic/angular';
 import { ApiProvider } from '../api/api';
 import { ProjectService } from '../project-view/project.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { Platform } from '@ionic/angular';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { LoadingController } from '@ionic/angular';
+import { resolve } from 'url';
 
 declare var cordova: any;
 @Component({
@@ -30,6 +31,9 @@ export class PopoverComponent implements OnInit {
   isIos;
   projectToSync: any = [];
   appFolderPath;
+  attachmentsList = [];
+  storageUrls;
+  fileIndex = 0;
   constructor(
     public translateService: TranslateService,
     public popoverController: PopoverController,
@@ -144,45 +148,10 @@ export class PopoverComponent implements OnInit {
         delete this.projectToSync[0]._id;
       }
       if (this.projectToSync[0].tasks && this.projectToSync[0].tasks.length > 0) {
-        this.projectToSync[0].tasks.forEach(task => {
-          if (task.isNew) {
-            delete task._id;
-          }
-          if (task.subTasks && task.subTasks.length > 0) {
-            task.subTasks.forEach(subtask => {
-              if (subtask.isNew) {
-                delete subtask._id;
-              }
-            });
-          }
-        });
+        this.getAttachments();
+      } else {
+        this.sync();
       }
-      this.toastService.startLoader('Loading, please wait');
-      let metaData: any = [];
-      metaData.push(this.projectToSync);
-      let projects = {
-        projects: this.projectToSync
-      }
-      this.projectService.sync(projects).subscribe((data: any) => {
-        if (data.status == "success" || data.status == "succes") {
-          this.toastService.stopLoader();
-          data.allProjects.data.forEach(projects => {
-            projects.projects.forEach(sproject => {
-              if (sproject.share) {
-                this.getPDF(sproject._id);
-              }
-            })
-          });
-          this.DismissClick();
-          this.syncUpdateInLocal(data.allProjects.data);
-        } else {
-          this.DismissClick();
-          this.toastService.stopLoader();
-          this.toastService.errorToast1(data.message);
-        }
-      }, error => {
-        this.toastService.stopLoader();
-      })
     } else {
       this.toastService.startLoader('Loading, please wait');
       this.getPDF(this.project._id);
@@ -231,6 +200,162 @@ export class PopoverComponent implements OnInit {
       }, (error) => {
         this.toastService.stopLoader();
       });
+    }, error => {
+      this.toastService.stopLoader();
+    })
+  }
+
+  public getAttachments() {
+    let filesList = [];
+    this.attachmentsList = [];
+    if (this.projectToSync[0].tasks && this.projectToSync[0].tasks.length > 0) {
+      this.projectToSync[0].tasks.forEach(task => {
+        if (task.attachments) {
+          task.attachments.forEach(attachment => {
+            if (attachment.isNew) {
+              let data = {
+                taskId: task._id,
+                data: attachment.data,
+                name: attachment.name,
+                type: attachment.type,
+                isUploaded: false
+              }
+              this.attachmentsList.push(data);
+              filesList.push(attachment.name)
+            }
+          });
+        }
+      });
+    }
+    if (this.attachmentsList.length > 0) {
+      this.getUploadUrl(this.attachmentsList, filesList);
+    } else {
+      this.sync();
+    }
+  }
+  public getUploadUrl(attachmentsList, filesList) {
+    this.toastService.startLoader('Loading, Please wait');
+    this.fileIndex = 0;
+    let fileNames = { fileNames: filesList }
+    this.projectService.getStorageUrl(fileNames).subscribe((data: any) => {
+      if (data.status == 200) {
+        this.storageUrls = data.result;
+        this.uploadToGC(attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
+      } else {
+        this.toastService.stopLoader();
+      }
+    })
+  }
+
+  public uploadToGC(attachment, result) {
+    let options: FileUploadOptions = {
+      fileKey: 'file',
+      fileName: attachment.name,
+      chunkedMode: false,
+      mimeType: attachment.type,
+      headers: {
+        "Content-Type": 'multipart/form-data',
+        "x-ms-blob-type": (result.cloudStorage && result.cloudStorage === 'GC') ? "BlockBlob" : null
+      },
+      httpMethod: 'PUT',
+    }
+    let targetPath = this.pathForImage(attachment.name);
+    let fileTrns: FileTransferObject = this.transfer.create();
+    this.file.checkFile((this.platform.is('ios') ? this.file.documentsDirectory : this.file.externalDataDirectory) + 'attachments/', attachment.name).then(success => {
+      fileTrns.upload(targetPath, result.url, options)
+        .then((data) => {
+          // success
+          this.attachmentsList[this.fileIndex]
+          this.attachmentsList[this.fileIndex].gcUrl = result.payload.sourcePath;
+          if (this.fileIndex < this.attachmentsList.length - 1) {
+            this.fileIndex = this.fileIndex + 1;
+            this.uploadToGC(this.attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
+          } else {
+            this.mapAttachments();
+          }
+        }, (err) => {
+          this.toastService.stopLoader();
+        }).catch(err => {
+        })
+    }, error => {
+      this.attachmentsList[this.fileIndex]
+      this.attachmentsList[this.fileIndex].gcUrl = result.payload.sourcePath;
+      if (this.fileIndex < this.attachmentsList.length - 1) {
+        this.fileIndex = this.fileIndex + 1;
+        this.uploadToGC(this.attachmentsList[this.fileIndex], this.storageUrls[this.fileIndex]);
+      } else {
+        this.mapAttachments();
+      }
+    })
+  }
+
+  pathForImage(img) {
+    if (img === null) {
+      return '';
+    } else {
+      const path = this.platform.is('ios') ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory
+      return path + 'attachments/' + img;
+    }
+  }
+  // map attachments to task and sync
+  mapAttachments() {
+    if (this.projectToSync[0].tasks && this.projectToSync[0].tasks.length > 0) {
+      this.projectToSync[0].tasks.forEach(task => {
+        if (task.attachments && task.attachments.length > 0) {
+          this.attachmentsList.forEach(attachment => {
+            if (task._id == attachment.taskId) {
+              task.attachments.forEach(function (ta, i) {
+                if (ta.isNew && ta.name == attachment.name) {
+                  ta.sourcePath = attachment.gcUrl;
+                  ta.isUploaded = true;
+                  ta.isNew = false;
+                }
+              });
+            }
+          });
+        }
+        if (task.subTasks && task.subTasks.length > 0) {
+          task.subTasks.forEach(subtasks => {
+            if (subtasks.isNew && subtasks._id) {
+              delete subtasks._id;
+            }
+          })
+        }
+        if (task.isNew && task._id) {
+          delete task._id;
+        }
+        if (task.isSync) {
+          task.isNew = false;
+        }
+      });
+      this.sync();
+    }
+  }
+
+  sync() {
+    this.toastService.startLoader('Loading, please wait');
+    let metaData: any = [];
+    metaData.push(this.projectToSync);
+    let projects = {
+      projects: this.projectToSync
+    }
+    this.projectService.sync(projects).subscribe((data: any) => {
+      if (data.status == "success" || data.status == "succes") {
+        this.toastService.stopLoader();
+        data.allProjects.data.forEach(projects => {
+          projects.projects.forEach(sproject => {
+            if (sproject.share) {
+              this.getPDF(sproject._id);
+            }
+          })
+        });
+        this.DismissClick();
+        this.syncUpdateInLocal(data.allProjects.data);
+      } else {
+        this.DismissClick();
+        this.toastService.stopLoader();
+        this.toastService.errorToast1(data.message);
+      }
     }, error => {
       this.toastService.stopLoader();
     })

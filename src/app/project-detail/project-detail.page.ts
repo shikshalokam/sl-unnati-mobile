@@ -8,6 +8,13 @@ import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
 import { HomeService } from '../home/home.service';
+import { File } from '@ionic-native/file/ngx';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { Platform } from '@ionic/angular';
+
+declare var cordova: any;
 
 @Component({
   selector: 'app-project-detail',
@@ -24,6 +31,9 @@ export class ProjectDetailPage {
   isValidDate;
   tasksLength = 0;
   endDate;
+  isIos;
+  appFolderPath: string;
+  rootPath: string;
   projectId;
   markLabelsAsInvalid: boolean = false;
   editGoal: boolean = false;
@@ -47,8 +57,15 @@ export class ProjectDetailPage {
     public datepipe: DatePipe,
     public taskService: CreateTaskService,
     public toastService: ToastService,
-    public homeService: HomeService
+    public homeService: HomeService,
+    public file: File,
+    public transfer: FileTransfer,
+    public filePath: FilePath,
+    public platform: Platform
   ) {
+    this.isIos = this.platform.is('ios') ? true : false;
+    this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
+    this.rootPath = this.isIos ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory;
     createProjectService.addNewTask.subscribe((data: any) => {
       this.showAddTask = false;
       if (this.project.tasks && this.project.tasks.length > 0) {
@@ -77,7 +94,6 @@ export class ProjectDetailPage {
           this.back = 'project-view/home';
         } else if (this.category == 'form') {
           this.back = 'project-view/create-project';
-
         }
         else {
           this.back = 'project-view/category/' + this.category;
@@ -85,12 +101,10 @@ export class ProjectDetailPage {
       } else {
         this.back = 'project-view/category/my_projects';
       }
-
-
     })
   }
   ionViewDidEnter() {
-    if (this.category == 'my_projects' || this.category == 'form') {
+    if (this.category == 'my_projects' || this.category == 'form' || this.category == 'home' || this.category == 'projectsList') {
       this.addTaskButton = true;
     } else {
       this.addTaskButton = false;
@@ -108,7 +122,8 @@ export class ProjectDetailPage {
         if (!task.isDeleted) {
           this.tasksLength = this.tasksLength + 1;
         }
-        // set the project status if project is started
+
+        //  set the project status if project is started
         if (project.isStarted) {
           if (task.status == 'Not started' || task.status == 'not yet started') {
             notStarted = notStarted + 1;
@@ -127,8 +142,10 @@ export class ProjectDetailPage {
             project.status = 'In Progress';
           }
         }
+        if (task.imageUrl || task.file) {
+          this.prepareAttachments(task);
+        }
       });
-
       if (project.status == 'not yet started') {
         project.status = 'Not started';
       }
@@ -146,7 +163,8 @@ export class ProjectDetailPage {
       this.sortTasks();
     })
   }
-  // Copy the template project into my project
+
+  //  Copy the template project into my project
   public copyTemplate() {
     this.projectId = '';
     this.project.isStarted = true;
@@ -232,7 +250,7 @@ export class ProjectDetailPage {
           label: 'End Date',
           placeholder: '',
           required: false,
-          field: 'endDate ',
+          field: 'endDate',
           icon: 'assets/images/task-cal.svg',
           value: ''
         },
@@ -243,7 +261,6 @@ export class ProjectDetailPage {
           field: 'title',
           required: true,
           icon: 'assets/images/task-title.png',
-
           value: ''
         },
         {
@@ -387,7 +404,7 @@ export class ProjectDetailPage {
     let cp = this.project
     cp.isEdited = true;
     cp.lastUpdate = new Date();
-    //  this.createProjectService.updateByProjects(this.project);
+    this.createProjectService.updateByProjects(this.project);
     let mapped: boolean = false;
     return this.storage.get('latestProjects').then(projectList => {
       projectList.forEach(projectsPrograms => {
@@ -426,7 +443,6 @@ export class ProjectDetailPage {
       })
     })
   }
-
   // navigate to view task
   public taskView(task) {
     if (this.project.isStarted) {
@@ -438,7 +454,6 @@ export class ProjectDetailPage {
       })
     }
   }
-
   // mark the task as deleted
   public delete(task) {
     task.isDeleted = true;
@@ -503,8 +518,170 @@ export class ProjectDetailPage {
       }
       this.storage.set('latestProjects', myProjects).then(success => {
         this.toastService.successToast('message.task_is_created');
-        this.homeService.loadActiveProjects();
       })
     })
   }
+  // prepare old apk attachments to new version apk
+  prepareAttachments(task) {
+    const fileTransfer: FileTransferObject = this.transfer.create();
+    if (task.imageUrl) {
+      let d = new Date(),
+        n = d.getTime(),
+        newFileName = n + ".jpg";
+      this.downloadFile(task.imageUrl, newFileName, task, 'img');
+    }
+    if (task.file) {
+      let d = new Date(),
+        n = d.getTime(),
+        newFileName = n + ".pdf";
+      this.downloadFile(task.file.url, newFileName, task, 'fileUrl');
+    }
+  }
+  downloadFile(attachment, newFileName, task, type) {
+    if (this.isIos) {
+      this.file.checkDir(this.file.documentsDirectory, 'attachments').then(_ => {
+        let blob = this.b64toBlob(attachment, type);
+        this.appFolderPath = decodeURIComponent(this.appFolderPath);
+        newFileName = decodeURIComponent(newFileName);
+        this.file.writeFile(this.rootPath, newFileName, blob).then(res => {
+          let currentPath = res.nativeURL.substr(0, res.nativeURL.lastIndexOf('/') + 1).toString();
+          let currentName = res.nativeURL.substring(res.nativeURL.lastIndexOf('/') + 1, res.nativeURL.length).toString();
+          this.file.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(res => {
+            let fileMIMEType = this.getMIMEtype(newFileName.substring(newFileName.lastIndexOf('.') + 1));
+            let data = {
+              name: newFileName,
+              type: fileMIMEType,
+              isNew: true
+            }
+            if (type == 'fileUrl') {
+              task.file = ''
+            } else {
+              task.imageUrl = ''
+            }
+            task.attachments.push(data);
+          }, err => {
+          })
+        }).catch(err => {
+        });
+      }).catch(err => {
+        this.file.createDir(cordova.file.documentsDirectory, 'attachments', false).then(response => {
+          this.toastService.presentLoading('Downloading, Please wait');
+          let blob = this.b64toBlob(attachment, type);
+          this.appFolderPath = decodeURIComponent(this.appFolderPath);
+          newFileName = decodeURIComponent(newFileName);
+          this.file.writeFile(this.rootPath, newFileName, blob).then(res => {
+            let currentPath = res.nativeURL.substr(0, res.nativeURL.lastIndexOf('/') + 1).toString();
+            let currentName = res.nativeURL.substring(res.nativeURL.lastIndexOf('/') + 1, res.nativeURL.length).toString();
+            this.file.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(res => {
+              let fileMIMEType = this.getMIMEtype(newFileName.substring(newFileName.lastIndexOf('.') + 1));
+              let data = {
+                name: newFileName,
+                type: fileMIMEType,
+                isNew: true
+              }
+              if (type == 'fileUrl') {
+                task.file = ''
+              } else {
+                task.imageUrl = ''
+              }
+              task.attachments.push(data);
+            }, err => {
+            })
+          }).catch(err => {
+          });
+        }).catch(err => {
+        });
+      });
+    } else {
+      this.file.checkDir(this.file.externalDataDirectory, 'attachments').then(_ => {
+        let blob = this.b64toBlob(attachment, type);
+        this.appFolderPath = decodeURIComponent(this.appFolderPath);
+        newFileName = decodeURIComponent(newFileName);
+        this.file.writeFile(this.rootPath, newFileName, blob).then(res => {
+          let currentPath = res.nativeURL.substr(0, res.nativeURL.lastIndexOf('/') + 1).toString();
+          let currentName = res.nativeURL.substring(res.nativeURL.lastIndexOf('/') + 1, res.nativeURL.length).toString();
+          this.file.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(res => {
+            let fileMIMEType = this.getMIMEtype(newFileName.substring(newFileName.lastIndexOf('.') + 1));
+            let data = {
+              name: newFileName,
+              type: fileMIMEType,
+              isNew: true
+            }
+            if (type == 'fileUrl') {
+              task.file = ''
+            } else {
+              task.imageUrl = ''
+            }
+            task.attachments.push(data);
+          }, err => {
+          })
+        }).catch(err => {
+        });
+      }).catch(err => {
+        this.file.createDir(cordova.file.externalDataDirectory, 'attachments', false).then(response => {
+          this.toastService.presentLoading('Downloading, Please wait');
+          let blob = this.b64toBlob(attachment, type);
+          this.appFolderPath = decodeURIComponent(this.appFolderPath);
+          newFileName = decodeURIComponent(newFileName);
+          this.file.writeFile(this.rootPath, newFileName, blob).then(res => {
+            let currentPath = res.nativeURL.substr(0, res.nativeURL.lastIndexOf('/') + 1).toString();
+            let currentName = res.nativeURL.substring(res.nativeURL.lastIndexOf('/') + 1, res.nativeURL.length).toString();
+            this.file.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(res => {
+              let fileMIMEType = this.getMIMEtype(newFileName.substring(newFileName.lastIndexOf('.') + 1));
+              let data = {
+                name: newFileName,
+                type: fileMIMEType,
+                isNew: true
+              }
+              if (type == 'fileUrl') {
+                task.file = ''
+              } else {
+                task.imageUrl = ''
+              }
+              task.attachments.push(data);
+            }, err => {
+            })
+          }).catch(err => {
+          });
+        }).catch(err => {
+        });
+      });
+    }
+  }
+  getMIMEtype(extn) {
+    let ext = extn.toLowerCase();
+    let MIMETypes = {
+      'pdf': 'application/pdf',
+      'jpg': 'image/jpeg',
+      'bmp': 'image/bmp',
+      'png': 'image/png',
+      'jpeg': 'image/jpeg',
+      'gif': 'image/gif'
+    }
+    return MIMETypes[ext];
+  }
+
+  b64toBlob(b64Data, contentType) {
+    contentType = contentType || '';
+    var sliceSize = 512;
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      var byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      var byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
+    }
+
+    var blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+  }
+
 }
