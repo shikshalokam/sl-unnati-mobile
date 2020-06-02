@@ -3,7 +3,8 @@ import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
-import { AppConfigs } from '../app.config'
+import { AppConfigs } from '../core-module/constants/app-config';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -294,6 +295,6 @@ export class TasksService {
     let httpHeaders = new HttpHeaders({
       'x-auth-token': token
     })
-    return this.http.get(AppConfigs.api_url + '/unnati/api/v1/getTaskDetailsById/'+data.taskId, { headers: httpHeaders })
+    return this.http.get(AppConfigs.api_url + '/unnati/api/v1/getTaskDetailsById/' + data.taskId, { headers: httpHeaders })
   }
 }

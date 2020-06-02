@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { AppConfigs } from "./app.config";
+import { AppConfigs } from './core-module/constants/app-config';
 import { URLSearchParams, Http } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { CurrentUserProvider } from './current-user'
 import { Subject } from 'rxjs';
-import{Storage} from '@ionic/storage';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -21,9 +20,9 @@ export class Login {
   base_url: string;
 
   logout_redirect_url: string;
-  constructor(public http: Http, 
+  constructor(public http: Http,
     public currentUser: CurrentUserProvider,
-    public storage:Storage) { }
+    public storage: Storage) { }
   doLogin() {
     // var ref = (<any>window).cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
     this.base_url = AppConfigs.app_url;

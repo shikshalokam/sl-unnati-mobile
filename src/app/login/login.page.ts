@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { AppConfigs } from "../app.config";
+import { AppConfigs } from '../core-module/constants/app-config';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';

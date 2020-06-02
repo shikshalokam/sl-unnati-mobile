@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { CurrentUserProvider } from '../current-user';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { AppConfigs } from '../app.config'
+import { AppConfigs } from '../core-module/constants/app-config';
+
+
 import { URLSearchParams, Http } from '@angular/http';
 import { Subject } from 'rxjs';
 
@@ -19,12 +21,7 @@ export class ProjectService {
     public sync(data) {
         return this.http.post(AppConfigs.api_url + '/unnati/api/v1/project/sync', data)
     }
-    // public syncForPDF(data, token) {
-    //     let httpHeaders = new HttpHeaders({
-    //         'x-auth-token': token
-    //     })
-    //     return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projects/getProjectPdfWithSyc', data, { headers: httpHeaders })
-    // }
+
     public oldDataSync(data) {
         return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projects/syncLocalDataOnUpgradeOfApp', data)
     }
@@ -48,6 +45,5 @@ export class ProjectService {
             'Content-Type': 'multipart/form-data'
         })
         return this.http.put(url, base64)
-
     }
 }

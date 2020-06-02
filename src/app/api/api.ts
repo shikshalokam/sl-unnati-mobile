@@ -1,7 +1,7 @@
 import { URLSearchParams, Headers, RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { CurrentUserProvider } from '../current-user';
-import { AppConfigs } from '../app.config';
+import { AppConfigs } from '../core-module/constants/app-config';
 import { Login } from '../login.service';
 import { Storage } from '@ionic/storage';
 import * as jwt_decode from "jwt-decode";

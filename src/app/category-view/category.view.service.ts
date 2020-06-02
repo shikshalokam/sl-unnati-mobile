@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { AppConfigs } from '../app.config'
+import { AppConfigs } from '../core-module/constants/app-config';
 import { Subject } from 'rxjs';
+import {LocalKeys} from '../shared-module/localstorage-keys';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,14 +13,14 @@ export class CategoryViewService {
     public http: HttpClient) { }
   //  get my projects from local 
   public getMyProjects() {
-    return this.storage.get('latestProjects').then(projects => {
+    return this.storage.get(LocalKeys.allProjects).then(projects => {
       return projects;
     })
   }
 
   // get templates from local
   public getTemplates(type) {
-    return this.storage.get('templates').then(templates => {
+    return this.storage.get(LocalKeys.templates).then(templates => {
       return templates[type];
     })
   }

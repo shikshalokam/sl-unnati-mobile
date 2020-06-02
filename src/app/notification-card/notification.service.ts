@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AppConfigs } from '../app.config';
+import { AppConfigs } from '../core-module/constants/app-config';
 import { Subject } from 'rxjs/Subject';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';

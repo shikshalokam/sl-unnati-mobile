@@ -9,7 +9,7 @@ import { Platform } from '@ionic/angular';
 // import { LocalNotifications } from '@ionic-native/local-notifications';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { Storage } from '@ionic/storage';
-import { AppConfigs } from './app.config';
+import { AppConfigs } from './core-module/constants/app-config';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationCardService } from './notification-card/notification.service';
 @Injectable()

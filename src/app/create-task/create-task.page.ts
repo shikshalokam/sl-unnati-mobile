@@ -7,6 +7,8 @@ import { Storage } from '@ionic/storage';
 import { HomeService } from '../home/home.service';
 import { CreateTaskService } from './create-task.service';
 import { ToastService } from '../toast.service';
+import { LocalKeys } from '../shared-module/localstorage-keys';
+
 @Component({
   selector: 'app-create-task',
   templateUrl: './create-task.page.html',
@@ -64,7 +66,7 @@ export class CreateTaskPage implements OnInit {
   }
   public getCurrentProject(id) {
     let mapped: boolean = false;
-    this.storage.get('latestProjects').then(projectList => {
+    this.storage.get(LocalKeys.allProjects).then(projectList => {
       if (projectList) {
         projectList.forEach(programs => {
           programs.projects.forEach(project => {
@@ -133,10 +135,10 @@ export class CreateTaskPage implements OnInit {
       this.currentMyProject.lastUpdate = new Date();
       this.currentMyProject.tasks.push(this.task);
       this.currentMyProject.isEdited = true;
-      this.storage.set('newcreatedproject', this.currentMyProject).then(cp => {
+      this.storage.set(LocalKeys.newcreatedproject, this.currentMyProject).then(cp => {
         this.currentMyProject = cp;
         // if (this.currentMyProject.createdType) {
-        this.storage.get('latestProjects').then(myProjects => {
+        this.storage.get(LocalKeys.allProjects).then(myProjects => {
           if (myProjects) {
             if (myProjects.program)
               myProjects.program.forEach(programs => {
@@ -157,7 +159,7 @@ export class CreateTaskPage implements OnInit {
               }
             });
           }
-          this.storage.set('latestProjects', myProjects).then(success => {
+          this.storage.set(LocalKeys.allProjects, myProjects).then(success => {
             this.toastService.successToast('message.task_is_created');
           })
         })
@@ -178,9 +180,9 @@ export class CreateTaskPage implements OnInit {
     this.showpopup = false;
   }
   // Navigate to project view screen
-  public navigateToProjectViewScreen() { 
+  public navigateToProjectViewScreen() {
     this.closepopup();
-    this.storage.set('projectToBeView', this.currentMyProject).then(project => {
+    this.storage.set(LocalKeys.projectToBeView, this.currentMyProject).then(project => {
       this.router.navigate(['/project-view/project-detail/my_projects'])
     })
   }
@@ -219,9 +221,9 @@ export class CreateTaskPage implements OnInit {
   updateProject() {
     this.currentMyProject.isEdited = true;
     this.currentMyProject.lastUpdate = new Date();
-    this.storage.set('newcreatedproject', this.currentMyProject).then(cp => {
+    this.storage.set(LocalKeys.newcreatedproject, this.currentMyProject).then(cp => {
       this.currentMyProject = cp;
-      this.storage.get('latestProjects').then(myProjects => {
+      this.storage.get(LocalKeys.allProjects).then(myProjects => {
         if (myProjects) {
           if (myProjects.program)
             myProjects.program.forEach(programs => {
@@ -229,7 +231,7 @@ export class CreateTaskPage implements OnInit {
                 programs.projects.forEach(project => {
                   if (project._id == cp._id) {
                     project = cp;
-                    this.storage.set('latestProjects', myProjects).then(success => {
+                    this.storage.set(LocalKeys.allProjects, myProjects).then(success => {
                     })
                   }
                 });
