@@ -11,7 +11,7 @@ import { Market } from '@ionic-native/market/ngx';
 import { ProjectService } from '../project-view/project.service';
 import { HomeService } from '../home/home.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import { LocalKeys } from '../shared-module/localstorage-keys';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 @Component({
   selector: 'app-school-task-report',
   templateUrl: './school-task-report.page.html',

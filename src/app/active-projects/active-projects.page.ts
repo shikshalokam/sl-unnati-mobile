@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import {Router} from '@angular/router';
-import {LocalKeys} from '../shared-module/localstorage-keys';
+import {LocalKeys} from '../core-module/constants/localstorage-keys';
 @Component({
   selector: 'app-active-projects',
   templateUrl: './active-projects.page.html',

@@ -4,9 +4,8 @@ import { CategoryViewService } from './category.view.service';
 import { Storage } from '@ionic/storage';
 import { ApiProvider } from '../api/api';
 import { PopoverController } from '@ionic/angular';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
-import { LocalKeys } from '../shared-module/localstorage-keys';
-
 @Component({
   selector: 'app-category-view',
   templateUrl: './category-view.page.html',

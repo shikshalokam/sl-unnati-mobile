@@ -13,7 +13,7 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { Platform } from '@ionic/angular';
-import { LocalKeys } from '../shared-module/localstorage-keys';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 declare var cordova: any;
 
 @Component({

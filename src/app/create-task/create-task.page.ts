@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage';
 import { HomeService } from '../home/home.service';
 import { CreateTaskService } from './create-task.service';
 import { ToastService } from '../toast.service';
-import { LocalKeys } from '../shared-module/localstorage-keys';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 
 @Component({
   selector: 'app-create-task',

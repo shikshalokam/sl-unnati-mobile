@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiProvider } from '../api/api';
 import { AlertController, Platform } from '@ionic/angular';
 import * as Highcharts from 'highcharts/highcharts-gantt';
-import { LocalKeys } from '../shared-module/localstorage-keys';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 
 @Component({
   selector: 'app-charts',

@@ -14,7 +14,7 @@ import { map, catchError } from 'rxjs/operators';
 import {
     Router
 } from '@angular/router';
-import { AppConfigs } from '../core-module/constants/app-config';
+import { AppConfigs } from '../core-module/constants/app.config';
 import { ToastController, Platform } from '@ionic/angular';
 
 @Injectable()

@@ -7,7 +7,7 @@ import { ApiProvider } from '../api/api';
 import { IonInfiniteScroll } from '@ionic/angular';
 import { Location } from '@angular/common';
 import { HomeService } from '../home/home.service';
-import { LocalKeys } from '../shared-module/localstorage-keys';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 
 @Component({
   selector: 'app-reports',

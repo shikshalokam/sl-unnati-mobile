@@ -3,7 +3,7 @@ import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
-import { AppConfigs } from '../core-module/constants/app-config';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,9 @@ import { AppConfigs } from '../core-module/constants/app-config';
 export class TasksService {
   public emit = new Subject();
   public isActive;
-  constructor(public storage: Storage, public http: HttpClient, public location: Location) {
+  constructor(public storage: Storage,
+    public http: HttpClient,
+    public location: Location) {
   }
 
   // Add tasks
@@ -283,7 +285,7 @@ export class TasksService {
         }
       ]
     }
-    return this.http.post(AppConfigs.api_url + '/unnati/api/v1/taskSync', jsonPrepare, { headers: httpHeaders });
+    return this.http.post(environment.api_url + '/unnati/api/v1/taskSync', jsonPrepare, { headers: httpHeaders });
   }
 
   public modalActive(value) {
@@ -295,6 +297,6 @@ export class TasksService {
     let httpHeaders = new HttpHeaders({
       'x-auth-token': token
     })
-    return this.http.get(AppConfigs.api_url + '/unnati/api/v1/getTaskDetailsById/' + data.taskId, { headers: httpHeaders })
+    return this.http.get(environment.api_url + '/unnati/api/v1/getTaskDetailsById/' + data.taskId, { headers: httpHeaders })
   }
 }

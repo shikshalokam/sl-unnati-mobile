@@ -1,10 +1,9 @@
 import { URLSearchParams, Headers, RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { CurrentUserProvider } from '../current-user';
-import { AppConfigs } from '../core-module/constants/app-config';
 import { Login } from '../login.service';
 import { Storage } from '@ionic/storage';
 import * as jwt_decode from "jwt-decode";
+import { environment } from '../../environments/environment';
 
 
 import { Http } from '@angular/http';
@@ -13,7 +12,6 @@ export class ApiProvider {
   constructor(
     public storage: Storage,
     public http: Http,
-    public currentUser: CurrentUserProvider,
     public login: Login,
   ) { }
 
@@ -27,10 +25,10 @@ export class ApiProvider {
   refershToken(refreshToken) {
     const body = new URLSearchParams();
     body.set('grant_type', "refresh_token");
-    body.set('client_id', AppConfigs.clientId);
-    body.set('client_secret', AppConfigs.api_key);
-    const obj = 'grant_type=refresh_token&refresh_token=' + refreshToken + "&client_id=" + AppConfigs.clientId;
-    const url = AppConfigs.app_url + AppConfigs.keyCloak.getAccessToken;
+    body.set('client_id', environment.clientId);
+    body.set('client_secret', environment.api_key);
+    const obj = 'grant_type=refresh_token&refresh_token=' + refreshToken + "&client_id=" + environment.clientId;
+    const url = environment.app_url + environment.keyCloak.getAccessToken;
     const headers = new Headers({
       'Content-Type': 'application/x-www-form-urlencoded'
     })
@@ -38,26 +36,7 @@ export class ApiProvider {
     return this.http.post(url, obj, options);
   }
 
-  OnTokenExpired(url, payload, successCallback, errorCallback, requestType) {
-    const apiUrl = AppConfigs.api_base_url + url;
-    if (this.errorTokenRetryCount >= 3) {
-      errorCallback({});
-      const errorObject = { ...this.errorObj };
-      errorObject.text = `API failed. URL: ${apiUrl}. Error  Details ${JSON.stringify(errorObject)}.Toke expired. Relogin enabled.`;
-      //this.slack.pushException(errorObject);
-      this.login.doLogout().then(success => {
-        this.errorTokenRetryCount = 0;
-        this.reLoginAlert();
-      }).catch(error => {
-      })
-    } else {
-    }
-  }
-  reLoginAlert() {
-    this.currentUser.deactivateActivateSession(true);
-  }
-
-   validateToken() {
+  validateToken() {
     return new Promise(resolve => {
       return this.storage.get('userDetails').then(data => {
         if (data) {

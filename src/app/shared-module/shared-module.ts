@@ -12,7 +12,7 @@ import { SearchEntities } from '../get-sub-entities/search-entities.filter';
 import { TaskBoardPipe } from '../task-board/task-board.filter';
 import { CustomPopupComponent } from '../custom-popup/custom-popup.component';
 import { CreateTasksComponent } from '../create-tasks/create-tasks.component';
-
+import { PopoverComponent } from './components/popover/popover.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -21,26 +21,31 @@ import { CreateTasksComponent } from '../create-tasks/create-tasks.component';
     IonicModule,
     TranslateModule.forChild()
   ],
+  entryComponents: [
+    PopoverComponent
+  ],
   declarations: [
-    HeaderComponent, 
-    NotificationCardComponent, 
-    SearchSchool, 
-    FilterPipe, 
-    CustomPopupComponent, 
+    HeaderComponent,
+    NotificationCardComponent,
+    SearchSchool,
+    FilterPipe,
+    CustomPopupComponent,
     CreateTasksComponent,
-    TaskBoardPipe, 
-    SearchEntities
+    TaskBoardPipe,
+    SearchEntities,
+    PopoverComponent
   ],
   exports: [
-    HighchartsChartModule, 
-    HeaderComponent, 
-    NotificationCardComponent, 
-    SearchSchool, 
-    FilterPipe, 
-    CustomPopupComponent, 
+    HighchartsChartModule,
+    HeaderComponent,
+    NotificationCardComponent,
+    SearchSchool,
+    FilterPipe,
+    CustomPopupComponent,
     CreateTasksComponent,
-    TaskBoardPipe, 
-    SearchEntities
+    TaskBoardPipe,
+    SearchEntities,
+    PopoverComponent
   ]
 })
 export class SharedModule { }

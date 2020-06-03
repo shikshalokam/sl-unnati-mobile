@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
 import { HomeService } from '../home/home.service';
 import { AppConfigs } from '../app.config';
-import { LocalKeys } from '../shared-module/localstorage-keys';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 @Component({
   selector: 'app-template-view',
   templateUrl: './template-view.page.html',

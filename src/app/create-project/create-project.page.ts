@@ -7,8 +7,8 @@ import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { HomeService } from '../home/home.service';
 import { ToastService } from '../toast.service';
-import { AppConfigs } from '../core-module/constants/app-config';
-import { LocalKeys } from '../shared-module/localstorage-keys';
+import { AppConfigs } from '../core-module/constants/app.config';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 
 @Component({
   selector: 'app-create-project',

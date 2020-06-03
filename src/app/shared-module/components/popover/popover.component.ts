@@ -15,8 +15,7 @@ import { Platform } from '@ionic/angular';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { LoadingController } from '@ionic/angular';
-import { resolve } from 'url';
-import { LocalKeys } from '../../../shared-module/localstorage-keys';
+import { LocalKeys } from '../../../core-module/constants/localstorage-keys';
 
 declare var cordova: any;
 @Component({

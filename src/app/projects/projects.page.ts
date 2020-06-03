@@ -12,8 +12,8 @@ import { Network } from '@ionic-native/network/ngx';
 import { ProjectService } from '../project-view/project.service';
 import { HomeService } from '../home/home.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import { AppConfigs } from '../core-module/constants/app-config';
-import { LocalKeys } from '../shared-module/localstorage-keys';
+import { AppConfigs } from '../core-module/constants/app.config';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 
 //import { trigger, state, style, animate, transition } from '@angular/animations';
 @Component({
