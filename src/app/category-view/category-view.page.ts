@@ -4,8 +4,8 @@ import { CategoryViewService } from './category.view.service';
 import { Storage } from '@ionic/storage';
 import { ApiProvider } from '../api/api';
 import { PopoverController } from '@ionic/angular';
-import { PopoverComponent } from '../popover/popover.component';
-
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { PopoverComponent } from '../shared-module/components/popover/popover.component';
 @Component({
   selector: 'app-category-view',
   templateUrl: './category-view.page.html',
@@ -135,7 +135,7 @@ export class CategoryViewPage {
   bgcolor = '#f7f7f7';
   public getMyProjects() {
     this.showSkeleton = true;
-    this.storage.get('latestProjects').then(projects => {
+    this.storage.get(LocalKeys.allProjects).then(projects => {
       if (projects) {
         projects.forEach(programsList => {
           return programsList.projects.sort((a, b) => {
@@ -152,7 +152,7 @@ export class CategoryViewPage {
   }
 
   public projectView(project) {
-    this.storage.set('projectToBeView', project).then(project => {
+    this.storage.set(LocalKeys.projectToBeView, project).then(project => {
       this.router.navigate(['/project-view/project-detail', this.catType])
     })
   }

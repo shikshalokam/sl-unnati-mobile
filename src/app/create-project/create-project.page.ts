@@ -7,7 +7,9 @@ import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { HomeService } from '../home/home.service';
 import { ToastService } from '../toast.service';
-import { AppConfigs } from '../app.config';
+import { AppConfigs } from '../core-module/constants/app.config';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
+
 @Component({
   selector: 'app-create-project',
   templateUrl: './create-project.page.html',
@@ -62,8 +64,8 @@ export class CreateProjectPage implements OnInit {
         this.today = this.datepipe.transform(this.today, 'dd-MM-yyyy');
       } else {
         this.createNewProject = false;
-        this.storage.get('newcreatedproject').then(data => {
-          this.storage.get('latestProjects').then(projectsList => {
+        this.storage.get(LocalKeys.newcreatedproject).then(data => {
+          this.storage.get(LocalKeys.allProjects).then(projectsList => {
             projectsList.forEach(programs => {
               programs.projects.forEach(project => {
                 if (project._id == data._id) {
@@ -181,7 +183,7 @@ export class CreateProjectPage implements OnInit {
           programId = env.programId;
         }
       });
-      this.storage.get('latestProjects').then((projectsList: any) => {
+      this.storage.get(LocalKeys.allProjects).then((projectsList: any) => {
         let mapped: boolean = false;
         if (projectsList) {
           projectsList.forEach(programsList => {
@@ -193,8 +195,8 @@ export class CreateProjectPage implements OnInit {
                 if (this.createNewProject) {
                   this.project._id = programsList.projects.length + 1;
                   programsList.projects.push(this.project);
-                  this.storage.set('latestProjects', projectsList).then(myProjects => {
-                    this.storage.set('newcreatedproject', this.project).then(cmp => {
+                  this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {
+                    this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
                       this.toastService.successToast('message.project_is_created');
                       // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                     })
@@ -207,8 +209,8 @@ export class CreateProjectPage implements OnInit {
                       project.goal = this.project.goal;
                       project.endDate = this.project.endDate;
                       project.startDate = this.project.startDate;
-                      this.storage.set('latestProjects', projectsList).then(myProjects => {
-                        this.storage.set('newcreatedproject', this.project).then(cmp => {
+                      this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {
+                        this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
                           this.toastService.successToast('message.project_is_created');
                           // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                         })
@@ -230,8 +232,8 @@ export class CreateProjectPage implements OnInit {
           }]
           pro1[0].projects.push(this.project);
           projectsList = pro1;
-          this.storage.set('latestProjects', projectsList).then(myProjects => {
-            this.storage.set('newcreatedproject', this.project).then(cmp => {
+          this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {
+            this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
               this.toastService.successToast('message.project_is_created');
               // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
             })
@@ -256,7 +258,7 @@ export class CreateProjectPage implements OnInit {
               isActionable: '/project-view/project-detail/form',
             }]
         }
-        this.storage.set('projectToBeView', this.project).then(project => {
+        this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
         })
       })
     }

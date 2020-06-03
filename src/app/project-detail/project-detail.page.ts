@@ -13,7 +13,7 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { Platform } from '@ionic/angular';
-
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 declare var cordova: any;
 
 @Component({
@@ -113,7 +113,7 @@ export class ProjectDetailPage {
     this.getProject();
   }
   getProject() {
-    this.storage.get('projectToBeView').then(project => {
+    this.storage.get(LocalKeys.projectToBeView).then(project => {
       let completed = 0;
       let notStarted = 0;
       this.tasksLength = 0;
@@ -200,9 +200,9 @@ export class ProjectDetailPage {
           }
         })
       }
-      this.storage.set('projectToBeView', this.project).then(project => {
+      this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
         this.project = project;
-        this.storage.get('latestProjects').then(p => {
+        this.storage.get(LocalKeys.allProjects).then(p => {
         })
         this.createProjectService.insertIntoMyProjects(this.project).then(data => {
           this.project.isStarted = true;
@@ -212,7 +212,7 @@ export class ProjectDetailPage {
     } else {
       this.project.lastUpdate = new Date();
       this.createProjectService.updateByProjects(this.project);
-      this.storage.set('projectToBeView', this.project).then(project => {
+      this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
         this.project = project;
       })
     }
@@ -435,9 +435,9 @@ export class ProjectDetailPage {
           }
         }
       })
-      this.storage.set('latestProjects', projectList).then(projects => {
-        this.storage.set('newcreatedproject', this.project).then(sucess => {
-          this.storage.set('projectToBeView', this.project).then(updatedProject => {
+      this.storage.set(LocalKeys.allProjects, projectList).then(projects => {
+        this.storage.set(LocalKeys.newcreatedproject, this.project).then(sucess => {
+          this.storage.set(LocalKeys.projectToBeView, this.project).then(updatedProject => {
           })
         })
       })
@@ -446,7 +446,7 @@ export class ProjectDetailPage {
   // navigate to view task
   public taskView(task) {
     if (this.project.isStarted) {
-      this.storage.set('newcreatedproject', this.project).then(cmp => {
+      this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
         task.projectStarted = this.project.isStarted;
         this.storage.set('cTask', task).then(ct => {
           this.router.navigate(['/project-view/current-task', task._id, 'pd']);
@@ -493,7 +493,7 @@ export class ProjectDetailPage {
 
   // add created task
   public addNewTask(task) {
-    this.storage.get('latestProjects').then(myProjects => {
+    this.storage.get(LocalKeys.allProjects).then(myProjects => {
       let mapped;
 
       if (myProjects) {
@@ -516,7 +516,7 @@ export class ProjectDetailPage {
           }
         });
       }
-      this.storage.set('latestProjects', myProjects).then(success => {
+      this.storage.set(LocalKeys.allProjects, myProjects).then(success => {
         this.toastService.successToast('message.task_is_created');
       })
     })

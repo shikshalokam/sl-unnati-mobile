@@ -33,6 +33,9 @@ package-lock.json
 .sourcemaps/
 
 src/app/app.config.ts
+src/app/core-module/constants/app.config.ts
+src/environments/*
+src/app/core-module/constants/app-config.ts
 google-services.json
 .DS_Store
 Thumbs.db

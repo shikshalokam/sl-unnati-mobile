@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
-// import { FCM } from '@ionic-native/fcm/ngx';
-// import { FCM } from '@ionic-native/fcm';
 import { FCM } from '@ionic-native/fcm/ngx';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ApiProvider } from './api/api';
 import { Platform } from '@ionic/angular';
-// import { LocalNotifications } from '@ionic-native/local-notifications';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { Storage } from '@ionic/storage';
-import { AppConfigs } from './app.config';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { NotificationCardService } from './notification-card/notification.service';
+import { environment } from '../environments/environment';
 @Injectable()
 export class FcmProvider {
 
@@ -23,7 +19,6 @@ export class FcmProvider {
         public api: ApiProvider,
         public localNotification: LocalNotifications, public notificationCardService: NotificationCardService,
         public localStorage: Storage,
-        //   public currentUser: CurrentUserProvider,
         public platform: Platform) {
     }
 
@@ -93,7 +88,7 @@ export class FcmProvider {
                         refresh_token: parsedData.refresh_token,
                     };
                     this.localStorage.set('userTokens', userTokens).then(usertoken => {
-                        const url = AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.registerDevice;
+                        const url = environment.notification.kendra_base_url + 'v1' + environment.notification.registerDevice;
                         const payload = {
                             deviceId: this.fcmDeviceId,
                             os: this.platform.is('android') ? 'android' : 'ios',

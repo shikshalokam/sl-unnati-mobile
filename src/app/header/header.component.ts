@@ -9,8 +9,7 @@ import { HomeService } from '../home/home.service';
 import { Platform } from '@ionic/angular';
 import { UpdateProfileService } from '../update-profile/update-profile.service';
 import { NetworkService } from '../network.service';
-import { AppConfigs } from '../app.config';
-
+import { AppConfigs } from '../core-module/constants/app.config';
 // import { AppVersion } from '@ionic-native/app-version';
 
 @Component({

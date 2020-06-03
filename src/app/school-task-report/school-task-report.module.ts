@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import { IonicModule } from '@ionic/angular';
-import {SharedModule} from '../shared.module';
+import {SharedModule} from '../shared-module/shared-module';
 import { SchoolTaskReportPage } from './school-task-report.page';
 
 const routes: Routes = [

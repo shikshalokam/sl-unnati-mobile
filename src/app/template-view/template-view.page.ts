@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
 import { HomeService } from '../home/home.service';
 import { AppConfigs } from '../app.config';
-
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 @Component({
   selector: 'app-template-view',
   templateUrl: './template-view.page.html',
@@ -120,7 +120,7 @@ export class TemplateViewPage {
     if (!this.project.programId) {
       this.project.programId = programId;
     }
-    this.storage.get('latestProjects').then(projectList => {
+    this.storage.get(LocalKeys.allProjects).then(projectList => {
       if (projectList) {
         projectList.forEach(projectsPrograms => {
           if (projectsPrograms.programs) {
@@ -153,7 +153,7 @@ export class TemplateViewPage {
         }
       })
     }
-    this.storage.set('projectToBeView', this.project).then(project => {
+    this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
       this.project = project;
       this.createProjectService.insertIntoMyProjects(this.project).then(data => {
         this.router.navigate(['/project-view/project-detail', 'my_projects'])

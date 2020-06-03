@@ -1,13 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PopoverController } from '@ionic/angular';
-import { CategoryViewService } from '../category-view/category.view.service';
-import { CreateProjectService } from '../create-project/create-project.service';
+import { CategoryViewService } from '../../../category-view/category.view.service';
+import { CreateProjectService } from '../../../create-project/create-project.service';
 import { Storage } from '@ionic/storage';
-import { ToastService } from '../toast.service';
+import { ToastService } from '../../../toast.service';
 import { AlertController } from '@ionic/angular';
-import { ApiProvider } from '../api/api';
-import { ProjectService } from '../project-view/project.service';
+import { ApiProvider } from '../../../api/api';
+import { ProjectService } from '../../../project-view/project.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
@@ -15,7 +15,7 @@ import { Platform } from '@ionic/angular';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { LoadingController } from '@ionic/angular';
-import { resolve } from 'url';
+import { LocalKeys } from '../../../core-module/constants/localstorage-keys';
 
 declare var cordova: any;
 @Component({
@@ -95,7 +95,7 @@ export class PopoverComponent implements OnInit {
   public deleteProject() {
     this.project.isDeleted = true;
     let projectData = this.project;
-    this.storage.get('latestProjects').then(myProjects => {
+    this.storage.get(LocalKeys.allProjects).then(myProjects => {
       if (myProjects) {
         myProjects.forEach(programs => {
           programs.projects.forEach(function (project, i) {
@@ -104,7 +104,7 @@ export class PopoverComponent implements OnInit {
               programs.projects[i] = projectData;
             }
           });
-          this.storage.set('latestProjects', myProjects).then(project => {
+          this.storage.set(LocalKeys.allProjects, myProjects).then(project => {
             this.toastService.successToast('message.project_deleted_success');
             this.categoryViewService.deleteProject('deleted');
             this.DismissClick();
@@ -120,7 +120,7 @@ export class PopoverComponent implements OnInit {
               myProjects[0].projects[i] = projectData;
             }
           });
-          this.storage.set('latestProjects', myProjects).then(project => {
+          this.storage.set(LocalKeys.allProjects, myProjects).then(project => {
             this.toastService.successToast('message.project_deleted_success');
             this.categoryViewService.deleteProject('deleted');
             this.DismissClick();
@@ -172,7 +172,7 @@ export class PopoverComponent implements OnInit {
         }
       })
     });
-    this.storage.set('latestProjects', syncedProjects).then(myprojectsff => {
+    this.storage.set(LocalKeys.allProjects, syncedProjects).then(myprojectsff => {
     })
   }
   // geting pdf file report of project and share the project
