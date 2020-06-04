@@ -40,7 +40,7 @@
         </ion-item>
       </ion-col>
       <ion-col size="6">
-        <ion-label class="custom-label" position="floating" style=" margin-left: 15px; font-size: 18px !important;"
+        <ion-label position="floating" style=" margin-left: 15px; font-size: 18px !important;"
           [ngClass]="{'required-field':markLabelsAsInvalid && !isValidDate}">
           {{'create_project.end_date' | translate}}</ion-label>
         <ion-item class="custom-ion-item" (click)="setDate('ed')">
@@ -52,13 +52,26 @@
     </ion-row>
     <!-- Project start and end date end here -->
     <!-- Project improvement areas starts here -->
-    <ion-item class="custom-ion-item" style="margin-bottom:50px;">
+    <!-- <ion-item class="custom-ion-item" style="margin-bottom:50px;">
       <ion-label class="custom-label text-wrap-overflow" position="floating"
         [ngClass]="{'required-field':markLabelsAsInvalid && !project.category}">
         {{'create_project.areas' | translate}}</ion-label>
       <ion-textarea type="text" [(ngModel)]="project.category" name="category" formControlName="category"
         placeholder="{{'create_project.placeholder_areas'| translate}}" maxlength="90"></ion-textarea>
-    </ion-item>
+    </ion-item> -->
+    <ion-label style="margin-left: 15px;
+    font-size: 18px !important;">{{'create_project.category'| translate}}</ion-label>
+    <ion-row>
+      <ion-col *ngFor="let option of categories" size="6">
+        <ion-item-group>
+          <ion-item>
+            <ion-label>{{option.value}}</ion-label>
+            <ion-checkbox [(ngModel)]="option.isChecked" formControlName="category" style="--border-radius: 50%;">
+            </ion-checkbox>
+          </ion-item>
+        </ion-item-group>
+      </ion-col>
+    </ion-row>
     <!-- Project improvement areas end here -->
     <ion-button (click)="create()" color="secondary" class="round-corner-btn" expand="block">
       {{'button.save_create_task' | translate}}
