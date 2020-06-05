@@ -609,8 +609,10 @@ export class AppComponent {
             task.isSync = true;
           });
         }
+        console.log(sproject, "sproject");
       })
     });
+    console.log(syncedProjects,"syncedProjects syncedProjects 56565656");
     this.storage.set('latestProjects', syncedProjects).then(myprojectsff => {
       this.toastService.successToast('message.sync_success');
       this.homeService.syncUpdated();

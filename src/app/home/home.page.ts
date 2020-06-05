@@ -92,9 +92,11 @@ export class HomePage implements OnInit {
       this.connected = localStorage.getItem("networkStatus");
     });
     this.login.emit.subscribe((data: any) => {
+      console.log(data, "data login event");
       if (data == true) {
         this.menuCtrl.enable(true);
         this.activeProjects = [];
+        console.log(this.activeProjects, "this.activeProjects 98");
         this.storage.get('latestProjects').then(projects => {
           if (!projects) {
             this.getProjects();
@@ -131,6 +133,7 @@ export class HomePage implements OnInit {
             if (!projects) {
               this.getProjects();
             } else {
+              console.log(this.activeProjects, "this.activeProjects 135");
               this.getActiveProjects();
             }
           })
@@ -290,6 +293,9 @@ export class HomePage implements OnInit {
         this.storage.set('latestProjects', resp.data).then(resp1 => {
           this.getActiveProjects();
         })
+      } else {
+        console.log(this.activeProjects, "this.activeProjects");
+        this.activeProjects = [];
       }
     }, error => {
     })

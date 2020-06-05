@@ -407,40 +407,44 @@ export class ProjectDetailPage {
     this.createProjectService.updateByProjects(this.project);
     let mapped: boolean = false;
     return this.storage.get('latestProjects').then(projectList => {
-      projectList.forEach(projectsPrograms => {
-        if (projectsPrograms) {
-          projectsPrograms.projects.forEach(function (project, i) {
-            if (project._id == cp._id) {
-              cp.isEdited = true;
-              projectsPrograms.projects[i] = cp;
-              mapped = true;
-            }
-          });
-        }
-        if (!mapped) {
-          if (projectList[0].projects) {
-            projectList[0].projects.forEach(function (project, i) {
+      if (projectList) {
+        projectList.forEach(projectsPrograms => {
+          if (projectsPrograms) {
+            projectsPrograms.projects.forEach(function (project, i) {
               if (project._id == cp._id) {
                 cp.isEdited = true;
-                projectList[0].projects[i] = cp;
+                projectsPrograms.projects[i] = cp;
+                mapped = true;
               }
             });
-          } else {
-            let pro1 = [{
-              projects: [
-              ]
-            }]
-            pro1[0].projects.push(this.project);
-            projectList = pro1;
           }
-        }
-      })
-      this.storage.set('latestProjects', projectList).then(projects => {
-        this.storage.set('newcreatedproject', this.project).then(sucess => {
-          this.storage.set('projectToBeView', this.project).then(updatedProject => {
+          if (!mapped) {
+            console.log(projectList, "projectList");
+            if (projectList && projectList[0].projects) {
+              projectList[0].projects.forEach(function (project, i) {
+                if (project._id == cp._id) {
+                  cp.isEdited = true;
+                  projectList[0].projects[i] = cp;
+                }
+              });
+            } else {
+              let pro1 = [{
+                projects: [
+                ]
+              }]
+              pro1[0].projects.push(this.project);
+              projectList = pro1;
+            }
+          }
+        })
+        this.storage.set('latestProjects', projectList).then(projects => {
+          this.storage.set('newcreatedproject', this.project).then(sucess => {
+            this.storage.set('projectToBeView', this.project).then(updatedProject => {
+            })
           })
         })
-      })
+      }
+
     })
   }
   // navigate to view task

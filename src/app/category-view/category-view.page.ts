@@ -13,7 +13,7 @@ import { PopoverComponent } from '../popover/popover.component';
 })
 export class CategoryViewPage {
   back = 'project-view/library'
-  projects;
+  projects = [];
   searchInput;
   searchProjects;
   templates;
@@ -136,6 +136,7 @@ export class CategoryViewPage {
   public getMyProjects() {
     this.showSkeleton = true;
     this.storage.get('latestProjects').then(projects => {
+      console.log(projects, "projects");
       if (projects) {
         projects.forEach(programsList => {
           return programsList.projects.sort((a, b) => {
@@ -144,6 +145,8 @@ export class CategoryViewPage {
         })
         this.projects = projects;
         this.showSkeleton = false;
+      } else {
+        this.projects = [];
       }
       this.showSkeleton = false;
     }, error => {
