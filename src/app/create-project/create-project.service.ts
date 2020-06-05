@@ -101,18 +101,18 @@ export class CreateProjectService {
                     }
                 }
             } else {
-                if (projectList.projects) {
-                    project._id = projectList.projects.length + 1;
-                    projectList.projects.push(project)
-                } else {
-                    project._id = 1;
-                    let pro1 = [{
-                        projects: [
-                        ]
-                    }]
-                    pro1[0].projects.push(project);
-                    projectList = pro1;
-                }
+                // if (projectList.projects) {
+                //     project._id = projectList.projects.length + 1;
+                //     projectList.projects.push(project)
+                // } else {
+                project._id = 1;
+                let pro1 = [{
+                    projects: [
+                    ]
+                }]
+                pro1[0].projects.push(project);
+                projectList = pro1;
+                // }
             }
             this.storage.set('latestProjects', projectList).then(projects => {
             })

@@ -74,6 +74,15 @@ export class CreateProjectPage implements OnInit {
                     this.startDate = this.datepipe.transform(new Date(this.project.startDate));
                     this.endDate = this.datepipe.transform(new Date(this.project.endDate));
                   }
+                  if (project.category) {
+                    project.category.forEach(cat => {
+                      this.categories.forEach(category => {
+                        if (category.value == cat) {
+                          category.isChecked = true;
+                        }
+                      });
+                    });
+                  }
                 }
               });
             });
@@ -162,7 +171,15 @@ export class CreateProjectPage implements OnInit {
   }
   // Create project
   public create() {
-    if (this.createProject.status == "INVALID" || !this.isValidDate) {
+    let categories = [];
+    this.categories.forEach(cat => {
+      if (cat.isChecked) {
+        categories.push(cat.value);
+      }
+    });
+    this.project.category = categories;
+    console.log(this.project, "categories", this.createProject, "this.createProject", !this.project.category);
+    if (this.createProject.status == "INVALID" || !this.isValidDate && (!this.project.category && this.project.category.length == 0)) {
       this.markLabelsAsInvalid = true;
     } else {
       this.markLabelsAsInvalid = false;

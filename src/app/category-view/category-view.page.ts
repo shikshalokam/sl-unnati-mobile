@@ -22,6 +22,15 @@ export class CategoryViewPage {
   catType;
   showSkeleton: boolean = false;
   skeletons = [{}, {}, {}, {}, {}, {}];
+  menus = [{
+    title: 'Delete',
+    value: 'deleteProject'
+  },
+  {
+    title: 'Share',
+    value: 'shareProject'
+  }
+  ]
   constructor(public rout: ActivatedRoute,
     public categaryService: CategoryViewService,
     public storage: Storage,
@@ -173,7 +182,7 @@ export class CategoryViewPage {
     pro.share = true;
     const popover = await this.popoverController.create({
       component: PopoverComponent,
-      componentProps: { project: pro },
+      componentProps: { project: pro, menus: this.menus },
       event: ev,
       translucent: true
     });

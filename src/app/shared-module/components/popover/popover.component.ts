@@ -16,6 +16,7 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { LoadingController } from '@ionic/angular';
 import { LocalKeys } from '../../../core-module/constants/localstorage-keys';
+import { ActivatedRoute, Router } from '@angular/router';
 
 declare var cordova: any;
 @Component({
@@ -26,8 +27,10 @@ declare var cordova: any;
 export class PopoverComponent implements OnInit {
   share;
   delete;
-  deleteConfirm;
+  deleteProjectConfirm;
+  deleteTaskConfirm;
   @Input() project;
+  @Input() menus
   isIos;
   projectToSync: any = [];
   appFolderPath;
@@ -50,7 +53,9 @@ export class PopoverComponent implements OnInit {
     public socialSharing: SocialSharing,
     public fileChooser: FileChooser,
     public base64: Base64,
-    public loadingController: LoadingController) { }
+    public loadingController: LoadingController,
+    public route: ActivatedRoute,
+    public router: Router) { }
 
   ngOnInit() {
     this.platform.ready().then(() => {
@@ -64,15 +69,18 @@ export class PopoverComponent implements OnInit {
         this.delete = text;
       });
       this.translateService.get('message.delete_project_confirm').subscribe((text: string) => {
-        this.deleteConfirm = text;
+        this.deleteProjectConfirm = text;
+      });
+      this.translateService.get('message.delete_task_confirm').subscribe((text: string) => {
+        this.deleteTaskConfirm = text;
       });
     })
   }
 
   // confirmation for delete project
-  async deleteConfirmation() {
+  async deleteConfirmation(type, msg) {
     const alert = await this.alertController.create({
-      message: this.deleteConfirm,
+      message: msg,
       buttons: [
         {
           text: 'Cancel',
@@ -83,7 +91,11 @@ export class PopoverComponent implements OnInit {
         }, {
           text: 'Okay',
           handler: () => {
-            this.deleteProject();
+            if (type == 'project') {
+              this.deleteProject();
+            } else if (type == 'task') {
+              this.deleteTask();
+            }
           }
         }
       ]
@@ -107,7 +119,7 @@ export class PopoverComponent implements OnInit {
           this.storage.set(LocalKeys.allProjects, myProjects).then(project => {
             this.toastService.successToast('message.project_deleted_success');
             this.categoryViewService.deleteProject('deleted');
-            this.DismissClick();
+            // this.DismissClick();
           }, error => {
             this.toastService.errorToast('message.project_deleted_failed');
           })
@@ -123,7 +135,7 @@ export class PopoverComponent implements OnInit {
           this.storage.set(LocalKeys.allProjects, myProjects).then(project => {
             this.toastService.successToast('message.project_deleted_success');
             this.categoryViewService.deleteProject('deleted');
-            this.DismissClick();
+            // this.DismissClick();
           }, error => {
             this.toastService.errorToast('message.project_deleted_failed');
           })
@@ -133,7 +145,7 @@ export class PopoverComponent implements OnInit {
     }, error => {
       this.toastService.errorToast('message.project_deleted_failed');
     })
-    this.DismissClick();
+    // this.DismissClick();
   }
 
   // Dismiss popver menu 
@@ -155,7 +167,7 @@ export class PopoverComponent implements OnInit {
     } else {
       this.toastService.startLoader('Loading, please wait');
       this.getPDF(this.project._id);
-      this.DismissClick();
+      // this.DismissClick();
     }
   }
   syncUpdateInLocal(syncedProjects) {
@@ -189,7 +201,7 @@ export class PopoverComponent implements OnInit {
           let data = base64File.split(',');
           let base64Data = "data:application/pdf;base64," + data[1];
           this.toastService.stopLoader();
-          this.DismissClick();
+          // this.DismissClick();
           this.socialSharing.share("", fileName, base64Data, "").then(() => {
           }, error => {
             // intentially left blank
@@ -349,15 +361,65 @@ export class PopoverComponent implements OnInit {
             }
           })
         });
-        this.DismissClick();
+        // this.DismissClick();
         this.syncUpdateInLocal(data.allProjects.data);
       } else {
-        this.DismissClick();
+        // this.DismissClick();
         this.toastService.stopLoader();
         this.toastService.errorToast1(data.message);
       }
     }, error => {
       this.toastService.stopLoader();
     })
+  }
+
+  public action(action) {
+    switch (action) {
+      case 'deleteProject': {
+        this.deleteConfirmation('project', this.deleteProjectConfirm);
+        break;
+      }
+      case 'shareProject': {
+        this.syncProject();
+        break;
+      }
+      case 'shareTask': {
+        this.shareTask();
+        break;
+      }
+      case 'deleteTask': {
+        this.deleteConfirmation('task', this.deleteTaskConfirm);
+        break;
+      }
+      case 'editTask': {
+        this.taskView();
+        break;
+      }
+    }
+    this.DismissClick();
+  }
+  public shareTask() {
+    console.log('share task');
+  }
+
+  // mark the task as deleted
+  public deleteTask() {
+    console.log(this.project, 'project');
+    this.project.tasks[0].isDeleted = true;
+    this.project.tasks[0].status = 'Completed';
+    this.storage.set('cTask', this.project.tasks[0]).then(ct => {
+      this.projectService.taskDelete(this.project.tasks[0]);
+      this.toastService.successToast('message.task_is_deleted');
+    })
+  }
+  // navigate to view task
+  public taskView() {
+    // if (this.project.isStarted) {
+    this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
+      this.storage.set('cTask', this.project.tasks[0]).then(ct => {
+        this.router.navigate(['/project-view/current-task', this.project.tasks[0]._id, 'pd']);
+      });
+    })
+    // }
   }
 }

@@ -14,6 +14,9 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { Platform } from '@ionic/angular';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { PopoverController } from '@ionic/angular';
+import { PopoverComponent } from '../shared-module/components/popover/popover.component';
+import { ProjectService } from '../project-view/project.service';
 declare var cordova: any;
 
 @Component({
@@ -40,6 +43,19 @@ export class ProjectDetailPage {
   editTitle: boolean = false;
   show: boolean = false;
   showAddTask: boolean = false;
+  menus = [{
+    title: 'Share Task',
+    value: 'shareTask'
+  },
+  {
+    title: 'Edit Task',
+    value: 'editTask'
+  },
+  {
+    title: 'Delete Task',
+    value: 'deleteTask'
+  }
+  ]
   statuses = [
     { title: 'Not started' },
     { title: 'In Progress' },
@@ -51,8 +67,8 @@ export class ProjectDetailPage {
   constructor(
     public storage: Storage,
     public route: ActivatedRoute,
-    public createProjectService: CreateProjectService,
     public router: Router,
+    public createProjectService: CreateProjectService,
     public datePicker: DatePicker,
     public datepipe: DatePipe,
     public taskService: CreateTaskService,
@@ -61,8 +77,15 @@ export class ProjectDetailPage {
     public file: File,
     public transfer: FileTransfer,
     public filePath: FilePath,
-    public platform: Platform
+    public platform: Platform,
+    public popoverController: PopoverController,
+    public projectService: ProjectService
   ) {
+    this.projectService.taskDeleteEvent.subscribe((data: any) => {
+      data.isDeleted = true;
+      console.log(data, "delete event");
+      this.delete(data);
+    })
     this.isIos = this.platform.is('ios') ? true : false;
     this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
     this.rootPath = this.isIos ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory;
@@ -155,6 +178,10 @@ export class ProjectDetailPage {
       if (!project.isStarted) {
         project.isStarted = false;
       }
+      // console.log(project.category.length,"length");
+      // if (project.category) {
+      //   project.category = project.category.join(', ');
+      // }
       this.project = project;
       if (this.project) {
         this.updateTask();
@@ -683,5 +710,25 @@ export class ProjectDetailPage {
     var blob = new Blob(byteArrays, { type: contentType });
     return blob;
   }
-
+  async showMenu(ev: any, task) {
+    let project = {
+      title: this.project.title,
+      goal: this.project.goal,
+      duration: this.project.duration,
+      startDate: this.project.startDate,
+      endDate: this.project.startDate,
+      status: this.project.startDate,
+      tasks: [
+        task
+      ]
+    }
+    console.log(project, "project in share")
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      componentProps: { project: project, menus: this.menus },
+      event: ev,
+      translucent: true
+    });
+    return await popover.present();
+  }
 }

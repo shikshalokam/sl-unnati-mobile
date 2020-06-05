@@ -236,6 +236,7 @@ export class HomePage implements OnInit {
             }
           });
         }
+        console.log(ap, "ap");
         this.activeProjects = ap;
       }
       this.showSkeleton = false;
@@ -290,6 +291,8 @@ export class HomePage implements OnInit {
         this.storage.set(LocalKeys.allProjects, resp.data).then(resp1 => {
           this.getActiveProjects();
         })
+      } else {
+        this.activeProjects = [];
       }
     }, error => {
     })

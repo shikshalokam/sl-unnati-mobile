@@ -60,13 +60,15 @@
         placeholder="{{'create_project.placeholder_areas'| translate}}" maxlength="90"></ion-textarea>
     </ion-item> -->
     <ion-label style="margin-left: 15px;
-    font-size: 18px !important;">{{'create_project.category'| translate}}</ion-label>
+    font-size: 18px !important;" [ngClass]="{'required-field':markLabelsAsInvalid && project.category.length == 0}">
+      {{'create_project.category'| translate}}</ion-label>
     <ion-row>
       <ion-col *ngFor="let option of categories" size="6">
         <ion-item-group>
           <ion-item>
             <ion-label>{{option.value}}</ion-label>
-            <ion-checkbox [(ngModel)]="option.isChecked" formControlName="category" style="--border-radius: 50%;">
+            <ion-checkbox [(ngModel)]="option.isChecked" name="category" formControlName="category"
+              style="--border-radius: 50%;">
             </ion-checkbox>
           </ion-item>
         </ion-item-group>
