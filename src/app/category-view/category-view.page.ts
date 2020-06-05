@@ -136,7 +136,6 @@ export class CategoryViewPage {
   public getMyProjects() {
     this.showSkeleton = true;
     this.storage.get('latestProjects').then(projects => {
-      console.log(projects, "projects");
       if (projects) {
         projects.forEach(programsList => {
           return programsList.projects.sort((a, b) => {

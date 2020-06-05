@@ -419,7 +419,6 @@ export class ProjectDetailPage {
             });
           }
           if (!mapped) {
-            console.log(projectList, "projectList");
             if (projectList && projectList[0].projects) {
               projectList[0].projects.forEach(function (project, i) {
                 if (project._id == cp._id) {

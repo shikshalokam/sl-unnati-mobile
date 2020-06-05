@@ -183,16 +183,13 @@ export class CreateProjectPage implements OnInit {
       });
       this.storage.get('latestProjects').then((projectsList: any) => {
         let mapped: boolean = false;
-        console.log(projectsList, "projectsList");
         if (projectsList) {
           projectsList.forEach(programsList => {
             // already basic structure is there in local
-            console.log(programsList, "programsList");
             if (programsList) {
               if (programsList.programs && programsList.programs._id == programId) {
                 mapped = true
                 // programsList.projects.forEach(program => {
-                console.log(this.createNewProject, "this.createNewProject");
                 if (this.createNewProject) {
                   this.project._id = programsList.projects.length + 1;
                   programsList.projects.push(this.project);
@@ -222,7 +219,6 @@ export class CreateProjectPage implements OnInit {
                 // });
               } else {
                 this.project._id = programsList.projects.length + 1;
-                console.log(this.project, "this.project this.project this.project");
               }
             }
           });
@@ -234,9 +230,7 @@ export class CreateProjectPage implements OnInit {
             projects: []
           }]
           pro1[0].projects.push(this.project);
-          console.log(this.project, "this.project");
           projectsList = pro1;
-          console.log(projectsList, "projectsList");
           this.storage.set('latestProjects', projectsList).then(myProjects => {
             this.storage.set('newcreatedproject', this.project).then(cmp => {
               this.toastService.successToast('message.project_is_created');
@@ -263,7 +257,6 @@ export class CreateProjectPage implements OnInit {
               isActionable: '/project-view/project-detail/form',
             }]
         }
-        console.log(this.project, "this.project 263");
         this.storage.set('projectToBeView', this.project).then(project => {
         })
       })
