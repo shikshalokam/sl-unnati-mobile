@@ -95,10 +95,10 @@ export class LoginPage {
         })
         this.storage.set('userTokens', success1).then(data => {
           localStorage.setItem('isPopUpShowen', null);
+          this.menuCtrl.enable(true);
           if (this.veryFirstTime) {
             this.router.navigateByUrl('/app-permissions');
           } else {
-            this.menuCtrl.enable(true);
             this.router.navigateByUrl('/project-view/home');
           }
           this.fcm.initializeFCM();

@@ -37,6 +37,7 @@ export class PopoverComponent implements OnInit {
   attachmentsList = [];
   storageUrls;
   fileIndex = 0;
+  projectData = {}
   constructor(
     public translateService: TranslateService,
     public popoverController: PopoverController,
@@ -56,7 +57,6 @@ export class PopoverComponent implements OnInit {
     public loadingController: LoadingController,
     public route: ActivatedRoute,
     public router: Router) { }
-
   ngOnInit() {
     this.platform.ready().then(() => {
       this.projectToSync.push(this.project);
@@ -399,12 +399,33 @@ export class PopoverComponent implements OnInit {
     this.DismissClick();
   }
   public shareTask() {
-    console.log('share task');
+    console.log('share task', this.project.tasks[0]);
+    let files = [];
+    this.project.tasks[0].attachments.forEach(element => {
+      let data = {
+        name: element.name
+      }
+      files.push(data);
+    });
+    this.project.tasks[0].attachments = files;
+    this.projectData = {
+      projectName: this.project.title,
+      goal: this.project.goal,
+      duration: this.project.duration,
+      projectId: this.project._id,
+      tasks: this.project.tasks[0]
+    }
+
+    this.toastService.startLoader('Loading, please wait');
+    this.createProjectService.getTaskPDF(this.projectData).subscribe(data => {
+      console.log(data, "data 414");
+      this.toastService.stopLoader();
+      this.sharePdf(data);
+    })
   }
 
   // mark the task as deleted
   public deleteTask() {
-    console.log(this.project, 'project');
     this.project.tasks[0].isDeleted = true;
     this.project.tasks[0].status = 'Completed';
     this.storage.set('cTask', this.project.tasks[0]).then(ct => {
@@ -421,5 +442,28 @@ export class PopoverComponent implements OnInit {
       });
     })
     // }
+  }
+
+  sharePdf(data) {
+    this.toastService.startLoader('Loading Please wait');
+    const fileName = 'Unnati Task';
+    const fileTransfer: FileTransferObject = this.transfer.create();
+    const url = data.pdfUrl;
+    fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
+      this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
+        let data = base64File.split(',');
+        let base64Data = "data:application/pdf;base64," + data[1];
+        this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+          this.toastService.stopLoader();
+        }, error => {
+          this.toastService.stopLoader();
+          // intentially left blank
+        });
+      }, (err) => {
+        this.toastService.stopLoader();
+      });
+    }, (error) => {
+      this.toastService.stopLoader();
+    });
   }
 }

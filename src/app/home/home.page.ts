@@ -115,6 +115,7 @@ export class HomePage implements OnInit {
   }
   ionViewDidEnter() {
     this.platform.ready().then(() => {
+      this.menuCtrl.enable(true);
       this.searchInput = '';
       this.storage.get('userTokens').then(data => {
         if (data) {

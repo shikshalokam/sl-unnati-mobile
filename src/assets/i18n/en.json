@@ -3,6 +3,7 @@
     "landing_page": "Home",
     "button": {
         "share": "Share",
+        "imp_prj": "Import Project",
         "delete": "Delete",
         "cancel": "Cancel",
         "save": "Save",
@@ -243,6 +244,7 @@
         "end_date": "End Date",
         "category": "Category",
         "placeholder_project_title": "Name your project here",
+        "placeholder_other_cat": "If other please mention here",
         "placeholder_goal": "Add goal of the project here",
         "fileds_mandatory": "Please fill Mandatory Fields",
         "areas": "What area of your school are you improving?",

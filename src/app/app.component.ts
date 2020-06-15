@@ -44,6 +44,7 @@ export class AppComponent {
   showCloseButton: boolean = false;
   body;
   button;
+  showAlert: boolean = false;
   appUpdate: any = {}
   showUpdatePopup: boolean = false;
   mappedProjectsToSync;
@@ -101,6 +102,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       toastService.popClose.subscribe(data => {
         this.showUpdatePop = false;
+        this.showAlert = false;
       })
       this.notificationCardService.appUpdatePopUp.subscribe(data => {
         this.showUpdatePop = false;
@@ -193,7 +195,7 @@ export class AppComponent {
           this.translate.setDefaultLang('en');
           this.translate.use('en');
           this.networkService.setLang('en');
-          this.router.navigateByUrl('/project-view/home');
+          this.router.navigate(['/project-view/home']);
         } else {
           this.router.navigateByUrl('/login');
         }
@@ -231,13 +233,16 @@ export class AppComponent {
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
-      this.platform.backButton.subscribeWithPriority(9999, () => {
+      this.platform.backButton.subscribeWithPriority(99999999999, () => {
+        console.log('event call');
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
+        console.log(this.router.url, "this.router.url");
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
-          //this.presentAlertConfirm();
-          navigator['app'].exitApp();
+          console.log('call popup method');
+          this.presentAlertConfirm();
+          // navigator['app'].exitApp();
         } else if (this.router.url == '/project-view/notifications' || this.router.url == '/project-view/newsfeed' || this.router.url == '/project-view/about' ||
           this.router.url == '/project-view/reports' || this.router.url == '/project-view/my-schools' ||
           this.router.url == '/project-view/projects' || this.router.url == '/project-view/update-profile' ||
@@ -890,5 +895,54 @@ export class AppComponent {
         });
       });
     }
+  }
+
+  async presentAlertConfirm() {
+    console.log("in presentAlertConfirm");
+    this.appUpdate.actions = {
+      closeApp: true,
+    }
+    this.appUpdate.showCloseButton = false,
+      this.appUpdate.type = "exitApp";
+    this.appUpdate.text = "Are you sure you wish to leave the app?";
+    this.appUpdate.buttons = [{
+      title: 'Yes',
+      color: 'light',
+      isActionable: 'submit',
+      outline: true
+    },
+    {
+      title: 'No',
+      color: 'primary',
+      isActionable: 'cancel',
+      outline: false
+    }]
+    this.showUpdatePopup = false;
+    this.showUpdatePop = false;
+    this.showAlert = true;
+
+    // console.log('in presentAlertConfirm');
+    // const alert = await this.alertController.create({
+    //   header: 'Are you sure you wish to leave the app?',
+    //   buttons: [
+    //     {
+    //       text: 'Cancel',
+    //       role: 'cancel',
+    //       cssClass: 'secondary',
+    //       handler: (blah) => {
+    //         console.log('exit cancel app');
+
+    //       }
+    //     },
+    //     {
+    //       text: 'Close',
+    //       handler: () => {
+    //         console.log('exit the app');
+    //         // navigator['app'].exitApp();
+    //       }
+    //     }
+    //   ]
+    // });
+    // await alert.present();
   }
 }

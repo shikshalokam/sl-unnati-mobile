@@ -9,7 +9,7 @@
     {{'create_project.fileds_mandatory' | translate}}</h5>
   <!-- Error message ends here-->
   <!-- Project creation form starts here -->
-  <form [formGroup]="createProject" class="create-project">
+  <form [formGroup]="createProject" class="create-project" *ngIf="createProject">
     <!-- Project title start here -->
     <ion-item class="custom-ion-item">
       <ion-label class="custom-label" position="floating"
@@ -62,18 +62,36 @@
     <ion-label style="margin-left: 15px;
     font-size: 18px !important;" [ngClass]="{'required-field':markLabelsAsInvalid && project.category.length == 0}">
       {{'create_project.category'| translate}}</ion-label>
-    <ion-row>
+    <ion-row style="margin-bottom: 1.2em;">
       <ion-col *ngFor="let option of categories" size="6">
         <ion-item-group>
-          <ion-item>
-            <ion-label>{{option.value}}</ion-label>
-            <ion-checkbox [(ngModel)]="option.isChecked" name="category" formControlName="category"
-              style="--border-radius: 50%;">
+          <ion-item (click)="selectedCategory(option.key)">
+            <ion-checkbox name="category" [checked]="checkedCategories.includes(option.key)"
+              style="margin-right: 10px;">
             </ion-checkbox>
+            <ion-label> {{ option.key}}</ion-label>
+          </ion-item>
+        </ion-item-group>
+      </ion-col>
+      <ion-col size="6">
+        <ion-item-group>
+          <ion-item>
+            <ion-checkbox (ionChange)="categorySelected($event)" [checked]="true" *ngIf="selectedOther"
+              style="margin-right: 10px;">
+            </ion-checkbox>
+            <ion-checkbox (ionChange)="categorySelected($event)" [checked]="false" *ngIf="!selectedOther"
+              style="margin-right: 10px;">
+            </ion-checkbox>
+            <ion-label>Other</ion-label>
           </ion-item>
         </ion-item-group>
       </ion-col>
     </ion-row>
+    <ion-item style="margin-bottom: 1em; border: 1px solid;
+    padding: 5px; --border-color: transparent;" [hidden]="!selectedOther">
+      <ion-input type="text" [(ngModel)]="otherCategory" name="othercategory" formControlName="Othercategory"
+        placeholder="{{'create_project.placeholder_other_cat'| translate}}"></ion-input>
+    </ion-item>
     <!-- Project improvement areas end here -->
     <ion-button (click)="create()" color="secondary" class="round-corner-btn" expand="block">
       {{'button.save_create_task' | translate}}
@@ -81,7 +99,7 @@
   </form>
   <!-- Project creation form starts here -->
   <div *ngIf="popupshow">
-    <app-custom-popup [content]="projectCreatePopUp" [showPopup]="true">
+    <app-custom-popup [content]="projectCreatePopUp" [showPopup]="true" [showAlert]="false">
     </app-custom-popup>
   </div>
 </ion-content>

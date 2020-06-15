@@ -13,6 +13,7 @@ import { TaskBoardPipe } from '../task-board/task-board.filter';
 import { CustomPopupComponent } from '../custom-popup/custom-popup.component';
 import { CreateTasksComponent } from '../create-tasks/create-tasks.component';
 import { PopoverComponent } from './components/popover/popover.component';
+import {VideoPlayerComponent} from '../video-player/video-player.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -22,7 +23,8 @@ import { PopoverComponent } from './components/popover/popover.component';
     TranslateModule.forChild()
   ],
   entryComponents: [
-    PopoverComponent
+    PopoverComponent,
+    VideoPlayerComponent
   ],
   declarations: [
     HeaderComponent,
@@ -33,7 +35,8 @@ import { PopoverComponent } from './components/popover/popover.component';
     CreateTasksComponent,
     TaskBoardPipe,
     SearchEntities,
-    PopoverComponent
+    PopoverComponent,
+    VideoPlayerComponent
   ],
   exports: [
     HighchartsChartModule,

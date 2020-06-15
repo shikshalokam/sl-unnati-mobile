@@ -19,10 +19,23 @@
     font-weight: 600;
     margin-bottom: 3em;
     min-height: 9em;
-    .completed-task{
-        background:#2c8959;
-        color:#fff !important;
-    }
+   .left-border{
+    width: 6px;
+    height: 50%;
+    max-width: 10px;
+    margin: 1.5em 0px;
+    position: absolute;
+   }
+   h5{
+    margin-top: 0px;
+    margin-bottom: 0px;
+   }
+   .completed-task-left-border{
+       background: green;
+   }
+   .pending-task-left-border{
+    background: #828386;
+}
     .task-list{
         border-bottom: 1px solid #b23d33;
         padding: 5px 15px 5px 15px;
@@ -35,7 +48,7 @@
             width: 25px;
             height: 25px;
         }
-        
+       
     }
     .tasks-label {    
         text-align: center;
@@ -46,6 +59,11 @@
             margin-left: 12px;
         }
     }
+    .date-label{
+        text-align: center;
+        color: #b23e33;
+        font-size:16px;
+        }
 }
 .custom-select{
     border: 1px solid #ccc;

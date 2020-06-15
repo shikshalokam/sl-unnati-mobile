@@ -49,6 +49,41 @@
         }
     }
 }
+.bottom-pop-container{
+    max-width: 100%;
+    padding: 10px;
+    position: absolute;
+    bottom: 0px;
+    min-width: 100%;
+    background: #fff;
+    .close-btn{
+        text-align: right; 
+        margin-right: 5px; 
+        margin-bottom: -10px;
+    }
+    .pop-ion{
+        text-align: center;
+        ion-icon{
+            font-size:60px;
+        }
+    }
+    .pop-msg
+    {
+    margin: 0px 20px;
+    .bottom-border{
+        border-bottom:1px solid #000;
+        margin-bottom: 0px;
+        padding-bottom: 5px;
+    }
+    }
+    .pop-btn{
+        margin: 0px 15px;
+        ion-button{
+            text-transform: capitalize;
+            font-family: 'SourceSansPro-Bold' !important;
+        }
+    }
+}
 }
 
 .color-primary{

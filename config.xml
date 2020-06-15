@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.shikshalokam.unnati.dev" version="2.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Unnati.dev</name>
+<widget id="org.shikshalokam.unnati.qa" version="2.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Unnati.qa</name>
     <description>Unnati</description>
     <author email="vishubadiger33@gmail.com" href="http://ionicframework.com/">Bachi</author>
     <content src="index.html" />

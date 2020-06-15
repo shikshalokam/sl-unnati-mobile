@@ -17,6 +17,7 @@ import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { PopoverController } from '@ionic/angular';
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
 import { ProjectService } from '../project-view/project.service';
+
 declare var cordova: any;
 
 @Component({
@@ -43,17 +44,27 @@ export class ProjectDetailPage {
   editTitle: boolean = false;
   show: boolean = false;
   showAddTask: boolean = false;
+  past = [];
+  currentTask = [];
+  weekTask = [];
+  upcoming = [];
+  months = [];
+  quarter = [];
+  currentDate = new Date();
   menus = [{
     title: 'Share Task',
-    value: 'shareTask'
+    value: 'shareTask',
+    icon: 'md-share'
   },
   {
     title: 'Edit Task',
-    value: 'editTask'
+    value: 'editTask',
+    icon: 'md-create'
   },
   {
     title: 'Delete Task',
-    value: 'deleteTask'
+    value: 'deleteTask',
+    icon: 'md-trash'
   }
   ]
   statuses = [
@@ -98,6 +109,12 @@ export class ProjectDetailPage {
       }
       this.project.tasks.push(data);
       this.tasksLength = this.project.tasks.length;
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        this.sortTasks();
+      }
       this.updateTask();
     })
     createProjectService.modalCloseEvent.subscribe(data => {
@@ -116,7 +133,7 @@ export class ProjectDetailPage {
         } else if (this.category == 'home') {
           this.back = 'project-view/home';
         } else if (this.category == 'form') {
-          this.back = 'project-view/create-project';
+          this.back = 'project-view/create-project/no';
         }
         else {
           this.back = 'project-view/category/' + this.category;
@@ -183,11 +200,19 @@ export class ProjectDetailPage {
       //   project.category = project.category.join(', ');
       // }
       this.project = project;
+
+      this.show = true;
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        console.log(this.project.tasks, " this.project.tasks");
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        console.log(this.project.tasks, " this.project.tasks");
+        this.sortTasks();
+      }
       if (this.project) {
         this.updateTask();
       }
-      this.show = true;
-      this.sortTasks();
     })
   }
 
@@ -226,6 +251,12 @@ export class ProjectDetailPage {
             task.subTasks = [];
           }
         })
+        if (this.tasksLength > 0 && this.project.isStarted) {
+          this.project.tasks.sort((a, b) => {
+            return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+          });
+          this.sortTasks();
+        }
       }
       this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
         this.project = project;
@@ -498,31 +529,77 @@ export class ProjectDetailPage {
     this.createProjectService.updateByProjects(this.project);
   }
   public sortTasks() {
-    let today = this.datepipe.transform(new Date(), "MMM dd, yyyy");
-    let tasksWithEndDate = [];
-    let tasksWithoutEndDate = [];
+    this.past = [];
+    this.currentTask = [];
+    this.weekTask = [];
+    this.upcoming = [];
+    this.months = [];
+    this.quarter = [];
+    let withoutEndDate = [];
+    let today: any = new Date();
+    let st = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+    let et = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 2, 59, 59);
+    console.log(st, "st", et);
+    let date = new Date(), y = date.getFullYear(), m = date.getMonth(), m1 = date.getMonth() + 4;
+    let month = new Date(y, m + 1, 0);
+    let month1 = new Date(y, m1 + 1, 0);
+    let week = new Date(today.getTime() + (7 - today.getDay()) * 24 * 60 * 60 * 1000);
+    let week1 = new Date(today.getTime() + (14 - today.getDay()) * 24 * 60 * 60 * 1000);
+    console.log(week, week1, "week week1");
+    console.log(month, month1, "month month1");
     this.project.tasks.forEach(task => {
-      if (task.endDate && !task.isDeleted) {
-        if (task.endDate >= today) {
-          tasksWithEndDate.push(task);
+      if (!task.isDeleted) {
+        if (task.endDate) {
+          task.endDate = new Date(new Date(task.endDate).getFullYear(), new Date(task.endDate).getMonth(), new Date(task.endDate).getDate(), 0, 0, 0);
+          console.log(new Date(task.endDate) < today, "===", today, "endDate", new Date(task.endDate));
+          console.log(new Date(task.endDate) > week1 && new Date(task.endDate) <= month, "new Date(task.endDate) > week1 && new Date(task.endDate) <= month");
+          if (new Date(task.endDate) < st) {
+            this.past.push(task);
+          } else if (new Date(task.endDate) >= st && new Date(task.endDate) <= et) {
+            this.currentTask.push(task);
+          } else if (new Date(task.endDate) >= today && new Date(task.endDate) <= week) {
+            this.weekTask.push(task);
+          } else if (new Date(task.endDate) > week && new Date(task.endDate) <= month) {
+            this.months.push(task);
+          } else if (new Date(task.endDate) > month && new Date(task.endDate) <= month1) {
+            this.quarter.push(task);
+          } else {
+            this.upcoming.push(task);
+          }
         } else {
-          tasksWithoutEndDate.push(task);
+          console.log(task, "task in withoutEndDate");
+          withoutEndDate.push(task);
+          console.log(withoutEndDate, "task in this.upcoming.length", this.upcoming.length);
         }
-      } else {
-        tasksWithoutEndDate.push(task);
+        console.log(this.upcoming, "this.upcoming before", withoutEndDate);
+        if (this.upcoming.length > 0) {
+          this.upcoming.concat(withoutEndDate);
+        } else {
+          this.upcoming = withoutEndDate;
+        }
+        console.log(this.upcoming, "this.upcoming after", withoutEndDate);
+
+        // this.upcoming.sort((a, b) => {
+        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        // });
+        // this.past.sort((a, b) => {
+        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        // });
+        // this.currentTask.sort((a, b) => {
+        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        // });
+        // this.quarter.sort((a, b) => {
+        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        // });
       }
     });
-    tasksWithEndDate.sort((a, b) => {
-      return <any>new Date(a.endDate) - <any>new Date(b.endDate);
-    });
-    this.project.tasks = tasksWithEndDate.concat(tasksWithoutEndDate);
+    console.log(this.past, this.currentTask, this.weekTask, "this.past, this.currentTask, this.weekTask");
   }
 
   // add created task
   public addNewTask(task) {
     this.storage.get(LocalKeys.allProjects).then(myProjects => {
       let mapped;
-
       if (myProjects) {
         if (myProjects.program)
           myProjects.program.forEach(programs => {

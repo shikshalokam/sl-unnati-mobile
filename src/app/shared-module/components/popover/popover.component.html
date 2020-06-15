@@ -3,8 +3,7 @@
     <ion-label>{{menu.title}}
     </ion-label>
     <ion-avatar slot="end" class="avatar-style" *ngIf="menu.icon">
-      <i class="material-icons" style="font-size: 1.4em;">
-      </i>
+      <ion-icon ios="ios-trash" md="{{menu.icon}}"></ion-icon>
     </ion-avatar>
   </ion-item>
   <!-- <ion-item (click)="syncProject()">
