@@ -13,7 +13,6 @@ export class CreateProjectService {
         public http: HttpClient) { }
     // Update task in current Project
     public updateCurrentMyProject(createdTask) {
-        console.log('16 updateCurrentMyProject');
         return this.storage.get('newcreatedproject').then(cmp => {
             cmp.isEdited = true;
             cmp.tasks.forEach(function (task, i) {
@@ -32,7 +31,6 @@ export class CreateProjectService {
     }
     //  Update project in my projects list.
     public updateByProjects(updatedProject) {
-        console.log('updateByProjects 34 creat-project service');
         let mapped: boolean = false;
         return this.storage.get('latestProjects').then(projectList => {
             if (projectList) {
@@ -49,7 +47,6 @@ export class CreateProjectService {
                 })
             }
             if (!mapped) {
-                console.log(projectList);
                 if (projectList && projectList[0].projects) {
                     projectList[0].projects.forEach(project => {
                         projectList[0].projects.push(updatedProject);
@@ -73,7 +70,6 @@ export class CreateProjectService {
     }
     // add new project into my projects.
     public insertIntoMyProjects(project) {
-        console.log('16 updateCurrentMyProject');
         let mapped: boolean = false;
         let environment = AppConfigs.currentEnvironment;
         let programId = '';
@@ -83,7 +79,6 @@ export class CreateProjectService {
             }
         });
         return this.storage.get('latestProjects').then(projectList => {
-            console.log(projectList, "projectList 83");
             if (projectList) {
                 projectList.forEach(projectsPrograms => {
                     if (projectsPrograms.programs) {
@@ -94,9 +89,7 @@ export class CreateProjectService {
                     }
                 })
                 if (!mapped) {
-                    console.log(projectList, "projectList")
                     if (projectList) {
-                        console.log(projectList[0].projects, "projectList[0].projects");
                         project._id = projectList[0].projects.length + 1;
                         projectList[0].projects.push(project)
                     } else {
@@ -109,16 +102,12 @@ export class CreateProjectService {
                     }
                 }
             } else {
-                console.log('in else part', projectList);
                 projectList.forEach(project => {
-                    console.log(project, "project");
                 });
                 if (projectList) {
-                    console.log('in else part', projectList.projects);
                     project._id = projectList.projects.length + 1;
                     projectList.projects.push(project)
                 } else {
-                    console.log('in else');
                     project._id = 1;
                     let pro1 = [{
                         projects: [
@@ -126,7 +115,6 @@ export class CreateProjectService {
                     }]
                     pro1[0].projects.push(project);
                     projectList = pro1;
-                    console.log(projectList, "projectLis");
                 }
             }
             this.storage.set('latestProjects', projectList).then(projects => {
@@ -135,7 +123,6 @@ export class CreateProjectService {
     }
     // update task in project after marking as delete. 
     public UpdateCurrentMyProjectByTask(createdTask) {
-        console.log("UpdateCurrentMyProjectByTask");
         return this.storage.get('projectToBeView').then(cmp => {
             cmp.tasks.forEach(function (task, i) {
                 if (task._id == createdTask._id) {
