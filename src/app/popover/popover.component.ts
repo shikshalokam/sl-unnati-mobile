@@ -314,6 +314,15 @@ export class PopoverComponent implements OnInit {
             }
           });
         }
+      });
+      this.sync();
+    }
+  }
+
+  sync() {
+    this.toastService.startLoader('Loading, please wait');
+    if (this.projectToSync[0].tasks && this.projectToSync[0].tasks.length > 0) {
+      this.projectToSync[0].tasks.forEach(task => {
         if (task.subTasks && task.subTasks.length > 0) {
           task.subTasks.forEach(subtasks => {
             if (subtasks.isNew && subtasks._id) {
@@ -328,12 +337,7 @@ export class PopoverComponent implements OnInit {
           task.isNew = false;
         }
       });
-      this.sync();
     }
-  }
-
-  sync() {
-    this.toastService.startLoader('Loading, please wait');
     let metaData: any = [];
     metaData.push(this.projectToSync);
     let projects = {

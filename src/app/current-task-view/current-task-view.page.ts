@@ -427,6 +427,7 @@ export class CurrentTaskViewPage implements OnInit {
       quality: 20,
       targetWidth: 600,
       targetHeight: 600,
+      correctOrientation: true,
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,

@@ -290,6 +290,8 @@ export class HomePage implements OnInit {
         this.storage.set('latestProjects', resp.data).then(resp1 => {
           this.getActiveProjects();
         })
+      } else {
+        this.activeProjects = [];
       }
     }, error => {
     })

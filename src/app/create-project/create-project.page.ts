@@ -217,6 +217,8 @@ export class CreateProjectPage implements OnInit {
                   });
                 }
                 // });
+              } else {
+                this.project._id = programsList.projects.length + 1;
               }
             }
           });
@@ -225,8 +227,7 @@ export class CreateProjectPage implements OnInit {
           mapped = true;
           this.project._id = 1;
           let pro1 = [{
-            projects: [
-            ]
+            projects: []
           }]
           pro1[0].projects.push(this.project);
           projectsList = pro1;
