@@ -15,7 +15,7 @@ const routes: Routes = [
     children: [
       { path: 'home', loadChildren: '../home/home.module#HomePageModule' },
       { path: 'my-schools', loadChildren: '../myschools/myschools.module#MyschoolsPageModule' },
-      { path: 'fullreports/:state', loadChildren: '../fullreports/fullreports.module#FullreportsPageModule' },
+      { path: 'fullreports/:state/:id/:school', loadChildren: '../fullreports/fullreports.module#FullreportsPageModule' },
       { path: 'about', loadChildren: '../about/about.module#AboutPageModule' },
       // { path: 'last-month-reports', loadChildren: '../last-month-reports/last-month-reports.module#LastMonthReportsPageModule' },
       // { path: 'last-quarter-reports', loadChildren: '../last-quarter-reports/last-quarter-reports.module#LastQuarterReportsPageModule' },
@@ -28,6 +28,8 @@ const routes: Routes = [
       { path: 'subtask-status', loadChildren: '../subtask-status/subtask-status.module#SubtaskStatusPageModule' },
       { path: 'courses', loadChildren: '../courses/courses.module#CoursesPageModule' },
       { path: 'courses/:cat', loadChildren: '../courses/courses.module#CoursesPageModule' },
+      { path: 'courses/:cat/:projectId', loadChildren: '../courses/courses.module#CoursesPageModule' },
+      { path: 'courses/:cat/:projectId/:programId', loadChildren: '../courses/courses.module#CoursesPageModule' },
       { path: 'status/:id', loadChildren: '../charts/charts.module#ChartsPageModule' },
       { path: 'create-project', loadChildren: '../create-project/create-project.module#CreateProjectPageModule' },
       { path: 'create-project/:clearData', loadChildren: '../create-project/create-project.module#CreateProjectPageModule' },
@@ -41,11 +43,14 @@ const routes: Routes = [
       { path: 'project-detail', loadChildren: '../project-detail/project-detail.module#ProjectDetailPageModule' },
       { path: 'newsfeed', loadChildren: '../newsfeed/newsfeed.module#NewsfeedPageModule' },
       { path: 'my-reports', loadChildren: '../my-reports/my-reports.module#MyReportsPageModule' },
+      { path: 'my-reports/:id/:school', loadChildren: '../my-reports/my-reports.module#MyReportsPageModule' },
       { path: 'files/:id', loadChildren: '../files/files.module#FilesPageModule' },
       { path: 'notifications', loadChildren: '../notifications/notifications.module#NotificationsPageModule' },
       { path: 'task-board', loadChildren: '../task-board/task-board.module#TaskBoardPageModule' },
       { path: 'update-profile', loadChildren: '../update-profile/update-profile.module#UpdateProfilePageModule' },
       { path: 'tutorial-videos', loadChildren: '../tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
+      { path: 'template-view/:templateId', loadChildren: '../template-view/template-view.module#TemplateViewPageModule' },
+      { path: 'template-view/:templateId/:programId', loadChildren: '../template-view/template-view.module#TemplateViewPageModule' },
     ]
   }
 ]

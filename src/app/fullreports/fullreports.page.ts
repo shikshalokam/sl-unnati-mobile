@@ -22,8 +22,10 @@ export class FullreportsPage implements OnInit {
   connected: any = navigator.onLine;
   page: number = 1;
   count: number = 5;
+  entityId;
   highcharts = Highcharts;
   showCharts: boolean = false;
+  mappedSchool;
   chartOptions;
   showSkeleton: boolean = false;
   skeletons = [{}, {}, {}, {}];
@@ -44,7 +46,10 @@ export class FullreportsPage implements OnInit {
     });
     activatedRoute.params.subscribe((params: any) => {
       this.state = params.state;
-      this.getSchools();
+      this.mappedSchool = params.school;
+      this.entityId = params.id;
+      this.back = "/project-view/my-reports/" + params.id + '/' + params.school;
+      // this.getSchools();
       this.getReports(params.state);
       try {
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
@@ -56,19 +61,19 @@ export class FullreportsPage implements OnInit {
   }
   public getReports(state) {
     this.showSkeleton = true;
-    this.myReportsService.getFullReports(state).subscribe((data: any) => {
-      data.data.forEach(report => {
-      });
-      this.reports = data.data;
-      if (this.reports.length > 0) {
-
-        setTimeout(() => {
-          this.showCharts = true;
-          this.setUpChart(this.reports[0]);
-        }, 1000);
-      } else {
-        this.showSkeleton = false;
+    this.myReportsService.getFullReports(state,this.entityId).subscribe((data: any) => {
+      if(data.data){
+        this.reports = data.data;
+        if (this.reports.length > 0) {
+          setTimeout(() => {
+            this.showCharts = true;
+            this.setUpChart(this.reports[0]);
+          }, 1000);
+        } else {
+          this.showSkeleton = false;
+        }
       }
+      this.showSkeleton = false;
     }, error => {
       this.showSkeleton = false;
     })
@@ -107,31 +112,29 @@ export class FullreportsPage implements OnInit {
     }
     this.showSkeleton = false;
   }
-  // go back
-  public goBack() {
-    this.router.navigate(['/project-view/my-reports/last-' + this.state + '-reports']);
-  }
 
-  public getSchools() {
-    if (this.connected) {
-      this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-        if (data.status != 'failed') {
-          this.mySchools = data.data;
-        }
-      }, error => { })
-    } else {
-      this.toastService.errorToast('message.nerwork_connection_check');
-    }
-  }
+  // public getSchools() {
+  //   if (this.connected) {
+  //     this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
+  //       if (data.status != 'failed') {
+  //         this.mySchools = data.data;
+  //       }
+  //     }, error => { })
+  //   } else {
+  //     this.toastService.errorToast('message.nerwork_connection_check');
+  //   }
+  // }
 
   public getReport(type) {
     let obj: any;
     let obj1: any = {};
     if (this.mySchools) {
-      this.mySchools[0].type = type;
-      this.mySchools[0].isFullReport = true;
-      this.mySchools[0].reportType = this.state;
-      obj = this.mySchools[0];
+      this.mySchools.type = type;
+      this.mySchools.isFullReport = true;
+      this.mySchools.reportType = this.state;
+      this.mySchools.name = this.mappedSchool;
+      this.mySchools.entityId = this.entityId;
+      obj = this.mySchools;
     } else {
       obj1.type = type;
       obj1.isFullReport = true;

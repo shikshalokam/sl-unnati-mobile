@@ -4,21 +4,19 @@ import { AppConfigs } from '../app.config'
 @Injectable({
     providedIn: 'root',
 })
-export class SchoolTaskService
-{
+export class SchoolTaskService {
     constructor(public http: HttpClient) {
     }
     public getSchoolTaskReport(id) {
-        let data ={
-            entityId:id
+        let data = {
+            entityId: id
         }
-        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projectsByEntity',data)
+        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projectsByEntity', data)
     }
-    public getProjectDetail(id)
-    {
-        let data ={
-            projectId:id
+    public getProjectDetail(id) {
+        let data = {
+            projectId: id
         }
-        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projectsDetailsById',data)
+        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/projectsDetailsById', data)
     }
 }

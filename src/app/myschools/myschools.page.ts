@@ -17,9 +17,9 @@ export class MyschoolsPage {
   @ViewChild(NavController) nav: NavController;
   searchInput;
   connected: any = localStorage.getItem('networkStatus');
-  mySchools;
+  mySchools = [];
   back = "project-view/home"
-  noSchools: boolean = false;
+  noSchools: boolean = true;
   page: number = 1;
   count: number = 5;
   skeletons = [{}, {}, {}, {}, {}, {}];
@@ -48,10 +48,18 @@ export class MyschoolsPage {
     })
   }
   // get schools list
-  public getSchools() {
+  public getSchools(event?) {
     if (this.connected) {
+      // event.target.complete();
       this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-        this.mySchools = data.data;
+        if (data.data && data.status != 'failed') {
+          this.mySchools = this.mySchools.concat(data.data);
+          this.page = this.page + 1;
+          this.noSchools = false;
+          // event.target.disabled = true;
+        } else {
+          this.noSchools = true;
+        }
       }, error => { })
     } else {
       this.networkService.networkErrorToast();
@@ -93,13 +101,13 @@ export class MyschoolsPage {
     let connected = navigator.onLine;
     if (connected) {
       this.mySchoolsService.searchScool(keyword).subscribe((data: any) => {
-        if(data.status !='failed'){
+        if (data.status != 'failed') {
           this.mySchools = data.data;
           this.noSchools = false;
           if (data.data.length == 0) {
             this.noSchools = true;
           }
-        }else {
+        } else {
           this.noSchools = false;
         }
       }, error => {
@@ -107,16 +115,5 @@ export class MyschoolsPage {
     } else {
       this.networkService.networkErrorToast();
     }
-  }
-  // Load Data for infinite scroll
-  public loadData(event) {
-    event.target.complete();
-    //getReports(data,limit,page)
-    this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-      this.page = this.page + 1;
-      event.target.disabled = true;
-      this.mySchools.push(data.data);
-    }, error => {
-    })
   }
 }

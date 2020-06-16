@@ -16,9 +16,7 @@ const routes: Routes = [
   { path: 'projects', loadChildren: './projects/projects.module#ProjectsPageModule' },
   { path: 'project-view', loadChildren: './project-view/project-view.module#ProjectViewPageModule' },
   { path: 'tasks', loadChildren: './tasks/tasks.module#TasksPageModule' },
-  { path: 'detail', loadChildren: './detail/detail.module#DetailPageModule' },
   { path: 'resources', loadChildren: './charts/charts.module#ChartsPageModule' },
-  { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
   { path: 'task-view/:projectId/:taskId/:from', loadChildren: './task-view/task-view.module#TaskViewPageModule' },
   { path: 'courses', loadChildren: './courses/courses.module#CoursesPageModule' },
   { path: 'subtasks', loadChildren: './subtasks/subtasks.module#SubtasksPageModule' },
@@ -41,12 +39,13 @@ const routes: Routes = [
   { path: 'project-detail', loadChildren: './project-detail/project-detail.module#ProjectDetailPageModule' },
   { path: 'active-projects', loadChildren: './active-projects/active-projects.module#ActiveProjectsPageModule' },
   { path: 'my-projects', loadChildren: './my-projects/my-projects.module#MyProjectsPageModule' },
-  { path: 'all-projects', loadChildren: './all-projects/all-projects.module#AllProjectsPageModule' },
   { path: 'files/:id', loadChildren: './files/files.module#FilesPageModule' },
   { path: 'task-board', loadChildren: './task-board/task-board.module#TaskBoardPageModule' },
   { path: 'update-profile', loadChildren: './update-profile/update-profile.module#UpdateProfilePageModule' },
   { path: 'tutorial-videos', loadChildren: './tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
   { path: 'get-sub-entities', loadChildren: './get-sub-entities/get-sub-entities.module#GetSubEntitiesPageModule' },
+  { path: 'app-permissions', loadChildren: './app-permissions/app-permissions.module#AppPermissionsPageModule' },
+  { path: 'template-view', loadChildren: './template-view/template-view.module#TemplateViewPageModule' },
 ];
 
 @NgModule({

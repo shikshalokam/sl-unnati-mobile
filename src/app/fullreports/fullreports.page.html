@@ -5,45 +5,45 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-fab vertical="top" horizontal="end">
-    <ion-fab-button size="small">
-      <ion-icon ios="ios-more" md="md-more"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="start">
-      <ion-fab-button color="medium" (click)="getReport('share')">
-        <ion-icon ios="ios-share" md="md-share" style="color: #000;"></ion-icon>
+  <div *ngIf="reports && reports.length > 0 && !showSkeleton">
+    <ion-fab vertical="top" horizontal="end">
+      <ion-fab-button size="small">
+        <ion-icon ios="ios-more" md="md-more"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button color="medium" (click)="getReport('download')">
-        <ion-icon ios="ios-download" md="md-download" style="color: #000;"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
+      <ion-fab-list side="start">
+        <ion-fab-button color="medium" (click)="getReport('share')">
+          <ion-icon ios="ios-share" md="md-share" style="color: #000;"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button color="medium" (click)="getReport('download')">
+          <ion-icon ios="ios-download" md="md-download" style="color: #000;"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
 
-  <div *ngIf="mySchools && mySchools[0].name" style="width: 90%;">
-    <h5>
-      {{mySchools[0].name }}
+    <div  style="width: 75%; min-height: 25px;">
+      <h5>
+        {{mappedSchool}}
+      </h5>
+    </div>
+
+    <h5 *ngIf="state == 'latsMonth'">
+      {{ "fullreports.undertaken_prjcts_inmonth" | translate }}
     </h5>
-  </div>
-
-  <h5 *ngIf="state == 'latsMonth'">
-    {{ "fullreports.undertaken_prjcts_inmonth" | translate }}
-  </h5>
-  <h5 *ngIf="state == 'lastQuarter'">
-    {{ "fullreports.undertaken_prjcts_inqrtr" | translate }}
-  </h5>
-  <div *ngFor="let report of reports; let i = index">
-    <ion-card style="background: #f5f5f5b8;
+    <h5 *ngIf="state == 'lastQuarter'">
+      {{ "fullreports.undertaken_prjcts_inqrtr" | translate }}
+    </h5>
+    <div *ngFor="let report of reports; let i = index">
+      <ion-card style="background: #f5f5f5b8;
     border-radius: 10px;" *ngIf=" report?.title?.text">
-      <ion-card-header class="chart-title">
-        {{ report.title.text }}
-      </ion-card-header>
-      <ion-card-content>
-        <div id="{{ idvalue }}{{ i }}"></div>
-      </ion-card-content>
-    </ion-card>
+        <ion-card-header class="chart-title">
+          {{ report.title.text }}
+        </ion-card-header>
+        <ion-card-content>
+          <div id="{{ idvalue }}{{ i }}"></div>
+        </ion-card-content>
+      </ion-card>
+    </div>
   </div>
-
-
   <ion-card *ngIf="reports && reports.length == 0 && !showSkeleton">
     <h5 style="text-align: center;"> {{'message.no_data_found' |translate}} </h5>
   </ion-card>

@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { LoadingController } from '@ionic/angular';
+import { Subject } from 'rxjs';
 @Injectable({
 
     providedIn: 'root',
 })
 export class ToastService {
     loading: any;
+    popClose = new Subject();
+    requestPermissions = new Subject();
     constructor(
         public toastController: ToastController,
         public translateService: TranslateService,
@@ -62,4 +65,21 @@ export class ToastService {
     async stopLoader() {
         return await this.loadingController.dismiss().then(() => console.log('dismissed'));
     }
+
+    public popUpClose() {
+        this.popClose.next();
+    }
+    public getPermissions() {
+        this.requestPermissions.next();
+    }
+
+    async presentLoading(msg) {
+        const loading = await this.loadingController.create({
+          message: msg,
+          duration: 2000
+        });
+        await loading.present();
+    
+        const { role, data } = await loading.onDidDismiss();
+      }
 }
