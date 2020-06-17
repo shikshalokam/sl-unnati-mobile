@@ -115,6 +115,7 @@ export class HomePage implements OnInit {
   }
   ionViewDidEnter() {
     this.platform.ready().then(() => {
+      this.menuCtrl.enable(true);
       this.searchInput = '';
       this.storage.get('userTokens').then(data => {
         if (data) {
@@ -290,6 +291,8 @@ export class HomePage implements OnInit {
         this.storage.set(LocalKeys.allProjects, resp.data).then(resp1 => {
           this.getActiveProjects();
         })
+      } else {
+        this.activeProjects = [];
       }
     }, error => {
     })

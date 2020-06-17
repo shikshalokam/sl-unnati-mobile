@@ -76,7 +76,7 @@ export class AppPermissionsPage implements OnInit {
     })
     toastService.requestPermissions.subscribe(data => {
       this.showWarning = false;
-      menuController.enable(true);
+      // menuController.enable(true);
       this.getPermissions();
     })
   }
@@ -84,7 +84,7 @@ export class AppPermissionsPage implements OnInit {
 
   ngOnInit() {
     this.isIos = this.platform.is('ios') ? true : false;
-    this.menuController.enable(false);
+    this.menuController.enable(true);
   }
   public permissionGivenTo(request) {
     this.disableBtn = true;
@@ -123,6 +123,7 @@ export class AppPermissionsPage implements OnInit {
       if (!this.isIos) {
         this.getPermissions();
       } else {
+        this.menuController.enable(true);
         this.router.navigate(['/project-view/home']);
       }
     } else {
@@ -148,8 +149,7 @@ export class AppPermissionsPage implements OnInit {
         err => this.androidPermissions.requestPermission(element))
     });
   }
-
   public openTermsAndPolicy() {
     (<any>window).cordova.InAppBrowser.open('https://shikshalokam.org/wp-content/uploads/2019/05/Final-ShikshaLokam-Terms-of-Use-MCM-08052019-Clean-copy-1.html', "_system", "zoom=no");
   }
-}
+} 

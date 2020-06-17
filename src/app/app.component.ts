@@ -44,6 +44,7 @@ export class AppComponent {
   showCloseButton: boolean = false;
   body;
   button;
+  showAlert: boolean = false;
   appUpdate: any = {}
   showUpdatePopup: boolean = false;
   mappedProjectsToSync;
@@ -101,6 +102,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       toastService.popClose.subscribe(data => {
         this.showUpdatePop = false;
+        this.showAlert = false;
       })
       this.notificationCardService.appUpdatePopUp.subscribe(data => {
         this.showUpdatePop = false;
@@ -129,9 +131,9 @@ export class AppComponent {
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
-          this.subscription = this.interval.subscribe(val => {
-            this.prepareMappedProjectToSync();
-          });
+          // this.subscription = this.interval.subscribe(val => {
+          //   this.prepareMappedProjectToSync();
+          // });
           this.menuCtrl.enable(true, 'unnati');
           this.loggedInUser = value;
           this.appPages = [
@@ -193,7 +195,7 @@ export class AppComponent {
           this.translate.setDefaultLang('en');
           this.translate.use('en');
           this.networkService.setLang('en');
-          this.router.navigateByUrl('/project-view/home');
+          this.router.navigate(['/project-view/home']);
         } else {
           this.router.navigateByUrl('/login');
         }
@@ -231,13 +233,14 @@ export class AppComponent {
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
-      this.platform.backButton.subscribeWithPriority(9999, () => {
+      this.platform.backButton.subscribeWithPriority(99999999999, () => {
+        this.modalController.dismiss();
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
-          //this.presentAlertConfirm();
-          navigator['app'].exitApp();
+          this.presentAlertConfirm();
+          // navigator['app'].exitApp();
         } else if (this.router.url == '/project-view/notifications' || this.router.url == '/project-view/newsfeed' || this.router.url == '/project-view/about' ||
           this.router.url == '/project-view/reports' || this.router.url == '/project-view/my-schools' ||
           this.router.url == '/project-view/projects' || this.router.url == '/project-view/update-profile' ||
@@ -253,7 +256,7 @@ export class AppComponent {
           } else {
             this.router.navigateByUrl('project-view/template-view/' + s[3].path);
           }
-        } else if (s.length == 3 && s[0].path == 'project-view' && s[1].path == 'template-view') {
+        }else if (s.length == 3 && s[0].path == 'project-view' && s[1].path == 'template-view') {
           this.router.navigateByUrl('project-view/home');
         }
         else if (this.router.url == '/project-view/my-reports/last-month-reports' || this.router.url == '/project-view/my-reports/last-quarter-reports' || this.router.url == '/my-reports/last-month-reports' || this.router.url == '/my-reports/last-quarter-reports') {
@@ -890,5 +893,29 @@ export class AppComponent {
         });
       });
     }
+  }
+
+  async presentAlertConfirm() {
+    this.appUpdate.actions = {
+      closeApp: true,
+    }
+    this.appUpdate.showCloseButton = false,
+      this.appUpdate.type = "exitApp";
+    this.appUpdate.text = "Are you sure you wish to leave the app?";
+    this.appUpdate.buttons = [{
+      title: 'Yes',
+      color: 'light',
+      isActionable: 'submit',
+      outline: true
+    },
+    {
+      title: 'No',
+      color: 'primary',
+      isActionable: 'cancel',
+      outline: false
+    }]
+    this.showUpdatePopup = false;
+    this.showUpdatePop = false;
+    this.showAlert = true;
   }
 }

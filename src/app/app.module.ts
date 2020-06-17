@@ -49,6 +49,7 @@ export function HttpLoaderFactory(handler: HttpBackend) {
   const http = new HttpClient(handler);
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
 @NgModule({
   declarations: [
     AppComponent,

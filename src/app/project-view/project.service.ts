@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 })
 export class ProjectService {
     public emit = new Subject();
+    taskDeleteEvent = new Subject();
     public title = new Subject();
     constructor(public http: HttpClient, public Http: Http, public currentUser: CurrentUserProvider, public storage: Storage) {
     }
@@ -43,5 +44,10 @@ export class ProjectService {
             'Content-Type': 'multipart/form-data'
         })
         return this.http.put(url, base64)
+    }
+
+    // delete task 
+    taskDelete(task) {
+        this.taskDeleteEvent.next(task);
     }
 }

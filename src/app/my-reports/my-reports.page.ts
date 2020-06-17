@@ -4,6 +4,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { NetworkService } from '../network.service';
 import { Platform } from '@ionic/angular';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
@@ -63,6 +64,7 @@ export class MyReportsPage {
     public platform: Platform,
     public socialSharing: SocialSharing,
     public fileChooser: FileChooser,
+    public networkService: NetworkService,
     public base64: Base64,
     public fileOpener: FileOpener,
     public transfer: FileTransfer,
@@ -110,6 +112,11 @@ export class MyReportsPage {
         }];
         this.selectTab('school');
       }
+    })
+    platform.ready().then(() => {
+      networkService.emit.subscribe(status => {
+        this.connected = status;
+      })
     })
     myReportsService.reportEvent.subscribe((data: any) => {
       // this.share(data);
@@ -159,30 +166,36 @@ export class MyReportsPage {
   }
 
   public getSchools(event?) {
-    this.showSkeleton = true;
-    this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-      if (data.data && data.data.length > 0 && data.status != 'failed') {
-        this.schools = this.schools.concat(data.data);
-        this.page = this.page + 1;
-      } else {
-        this.schools = [];
-        this.tabs = [
-          {
-            title: 'Last Month',
-            id: 'lastMonth',
-            isActive: true
-          },
-          {
-            title: 'Last Quarter',
-            id: 'lastQuarter',
-            isActive: false
-          }];
-        this.selectTab('lastMonth');
-      }
-      this.showSkeleton = false;
-    }, error => {
-      this.showSkeleton = false;
-    })
+    if (this.connected) {
+      this.showSkeleton = true;
+      this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
+        if (data.data && data.data.length > 0 && data.status != 'failed') {
+          this.schools = this.schools.concat(data.data);
+          this.page = this.page + 1;
+        } else {
+          this.schools = [];
+          this.tabs = [
+            {
+              title: 'Last Month',
+              id: 'lastMonth',
+              isActive: true
+            },
+            {
+              title: 'Last Quarter',
+              id: 'lastQuarter',
+              isActive: false
+            }];
+          this.selectTab('lastMonth');
+        }
+        this.showSkeleton = false;
+      }, error => {
+        this.showSkeleton = false;
+      })
+    }
+    else {
+      this.toastService.stopLoader();
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
   }
   // download and Share Reports
   public getReport(type: any) {
@@ -382,14 +395,12 @@ export class MyReportsPage {
   }
 
   public viewFullReport() {
-    if (navigator.onLine) {
-
+    if (this.connected) {
       this.router.navigate(['project-view/fullreports', this.activeTab, this.entityId, this.mappedSchool]);
     } else {
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
-
   public getReportsBySchool(entityId, mappedSchool) {
     this.router.navigate(["project-view/my-reports", entityId, mappedSchool]);
   }

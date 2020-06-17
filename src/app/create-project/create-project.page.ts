@@ -18,11 +18,12 @@ import { LocalKeys } from '../core-module/constants/localstorage-keys';
 export class CreateProjectPage implements OnInit {
   back = 'project-view/home';
   isValidDate: boolean = true;
+  otherCategory;
   withinTitleLimit;
   withinGoalLimit;
   createProject: FormGroup;
   startDate;
-
+  selectedOther: boolean = false;
   popupshow: boolean = false;
   endDate;
   today: any = new Date();
@@ -30,15 +31,18 @@ export class CreateProjectPage implements OnInit {
   project: any = {};
   markLabelsAsInvalid: boolean = false;
   createNewProject: boolean;
-  categories = [
-    { value: 'Teacher', id: 1, isChecked: false },
-    { value: 'Student', id: 2, isChecked: false },
-    { value: 'Community', id: 3, isChecked: false },
-    { value: 'School process', id: 4, isChecked: false },
-    { value: 'infrastructure  ', id: 5, isChecked: false },
-    { value: 'Education leader', id: 6, isChecked: false },
-    { value: 'Other', id: 6, isChecked: false },
+
+  checkedCategories = [];
+  categories: any = [
+    { key: 'Teacher', id: 1, value: false },
+    { key: 'Student', id: 2, value: false },
+    { key: 'Community', id: 3, value: false },
+    { key: 'School process', id: 4, value: false },
+    { key: 'infrastructure', id: 5, value: false },
+    { key: 'Education leader', id: 6, value: false },
+    // { value: 'Other', id: 6, isChecked: false },
   ];
+
   constructor(
     public formBuilder: FormBuilder,
     public router: Router,
@@ -57,6 +61,9 @@ export class CreateProjectPage implements OnInit {
       this.createNewProject = true;
     })
     route.params.subscribe(param => {
+      // this.categories.forEach((cat, i) => {
+      //   this.categories[i].isChecked = false;
+      // });
       if (param.clearData == 'yes') {
         this.project = {};
         this.prepareForm();
@@ -65,26 +72,24 @@ export class CreateProjectPage implements OnInit {
       } else {
         this.createNewProject = false;
         this.storage.get(LocalKeys.newcreatedproject).then(data => {
-          this.storage.get(LocalKeys.allProjects).then(projectsList => {
-            projectsList.forEach(programs => {
-              programs.projects.forEach(project => {
-                if (project._id == data._id) {
-                  this.project = project;
-                  if (this.project.startDate && this.project.endDate) {
-                    this.startDate = this.datepipe.transform(new Date(this.project.startDate));
-                    this.endDate = this.datepipe.transform(new Date(this.project.endDate));
-                  }
-                }
-              });
-            });
-            // projectsList[0].projects.forEach(project => {
-
-            // });
+          this.checkedCategories = data.category;
+          data.category.forEach(cat => {
+            if (cat == 'Teacher' || cat == 'Student' || cat == 'Community' || cat == 'School process' || cat == 'infrastructure' || cat == 'Education leader') {
+            } else {
+              this.selectedOther = true;
+              this.otherCategory = cat;
+              const index: number = this.checkedCategories.indexOf(cat);
+              if (index !== -1) {
+                this.checkedCategories.splice(index, 1);
+              }
+            }
           })
+          this.project = data;
         })
       }
     })
   }
+
   ionViewDidEnter() {
     this.isValidDate = true;
   }
@@ -96,9 +101,10 @@ export class CreateProjectPage implements OnInit {
     this.createProject = this.formBuilder.group({
       title: ['', Validators.required],
       goal: ['', Validators.required],
-      category: ['', Validators.required],
+      // category: ['', Validators.required],
       startDate: ['', ''],
-      endDate: ['', '']
+      endDate: ['', ''],
+      Othercategory: ['', '']
     })
   }
   // set date
@@ -162,7 +168,14 @@ export class CreateProjectPage implements OnInit {
   }
   // Create project
   public create() {
-    if (this.createProject.status == "INVALID" || !this.isValidDate) {
+    if (this.otherCategory) {
+      const index: number = this.checkedCategories.indexOf(this.otherCategory);
+      if (index == -1) {
+        this.checkedCategories.push(this.otherCategory);
+      }
+    }
+    this.project.category = this.checkedCategories;
+    if (this.createProject.status == "INVALID" || !this.isValidDate && (!this.project.category && this.project.category.length == 0)) {
       this.markLabelsAsInvalid = true;
     } else {
       this.markLabelsAsInvalid = false;
@@ -261,6 +274,23 @@ export class CreateProjectPage implements OnInit {
         this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
         })
       })
+    }
+  }
+  categorySelected(event) {
+    this.selectedOther = !this.selectedOther;
+    if (!this.selectedOther) {
+      this.otherCategory = '';
+    }
+  }
+
+  selectedCategory(key) {
+    if (!this.checkedCategories.includes(key)) {
+      this.checkedCategories.push(key);
+    } else {
+      const index: number = this.checkedCategories.indexOf(key);
+      if (index !== -1) {
+        this.checkedCategories.splice(index, 1);
+      }
     }
   }
 }

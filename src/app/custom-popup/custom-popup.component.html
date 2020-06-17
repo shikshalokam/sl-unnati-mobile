@@ -24,3 +24,20 @@
     </ion-row>
   </div>
 </div>
+
+<!-- Bottom popuop -->
+<div class="custom-popup" *ngIf="showAlert">
+  <div class="bottom-pop-container">
+    <div class="pop-msg">
+      <h5> {{content.text}}
+      </h5>
+    </div>
+    <ion-row class="pop-btn">
+      <ion-col *ngFor="let btn of content.buttons">
+        <ion-button color="{{btn.color}}" (click)="bottompopuPAction(btn.isActionable)" expand="block">
+          {{btn.title}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+</div>

@@ -1,23 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateProjectPage } from './create-project.page';
-import {SharedModule} from '../shared-module/shared-module';
-fdescribe('CreateProjectPage', () => {
-  let component: CreateProjectPage;
-  let fixture: ComponentFixture<CreateProjectPage>;
+import { VideoPlayerComponent } from './video-player.component';
+
+describe('VideoPlayerComponent', () => {
+  let component: VideoPlayerComponent;
+  let fixture: ComponentFixture<VideoPlayerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateProjectPage ],
-      imports:[SharedModule],
+      declarations: [ VideoPlayerComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateProjectPage);
+    fixture = TestBed.createComponent(VideoPlayerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

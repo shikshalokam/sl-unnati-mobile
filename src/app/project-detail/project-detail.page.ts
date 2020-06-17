@@ -14,6 +14,10 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { Platform } from '@ionic/angular';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { PopoverController } from '@ionic/angular';
+import { PopoverComponent } from '../shared-module/components/popover/popover.component';
+import { ProjectService } from '../project-view/project.service';
+
 declare var cordova: any;
 
 @Component({
@@ -40,6 +44,29 @@ export class ProjectDetailPage {
   editTitle: boolean = false;
   show: boolean = false;
   showAddTask: boolean = false;
+  past = [];
+  currentTask = [];
+  weekTask = [];
+  upcoming = [];
+  months = [];
+  quarter = [];
+  currentDate = new Date();
+  menus = [{
+    title: 'Share Task',
+    value: 'shareTask',
+    icon: 'md-share'
+  },
+  {
+    title: 'Edit Task',
+    value: 'editTask',
+    icon: 'md-create'
+  },
+  {
+    title: 'Delete Task',
+    value: 'deleteTask',
+    icon: 'md-trash'
+  }
+  ]
   statuses = [
     { title: 'Not started' },
     { title: 'In Progress' },
@@ -51,8 +78,8 @@ export class ProjectDetailPage {
   constructor(
     public storage: Storage,
     public route: ActivatedRoute,
-    public createProjectService: CreateProjectService,
     public router: Router,
+    public createProjectService: CreateProjectService,
     public datePicker: DatePicker,
     public datepipe: DatePipe,
     public taskService: CreateTaskService,
@@ -61,8 +88,14 @@ export class ProjectDetailPage {
     public file: File,
     public transfer: FileTransfer,
     public filePath: FilePath,
-    public platform: Platform
+    public platform: Platform,
+    public popoverController: PopoverController,
+    public projectService: ProjectService
   ) {
+    this.projectService.taskDeleteEvent.subscribe((data: any) => {
+      data.isDeleted = true;
+      this.delete(data);
+    })
     this.isIos = this.platform.is('ios') ? true : false;
     this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
     this.rootPath = this.isIos ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory;
@@ -75,6 +108,12 @@ export class ProjectDetailPage {
       }
       this.project.tasks.push(data);
       this.tasksLength = this.project.tasks.length;
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        this.sortTasks();
+      }
       this.updateTask();
     })
     createProjectService.modalCloseEvent.subscribe(data => {
@@ -93,7 +132,7 @@ export class ProjectDetailPage {
         } else if (this.category == 'home') {
           this.back = 'project-view/home';
         } else if (this.category == 'form') {
-          this.back = 'project-view/create-project';
+          this.back = 'project-view/create-project/no';
         }
         else {
           this.back = 'project-view/category/' + this.category;
@@ -155,12 +194,21 @@ export class ProjectDetailPage {
       if (!project.isStarted) {
         project.isStarted = false;
       }
+      // if (project.category) {
+      //   project.category = project.category.join(', ');
+      // }
       this.project = project;
+
+      this.show = true;
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        this.sortTasks();
+      }
       if (this.project) {
         this.updateTask();
       }
-      this.show = true;
-      this.sortTasks();
     })
   }
 
@@ -199,6 +247,12 @@ export class ProjectDetailPage {
             task.subTasks = [];
           }
         })
+        if (this.tasksLength > 0 && this.project.isStarted) {
+          this.project.tasks.sort((a, b) => {
+            return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+          });
+          this.sortTasks();
+        }
       }
       this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
         this.project = project;
@@ -471,31 +525,66 @@ export class ProjectDetailPage {
     this.createProjectService.updateByProjects(this.project);
   }
   public sortTasks() {
-    let today = this.datepipe.transform(new Date(), "MMM dd, yyyy");
-    let tasksWithEndDate = [];
-    let tasksWithoutEndDate = [];
+    this.past = [];
+    this.currentTask = [];
+    this.weekTask = [];
+    this.upcoming = [];
+    this.months = [];
+    this.quarter = [];
+    let withoutEndDate = [];
+    let today: any = new Date();
+    let st = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+    let et = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 2, 59, 59);
+    let date = new Date(), y = date.getFullYear(), m = date.getMonth(), m1 = date.getMonth() + 4;
+    let month = new Date(y, m + 1, 0);
+    let month1 = new Date(y, m1 + 1, 0);
+    let week = new Date(today.getTime() + (7 - today.getDay()) * 24 * 60 * 60 * 1000);
+    let week1 = new Date(today.getTime() + (14 - today.getDay()) * 24 * 60 * 60 * 1000);
     this.project.tasks.forEach(task => {
-      if (task.endDate && !task.isDeleted) {
-        if (task.endDate >= today) {
-          tasksWithEndDate.push(task);
+      if (!task.isDeleted) {
+        if (task.endDate) {
+          task.endDate = new Date(new Date(task.endDate).getFullYear(), new Date(task.endDate).getMonth(), new Date(task.endDate).getDate(), 0, 0, 0);
+          if (new Date(task.endDate) < st) {
+            this.past.push(task);
+          } else if (new Date(task.endDate) >= st && new Date(task.endDate) <= et) {
+            this.currentTask.push(task);
+          } else if (new Date(task.endDate) >= today && new Date(task.endDate) <= week) {
+            this.weekTask.push(task);
+          } else if (new Date(task.endDate) > week && new Date(task.endDate) <= month) {
+            this.months.push(task);
+          } else if (new Date(task.endDate) > month && new Date(task.endDate) <= month1) {
+            this.quarter.push(task);
+          } else {
+            this.upcoming.push(task);
+          }
         } else {
-          tasksWithoutEndDate.push(task);
+          withoutEndDate.push(task);
         }
-      } else {
-        tasksWithoutEndDate.push(task);
+        if (this.upcoming.length > 0) {
+          this.upcoming.concat(withoutEndDate);
+        } else {
+          this.upcoming = withoutEndDate;
+        }
+        // this.upcoming.sort((a, b) => {
+        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        // });
+        // this.past.sort((a, b) => {
+        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        // });
+        // this.currentTask.sort((a, b) => {
+        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        // });
+        // this.quarter.sort((a, b) => {
+        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        // });
       }
     });
-    tasksWithEndDate.sort((a, b) => {
-      return <any>new Date(a.endDate) - <any>new Date(b.endDate);
-    });
-    this.project.tasks = tasksWithEndDate.concat(tasksWithoutEndDate);
   }
 
   // add created task
   public addNewTask(task) {
     this.storage.get(LocalKeys.allProjects).then(myProjects => {
       let mapped;
-
       if (myProjects) {
         if (myProjects.program)
           myProjects.program.forEach(programs => {
@@ -683,5 +772,24 @@ export class ProjectDetailPage {
     var blob = new Blob(byteArrays, { type: contentType });
     return blob;
   }
-
+  async showMenu(ev: any, task) {
+    let project = {
+      title: this.project.title,
+      goal: this.project.goal,
+      duration: this.project.duration,
+      startDate: this.project.startDate,
+      endDate: this.project.startDate,
+      status: this.project.startDate,
+      tasks: [
+        task
+      ]
+    }
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      componentProps: { project: project, menus: this.menus },
+      event: ev,
+      translucent: true
+    });
+    return await popover.present();
+  }
 }
