@@ -23,17 +23,17 @@ export class NotificationsPage implements OnInit {
     public storage: Storage,
     public updateProfileService: UpdateProfileService) { }
   ngOnInit() {
-    this.fetchAllNotifications();
+    // this.fetchAllNotifications();
   }
   ionViewDidEnter() {
-    // this.fetchAllNotifications();
+    this.fetchAllNotifications();
   }
   fetchAllNotifications(infinateScrollRefrnc?) {
     this.showSkeleton = true;
     this.notificationCardService.getAllNotifications(this.page, this.limit).subscribe((success: any) => {
       this.totalCount = success.result.count;
       // this.notificationCardService.getCount(this.totalCount);
-      this.notifications = this.notifications.concat(success.result.count);
+      this.notifications = this.notifications.concat(success.result.data);
       this.showSkeleton = false;
     }, error => {
       this.showSkeleton = false;

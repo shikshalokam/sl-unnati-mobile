@@ -5,10 +5,11 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
 import { Platform } from '@ionic/angular';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { Storage } from '@ionic/storage';
-
+import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
+import { ToastService } from '../toast.service';
+import { DomSanitizer } from "@angular/platform-browser";
 declare var cordova: any;
 
 @Component({
@@ -24,17 +25,21 @@ export class FilesPage implements OnInit {
   showSkeleton: boolean = false;
   skeletons = [{}, {}, {}, {}, {}, {}];
   back = 'project-view/project-detail/my_projects';
+  private win: any = window;
   constructor(public createTaskService: CreateTaskService,
     public route: ActivatedRoute,
     public platform: Platform,
     public transfer: FileTransfer,
     public base64: Base64,
-    public fileChooser: FileChooser,
     public file: File,
     public fileOpener: FileOpener,
-    public storage: Storage
+    public storage: Storage,
+    private document: DocumentViewer,
+    public toastService: ToastService,
+    private sanitize: DomSanitizer
   ) {
     route.params.subscribe(params => {
+      this.activeTab = 'images';
       this.getCurrentProject(params.id);
     })
   }
@@ -42,11 +47,12 @@ export class FilesPage implements OnInit {
   ngOnInit() {
     this.platform.ready().then(() => {
       this.isIos = this.platform.is('ios') ? true : false;
-      this.appFolderPath = this.isIos ? this.file.documentsDirectory : this.file.externalApplicationStorageDirectory;
+      this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
     })
   }
   public getCurrentProject(id) {
     this.showSkeleton = true;
+    let win: any = window;
     this.storage.get('latestProjects').then(projectList => {
       if (projectList.programs) {
         projectList.programs.forEach(programsList => {
@@ -54,13 +60,42 @@ export class FilesPage implements OnInit {
             if (project._id == id) {
               if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(task => {
-                  if (task.imageUrl) {
-                    let value = task.imageUrl.split(",");
-                    if (value[1]) {
-                      task.imageUrl = 'data:image/jpeg;base64,' + value[1];
-                    } else {
-                      task.imageUrl = 'data:image/jpeg;base64,' + value[0];
-                    }
+                  if (task.attachments && task.attachments.length > 0) {
+                    task.imageList = [];
+                    task.fileList = [];
+                    task.attachments.forEach(attachment => {
+                      let isInLocal = this.checkFileInLocal(attachment);
+                      if (attachment.isNew && !attachment.isUploaded) {
+                        if (attachment.type == 'application/pdf') {
+                          attachment.url = this.appFolderPath + '/' + attachment.name;
+                          task.fileList.push(attachment);
+                        } else {
+                          if (this.isIos) {
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          } else {
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                          }
+                          task.imageList.push(attachment);
+                        }
+                      } else {
+                        attachment.notInLocal = true;
+                        if (attachment.type == 'application/pdf') {
+                          // attachment.url = this.appFolderPath + '/' + attachment.name
+                          task.fileList.push(attachment);
+                        } else {
+                          if (this.isIos) {
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          } else {
+                            let win: any = window;
+                            // attachment.url = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          }
+                          task.imageList.push(attachment);
+                        }
+                      }
+                    });
                   }
                 });
               }
@@ -74,13 +109,41 @@ export class FilesPage implements OnInit {
             if (project._id == id) {
               if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(task => {
-                  if (task.imageUrl) {
-                    let value = task.imageUrl.split(",");
-                    if (value[1]) {
-                      task.imageUrl = 'data:image/jpeg;base64,' + value[1];
-                    } else {
-                      task.imageUrl = 'data:image/jpeg;base64,' + value[0];
-                    }
+                  if (task.attachments && task.attachments.length > 0) {
+                    task.imageList = [];
+                    task.fileList = [];
+                    task.attachments.forEach(attachment => {
+                      let isInLocal = this.checkFileInLocal(attachment);
+                      if (attachment.isNew && !attachment.isUploaded) {
+                        if (attachment.type == 'application/pdf') {
+                          attachment.url = this.appFolderPath + '/' + attachment.name;
+                          task.fileList.push(attachment);
+                        } else {
+                          if (this.isIos) {
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          } else {
+                            attachment.imgurl = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                            attachment.url = this.appFolderPath + '/' + attachment.name;
+                          }
+                          task.imageList.push(attachment);
+                        }
+                      } else {
+                        if (attachment.type == 'application/pdf') {
+                          // attachment.url = this.appFolderPath + '/' + attachment.name
+                          task.fileList.push(attachment);
+                        } else {
+                          // if (this.isIos) {
+                          //   attachment.url = this.file.documentsDirectory + '/' + attachment.name;
+                          // } else {
+                          //   let win: any = window;
+                          //   // attachment.url = win.Ionic.WebView.convertFileSrc(this.appFolderPath + '/' + attachment.name);
+                          // }
+                          attachment.imgurl = attachment.url;
+                          task.imageList.push(attachment);
+                        }
+                      }
+                    });
                   }
                 });
               }
@@ -96,23 +159,76 @@ export class FilesPage implements OnInit {
   public selectTab(type) {
     this.activeTab = type;
   }
-  downloadFile(task) {
-    fetch(task.file.url,
-      {
-        method: "GET"
-      }).then(res => res.blob()).then(blob => {
-        this.appFolderPath = decodeURIComponent(this.appFolderPath);
-        task.file.name = decodeURIComponent(task.file.name);
-        this.file.writeFile(this.appFolderPath, task.file.name, blob, { replace: true }).then(res => {
-          this.fileOpener.open(
-            res.toInternalURL(),
-            'application/pdf'
-          ).then((res) => {
-          }).catch(err => {
-          });
+
+  viewDocument(attachment) {
+    if (attachment.notInLocal) {
+      this.downloadFile(attachment);
+    } else {
+      this.fileOpener.open(this.appFolderPath + '/' + attachment.name, attachment.type)
+        .then(() => console.log('File is opened'))
+        .catch(e => console.log('Error opening file', e));
+    }
+  }
+
+
+
+  downloadFile(attachment) {
+    this.toastService.presentLoading('Downloading, Please wait');
+    const fileTransfer: FileTransferObject = this.transfer.create();
+    // attachment.url = encodeURI(attachment.url);
+    let win: any = window;
+    // attachment.url = this.sanitize.bypassSecurityTrustResourceUrl(win.Ionic.WebView.convertFileSrc(attachment.url));
+    fileTransfer.download(attachment.url, this.appFolderPath + '/' + attachment.name).then(success => {
+      attachment.notInLocal = false;
+      // this.viewDocument(attachment);
+    }).catch(error => {
+    });
+  }
+
+
+
+
+
+  checkFileInLocal(attachment) {
+    if (this.isIos) {
+      this.file.checkDir(this.file.documentsDirectory, 'attachments').then(_ => {
+        this.file.checkFile(this.appFolderPath, attachment.name).then(success => {
+          attachment.notInLocal = false;
+        }, error => {
+          attachment.notInLocal = true;
+        })
+      }).catch(err => {
+        this.file.createDir(this.file.documentsDirectory, 'attachments', false).then(response => {
+          this.file.checkFile(this.appFolderPath, attachment.name).then(success => {
+            attachment.notInLocal = false;
+          }, error => {
+            attachment.name = attachment.name.trim();
+            attachment.name = attachment.name.replace(/ /g, "_");
+            this.file.checkFile(this.appFolderPath, attachment.name).then(success => {
+            }, error => {
+              attachment.notInLocal = true;
+            })
+          })
         }).catch(err => {
         });
-      }).catch(err => {
       });
+    } else {
+      this.file.checkDir(this.file.dataDirectory, 'attachments').then(_ => {
+        this.file.checkFile(this.appFolderPath + '/', attachment.name).then(success => {
+          return attachment.notInLocal = false;
+        }, error => {
+          return attachment.notInLocal = true;
+        })
+      }).catch(err => {
+        this.file.createDir(this.file.dataDirectory, 'attachments', false).then(response => {
+          this.file.checkFile(this.appFolderPath + '/', attachment.name).then(success => {
+            return attachment.notInLocal = false;
+          }, error => {
+            return attachment.notInLocal = true;
+          })
+        }).catch(err => {
+        });
+      });
+    }
   }
 }

@@ -159,7 +159,6 @@ export class CreateTaskPage implements OnInit {
           }
           this.storage.set('latestProjects', myProjects).then(success => {
             this.toastService.successToast('message.task_is_created');
-            this.homeService.loadActiveProjects();
           })
         })
       })
@@ -231,7 +230,6 @@ export class CreateTaskPage implements OnInit {
                   if (project._id == cp._id) {
                     project = cp;
                     this.storage.set('latestProjects', myProjects).then(success => {
-                      this.homeService.loadActiveProjects();
                     })
                   }
                 });

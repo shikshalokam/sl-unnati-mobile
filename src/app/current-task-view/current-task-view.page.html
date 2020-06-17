@@ -5,7 +5,7 @@
 </ion-header>
 
 
-<ion-content class="ion-padding task-view-container" *ngIf="task" >
+<ion-content class="ion-padding task-view-container" *ngIf="task">
   <div style="min-height:85%">
     <h3 (click)="allowEdit('title')" *ngIf="!editTitle">{{task?.title}}
     </h3>
@@ -13,7 +13,7 @@
       <ion-label class="custom-label" position="floating" style="text-transform: none; margin: 0px;font-size: 20px;"
         [ngClass]="{'required-field':markLabelsAsInvalid}">{{'add_task.add_a_task'| translate}}
       </ion-label>
-      <ion-input type="text" [(ngModel)]="task.title" name="title" 
+      <ion-input type="text" [(ngModel)]="task.title" name="title"
         placeholder="{{'add_task.edit_task_title'| translate}}" style="border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;" autofocus></ion-input>
     </ion-item>
@@ -113,17 +113,14 @@
           <ion-col size="6">
           </ion-col>
           <ion-col size="3" class="pop-action">
-          <div class="icon-attch" [ngClass]="{'isHaveData': task.imageUrl}">
-            <img src="assets/images/camera.svg" (click)="openCamera()"  style="width: 1.8em;">
+            <div class="icon-attch" [ngClass]="{'isHaveData': task.imageUrl}">
+              <img src="assets/images/camera.svg" (click)="openCamera()" style="width: 1.8em;">
             </div>
           </ion-col>
           <ion-col size="3" class="pop-action">
-            <form class="icon-attch" [ngClass]="{'isHaveData': task.file?.name}">
-              <div class="fileUpload">
-                <img src="assets/images/attach_file.svg" style="width: 1.8em;">
-                <input #imageInputFile type="file" class="upload" (change)="selectedFile(imageInputFile,'file')" />
-              </div>
-            </form>
+            <div class="icon-attch" [ngClass]="{'isHaveData': task.file?.name}" (click)="selectFile()">
+              <img src="assets/images/attach_file.svg" style="width: 1.8em;">
+            </div>
           </ion-col>
         </ion-row>
       </div>

@@ -87,27 +87,29 @@ export class LoginPage {
   loginClick() {
     // this.showLogin = true;
     this.doOAuthStepOne().then(success => {
-      this.menuCtrl.enable(true);
       this.login.doOAuthStepTwo(success).then(success1 => {
-        this.menuCtrl.enable(true);
         this.login.checkForCurrentUserLocalData(success1);
         let userDetails = jwt_decode(success1.access_token);
-        this.menuCtrl.enable(true);
         this.storage.set('userDetails', userDetails).then(userData => {
         })
         this.storage.set('userTokens', success1).then(data => {
           localStorage.setItem('isPopUpShowen', null);
+          if (this.veryFirstTime) {
+            this.router.navigateByUrl('/app-permissions');
+          } else {
+            this.menuCtrl.enable(true);
+            this.router.navigateByUrl('/project-view/home');
+          }
           this.fcm.initializeFCM();
           this.login.loggedIn('true');
-          this.menuCtrl.enable(true);
           this.storage.set('veryFirstTime', 'false').then(data => {
             this.veryFirstTime = false;
           })
-          this.router.navigateByUrl('/project-view/home');
         });
+        this.storage.set('currentUser', success1).then(data => {
+        })
         localStorage.setItem('token', success1);
         this.networkService.status(true);
-        this.menuCtrl.enable(true);
         this.login.loggedIn('true');
         localStorage.setItem("networkStatus", 'true');
       }).catch(error1 => {
