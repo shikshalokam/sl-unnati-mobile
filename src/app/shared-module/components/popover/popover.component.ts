@@ -399,7 +399,6 @@ export class PopoverComponent implements OnInit {
     this.DismissClick();
   }
   public shareTask() {
-    console.log('share task', this.project.tasks[0]);
     let files = [];
     this.project.tasks[0].attachments.forEach(element => {
       let data = {
@@ -418,7 +417,6 @@ export class PopoverComponent implements OnInit {
 
     this.toastService.startLoader('Loading, please wait');
     this.createProjectService.getTaskPDF(this.projectData).subscribe(data => {
-      console.log(data, "data 414");
       this.toastService.stopLoader();
       this.sharePdf(data);
     })

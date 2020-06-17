@@ -237,7 +237,6 @@ export class HomePage implements OnInit {
             }
           });
         }
-        console.log(ap, "ap");
         this.activeProjects = ap;
       }
       this.showSkeleton = false;

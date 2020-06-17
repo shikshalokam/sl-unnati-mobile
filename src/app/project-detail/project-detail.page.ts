@@ -94,7 +94,6 @@ export class ProjectDetailPage {
   ) {
     this.projectService.taskDeleteEvent.subscribe((data: any) => {
       data.isDeleted = true;
-      console.log(data, "delete event");
       this.delete(data);
     })
     this.isIos = this.platform.is('ios') ? true : false;
@@ -195,7 +194,6 @@ export class ProjectDetailPage {
       if (!project.isStarted) {
         project.isStarted = false;
       }
-      // console.log(project.category.length,"length");
       // if (project.category) {
       //   project.category = project.category.join(', ');
       // }
@@ -203,11 +201,9 @@ export class ProjectDetailPage {
 
       this.show = true;
       if (this.tasksLength > 0 && this.project.isStarted) {
-        console.log(this.project.tasks, " this.project.tasks");
         this.project.tasks.sort((a, b) => {
           return <any>new Date(a.endDate) - <any>new Date(b.endDate);
         });
-        console.log(this.project.tasks, " this.project.tasks");
         this.sortTasks();
       }
       if (this.project) {
@@ -539,20 +535,15 @@ export class ProjectDetailPage {
     let today: any = new Date();
     let st = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
     let et = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 2, 59, 59);
-    console.log(st, "st", et);
     let date = new Date(), y = date.getFullYear(), m = date.getMonth(), m1 = date.getMonth() + 4;
     let month = new Date(y, m + 1, 0);
     let month1 = new Date(y, m1 + 1, 0);
     let week = new Date(today.getTime() + (7 - today.getDay()) * 24 * 60 * 60 * 1000);
     let week1 = new Date(today.getTime() + (14 - today.getDay()) * 24 * 60 * 60 * 1000);
-    console.log(week, week1, "week week1");
-    console.log(month, month1, "month month1");
     this.project.tasks.forEach(task => {
       if (!task.isDeleted) {
         if (task.endDate) {
           task.endDate = new Date(new Date(task.endDate).getFullYear(), new Date(task.endDate).getMonth(), new Date(task.endDate).getDate(), 0, 0, 0);
-          console.log(new Date(task.endDate) < today, "===", today, "endDate", new Date(task.endDate));
-          console.log(new Date(task.endDate) > week1 && new Date(task.endDate) <= month, "new Date(task.endDate) > week1 && new Date(task.endDate) <= month");
           if (new Date(task.endDate) < st) {
             this.past.push(task);
           } else if (new Date(task.endDate) >= st && new Date(task.endDate) <= et) {
@@ -567,18 +558,13 @@ export class ProjectDetailPage {
             this.upcoming.push(task);
           }
         } else {
-          console.log(task, "task in withoutEndDate");
           withoutEndDate.push(task);
-          console.log(withoutEndDate, "task in this.upcoming.length", this.upcoming.length);
         }
-        console.log(this.upcoming, "this.upcoming before", withoutEndDate);
         if (this.upcoming.length > 0) {
           this.upcoming.concat(withoutEndDate);
         } else {
           this.upcoming = withoutEndDate;
         }
-        console.log(this.upcoming, "this.upcoming after", withoutEndDate);
-
         // this.upcoming.sort((a, b) => {
         //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
         // });
@@ -593,7 +579,6 @@ export class ProjectDetailPage {
         // });
       }
     });
-    console.log(this.past, this.currentTask, this.weekTask, "this.past, this.currentTask, this.weekTask");
   }
 
   // add created task
@@ -799,7 +784,6 @@ export class ProjectDetailPage {
         task
       ]
     }
-    console.log(project, "project in share")
     const popover = await this.popoverController.create({
       component: PopoverComponent,
       componentProps: { project: project, menus: this.menus },

@@ -37,8 +37,6 @@ export class CustomPopupComponent implements OnInit {
     })
   }
   ngOnInit() {
-    console.log(this.showAlert, "showAlert");
-    console.log(this.content, "content");
     if (this.content.titleCss && this.content.titleCss.bottomBorder) {
       this.isBorder = this.content.titleCss.bottomBorder;
     }
@@ -62,7 +60,6 @@ export class CustomPopupComponent implements OnInit {
     this.closepopup();
   }
   public navigateTo(url) {
-    console.log('in navigateTo');
     this.closepopup();
     if (this.content.type != 'appUpdate') {
       if (url) {
@@ -70,7 +67,6 @@ export class CustomPopupComponent implements OnInit {
       }
       this.showPopup = false;
     } else if (this.content.type == 'exitApp') {
-      console.log('exitApp');
       navigator['app'].exitApp();
     } else {
       this.openApp();
@@ -92,7 +88,6 @@ export class CustomPopupComponent implements OnInit {
   }
   bottompopuPAction(status) {
     this.closepopup();
-    console.log(status, "status");
     if (status == 'cancel') {
     } else if (status == 'submit') {
       navigator['app'].exitApp();

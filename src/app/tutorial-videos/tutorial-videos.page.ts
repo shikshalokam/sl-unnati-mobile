@@ -10,7 +10,8 @@ export class TutorialVideosPage implements OnInit {
   back = "/project-view/home";
   videos = [{
     title: 'How to use Unnati (App Tutorial Video)',
-    url: 'https://www.youtube.com/watch?v=G9c3xQP_ZEU'
+    url: 'https://youtu.be/G9c3xQP_ZEU'
+    // https://youtu.be/G9c3xQP_ZEU
   }];
   constructor(
     public modalController: ModalController
@@ -23,11 +24,11 @@ export class TutorialVideosPage implements OnInit {
   //   window.open(videoUrl, '_system')
   // }
 
-  async open(videoUrl) {
-  const modal = await this.modalController.create({
+  async open(video) {
+    const modal = await this.modalController.create({
       component: VideoPlayerComponent,
       componentProps: {
-        'url': videoUrl,
+        'video': video,
       }
     });
     return await modal.present();

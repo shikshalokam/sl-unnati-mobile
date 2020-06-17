@@ -131,9 +131,9 @@ export class AppComponent {
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
-          this.subscription = this.interval.subscribe(val => {
-            this.prepareMappedProjectToSync();
-          });
+          // this.subscription = this.interval.subscribe(val => {
+          //   this.prepareMappedProjectToSync();
+          // });
           this.menuCtrl.enable(true, 'unnati');
           this.loggedInUser = value;
           this.appPages = [
@@ -234,13 +234,11 @@ export class AppComponent {
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
       this.platform.backButton.subscribeWithPriority(99999999999, () => {
-        console.log('event call');
+        this.modalController.dismiss();
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
-        console.log(this.router.url, "this.router.url");
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
-          console.log('call popup method');
           this.presentAlertConfirm();
           // navigator['app'].exitApp();
         } else if (this.router.url == '/project-view/notifications' || this.router.url == '/project-view/newsfeed' || this.router.url == '/project-view/about' ||
@@ -258,7 +256,7 @@ export class AppComponent {
           } else {
             this.router.navigateByUrl('project-view/template-view/' + s[3].path);
           }
-        } else if (s.length == 3 && s[0].path == 'project-view' && s[1].path == 'template-view') {
+        }else if (s.length == 3 && s[0].path == 'project-view' && s[1].path == 'template-view') {
           this.router.navigateByUrl('project-view/home');
         }
         else if (this.router.url == '/project-view/my-reports/last-month-reports' || this.router.url == '/project-view/my-reports/last-quarter-reports' || this.router.url == '/my-reports/last-month-reports' || this.router.url == '/my-reports/last-quarter-reports') {
@@ -898,7 +896,6 @@ export class AppComponent {
   }
 
   async presentAlertConfirm() {
-    console.log("in presentAlertConfirm");
     this.appUpdate.actions = {
       closeApp: true,
     }
@@ -920,29 +917,5 @@ export class AppComponent {
     this.showUpdatePopup = false;
     this.showUpdatePop = false;
     this.showAlert = true;
-
-    // console.log('in presentAlertConfirm');
-    // const alert = await this.alertController.create({
-    //   header: 'Are you sure you wish to leave the app?',
-    //   buttons: [
-    //     {
-    //       text: 'Cancel',
-    //       role: 'cancel',
-    //       cssClass: 'secondary',
-    //       handler: (blah) => {
-    //         console.log('exit cancel app');
-
-    //       }
-    //     },
-    //     {
-    //       text: 'Close',
-    //       handler: () => {
-    //         console.log('exit the app');
-    //         // navigator['app'].exitApp();
-    //       }
-    //     }
-    //   ]
-    // });
-    // await alert.present();
   }
 }

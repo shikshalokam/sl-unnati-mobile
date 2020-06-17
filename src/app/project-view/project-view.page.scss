@@ -1,44 +1,180 @@
 .no-connection{
-    color:red;
+  color:red;
 }
 :host(.show-back-button) {
-  display: block;
+display: block;
 }
 
 .bottom-tab-img-container{
-  margin: auto;
-  margin-bottom: -32px;
-  .nf-tab-img
+margin: auto;
+margin-bottom: -32px;
+.nf-tab-img
 {
-  margin-top: -100px;
-  z-index: 99999999;
-  position: relative;
-  width: 60px;
-  border: 2px solid #fff;
-  border-radius: 50%;
+margin-top: -100px;
+z-index: 99999999;
+position: relative;
+width: 60px;
+border: 2px solid #fff;
+border-radius: 50%;
 }
 }
 .btm-tab-img{
-  width: 32px;
-  max-width: 32px;
-  max-height: 32px;
-  min-height: 32px;
+width: 32px;
+max-width: 32px;
+max-height: 32px;
+min-height: 32px;
 }
-#diamond-shield {
-  width: 0;
-  height: 0;
-  border: 50px solid transparent;
-  border-bottom: 20px solid red;
-  position: relative;
-  top: -50px;
-}
-#diamond-shield:after {
-  content: '';
-  position: absolute;
-  left: -50px;
-  top: 20px;
-  width: 0;
-  height: 0;
-  border: 50px solid transparent;
-  border-top: 70px solid red;
-}
+
+
+
+// .no-connection{
+//     color:red;
+// }
+// :host(.show-back-button) {
+//   display: block;
+// }
+// .tab-selected
+// {
+//     border-bottom:4px solid #fff;
+// }
+// .bottom-tab-img-container{
+//     margin: auto;
+//     background-image: url("../../assets/images/bbb.png");
+//     background-repeat: no-repeat;
+//     bottom: 4%;
+//     width: 100%;
+//     height: 100px;
+//     background-size: 100%;
+//     right: 0px;
+//     left: 0px;
+//     max-width: 100%;
+//     min-width: 100%;
+//     position: absolute;
+//     text-align: center;
+//   .nf-tab-img
+//   {
+//     z-index: 99999999;
+//     position: relative;
+//     border-radius: 50%;
+//     bottom: -48px;
+//     // margin-left: 20px;
+//     padding: 5px;
+//     font-size: 35px;
+//     box-shadow: black;
+//     color: #fff;
+//     background: #c36760;
+//   }
+// .activeHome{
+//     color: #af4038;
+//     background: #fff;
+//     box-shadow: 0px 1px 12px 2px #000;
+//  }
+// }
+// .bottom-tab-img-container-ios{
+//   margin: auto;
+//   background-image: url("../../assets/images/bbb.png");
+//   background-repeat: no-repeat;
+//     bottom: 7%;
+//     width: 100%;
+//     height: 100px;
+//     background-size: 100%;
+//     right: 0px;
+//     left: 0px;
+//     max-width: 100%;
+//     min-width: 100%;
+//     position: absolute;
+//     text-align: center;
+//   .nf-tab-img
+//   {
+//     z-index: 99999999;
+//     position: relative;
+//     border-radius: 50%;
+//     bottom: -48px;
+//     // margin-left: 20px;
+//     padding: 5px;
+//     font-size: 35px;
+//     box-shadow: black;
+//     color: #fff;
+//     background: #c36760;
+//   }
+// .activeHome{
+//     color: #af4038;
+//     background: #fff;
+//     box-shadow: 0px 1px 12px 2px #000;
+//  }
+// }
+// .btm-tab-img{
+//   width: 32px;
+//   max-width: 32px;
+//   max-height: 32px;
+//   min-height: 32px;
+// }
+
+
+
+
+// .tabbar {
+//   justify-content: center;
+// }
+
+// .tab-button {
+//   max-width: 200px;
+// }
+
+// ::ng-deep ion-icon.icon-button {
+//   background: var(--ion-color-primary-tint)!important;
+//   color: white;
+//   border-radius: 50%!important;
+// }
+
+// :host ::ng-deep .tabs-inner {
+//   position: unset!important;
+//   contain: size style!important;
+// }
+
+// .bottom-tab-bar {
+//   --background: transparent;
+//   --border: 0;
+// }
+
+// ion-tab-button {
+//   --background: #af4038;
+// }
+
+// .button-center {
+//   --background: transparent!important;
+//   ion-icon {
+//     height: 50px;
+//     width: 50px;
+//     font-size: 75px;
+//   }
+// }
+
+// ion-tab-bar {
+//   &:before {
+//     box-shadow: 0 387px 0 300px #af4038;
+//     position: absolute;
+//     margin-top: -48px;
+//     padding: 56px;
+//     border-radius: 65%;
+//     content: '';
+//   }
+// }
+
+// .inner-left-btn {
+//   border-radius: 0 39% 0 0; // create the curved style on the left side of the center
+// }
+
+// .inner-right-btn {
+//   border-radius: 39% 0 0 0; // create the curved style on the right side of the center
+// }
+
+// .inner-center-btn {
+//   position: absolute;
+//   left: calc(50% - 30px);
+//   bottom: 25px;
+//   font-size: 53px;
+//   --background: transparent;
+// }
+
+

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ModalController } from '@ionic/angular';
 // import { ScreenOrientation } from '@ionic-native/screen-orientation/';
 @Component({
   selector: 'app-video-player',
@@ -7,16 +8,22 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./video-player.component.scss'],
 })
 export class VideoPlayerComponent implements OnInit {
-  @Input() url;
+  @Input() video;
+  finalLink;
   constructor(
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modal: ModalController
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.sanitizeUrl();
+  }
   sanitizeUrl() {
-    console.log(this.url, "this.url this.url");
-    const videoId = this.url.substr(this.url.lastIndexOf('/'))
+    const videoId = this.video.url.substr(this.video.url.lastIndexOf('/'))
     const finalLink = `https://www.youtube.com/embed${videoId}`
-    return this.sanitizer.bypassSecurityTrustResourceUrl(finalLink);
+    this.finalLink = this.sanitizer.bypassSecurityTrustResourceUrl(finalLink);
+  }
+  close() {
+    this.modal.dismiss();
   }
 }

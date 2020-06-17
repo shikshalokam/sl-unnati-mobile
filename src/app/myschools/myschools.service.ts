@@ -9,7 +9,6 @@ export class MyschoolsService {
     constructor(public http: HttpClient) {
     }
     public getSchools(count, page) {
-        console.log(environment.api_url, "environment.api_url in home ");
         return this.http.get(environment.api_url + '/unnati/api/v1/schoolList?limit=' + count + '&page=' + page)
     }
     // Search school by name.

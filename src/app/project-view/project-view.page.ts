@@ -22,6 +22,7 @@ export class ProjectViewPage implements OnInit {
   public id;
   public project;
   public completed;
+  isIos;
   public title: any = "home_tab";
   canGoBack: boolean = false;
   isKeyBoardUp: boolean = false;
@@ -77,6 +78,7 @@ export class ProjectViewPage implements OnInit {
   public menuEnable() {
   }
   ngOnInit() {
+    this.isIos = this.platform.is('ios') ? true : false;
     this.checkNetwork();
     this.selectTab("home_tab");
   }
@@ -109,7 +111,7 @@ export class ProjectViewPage implements OnInit {
       // this.networkSubscriber();
     });
   }
-  public navigateToNewsFeed() {
-    this.router.navigate(['/project-view/newsfeed']);
+  public navigateToHome() {
+    this.router.navigate(['/project-view/home']);
   }
 }

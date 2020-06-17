@@ -174,7 +174,6 @@ export class CreateProjectPage implements OnInit {
         this.checkedCategories.push(this.otherCategory);
       }
     }
-    console.log(this.checkedCategories, "this.checkedCategories")
     this.project.category = this.checkedCategories;
     if (this.createProject.status == "INVALID" || !this.isValidDate && (!this.project.category && this.project.category.length == 0)) {
       this.markLabelsAsInvalid = true;
@@ -278,7 +277,6 @@ export class CreateProjectPage implements OnInit {
     }
   }
   categorySelected(event) {
-    console.log(this.selectedOther, "this.selectedOther 298");
     this.selectedOther = !this.selectedOther;
     if (!this.selectedOther) {
       this.otherCategory = '';
@@ -288,13 +286,11 @@ export class CreateProjectPage implements OnInit {
   selectedCategory(key) {
     if (!this.checkedCategories.includes(key)) {
       this.checkedCategories.push(key);
-      console.log(this.checkedCategories, " this.checkedCategories add");
     } else {
       const index: number = this.checkedCategories.indexOf(key);
       if (index !== -1) {
         this.checkedCategories.splice(index, 1);
       }
-      console.log(this.checkedCategories, " this.checkedCategories remove");
     }
   }
 }
