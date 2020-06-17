@@ -169,7 +169,7 @@ export class LastQuarterReportsPage implements OnInit {
       obj1.entityId = '';
       obj = obj1;
     }
-    this.myReportsService.getReportEvent(obj);
+    // this.myReportsService.getReportEvent(obj);
   }
   public getSchools() {
     if (this.connected) {

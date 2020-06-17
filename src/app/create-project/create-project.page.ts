@@ -20,8 +20,11 @@ export class CreateProjectPage implements OnInit {
   withinGoalLimit;
   createProject: FormGroup;
   startDate;
+
+  popupshow: boolean = false;
   endDate;
   today: any = new Date();
+  projectCreatePopUp: any = {};
   project: any = {};
   markLabelsAsInvalid: boolean = false;
   createNewProject: boolean;
@@ -44,6 +47,9 @@ export class CreateProjectPage implements OnInit {
     public homeService: HomeService,
     public toastService: ToastService
   ) {
+    toastService.popClose.subscribe(data => {
+      this.popupshow = false;
+    })
     this.homeService.clearMyProject.subscribe(data => {
       this.prepareForm();
       this.createNewProject = true;
@@ -190,7 +196,7 @@ export class CreateProjectPage implements OnInit {
                   this.storage.set('latestProjects', projectsList).then(myProjects => {
                     this.storage.set('newcreatedproject', this.project).then(cmp => {
                       this.toastService.successToast('message.project_is_created');
-                      this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
+                      // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                     })
                   })
                 } else if (programsList.programs) {
@@ -204,13 +210,15 @@ export class CreateProjectPage implements OnInit {
                       this.storage.set('latestProjects', projectsList).then(myProjects => {
                         this.storage.set('newcreatedproject', this.project).then(cmp => {
                           this.toastService.successToast('message.project_is_created');
-                          this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
+                          // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                         })
                       })
                     }
                   });
                 }
                 // });
+              } else {
+                this.project._id = programsList.projects.length + 1;
               }
             }
           });
@@ -219,18 +227,38 @@ export class CreateProjectPage implements OnInit {
           mapped = true;
           this.project._id = 1;
           let pro1 = [{
-            projects: [
-            ]
+            projects: []
           }]
           pro1[0].projects.push(this.project);
           projectsList = pro1;
           this.storage.set('latestProjects', projectsList).then(myProjects => {
             this.storage.set('newcreatedproject', this.project).then(cmp => {
               this.toastService.successToast('message.project_is_created');
-              this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
+              // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
             })
           })
         }
+        this.popupshow = true;
+        this.projectCreatePopUp = {
+          type: 'newProject',
+          title: '',
+          text: 'Your project has been saved, click below to view your project.',
+          showCloseButton: false,
+          titleCss: {
+          },
+          textCss: {
+            fontSize: '16px',
+            color: '#b23e33;'
+          },
+          buttons: [
+            {
+              title: 'View Project',
+              color: 'primary',
+              isActionable: '/project-view/project-detail/form',
+            }]
+        }
+        this.storage.set('projectToBeView', this.project).then(project => {
+        })
       })
     }
   }

@@ -91,11 +91,11 @@ ion-tab-button {
 //           float: right;
 //         }
 //     }
-.tabs-list{
-  position: fixed;
-  width: 100%;
-  z-index: 999;
-}
+// .tabs-list{
+//   position: fixed;
+//   width: 100%;
+//   z-index: 999;
+// }
 .custom-card
 {
   margin: 0px;
@@ -107,7 +107,8 @@ ion-tab-button {
   }
 }
 .custom-tab{
-  width:50%;
+  max-width: 50%;
+  min-width: 50%;
   background:#fff;
   color: #000;
     float: left;

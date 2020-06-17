@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { AppConfigs } from '../app.config';
-
+import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({
     providedIn: 'root'
 })
 export class CreateProjectService {
-    constructor(public storage: Storage) { }
+    modalCloseEvent = new Subject();
+    addNewTask = new Subject();
+    constructor(public storage: Storage,
+        public http: HttpClient) { }
     // Update task in current Project
     public updateCurrentMyProject(createdTask) {
         return this.storage.get('newcreatedproject').then(cmp => {
+            cmp.isEdited = true;
             cmp.tasks.forEach(function (task, i) {
                 if (task._id == createdTask._id) {
                     cmp.lastUpdate = new Date();
@@ -28,19 +33,21 @@ export class CreateProjectService {
     public updateByProjects(updatedProject) {
         let mapped: boolean = false;
         return this.storage.get('latestProjects').then(projectList => {
-            projectList.forEach(projectsPrograms => {
-                if (projectsPrograms) {
-                    projectsPrograms.projects.forEach(function (project, i) {
-                        if (project._id == updatedProject._id) {
-                            updatedProject.isEdited = true;
-                            projectsPrograms.projects[i] = updatedProject;
-                            mapped = true;
-                        }
-                    });
-                }
-            })
+            if (projectList) {
+                projectList.forEach(projectsPrograms => {
+                    if (projectsPrograms) {
+                        projectsPrograms.projects.forEach(function (project, i) {
+                            if (project._id == updatedProject._id) {
+                                updatedProject.isEdited = true;
+                                projectsPrograms.projects[i] = updatedProject;
+                                mapped = true;
+                            }
+                        });
+                    }
+                })
+            }
             if (!mapped) {
-                if (projectList[0].projects) {
+                if (projectList && projectList[0].projects) {
                     projectList[0].projects.forEach(project => {
                         projectList[0].projects.push(updatedProject);
                     });
@@ -67,9 +74,9 @@ export class CreateProjectService {
         let environment = AppConfigs.currentEnvironment;
         let programId = '';
         AppConfigs.environments.forEach(env => {
-          if (environment === env.name) {
-            programId = env.programId;
-          }
+            if (environment === env.name) {
+                programId = env.programId;
+            }
         });
         return this.storage.get('latestProjects').then(projectList => {
             if (projectList) {
@@ -82,8 +89,9 @@ export class CreateProjectService {
                     }
                 })
                 if (!mapped) {
-                    if (projectList.projects) {
-                        projectList.projects.push(project)
+                    if (projectList) {
+                        project._id = projectList[0].projects.length + 1;
+                        projectList[0].projects.push(project)
                     } else {
                         let pro1 = [{
                             projects: [
@@ -94,7 +102,9 @@ export class CreateProjectService {
                     }
                 }
             } else {
-                if (projectList.projects) {
+                projectList.forEach(project => {
+                });
+                if (projectList) {
                     project._id = projectList.projects.length + 1;
                     projectList.projects.push(project)
                 } else {
@@ -111,7 +121,6 @@ export class CreateProjectService {
             })
         });
     }
-
     // update task in project after marking as delete. 
     public UpdateCurrentMyProjectByTask(createdTask) {
         return this.storage.get('projectToBeView').then(cmp => {
@@ -125,5 +134,21 @@ export class CreateProjectService {
                 this.updateByProjects(updatedProject);
             })
         })
+    }
+
+    // Close task create modal
+    public closeModal() {
+        this.modalCloseEvent.next();
+    }
+
+    public getTaskPDF(data) {
+        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/reports/shareTaskPdf', data);
+    }
+    public addNewTaskIntoProject(task) {
+        this.addNewTask.next(task);
+    }
+
+    public getTemplate(templateId) {
+        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/template/getTemplateDetailsById/' + templateId)
     }
 }

@@ -56,20 +56,34 @@ export class UpdateProfilePage {
     public networkService: NetworkService,
     public alertController: AlertController
   ) {
-
+    toastService.popClose.subscribe(data => {
+      this.showUpdatePop = false;
+    })
   }
 
   ionViewDidEnter() {
 
-    this.appUpdate.title = 'Thank you';
-    this.appUpdate.text = 'Thank you for updating your details. We will verify and update it in two weeks.';
-    this.appUpdate.isActionable = '/project-view/home';
-    this.appUpdate.actions = {
+    this.popMsg = {
+      type: 'profileUpdated',
+      title: 'Thank you',
+      text: 'Thank you for updating your details. We will verify and update it in two weeks.',
       showCloseButton: false,
-      showUpdatePopup: true,
-      showUpdatePop: true,
+      titleCss: {
+        fontSize: '24px',
+        color: '#b23e33;'
+      },
+      textCss: {
+        fontSize: '16px',
+        color: '#b23e33;'
+      },
+      buttons: [
+        {
+          title: 'Continue',
+          color: 'primary',
+          isActionable: '/project-view/home',
+        }]
     }
-    this.showPopup = true;
+    this.showUpdatePop = false;
     this.storage.get('userTokens').then(data => {
       this.userDetails = jwt_decode(data.access_token);
     })
