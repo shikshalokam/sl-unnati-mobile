@@ -132,7 +132,7 @@
         expand="block"
         color="secondary"
         (click)="navigateToResources()"
-        *ngIf="category != 'my_projects' &&  category != 'form'   && project?.resources.length"
+        *ngIf="category != 'form'   && project?.resources?.length"
       >
         {{'button.learning_resources' | translate}}
       </ion-button>
