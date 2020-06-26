@@ -17,7 +17,6 @@ import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { PopoverController } from '@ionic/angular';
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
 import { ProjectService } from '../project-view/project.service';
-
 declare var cordova: any;
 
 @Component({
@@ -143,6 +142,7 @@ export class ProjectDetailPage {
     })
   }
   ionViewDidEnter() {
+    this.projectService.setTitle("project-detail");
     if (this.category == 'my_projects' || this.category == 'form' || this.category == 'home' || this.category == 'projectsList') {
       this.addTaskButton = true;
     } else {

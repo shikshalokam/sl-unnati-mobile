@@ -8,15 +8,7 @@ display: block;
 .bottom-tab-img-container{
 margin: auto;
 margin-bottom: -32px;
-.nf-tab-img
-{
-margin-top: -100px;
-z-index: 99999999;
-position: relative;
-width: 60px;
-border: 2px solid #fff;
-border-radius: 50%;
-}
+
 }
 .btm-tab-img{
 width: 32px;
@@ -24,19 +16,41 @@ max-width: 32px;
 max-height: 32px;
 min-height: 32px;
 }
+.btm-tab-img-newsfeed{
+  width: 28px;
+  max-width: 28px;
+  max-height: 28px;
+  min-height: 28px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
 
+.center-btn{
+  border-radius: 50%;
+  border: 2px solid #fff;
+  padding: 2px;
+  min-width: 34px;
+  min-height: 34px;
+  margin-top: 5px;
+  color:#fff;
+}
 
-
+.activeHome{
+    color: #af4038;
+    background: #fff;
+    // box-shadow: 0px 1px 12px 2px #000;
+ }
+ .tab-selected
+{
+    border-bottom:4px solid #fff;
+}
 // .no-connection{
 //     color:red;
 // }
 // :host(.show-back-button) {
 //   display: block;
 // }
-// .tab-selected
-// {
-//     border-bottom:4px solid #fff;
-// }
+
 // .bottom-tab-img-container{
 //     margin: auto;
 //     background-image: url("../../assets/images/bbb.png");

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { ProjectService } from '../project-view/project.service';
+
 @Component({
   selector: 'app-task-board',
   templateUrl: './task-board.page.html',
@@ -15,10 +17,12 @@ export class TaskBoardPage {
   showSkeleton: boolean = true;
   skeletons = [{}, {}, {}, {}, {}];
   constructor(
-    public storage: Storage
+    public storage: Storage,
+    public projectService: ProjectService
   ) { }
 
   ionViewDidEnter() {
+    this.projectService.setTitle("open-tasks");
     this.searchInput = '';
     this.activeTab = 'ongoing';
     this.getProjects();

@@ -13,6 +13,7 @@ import { ToastService } from '../toast.service';
 import { MyReportsService } from './my-reports.service';
 import { MyschoolsService } from '../myschools/myschools.service';
 import { ApiProvider } from '../api/api';
+import { ProjectService } from '../project-view/project.service';
 import { Storage } from '@ionic/storage';
 import * as Highcharts from 'highcharts';
 
@@ -72,7 +73,8 @@ export class MyReportsPage {
     public myReportsService: MyReportsService,
     public mySchoolsService: MyschoolsService,
     public api: ApiProvider,
-    public storage: Storage
+    public storage: Storage,
+    public projectService: ProjectService
   ) {
     activatedRoute.params.subscribe((params: any) => {
       this.mappedSchool = '';
@@ -133,6 +135,7 @@ export class MyReportsPage {
 
 
   ionViewDidEnter() {
+    this.projectService.setTitle("reports_tab");
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
     } catch (error) {

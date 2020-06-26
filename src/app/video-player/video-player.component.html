@@ -1,7 +1,7 @@
 <ion-content style="overflow: hidden;">
-  <div>
+  <div style="padding: 10px;">
     <span style="padding: 5px;"> {{video.title}} </span>
-    <ion-icon ios="ios-close-circle" md="md-close-circle" (click)="close()" class="close-bbn">
+    <ion-icon ios="ios-close-circle" md="md-close-circle" (click)="close()" class="close-btn">
     </ion-icon>
   </div>
   <iframe width="100%" height="100%" [src]="finalLink" allowfullscreen="allowfullscreen" *ngIf="finalLink"

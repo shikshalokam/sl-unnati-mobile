@@ -9,7 +9,7 @@ import { HomeService } from '../home/home.service';
 import { ToastService } from '../toast.service';
 import { AppConfigs } from '../core-module/constants/app.config';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
-
+import { ProjectService } from '../project-view/project.service';
 @Component({
   selector: 'app-create-project',
   templateUrl: './create-project.page.html',
@@ -51,7 +51,8 @@ export class CreateProjectPage implements OnInit {
     public datePicker: DatePicker,
     public storage: Storage,
     public homeService: HomeService,
-    public toastService: ToastService
+    public toastService: ToastService,
+    public projectService: ProjectService
   ) {
     toastService.popClose.subscribe(data => {
       this.popupshow = false;
@@ -61,6 +62,8 @@ export class CreateProjectPage implements OnInit {
       this.createNewProject = true;
     })
     route.params.subscribe(param => {
+      this.projectService.setTitle('createProject');
+      console.log("this.projectService.setTitle('createProject')");
       // this.categories.forEach((cat, i) => {
       //   this.categories[i].isChecked = false;
       // });

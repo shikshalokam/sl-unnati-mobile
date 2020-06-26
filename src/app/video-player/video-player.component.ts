@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
-// import { ScreenOrientation } from '@ionic-native/screen-orientation/';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/';
 @Component({
   selector: 'app-video-player',
   templateUrl: './video-player.component.html',
@@ -12,8 +12,14 @@ export class VideoPlayerComponent implements OnInit {
   finalLink;
   constructor(
     private sanitizer: DomSanitizer,
-    private modal: ModalController
-  ) { }
+    private modal: ModalController,
+    private screenOrientation: ScreenOrientation
+  ) { 
+    // try {
+    //   this.screenOrientation.lock(this.screenOrientation.);
+    // } catch (error) {
+    // }
+  }
 
   ngOnInit() {
     this.sanitizeUrl();
