@@ -55,7 +55,7 @@ export class AppComponent {
   subscription: Subscription;
   loading;
   type = 'quarter';
-  count = 100;
+  count = 0;
   page = 1;
   showUpdatePop: boolean = false;
   interval = interval(3600000);
@@ -244,8 +244,21 @@ export class AppComponent {
         } else if (this.router.url == '/project-view/notifications' || this.router.url == '/project-view/newsfeed' || this.router.url == '/project-view/about' ||
           this.router.url == '/project-view/reports' || this.router.url == '/project-view/my-schools' ||
           this.router.url == '/project-view/projects' || this.router.url == '/project-view/update-profile' ||
-          this.router.url == '/project-view/library' || this.router.url == '/project-view/project-detail/home' || this.router.url == '/project-view/tutorial-videos' || s[1].path == 'create-project' || this.router.url == '/project-view/task-board') {
+          this.router.url == '/project-view/library' || this.router.url == '/project-view/project-detail/home' || s[1].path == 'create-project' || this.router.url == '/project-view/task-board') {
+          this.count = 0;
           this.router.navigateByUrl('project-view/home');
+        } else if (this.router.url == '/project-view/tutorial-videos') {
+          this.count = this.count + 1;
+          switch (this.count) {
+            case 2: {
+              this.router.navigateByUrl('project-view/home');
+              this.count = 0;
+              break;
+            } case 1: {
+              this.modalController.dismiss();
+              break;
+            }
+          }
         } else if (this.router.url == '/project-view/task-view') {
           this.router.navigateByUrl('project-view/detail');
         } else if (this.router.url == '/project-view/project-detail/form') {
@@ -256,7 +269,7 @@ export class AppComponent {
           } else {
             this.router.navigateByUrl('project-view/template-view/' + s[3].path);
           }
-        }else if (s.length == 3 && s[0].path == 'project-view' && s[1].path == 'template-view') {
+        } else if (s.length == 3 && s[0].path == 'project-view' && s[1].path == 'template-view') {
           this.router.navigateByUrl('project-view/home');
         }
         else if (this.router.url == '/project-view/my-reports/last-month-reports' || this.router.url == '/project-view/my-reports/last-quarter-reports' || this.router.url == '/my-reports/last-month-reports' || this.router.url == '/my-reports/last-quarter-reports') {

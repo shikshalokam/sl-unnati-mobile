@@ -49,7 +49,6 @@ export class ProjectViewPage implements OnInit {
       this.keyboard.onKeyboardHide().subscribe(() => { this.isKeyBoardUp = false; });
     })
     this.projectService.title.subscribe((title: any) => {
-      console.log(title, "title sdsdf");
       if (title != 'home_tab' && title != 'projects_tab' && title != 'schools_tab' && title != 'reports_tab') {
         this.canGoBack = true;
       } else {
@@ -59,7 +58,6 @@ export class ProjectViewPage implements OnInit {
       this.translate.get(title).subscribe((text: string) => {
         this.title = text;
       });
-      console.log(this.title, "this.title");
     })
     this.networkService.emit.subscribe(value => {
       this.connected = value;
@@ -87,7 +85,6 @@ export class ProjectViewPage implements OnInit {
   }
   // Selected Tab for title of the screen.
   public selectTab(title) {
-    console.log(title, "title 88");
     // this.projectService.setTitle(title);
     this.translate.get(title).subscribe((text: string) => {
       this.title = text;

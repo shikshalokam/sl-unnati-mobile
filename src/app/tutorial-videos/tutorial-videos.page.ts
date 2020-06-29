@@ -13,6 +13,7 @@ export class TutorialVideosPage implements OnInit {
     url: 'https://youtu.be/G9c3xQP_ZEU'
     // https://youtu.be/G9c3xQP_ZEU
   }];
+  opened:boolean = false;
   constructor(
     public modalController: ModalController
   ) { }
@@ -25,12 +26,16 @@ export class TutorialVideosPage implements OnInit {
   // }
 
   async open(video) {
+    this.opened= true;
     const modal = await this.modalController.create({
       component: VideoPlayerComponent,
       componentProps: {
         'video': video,
       }
     });
+    modal.onDidDismiss().then((data: any) => {
+      this.opened= false;
+    })
     return await modal.present();
   }
 }

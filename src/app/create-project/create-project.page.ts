@@ -63,7 +63,6 @@ export class CreateProjectPage implements OnInit {
     })
     route.params.subscribe(param => {
       this.projectService.setTitle('createProject');
-      console.log("this.projectService.setTitle('createProject')");
       // this.categories.forEach((cat, i) => {
       //   this.categories[i].isChecked = false;
       // });
