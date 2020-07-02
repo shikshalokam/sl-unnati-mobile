@@ -202,8 +202,6 @@ export class ProjectDetailPage {
     this.project.startDate = new Date();
     // if (this.category != 'my_projects' && this.category != 'projectsList' && this.category != 'form') {
     if (this.category != "my_projects" && this.category != "form") {
-      console.log(this.category);
-      console.log(this.project);
       this.project.createdType = "by reference";
       this.project.lastUpdate = new Date();
       this.project.isNew = true;

@@ -13,6 +13,7 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { Platform } from '@ionic/angular';
 import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
 
 declare var cordova: any;
 
@@ -59,7 +60,7 @@ export class CurrentTaskViewPage implements OnInit {
     public createProjectService: CreateProjectService,
     public toastService: ToastService,
     public fileChooser: FileChooser,
-
+    public androidPermissions: AndroidPermissions,
     public camera: Camera) {
     route.params.subscribe(param => {
       this.from = param.from;
@@ -389,7 +390,9 @@ export class CurrentTaskViewPage implements OnInit {
   openFilePicker() {
     this.fileChooser.open()
       .then(filePath => {
+        console.log(filePath, "filePath === ")
         this.filePath.resolveNativePath(filePath).then(imageData => {
+          console.log(imageData, "imageData")
           let correctPath = imageData.substr(0, imageData.lastIndexOf('/') + 1);
           let currentName = imageData.substring(imageData.lastIndexOf('/') + 1);
           let fileMIMEType = this.getMIMEtype(currentName.substring(currentName.lastIndexOf('.') + 1))
@@ -399,7 +402,6 @@ export class CurrentTaskViewPage implements OnInit {
               type: fileMIMEType,
               isNew: true
             }
-
             this.checkInLocal(imageData, currentName, fileData);
           } else {
             this.toastService.errorToast('Sorry,Please attach image or pdf.')
@@ -457,57 +459,189 @@ export class CurrentTaskViewPage implements OnInit {
     let currentName = imageData.substring(imageData.lastIndexOf('/') + 1, imageData.length).toString();
     if (this.isIos) {
       this.files.checkDir(this.files.documentsDirectory, 'attachments').then(_ => {
+        console.log(currentPath, "currentPath", currentName);
         this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
           this.task.attachments.push(newAttachment);
           this.toastService.successToast('message.image_uploaded');
         }, error => {
-          this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
+          this.toastService.errorToast('Unable to upload ' + currentName + ' file. 466');
         });
       }).catch(err => {
         this.files.createDir(cordova.file.documentsDirectory, 'attachments', false).then(response => {
+          console.log(currentPath, "currentPath", currentName);
           this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
             this.task.attachments.push(newAttachment);
             this.toastService.successToast('message.image_uploaded');
           }, error => {
-            this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
+            this.toastService.errorToast('Unable to upload ' + currentName + ' file.475');
           });
         }).catch(err => {
         });
       });
     } else {
       this.files.checkDir(this.files.externalDataDirectory, 'attachments').then(_ => {
-        this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
-          this.task.attachments.push(newAttachment);
-          this.toastService.successToast('message.image_uploaded');
+        // this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
+        //   this.task.attachments.push(newAttachment);
+        //   this.toastService.successToast('message.image_uploaded');
+        // }, error => {
+        //   this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
+        // });
+        // this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
+        //   result => {
+        //     console.log('Has permission?', result.hasPermission);
+        //     this.downloadFile(imageData, name, newAttachment);
+        //   }, err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(resp => {
+        //     console.log('Has permission?', resp.hasPermission);
+        //     this.downloadFile(imageData, name, newAttachment);
+        //   })
+        // );
+        this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE]).then(resp => {
+          console.log('Has permission?', resp.hasPermission);
+          this.downloadFile(imageData, name, newAttachment);
         }, error => {
-          this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
-        });
+          console.log('Has permission?', error);
+        })
       }).catch(err => {
         this.files.createDir(cordova.file.externalDataDirectory, 'attachments', false).then(response => {
-          this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
-            this.task.attachments.push(newAttachment);
-            this.toastService.successToast('message.image_uploaded');
+          // this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
+          //   this.task.attachments.push(newAttachment);
+          //   this.toastService.successToast('message.image_uploaded');
+          // }, error => {
+          //   this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
+          // });
+          // this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
+          //   result => {
+          //     console.log('Has permission?', result.hasPermission);
+          //     this.downloadFile(imageData, name, newAttachment);
+          //   }, err => this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE]).then(resp => {
+          //     console.log('Has permission?', resp.hasPermission);
+          //     this.downloadFile(imageData, name, newAttachment);
+          //   })
+          // );
+          this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE]).then(resp => {
+            console.log('Has permission?', resp.hasPermission);
+            this.downloadFile(imageData, name, newAttachment);
           }, error => {
-            this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
-          });
+            console.log('Has permission?', error);
+          })
         }).catch(err => {
         });
       });
     }
   }
+
+
   checkInLocal(file, name, newAttachment) {
     let currentPath = file.substr(0, file.lastIndexOf('/') + 1).toString();
     let currentName = file.substring(file.lastIndexOf('/') + 1, file.length).toString();
-    this.files.checkFile(currentPath, currentName).then(success => {
-      this.saveFile(file, name, newAttachment);
+    this.files.resolveLocalFilesystemUrl(currentPath + currentName)
+      .then((entry: any) => {
+        console.log('entry', entry);
+        this.files.resolveLocalFilesystemUrl(this.appFolderPath)
+          .then((dirEntry: any) => {
+            console.log(dirEntry, "dirEntry", name);
+            entry.copyTo(dirEntry, name, this.successCopy, this.failCopy);
+          }).catch((error) => {
+            console.log(error, "resolveLocalFilesystemUrl");
+          });
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
+  successCopy(fileEntry) {
+    console.log(fileEntry.toURL() + ' moved successfully', fileEntry);
+  }
+  failCopy(error) {
+    console.log(error,'error occoured while moving file with error code: ' + error.code);
+  }
+  // checkInLocal(file, name, newAttachment) {
+  //   let currentPath = file.substr(0, file.lastIndexOf('/') + 1).toString();
+  //   let currentName = file.substring(file.lastIndexOf('/') + 1, file.length).toString();
+  //   this.files.checkFile(currentPath, currentName).then(success => {
+  //     // this.saveFile(file, name, newAttachment);
+  //     this.files.checkDir(this.files.externalDataDirectory, 'attachments').then(_ => {
+  //       console.log(currentPath, currentName, this.appFolderPath, name, "currentPath, currentName, this.appFolderPath, name");
+  //       // this.files.copyFile(currentPath, currentName, this.appFolderPath, name).then(success => {
+  //       //   this.task.attachments.push(newAttachment);
+  //       //   this.toastService.successToast('message.image_uploaded');
+  //       // }, error => {
+  //       //   console.log(error, "error");
+  //       //   this.toastService.errorToast('Unable to upload 515' + currentName + ' file.');
+  //       // });
+  //       // this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
+  //       //   result => {
+  //       //     console.log('Has permission?', result.hasPermission);
+  //       //     this.downloadFile(file, name, newAttachment);
+  //       //   }, err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(resp => {
+  //       //     console.log('Has permission?', resp.hasPermission);
+  //       //     this.downloadFile(file, name, newAttachment);
+  //       //   })
+  //       // );
+
+  //       this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE]).then(resp => {
+  //         console.log('Has permission?', resp.hasPermission);
+  //         this.downloadFile(file, name, newAttachment);
+  //       }, error => {
+  //         console.log('Has permission?', error);
+  //       })
+  //     }).catch(err => {
+  //       console.log(err, "checkInLocal");
+  //       this.files.createDir(cordova.file.externalDataDirectory, 'attachments', false).then(response => {
+  //         // this.files.copyFile(currentPath, currentName, this.appFolderPath, name).then(success => {
+  //         //   this.task.attachments.push(newAttachment);
+  //         //   this.toastService.successToast('message.image_uploaded');
+  //         // }, error => {
+  //         //   this.toastService.errorToast('Unable to upload checkInLocal' + currentName + ' file.');
+  //         // });
+  //         // this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
+  //         //   result => {
+  //         //     console.log('Has permission?', result.hasPermission);
+  //         //     this.downloadFile(file, name, newAttachment);
+  //         //   }, err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(resp => {
+  //         //     console.log('Has permission?', resp.hasPermission);
+  //         //     this.downloadFile(file, name, newAttachment);
+  //         //   })
+  //         // );
+  //         this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE]).then(resp => {
+  //           console.log('Has permission?', resp.hasPermission);
+  //           this.downloadFile(file, name, newAttachment);
+  //         }, error => {
+  //           console.log('Has permission?', error);
+  //         })
+  //       }).catch(err => {
+  //         console.log(err, "checkInLocal 527");
+  //       });
+  //     });
+  //   }, error => {
+  //     currentName = currentName.trim();
+  //     currentName = currentName.replace(/ /g, "_");
+  //     this.files.checkFile(currentPath, currentName).then(success => {
+  //       this.saveFile(file, name, newAttachment);
+  //     }, error => {
+  //       this.toastService.errorToast('Unable to upload in checkInLocal' + currentName + ' file.');
+  //     })
+  //   })
+  // }
+
+  downloadFile(imageData, newFileName, newAttachment) {
+    this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE]).then(resp => {
+      console.log('Has permission?', resp.hasPermission);
+      this.toastService.presentLoading('Downloading, Please wait');
+      const fileTransfer: FileTransferObject = this.fileTransfer.create();
+      // attachment.url = encodeURI(attachment.url);
+      let win: any = window;
+      // attachment.url = this.sanitize.bypassSecurityTrustResourceUrl(win.Ionic.WebView.convertFileSrc(attachment.url));
+      fileTransfer.download(imageData, this.appFolderPath + '/' + newFileName).then(success => {
+        // this.viewDocument(attachment);
+        console.log(success, "download");
+        this.task.attachments.push(newAttachment);
+        this.toastService.successToast('message.image_uploaded');
+      }).catch(error => {
+        console.log(error, "download");
+      });
     }, error => {
-      currentName = currentName.trim();
-      currentName = currentName.replace(/ /g, "_");
-      this.files.checkFile(currentPath, currentName).then(success => {
-        this.saveFile(file, name, newAttachment);
-      }, error => {
-        this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
-      })
+      console.log('Has permission?', error);
     })
+
   }
 }

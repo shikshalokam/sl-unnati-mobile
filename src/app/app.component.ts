@@ -51,6 +51,7 @@ export class AppComponent {
   projectsToSync = [];
   oldProjectsToSync = [];
   files = [];
+  isDeeplink: boolean = false;
   subscription: Subscription;
   loading;
   type = 'quarter';
@@ -175,159 +176,156 @@ export class AppComponent {
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
-      this.storage.get('userTokens').then(data => {
-        if (data != null) {
-          this.isIos = this.platform.is('ios') ? true : false;
-          this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
-          this.checkDir();
-          this.deeplinks.routeWithNavController(this.navController, {
-            '/about': AboutPage,
-            '/project-view/template-view/:templateId': TemplateViewPage
-          }).subscribe(match => {
-            this.zone.run(() => {
-              this.router.navigate([match.$link.path], { queryParams: { programId: match.$link.queryString } });
-            })
-          }, nomatch => {
-          });
-          this.translate.setDefaultLang('en');
-          this.translate.use('en');
-          this.networkService.setLang('en');
+    this.hideSplasher();
+    this.storage.get('userTokens').then(data => {
+      if (data != null) {
+        this.isIos = this.platform.is('ios') ? true : false;
+        this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
+        this.checkDir();
+        this.translate.setDefaultLang('en');
+        this.translate.use('en');
+        this.networkService.setLang('en');
+        if (!this.isDeeplink) {
           this.router.navigateByUrl('/project-view/home');
-        } else {
-          this.router.navigateByUrl('/login');
         }
-      })
-      if (!this.isConnected && !navigator.onLine) {
-        this.networkService.networkErrorToast();
+      } else {
+        this.router.navigateByUrl('/login');
       }
+    })
+    if (!this.isConnected && !navigator.onLine) {
+      this.networkService.networkErrorToast();
+    }
 
-      this.platform.pause.subscribe(() => {
-        localStorage.setItem('isPopUpShowen', null);
-      });
-      // this.fcm.connectSubscription.unsubscribe();
-      this.fcm.subscribeToPushNotifications();
-      this.fcm.localNotificationClickHandler();
-      this.network.onDisconnect()
-        .subscribe(() => {
-          this.isConnected = false;
-          this.networkService.networkErrorToast();
-          this.networkService.status(this.isConnected);
-          localStorage.setItem("networkStatus", this.isConnected);
-        });
-      this.network.onConnect()
-        .subscribe(() => {
-          this.isConnected = true;
-          this.networkService.status(this.isConnected);
-          setTimeout(() => {
-            if (this.network.type === 'wifi') {
-            }
-          }, 15000);
-          localStorage.setItem("networkStatus", this.isConnected);
-        });
-      if (this.isConnected) {
-        // this.getOldDataToSync();
-      }
-      // this.networkSubscriber();
-      this.statusBar.overlaysWebView(false);
-      this.statusBar.backgroundColorByHexString('#fff');
-      this.platform.backButton.subscribeWithPriority(9999, () => {
-        const tree: UrlTree = this.router.parseUrl(this.router.url);
-        const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
-        const s: UrlSegment[] = g.segments;
-        if (this.router.url == '/login' || this.router.url == '/project-view/home') {
-          //this.presentAlertConfirm();
-          navigator['app'].exitApp();
-        } else if (this.router.url == '/project-view/notifications' || this.router.url == '/project-view/newsfeed' || this.router.url == '/project-view/about' ||
-          this.router.url == '/project-view/reports' || this.router.url == '/project-view/my-schools' ||
-          this.router.url == '/project-view/projects' || this.router.url == '/project-view/update-profile' ||
-          this.router.url == '/project-view/library' || this.router.url == '/project-view/project-detail/home' || this.router.url == '/project-view/tutorial-videos' || s[1].path == 'create-project' || this.router.url == '/project-view/task-board') {
-          this.router.navigateByUrl('project-view/home');
-        } else if (this.router.url == '/project-view/task-view') {
-          this.router.navigateByUrl('project-view/detail');
-        } else if (this.router.url == '/project-view/project-detail/form') {
-          this.router.navigateByUrl('project-view/create-project');
-        } else if (s[1].path == 'courses' && s[2].path == 'template-view') {
-          if (s.length == 5) {
-            this.router.navigateByUrl('project-view/template-view/' + s[3].path + '/' + s[4].path);
-          } else {
-            this.router.navigateByUrl('project-view/template-view/' + s[3].path);
-          }
-        } else if (s.length == 3 && s[0].path == 'project-view' && s[1].path == 'template-view') {
-          this.router.navigateByUrl('project-view/home');
-        }
-        else if (this.router.url == '/project-view/my-reports/last-month-reports' || this.router.url == '/project-view/my-reports/last-quarter-reports' || this.router.url == '/my-reports/last-month-reports' || this.router.url == '/my-reports/last-quarter-reports') {
-          this.router.navigateByUrl('project-view/home');
-        } else if (this.router.url == '/project-view/fullreports/lastMonth') {
-          this.router.navigateByUrl('project-view/my-reports/last-month-reports');
-        } else if (this.router.url == '/project-view/fullreports/lastQuarter') {
-          this.router.navigateByUrl('project-view/my-reports/last-quarter-reports');
-        } else if (s.length == 3 && this.router.url == '/project-view/project-detail/' + s[2].path) {
-          if (s[2].path == "schools") {
-            this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
-          } else if (s[2].path == "projectsList") {
-            this.router.navigateByUrl('/project-view/projects');
-          }
-          else {
-            this.router.navigateByUrl('/project-view/category/' + s[2].path);
-          }
-        } else if (s[1].path == 'category') {
-          this.router.navigateByUrl('/project-view/library');
-        } else
-          if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "my-reports" && s[3].path)) {
-            this.router.navigateByUrl('project-view/my-reports');
-          } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "cp")) {
-            this.router.navigateByUrl('project-view/create-project');
-          } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "cp")) {
-            this.router.navigateByUrl('project-view/create-task/' + s[2].path + '/' + s[3].path);
-          }
-          else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd") || s[1].path == "files") {
-            this.router.navigateByUrl('project-view/project-detail');
-          } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "pd")) {
-            this.router.navigateByUrl('project-view/project-detail');
-          } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "category" && s[3].path == "home")) {
-            this.router.navigateByUrl('project-view/home');
-          }
-          else if (this.router.url == "/project-view/project-detail") {
-            this.router.navigateByUrl('/project-view/library');
-          }
-          else if (this.router.url == '/project-view/task-view') {
-            this.modalController.dismiss();
-          } else if (this.router.url == '/project-view/subtasks') {
-            this.router.navigateByUrl('project-view/task-view');
-          } else if (this.router.url == '/project-view/subtask-view') {
-            this.router.navigateByUrl('project-view/subtasks');
-          } else if (this.router.url == '/project-view/subtask-view') {
-            this.modalController.dismiss();
-          } else if (this.router.url == '/project-view/courses') {
-            this.router.navigateByUrl('project-view/detail');
-          }
-          else {
-            if ((s[0].path == 'project-view' && s[1].path == 'status')) {
-              this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
-            } else
-              if ((s[0].path == 'project-view' && s[1].path == 'detail') || this.router.url == '/project-view/detail') {
-
-                if (localStorage.getItem('from') === 'home') {
-                  this.router.navigateByUrl('project-view/home');
-                } else if (localStorage.getItem('from') === 'projects') {
-                  this.router.navigateByUrl('project-view/projects');
-                }
-                else {
-                  this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
-                }
-              } else if ((s[0].path == 'project-view' && s[1].path == 'school-task-report') || (s[0].path == 'project-view' && s[1].path == 'status')) {
-                if (localStorage.getItem('from1') === 'home') {
-                  this.router.navigateByUrl('project-view/home');
-                } else if (localStorage.getItem('from1') === 'mySchools') {
-                  this.router.navigateByUrl('project-view/my-schools');
-                }
-              }
-          }
-      });
-      this.hideSplasher();
-      // this.splashScreen.hide();
+    this.platform.pause.subscribe(() => {
+      localStorage.setItem('isPopUpShowen', null);
     });
+    // this.fcm.connectSubscription.unsubscribe();
+    this.fcm.subscribeToPushNotifications();
+    this.fcm.localNotificationClickHandler();
+    this.network.onDisconnect()
+      .subscribe(() => {
+        this.isConnected = false;
+        this.networkService.networkErrorToast();
+        this.networkService.status(this.isConnected);
+        localStorage.setItem("networkStatus", this.isConnected);
+      });
+    this.network.onConnect()
+      .subscribe(() => {
+        this.isConnected = true;
+        this.networkService.status(this.isConnected);
+        setTimeout(() => {
+          if (this.network.type === 'wifi') {
+          }
+        }, 15000);
+        localStorage.setItem("networkStatus", this.isConnected);
+      });
+    if (this.isConnected) {
+      // this.getOldDataToSync();
+    }
+    // this.networkSubscriber();
+    this.statusBar.overlaysWebView(false);
+    this.statusBar.backgroundColorByHexString('#fff');
+    this.platform.backButton.subscribeWithPriority(9999, () => {
+      const tree: UrlTree = this.router.parseUrl(this.router.url);
+      const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
+      const s: UrlSegment[] = g.segments;
+      if (this.router.url == '/login' || this.router.url == '/project-view/home') {
+        //this.presentAlertConfirm();
+        navigator['app'].exitApp();
+      } else if (this.router.url == '/project-view/notifications' || this.router.url == '/project-view/newsfeed' || this.router.url == '/project-view/about' ||
+        this.router.url == '/project-view/reports' || this.router.url == '/project-view/my-schools' ||
+        this.router.url == '/project-view/projects' || this.router.url == '/project-view/update-profile' ||
+        this.router.url == '/project-view/library' || this.router.url == '/project-view/project-detail/home' || this.router.url == '/project-view/tutorial-videos' || s[1].path == 'create-project' || this.router.url == '/project-view/task-board') {
+        this.router.navigateByUrl('project-view/home');
+      } else if (this.router.url == '/project-view/task-view') {
+        this.router.navigateByUrl('project-view/detail');
+      } else if (this.router.url == '/project-view/project-detail/form') {
+        this.router.navigateByUrl('project-view/create-project');
+      } else if (s[1].path == 'courses' && s[2].path == 'template-view') {
+        if (s.length == 5) {
+          this.router.navigateByUrl('project-view/template-view/' + s[3].path + '/' + s[4].path);
+        } else {
+          this.router.navigateByUrl('project-view/template-view/' + s[3].path);
+        }
+      } else if (s.length == 3 && s[0].path == 'project-view' && s[1].path == 'template-view') {
+        this.router.navigateByUrl('project-view/home');
+      }
+      else if (this.router.url == '/project-view/my-reports/last-month-reports' || this.router.url == '/project-view/my-reports/last-quarter-reports' || this.router.url == '/my-reports/last-month-reports' || this.router.url == '/my-reports/last-quarter-reports') {
+        this.router.navigateByUrl('project-view/home');
+      } else if (this.router.url == '/project-view/fullreports/lastMonth') {
+        this.router.navigateByUrl('project-view/my-reports/last-month-reports');
+      } else if (this.router.url == '/project-view/fullreports/lastQuarter') {
+        this.router.navigateByUrl('project-view/my-reports/last-quarter-reports');
+      } else if (s.length == 3 && this.router.url == '/project-view/project-detail/' + s[2].path) {
+        if (s[2].path == "schools") {
+          this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
+        } else if (s[2].path == "projectsList") {
+          this.router.navigateByUrl('/project-view/projects');
+        }
+        else {
+          this.router.navigateByUrl('/project-view/category/' + s[2].path);
+        }
+      } else if (s[1].path == 'category') {
+        this.router.navigateByUrl('/project-view/library');
+      } else
+        if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "my-reports" && s[3].path)) {
+          this.router.navigateByUrl('project-view/my-reports');
+        } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "cp")) {
+          this.router.navigateByUrl('project-view/create-project');
+        } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "cp")) {
+          this.router.navigateByUrl('project-view/create-task/' + s[2].path + '/' + s[3].path);
+        }
+        else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "create-task" && s[3].path == "pd") || s[1].path == "files") {
+          this.router.navigateByUrl('project-view/project-detail');
+        } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "current-task" && s[3].path == "pd")) {
+          this.router.navigateByUrl('project-view/project-detail');
+        } else if (s.length == 4 && (s[0].path == 'project-view' && s[1].path == "category" && s[3].path == "home")) {
+          this.router.navigateByUrl('project-view/home');
+        }
+        else if (this.router.url == "/project-view/project-detail") {
+          this.router.navigateByUrl('/project-view/library');
+        }
+        else if (this.router.url == '/project-view/task-view') {
+          this.modalController.dismiss();
+        } else if (this.router.url == '/project-view/subtasks') {
+          this.router.navigateByUrl('project-view/task-view');
+        } else if (this.router.url == '/project-view/subtask-view') {
+          this.router.navigateByUrl('project-view/subtasks');
+        } else if (this.router.url == '/project-view/subtask-view') {
+          this.modalController.dismiss();
+        } else if (this.router.url == '/project-view/courses') {
+          this.router.navigateByUrl('project-view/detail');
+        }
+        else {
+          if ((s[0].path == 'project-view' && s[1].path == 'status')) {
+            this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
+          } else
+            if ((s[0].path == 'project-view' && s[1].path == 'detail') || this.router.url == '/project-view/detail') {
+
+              if (localStorage.getItem('from') === 'home') {
+                this.router.navigateByUrl('project-view/home');
+              } else if (localStorage.getItem('from') === 'projects') {
+                this.router.navigateByUrl('project-view/projects');
+              }
+              else {
+                this.router.navigate(['project-view/school-task-report/' + localStorage.getItem('entityKey') + '/school']);
+              }
+            } else if ((s[0].path == 'project-view' && s[1].path == 'school-task-report') || (s[0].path == 'project-view' && s[1].path == 'status')) {
+              if (localStorage.getItem('from1') === 'home') {
+                this.router.navigateByUrl('project-view/home');
+              } else if (localStorage.getItem('from1') === 'mySchools') {
+                this.router.navigateByUrl('project-view/my-schools');
+              }
+            }
+        }
+    });
+    this.storage.get('userTokens').then(data => {
+      if (data != null) {
+        this.deeplinkCall();
+      }
+    })
+    // this.splashScreen.hide();
+    //});
   }
   hideSplasher() {
     if (this.splashScreen) {
@@ -335,6 +333,21 @@ export class AppComponent {
         this.splashScreen.hide();
       }, 1000);
     }
+  }
+
+  public deeplinkCall() {
+    this.deeplinks.route({
+      '/about': AboutPage,
+      '/project-view/template-view/:templateId': TemplateViewPage
+    }).subscribe(match => {
+      // this.zone.run(() => {
+      this.isDeeplink = true;
+      setTimeout(() => {
+        this.router.navigate([match.$link.path], { queryParams: { programId: match.$link.queryString } });
+      }, 1000);
+      // })
+    }, nomatch => {
+    });
   }
 
   //Langugae change

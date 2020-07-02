@@ -211,10 +211,8 @@ export class CoursesPage implements OnInit {
       .then((project) => {
         this.projectResources = project["resources"];
         this.showSkeleton = false;
-        console.log(this.projectResources);
       })
       .catch((er) => {
-        console.log(er);
         this.showSkeleton = false;
       });
   }

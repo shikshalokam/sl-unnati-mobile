@@ -69,6 +69,7 @@ export class TemplateViewPage {
     this.showAddTask = false;
   }
   getProject() {
+    this.toastService.startLoader('Please wait, Loading...');
     this.tasksLength = 0;
     this.createProjectService.getTemplate(this.templateId).subscribe(
       (data: any) => {
@@ -92,8 +93,11 @@ export class TemplateViewPage {
           this.project = data.result[0];
           this.show = true;
         }
+        this.toastService.stopLoader();
       },
-      (error) => {}
+      (error) => {
+        this.toastService.stopLoader();
+      }
     );
   }
   // Copy the template project into my project

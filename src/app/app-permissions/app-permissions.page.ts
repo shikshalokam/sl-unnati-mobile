@@ -145,7 +145,6 @@ export class AppPermissionsPage implements OnInit {
             this.androidPermissions.requestPermission(element).then(
               (resp) => {},
               (error) => {
-                console.log(error, "error");
               }
             );
             this.router.navigate(["/project-view/home"]);
