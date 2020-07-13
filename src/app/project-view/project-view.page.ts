@@ -54,6 +54,7 @@ export class ProjectViewPage implements OnInit {
       } else {
         this.canGoBack = false;
       }
+      this.selectTab(title);
       this.translate.get(title).subscribe((text: string) => {
         this.title = text;
       });
@@ -84,7 +85,7 @@ export class ProjectViewPage implements OnInit {
   }
   // Selected Tab for title of the screen.
   public selectTab(title) {
-    this.projectService.setTitle(title);
+    // this.projectService.setTitle(title);
     this.translate.get(title).subscribe((text: string) => {
       this.title = text;
     });

@@ -17,7 +17,6 @@ import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { PopoverController } from '@ionic/angular';
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
 import { ProjectService } from '../project-view/project.service';
-
 declare var cordova: any;
 
 @Component({
@@ -143,6 +142,7 @@ export class ProjectDetailPage {
     })
   }
   ionViewDidEnter() {
+    this.projectService.setTitle("project-detail");
     if (this.category == 'my_projects' || this.category == 'form' || this.category == 'home' || this.category == 'projectsList') {
       this.addTaskButton = true;
     } else {
@@ -254,16 +254,26 @@ export class ProjectDetailPage {
           this.sortTasks();
         }
       }
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        this.sortTasks();
+      }
       this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
         this.project = project;
-        this.storage.get(LocalKeys.allProjects).then(p => {
-        })
         this.createProjectService.insertIntoMyProjects(this.project).then(data => {
           this.project.isStarted = true;
           this.category = 'my_projects';
         })
       })
     } else {
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        this.sortTasks();
+      }
       this.project.lastUpdate = new Date();
       this.createProjectService.updateByProjects(this.project);
       this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
@@ -565,18 +575,6 @@ export class ProjectDetailPage {
         } else {
           this.upcoming = withoutEndDate;
         }
-        // this.upcoming.sort((a, b) => {
-        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
-        // });
-        // this.past.sort((a, b) => {
-        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
-        // });
-        // this.currentTask.sort((a, b) => {
-        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
-        // });
-        // this.quarter.sort((a, b) => {
-        //   return <any>new Date(a.endDate) - <any>new Date(b.endDate);
-        // });
       }
     });
   }

@@ -66,7 +66,7 @@ export class HomePage implements OnInit {
   projectList;
   searchInput;
   showSkeleton: boolean = false;
-  skeletons = [{}, {}, {}, {}, {}, {}];
+  skeletons = [{}, {}];
   mySchools;
   constructor(
     public datepipe: DatePipe,

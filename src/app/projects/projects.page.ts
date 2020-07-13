@@ -62,6 +62,7 @@ export class ProjectsPage {
   }
 
   ionViewDidEnter() {
+    this.projectService.setTitle("projects_tab");
     this.environment = AppConfigs.currentEnvironment;
     AppConfigs.environments.forEach(env => {
       if (this.environment === env.name) {

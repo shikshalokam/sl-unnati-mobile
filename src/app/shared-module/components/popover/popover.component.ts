@@ -400,13 +400,15 @@ export class PopoverComponent implements OnInit {
   }
   public shareTask() {
     let files = [];
-    this.project.tasks[0].attachments.forEach(element => {
-      let data = {
-        name: element.name
-      }
-      files.push(data);
-    });
-    this.project.tasks[0].attachments = files;
+    if (this.project.tasks[0].attachments) {
+      this.project.tasks[0].attachments.forEach(element => {
+        let data = {
+          name: element.name
+        }
+        files.push(data);
+      });
+      this.project.tasks[0].attachments = files;
+    }
     this.projectData = {
       projectName: this.project.title,
       goal: this.project.goal,
@@ -414,14 +416,12 @@ export class PopoverComponent implements OnInit {
       projectId: this.project._id,
       tasks: this.project.tasks[0]
     }
-
     this.toastService.startLoader('Loading, please wait');
     this.createProjectService.getTaskPDF(this.projectData).subscribe(data => {
       this.toastService.stopLoader();
       this.sharePdf(data);
     })
   }
-
   // mark the task as deleted
   public deleteTask() {
     this.project.tasks[0].isDeleted = true;

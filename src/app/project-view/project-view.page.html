@@ -1,87 +1,25 @@
-<!-- <div style="padding: 40px;"></div>
-<ion-tabs>
-    <ion-icon name="add-circle-outline" class="icon-button inner-center-btn" (click)="openRequestPage()"></ion-icon>
-  
-    <ion-tab-bar slot="bottom" class="bottom-tab-bar">
-  
-      <ion-tab-button tab="marketplace">
-        <ion-icon mode="md" name="home"></ion-icon>
-        <ion-label>Marketplace</ion-label>
-      </ion-tab-button>
-  
-      <ion-tab-button tab="friends" class="inner-left-btn">
-        <ion-icon name="contacts"></ion-icon>
-        <ion-label>Friends</ion-label>
-        <ion-badge *ngIf="friendCount > 0" color="danger">{{friendCount}}</ion-badge>
-      </ion-tab-button>
-  
-      <ion-tab-button class="button-center">
-        <div></div>
-      </ion-tab-button>
-  
-      <ion-tab-button tab="notifications" class="inner-right-btn">
-        <ion-icon name="notifications"></ion-icon>
-        <ion-label>Notifications</ion-label>
-        <ion-badge *ngIf="notificationCount > 0" color="danger">{{notificationCount}}</ion-badge>
-      </ion-tab-button>
-  
-      <ion-tab-button tab="settings">
-        <ion-icon name="settings"></ion-icon>
-        <ion-label>Settings</ion-label>
-      </ion-tab-button>
-  
-    </ion-tab-bar>
-  </ion-tabs> -->
-
-<!-- <ion-tabs color="primary">
-  <div *ngIf="!isKeyBoardUp" [ngClass]="{'bottom-tab-img-container-ios' : isIos,'bottom-tab-img-container' : !isIos }">
-        <ion-icon ios="ios-home" md="md-home" class="nf-tab-img" (click)="selectTab('home_tab');navigateToHome()"
-            [ngClass]="{'activeHome' : title =='Home'}"></ion-icon>
-      </div> 
-    <ion-tab-bar slot="bottom" color="primary" style="min-height:65px;">
-        <ion-tab-button tab="projects" (click)="selectTab('projects_tab')">
-            <img src="assets/images/bottom-tab/projects.png" class="btm-tab-img">
-              <ion-label>{{ "Projects" | translate }}</ion-label>
-          </ion-tab-button>
-        <ion-tab-button tab="my-schools" (click)="selectTab('schools_tab')">
-            <img src="assets/images/bottom-tab/baseline-domain.svg" class="btm-tab-img">
-              <ion-label>{{ "schools_tab" | translate }}</ion-label>
-          </ion-tab-button>
-        <ion-tab-button (click)="selectTab('home_tab');navigateToHome()">
-          </ion-tab-button>
-        <ion-tab-button tab="my-reports" (click)="selectTab('reports_tab')">
-            <img src="assets/images/bottom-tab/insert_chart.svg" class="btm-tab-img"
-                routerLink="/project-view/my-reports/last-month-reports">
-            <ion-label>{{ "reports_tab" | translate }}</ion-label>
-          </ion-tab-button>
-        <ion-tab-button tab="newsfeed" (click)="selectTab('newsfeed')">
-            <img src="assets/images/bottom-tab/home.png" class="btm-tab-img">
-              <ion-label>{{ "newsfeed.title" | translate }}</ion-label>
-          </ion-tab-button>
-      </ion-tab-bar>
-</ion-tabs> -->
-
-
 <ion-tabs color="primary" selected-tab="tasks">
-    <div class="bottom-tab-img-container" *ngIf="!isKeyBoardUp"><img src="assets/images/bottom-tab/newsfeed.png" class="nf-tab-img" (click)="navigateToNewsFeed()"> </div>
-    <ion-tab-bar slot="bottom" color="primary">
-      <ion-tab-button tab="home" selected="true" (click)="selectTab('home_tab')">
-        <img src="assets/images/bottom-tab/home.png" class="btm-tab-img">
-        <ion-label>{{ "landing_page" | translate }}</ion-label>
-      </ion-tab-button>
-      <ion-tab-button tab="projects" (click)="selectTab('projects_tab')">
-        <img src="assets/images/bottom-tab/projects.png" class="btm-tab-img">
-        <ion-label>{{ "Projects" | translate }}</ion-label>
-      </ion-tab-button>
-      <ion-tab-button  (click)="navigateToNewsFeed()">
-      </ion-tab-button>
-      <ion-tab-button tab="my-schools" (click)="selectTab('schools_tab')">
-        <img src="assets/images/bottom-tab/baseline-domain.svg" class="btm-tab-img">
-        <ion-label>{{ "schools_tab" | translate }}</ion-label>
-      </ion-tab-button>
-      <ion-tab-button routerLink="/project-view/my-reports/last-month-reports"  (click)="selectTab('reports_tab')">
-        <img src="assets/images/bottom-tab/insert_chart.svg" class="btm-tab-img">
-        <ion-label>{{ "reports_tab" | translate }}</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
+  <ion-tab-bar slot="bottom" color="primary">
+    <ion-tab-button tab="projects" (click)="selectTab('projects_tab')">
+      <img src="assets/images/bottom-tab/projects.png" class="btm-tab-img">
+      <ion-label>{{ "Projects" | translate }}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="my-schools" (click)="selectTab('schools_tab')">
+      <img src="assets/images/bottom-tab/baseline-domain.svg" class="btm-tab-img">
+      <ion-label>{{ "schools_tab" | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="selectTab('home_tab');navigateToHome()" style="margin-top:8px;">
+       <ion-icon ios="ios-home" md="md-home" class="center-btn"  [ngClass]="{'activeHome' : title =='Home'}"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button tab="my-reports" routerLink="/project-view/my-reports/last-month-reports"
+      (click)="selectTab('reports_tab')">
+      <img src="assets/images/bottom-tab/insert_chart.svg" class="btm-tab-img">
+      <ion-label>{{ "reports_tab" | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="newsfeed" selected="true" (click)="selectTab('newsfeed')">
+      <img src="assets/images/bottom-tab/news.svg" class="btm-tab-img-newsfeed">
+      <ion-label>{{ "newsfeed.title" | translate }}</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

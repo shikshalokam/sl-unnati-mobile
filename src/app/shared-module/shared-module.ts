@@ -14,6 +14,7 @@ import { CustomPopupComponent } from '../custom-popup/custom-popup.component';
 import { CreateTasksComponent } from '../create-tasks/create-tasks.component';
 import { PopoverComponent } from './components/popover/popover.component';
 import {VideoPlayerComponent} from '../video-player/video-player.component';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 @NgModule({
   imports: [
     CommonModule,
@@ -49,6 +50,7 @@ import {VideoPlayerComponent} from '../video-player/video-player.component';
     TaskBoardPipe,
     SearchEntities,
     PopoverComponent
-  ]
+  ],
+  providers:[ScreenOrientation]
 })
 export class SharedModule { }
