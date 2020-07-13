@@ -186,13 +186,16 @@ export class CreateProjectPage implements OnInit {
         if (projectsList) {
           projectsList.forEach(programsList => {
             // already basic structure is there in local
+            console.log(programsList, "programsList programsList");
             if (programsList) {
+              console.log(programsList.programs && programsList.programs._id == programId, "programsList.programs && programsList.programs._id == programId");
               if (programsList.programs && programsList.programs._id == programId) {
                 mapped = true
                 // programsList.projects.forEach(program => {
                 if (this.createNewProject) {
                   this.project._id = programsList.projects.length + 1;
                   programsList.projects.push(this.project);
+                  console.log(projectsList, "this.project 196");
                   this.storage.set('latestProjects', projectsList).then(myProjects => {
                     this.storage.set('newcreatedproject', this.project).then(cmp => {
                       this.toastService.successToast('message.project_is_created');
@@ -201,13 +204,17 @@ export class CreateProjectPage implements OnInit {
                   })
                 } else if (programsList.programs) {
                   programsList.projects.forEach(project => {
+                    console.log(project._id == this.project._id, "project._id == this.project._id");
                     if (project._id == this.project._id) {
+                      console.log(project._id == this.project._id, "project._id == this.project._id");
                       project.category = this.project.category;
                       project.title = this.project.title;
                       project.goal = this.project.goal;
                       project.endDate = this.project.endDate;
                       project.startDate = this.project.startDate;
+                      console.log(projectsList, "this.project 210");
                       this.storage.set('latestProjects', projectsList).then(myProjects => {
+                        console.log(myProjects, "myProjects after sync 217");
                         this.storage.set('newcreatedproject', this.project).then(cmp => {
                           this.toastService.successToast('message.project_is_created');
                           // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
@@ -231,7 +238,9 @@ export class CreateProjectPage implements OnInit {
           }]
           pro1[0].projects.push(this.project);
           projectsList = pro1;
+          console.log(projectsList, "this.project 234");
           this.storage.set('latestProjects', projectsList).then(myProjects => {
+            console.log(myProjects, "myProjects after sync 243");
             this.storage.set('newcreatedproject', this.project).then(cmp => {
               this.toastService.successToast('message.project_is_created');
               // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
@@ -257,6 +266,7 @@ export class CreateProjectPage implements OnInit {
               isActionable: '/project-view/project-detail/form',
             }]
         }
+        console.log(this.project, "this.project 264");
         this.storage.set('projectToBeView', this.project).then(project => {
         })
       })

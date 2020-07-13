@@ -53,6 +53,9 @@
         <config-file parent="NSCameraUsageDescription" platform="ios" target="*-Info.plist">
             <string>You can upload attachments for the task using your camera</string>
         </config-file>
+        <feature name="SocialSharing">
+            <param name="ios-package" value="SocialSharing" />
+        </feature>
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />

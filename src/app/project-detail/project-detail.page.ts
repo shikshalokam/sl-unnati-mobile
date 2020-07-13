@@ -202,8 +202,6 @@ export class ProjectDetailPage {
     this.project.startDate = new Date();
     // if (this.category != 'my_projects' && this.category != 'projectsList' && this.category != 'form') {
     if (this.category != "my_projects" && this.category != "form") {
-      console.log(this.category);
-      console.log(this.project);
       this.project.createdType = "by reference";
       this.project.lastUpdate = new Date();
       this.project.isNew = true;
@@ -232,7 +230,7 @@ export class ProjectDetailPage {
       }
       this.storage.set("projectToBeView", this.project).then((project) => {
         this.project = project;
-        this.storage.get("latestProjects").then((p) => {});
+        this.storage.get("latestProjects").then((p) => { });
         this.createProjectService
           .insertIntoMyProjects(this.project)
           .then((data) => {
@@ -481,7 +479,7 @@ export class ProjectDetailPage {
           this.storage.set("newcreatedproject", this.project).then((sucess) => {
             this.storage
               .set("projectToBeView", this.project)
-              .then((updatedProject) => {});
+              .then((updatedProject) => { });
           });
         });
       }
@@ -625,10 +623,10 @@ export class ProjectDetailPage {
                     }
                     task.attachments.push(data);
                   },
-                  (err) => {}
+                  (err) => { }
                 );
             })
-            .catch((err) => {});
+            .catch((err) => { });
         })
         .catch((err) => {
           this.file
@@ -676,12 +674,12 @@ export class ProjectDetailPage {
                         }
                         task.attachments.push(data);
                       },
-                      (err) => {}
+                      (err) => { }
                     );
                 })
-                .catch((err) => {});
+                .catch((err) => { });
             })
-            .catch((err) => {});
+            .catch((err) => { });
         });
     } else {
       this.file
@@ -726,10 +724,10 @@ export class ProjectDetailPage {
                     }
                     task.attachments.push(data);
                   },
-                  (err) => {}
+                  (err) => { }
                 );
             })
-            .catch((err) => {});
+            .catch((err) => { });
         })
         .catch((err) => {
           this.file
@@ -777,12 +775,12 @@ export class ProjectDetailPage {
                         }
                         task.attachments.push(data);
                       },
-                      (err) => {}
+                      (err) => { }
                     );
                 })
-                .catch((err) => {});
+                .catch((err) => { });
             })
-            .catch((err) => {});
+            .catch((err) => { });
         });
     }
   }
