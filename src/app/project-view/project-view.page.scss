@@ -4,7 +4,9 @@
 :host(.show-back-button) {
   display: block;
 }
-
+ion-label {
+  font-family: 'SourceSansPro !important';
+}
 .bottom-tab-img-container{
   margin: auto;
   margin-bottom: -32px;

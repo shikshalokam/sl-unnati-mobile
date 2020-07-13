@@ -36,8 +36,6 @@ export class CategoryViewPage {
           (myProjects: any) => {
             if (myProjects) {
               myProjects.forEach((programsList) => {
-                console.log(programsList);
-                console.log(programsList.projects);
                 programsList.projects.sort((a, b) => {
                   if (!b.lastUpdate) {
                     b.lastUpdate = b.lastSync;

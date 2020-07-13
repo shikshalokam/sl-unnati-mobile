@@ -13,12 +13,17 @@
       text-transform: uppercase;"> {{'library.imp_library' | translate}}</h5>
     <ion-row>
       <ion-col *ngFor="let tile of tiles | searchCategory: searchInput" class="tiles" size="6"
-        style="    margin: 5px 0px;">
+        style="margin: 5px 0px;">
         <ion-card (click)="navigateToCategoryView(tile.value)">
           <img src="{{tile.icon}}">
           <p>{{tile.title}}</p>
         </ion-card>
       </ion-col>
     </ion-row>
+    <ion-card *ngIf="(tiles | searchCategory: searchInput).length == 0">
+      <div class="no-results">
+        No Library available.
+      </div>
+    </ion-card>
   </ion-grid>
 </ion-content>

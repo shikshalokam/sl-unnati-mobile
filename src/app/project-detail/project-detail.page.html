@@ -224,14 +224,9 @@
     </div>
     <div>Files</div>
   </div>
-  <ion-fab
-    vertical="bottom"
-    horizontal="end"
-    style="position: fixed;"
-    mode="ios"
-    *ngIf="show && addTaskButton  && tasksLength > 0 "
-  >
-    <ion-fab-button (click)="addTask()" style="margin-bottom: 20%;">
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" edge  *ngIf="!this.showAddTask && show && addTaskButton  && tasksLength > 0 ">
+    <ion-fab-button (click)="addTask()" style="margin-bottom: 60px;">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

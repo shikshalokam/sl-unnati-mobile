@@ -5,43 +5,38 @@
     src="https://dev.shikshalokam.org/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=sl-ionic-connect&redirect_uri=http://localhost:8100/project-view/home"></iframe> -->
 
   <!-- On boarding screens -->
-  <ion-slides pager="true" [options]="slideOpts" style="min-height: 100%;"
-    (ionSlidePrevEnd)="slideDidChangePrev($event)" (ionSlideNextEnd)="slideDidChangeNext($event)">
+
+  <ion-slides pager="true" [options]="slideOpts" #slides (ionSlidePrevEnd)="slideDidChangePrev($event)" style="min-height: 100%;"
+     (ionSlideNextEnd)="slideDidChangeNext($event)">
     <ion-slide *ngIf="veryFirstTime">
-      <ion-grid>
-        <ion-row>
-          <div class="img-container">
-            <img src="../../assets/images/onboarding1.png" />
-          </div>
-        </ion-row>
-        <div>
-          <div class="onboard-header">
-            Planning Improvement Projects
-          </div>
-          <p>
-            Create and track projects towards improving school and school
+      <div class="mainContainer">
+        <div class="conatiner">
+          <img src="../../assets/images/onboarding1.png" class="maxSize" />
+        </div>
+        <div class="_flex-box _justify-content-center conatiner">
+          <h4 class="blackText"> Planning Improvement Projects</h4>
+          <p class="alignLeft content">
+            Create and track projects towards improving 
+            school and school
             support system.
           </p>
         </div>
-      </ion-grid>
+      </div>
     </ion-slide>
     <ion-slide *ngIf="veryFirstTime">
-      <ion-grid>
-        <ion-row>
-          <div class="img-container">
-            <img src="../../assets/images/onboarding2.png" />
-          </div>
-        </ion-row>
-        <div>
-          <div class="onboard-header">
-            Assign Tasks and Subtasks
-          </div>
-          <p>
-            Divide your plans into tasks and sub-tasks and assign it to other
+      <div class="mainContainer">
+        <div class="conatiner">
+          <img src="../../assets/images/onboarding2.png" class="maxSize" />
+        </div>
+        <div class="_flex-box _justify-content-center conatiner">
+          <h4 class="blackText"> Assign Tasks and Subtasks</h4>
+          <p class="alignLeft content">
+            Divide your plans into tasks and sub-tasks
+            and assign it to other
             users.
           </p>
         </div>
-      </ion-grid>
+      </div>
     </ion-slide>
     <ion-slide *ngIf="!veryFirstTime">
       <ion-grid style="margin-top: 50%;">
