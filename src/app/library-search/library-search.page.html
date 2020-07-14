@@ -1,0 +1,17 @@
+<ion-header>
+  <app-header [title]="Search" [bg]="bgcolor" [showMenu]="false" [showBack]="true" [isGoBack]="back" [noBorder]="false">
+  </app-header>
+</ion-header>
+<ion-content>
+  <ion-item class="search-bar-custom">
+    <ion-icon name="search" item-left color="dark"></ion-icon>
+    <ion-input type="text" placeholder="Search" [(ngModel)]="searchInput"></ion-input>
+  </ion-item>
+  <ion-card style="margin: 20px;">
+    <ion-row *ngFor="let project of projects | searchProjects : searchInput" style="padding: 10px;"
+      (click)="viewProject(project)">
+      <ion-col size="1"> <img src={{project.icon}} style="width: 30px; margin-right: 20px;"></ion-col>
+      <ion-col size="11">{{project.title}} </ion-col>
+    </ion-row>
+  </ion-card>
+</ion-content>

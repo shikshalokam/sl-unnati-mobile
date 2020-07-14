@@ -6,14 +6,13 @@
 <ion-content style="--background: rgb(247, 247, 247); margin-bottom:40px;">
   <ion-item class="search-bar-custom">
     <ion-icon name="search" item-left color="dark"></ion-icon>
-    <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
+    <ion-input type="text" placeholder="{{'home.search' | translate }}" (ionFocus)="navigateToSearch()"></ion-input>
   </ion-item>
   <ion-grid class="library-tiles-container">
     <h5 style="padding: 15px;
       text-transform: uppercase;"> {{'library.imp_library' | translate}}</h5>
     <ion-row>
-      <ion-col *ngFor="let tile of tiles | searchCategory: searchInput" class="tiles" size="6"
-        style="    margin: 5px 0px;">
+      <ion-col *ngFor="let tile of tiles" class="tiles" size="6" style="    margin: 5px 0px;">
         <ion-card (click)="navigateToCategoryView(tile.value)">
           <img src="{{tile.icon}}">
           <p>{{tile.title}}</p>
