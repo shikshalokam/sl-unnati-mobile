@@ -263,6 +263,8 @@ export class AppComponent {
           this.router.navigateByUrl('project-view/detail');
         } else if (this.router.url == '/project-view/project-detail/form') {
           this.router.navigateByUrl('project-view/create-project');
+        } else if (this.router.url == '/project-view/project-detail/search') {
+          this.router.navigateByUrl('project-view/library-search');
         } else if (s[1].path == 'courses' && s[2].path == 'template-view') {
           if (s.length == 5) {
             this.router.navigateByUrl('project-view/template-view/' + s[3].path + '/' + s[4].path);

@@ -99,6 +99,7 @@ export class ProjectDetailPage {
     this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
     this.rootPath = this.isIos ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory;
     createProjectService.addNewTask.subscribe((data: any) => {
+      console.log(data, "data");
       this.showAddTask = false;
       if (this.project.tasks && this.project.tasks.length > 0) {
         data._id = this.project.tasks.length + 2;
@@ -106,6 +107,7 @@ export class ProjectDetailPage {
         data._id = 1;
       }
       this.project.tasks.push(data);
+      console.log(this.project, "this.project");
       this.tasksLength = this.project.tasks.length;
       if (this.tasksLength > 0 && this.project.isStarted) {
         this.project.tasks.sort((a, b) => {
@@ -132,6 +134,8 @@ export class ProjectDetailPage {
           this.back = 'project-view/home';
         } else if (this.category == 'form') {
           this.back = 'project-view/create-project/no';
+        } else if (this.category == 'search') {
+          this.back = 'project-view/library-search';
         }
         else {
           this.back = 'project-view/category/' + this.category;
@@ -143,7 +147,7 @@ export class ProjectDetailPage {
   }
   ionViewDidEnter() {
     this.projectService.setTitle("project-detail");
-    if (this.category == 'my_projects' || this.category == 'form' || this.category == 'home' || this.category == 'projectsList') {
+    if (this.category == 'my_projects' || this.category == 'form' || this.category == 'home' || this.category == 'search' || this.category == 'projectsList') {
       this.addTaskButton = true;
     } else {
       this.addTaskButton = false;
@@ -465,7 +469,8 @@ export class ProjectDetailPage {
   }
   // update the task
   public updateTask() {
-    let cp = this.project
+    let cp = this.project;
+    console.log(this.project, "this.project");
     cp.isEdited = true;
     cp.lastUpdate = new Date();
     this.createProjectService.updateByProjects(this.project);
@@ -476,7 +481,9 @@ export class ProjectDetailPage {
           projectsPrograms.projects.forEach(function (project, i) {
             if (project._id == cp._id) {
               cp.isEdited = true;
+              console.log(projectsPrograms.projects[i], " projectsPrograms.projects[i]", cp, "CP");
               projectsPrograms.projects[i] = cp;
+              console.log(projectsPrograms.projects[i], " projectsPrograms.projects[i] after");
               mapped = true;
             }
           });
