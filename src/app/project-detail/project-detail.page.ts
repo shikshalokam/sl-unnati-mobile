@@ -147,7 +147,7 @@ export class ProjectDetailPage {
   }
   ionViewDidEnter() {
     this.projectService.setTitle("project-detail");
-    if (this.category == 'my_projects' || this.category == 'form' || this.category == 'home' || this.category == 'search' || this.category == 'projectsList') {
+    if (this.category == 'my_projects' || this.category == 'form' || this.category == 'home' || this.category == 'projectsList') {
       this.addTaskButton = true;
     } else {
       this.addTaskButton = false;
@@ -157,6 +157,7 @@ export class ProjectDetailPage {
   }
   getProject() {
     this.storage.get(LocalKeys.projectToBeView).then(project => {
+
       let completed = 0;
       let notStarted = 0;
       this.tasksLength = 0;
@@ -165,7 +166,9 @@ export class ProjectDetailPage {
         if (!task.isDeleted) {
           this.tasksLength = this.tasksLength + 1;
         }
-
+        if (this.category == 'search' && project.createdType) {
+          this.addTaskButton = true;
+        }
         //  set the project status if project is started
         if (project.isStarted) {
           if (task.status == 'Not started' || task.status == 'not yet started') {
@@ -470,49 +473,50 @@ export class ProjectDetailPage {
   // update the task
   public updateTask() {
     let cp = this.project;
-    console.log(this.project, "this.project");
     cp.isEdited = true;
     cp.lastUpdate = new Date();
     this.createProjectService.updateByProjects(this.project);
     let mapped: boolean = false;
-    return this.storage.get('latestProjects').then(projectList => {
-      projectList.forEach(projectsPrograms => {
-        if (projectsPrograms) {
-          projectsPrograms.projects.forEach(function (project, i) {
-            if (project._id == cp._id) {
-              cp.isEdited = true;
-              console.log(projectsPrograms.projects[i], " projectsPrograms.projects[i]", cp, "CP");
-              projectsPrograms.projects[i] = cp;
-              console.log(projectsPrograms.projects[i], " projectsPrograms.projects[i] after");
-              mapped = true;
-            }
-          });
-        }
-        if (!mapped) {
-          if (projectList[0].projects) {
-            projectList[0].projects.forEach(function (project, i) {
+    return this.storage.get("latestProjects").then((projectList) => {
+      if (projectList) {
+        projectList.forEach((projectsPrograms) => {
+          if (projectsPrograms) {
+            projectsPrograms.projects.forEach(function (project, i) {
               if (project._id == cp._id) {
                 cp.isEdited = true;
-                projectList[0].projects[i] = cp;
+                projectsPrograms.projects[i] = cp;
+                mapped = true;
               }
             });
-          } else {
-            let pro1 = [{
-              projects: [
-              ]
-            }]
-            pro1[0].projects.push(this.project);
-            projectList = pro1;
           }
-        }
-      })
-      this.storage.set(LocalKeys.allProjects, projectList).then(projects => {
-        this.storage.set(LocalKeys.newcreatedproject, this.project).then(sucess => {
-          this.storage.set(LocalKeys.projectToBeView, this.project).then(updatedProject => {
-          })
-        })
-      })
-    })
+          if (!mapped) {
+            if (projectList && projectList[0].projects) {
+              projectList[0].projects.forEach(function (project, i) {
+                if (project._id == cp._id) {
+                  cp.isEdited = true;
+                  projectList[0].projects[i] = cp;
+                }
+              });
+            } else {
+              let pro1 = [
+                {
+                  projects: [],
+                },
+              ];
+              pro1[0].projects.push(this.project);
+              projectList = pro1;
+            }
+          }
+        });
+        this.storage.set("latestProjects", projectList).then((projects) => {
+          this.storage.set("newcreatedproject", this.project).then((sucess) => {
+            this.storage
+              .set("projectToBeView", this.project)
+              .then((updatedProject) => { });
+          });
+        });
+      }
+    });
   }
   // navigate to view task
   public taskView(task) {

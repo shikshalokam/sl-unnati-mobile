@@ -100,7 +100,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -121,7 +121,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -142,7 +142,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -163,7 +163,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -184,7 +184,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -205,7 +205,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -226,7 +226,7 @@
             [ngClass]="{'completed-task-left-border' : task.status === 'Completed','pending-task-left-border' : task.status != 'Completed'}">
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
-            <ion-col size="11">
+            <ion-col size="11" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>

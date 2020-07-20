@@ -126,7 +126,7 @@ export class HeaderComponent implements OnInit {
           }
         })
       }
-    }, 18000);
+    }, 1000);
     this.getNotificationCount();
   }
 

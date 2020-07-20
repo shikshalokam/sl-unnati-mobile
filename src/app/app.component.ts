@@ -23,13 +23,10 @@ import * as jwt_decode from "jwt-decode";
 import { NotificationCardService } from './notification-card/notification.service';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { AboutPage } from './about/about.page';
-import { ProjectDetailPage } from './project-detail/project-detail.page';
 import { TemplateViewPage } from './template-view/template-view.page';
 import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
-import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
-
 declare var cordova: any;
 
 @Component({

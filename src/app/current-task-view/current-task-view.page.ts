@@ -27,6 +27,7 @@ export class CurrentTaskViewPage implements OnInit {
   file;
   remarks;
   from;
+  currentDay;
   showpopup: boolean = false;
   enableMarkButton: boolean = false;
   id;
@@ -67,6 +68,10 @@ export class CurrentTaskViewPage implements OnInit {
     })
   }
   ionViewDidEnter() {
+    this.currentDay = new Date();
+    console.log(this.currentDay, "this.currentDay ");
+    this.currentDay = this.datepipe.transform(new Date(this.currentDay));
+    console.log(this.currentDay, "this.currentDay 23");
     this.getTask();
     this.showpopup = false;
     this.enableMarkButton = false;
@@ -111,36 +116,48 @@ export class CurrentTaskViewPage implements OnInit {
     }
   }
   // set date
-  public setDate(type) {
-    this.datePicker.show({
-      date: new Date(),
-      mode: 'date',
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    }).then(
-      date => {
-        if (type == 'subtask') {
-          this.subtask.endDate = this.datepipe.transform(new Date(date));
-          this.updateTask();
-        } else if (type == 'task') {
-          this.task.endDate = this.datepipe.transform(new Date(date));
-          this.updateTask();
-        }
-      },
-      err => console.log('Error occurred while getting date: ', err)
-    );
+  public setDate(event,type) {
+    if (type == 'subtask') {
+      this.subtask.endDate = this.datepipe.transform(new Date(event.detail.value));
+      this.updateTask();
+    } else if (type == 'task') {
+      this.task.endDate = this.datepipe.transform(new Date(event.detail.value));
+      this.updateTask();
+    }
+    // this.datePicker.show({
+    //   date: new Date(),
+    //   mode: 'date',
+    //   androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    // }).then(
+    //   date => {
+    //     if (type == 'subtask') {
+    //       this.subtask.endDate = this.datepipe.transform(new Date(date));
+    //       this.updateTask();
+    //     } else if (type == 'task') {
+    //       this.task.endDate = this.datepipe.transform(new Date(date));
+    //       this.updateTask();
+    //     }
+    //   },
+    //   err => console.log('Error occurred while getting date: ', err)
+    // );
   }
-  public setSubTaskDate(subTask) {
-    this.datePicker.show({
-      date: new Date(),
-      mode: 'date',
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    }).then(
-      date => {
-        subTask.endDate = this.datepipe.transform(new Date(date));
-        this.upDateSubTask(subTask, 'update')
-      },
-      err => console.log('Error occurred while getting date: ', err)
-    );
+  public setSubTaskDate(event, subTask) {
+
+    // this.datePicker.show({
+    //   date: new Date(),
+    //   mode: 'date',
+    //   androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    // }).then(
+    //   date => {
+    //     subTask.endDate = this.datepipe.transform(new Date(date));
+    //     this.upDateSubTask(subTask, 'update')
+    //   },
+    //   err => console.log('Error occurred while getting date: ', err)
+    // );
+    console.log(event.detail.value);
+    subTask.endDate = this.datepipe.transform(new Date(event.detail.value));
+    console.log(subTask.endDate, " subTask.endDate");
+    this.upDateSubTask(subTask, 'update')
   }
 
   public addSubtask() {
@@ -161,17 +178,8 @@ export class CurrentTaskViewPage implements OnInit {
     }
   }
 
-  public subtaskDate() {
-    this.datePicker.show({
-      date: new Date(),
-      mode: 'date',
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    }).then(
-      date => {
-        this.subtask.endDate = this.datepipe.transform(new Date(date));
-      },
-      err => console.log('Error occurred while getting date: ', err)
-    );
+  public subtaskDate(event) {
+    this.subtask.endDate = this.datepipe.transform(new Date(event.detail.value));
   }
   public updateCurrentProject(ct) {
     this.createProjectService.updateCurrentMyProject(ct).then(currentMyProject => {

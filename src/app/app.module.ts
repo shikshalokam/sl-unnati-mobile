@@ -124,6 +124,6 @@ export class AppModule {
     this.translate.use('en');
     this.statusBar.overlaysWebView(false);
     this.statusBar.backgroundColorByHexString('#fff');
-  }
+ }
 }
 platformBrowserDynamic().bootstrapModule(AppModule);
