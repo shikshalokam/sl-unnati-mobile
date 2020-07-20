@@ -7,7 +7,9 @@ import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { HomeService } from '../home/home.service';
 import { ToastService } from '../toast.service';
-import { AppConfigs } from '../app.config';
+import { AppConfigs } from '../core-module/constants/app.config';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { ProjectService } from '../project-view/project.service';
 @Component({
   selector: 'app-create-project',
   templateUrl: './create-project.page.html',
@@ -16,11 +18,12 @@ import { AppConfigs } from '../app.config';
 export class CreateProjectPage implements OnInit {
   back = 'project-view/home';
   isValidDate: boolean = true;
+  otherCategory;
   withinTitleLimit;
   withinGoalLimit;
   createProject: FormGroup;
   startDate;
-
+  selectedOther: boolean = false;
   popupshow: boolean = false;
   endDate;
   today: any = new Date();
@@ -28,15 +31,18 @@ export class CreateProjectPage implements OnInit {
   project: any = {};
   markLabelsAsInvalid: boolean = false;
   createNewProject: boolean;
-  categories = [
-    { value: 'Teacher', id: 1, isChecked: false },
-    { value: 'Student', id: 2, isChecked: false },
-    { value: 'Community', id: 3, isChecked: false },
-    { value: 'School process', id: 4, isChecked: false },
-    { value: 'infrastructure  ', id: 5, isChecked: false },
-    { value: 'Education leader', id: 6, isChecked: false },
-    { value: 'Other', id: 6, isChecked: false },
+
+  checkedCategories = [];
+  categories: any = [
+    { key: 'Teacher', id: 1, value: false },
+    { key: 'Student', id: 2, value: false },
+    { key: 'Community', id: 3, value: false },
+    { key: 'School process', id: 4, value: false },
+    { key: 'infrastructure', id: 5, value: false },
+    { key: 'Education leader', id: 6, value: false },
+    // { value: 'Other', id: 6, isChecked: false },
   ];
+
   constructor(
     public formBuilder: FormBuilder,
     public router: Router,
@@ -45,7 +51,8 @@ export class CreateProjectPage implements OnInit {
     public datePicker: DatePicker,
     public storage: Storage,
     public homeService: HomeService,
-    public toastService: ToastService
+    public toastService: ToastService,
+    public projectService: ProjectService
   ) {
     toastService.popClose.subscribe(data => {
       this.popupshow = false;
@@ -55,6 +62,10 @@ export class CreateProjectPage implements OnInit {
       this.createNewProject = true;
     })
     route.params.subscribe(param => {
+      this.projectService.setTitle('createProject');
+      // this.categories.forEach((cat, i) => {
+      //   this.categories[i].isChecked = false;
+      // });
       if (param.clearData == 'yes') {
         this.project = {};
         this.prepareForm();
@@ -62,27 +73,25 @@ export class CreateProjectPage implements OnInit {
         this.today = this.datepipe.transform(this.today, 'dd-MM-yyyy');
       } else {
         this.createNewProject = false;
-        this.storage.get('newcreatedproject').then(data => {
-          this.storage.get('latestProjects').then(projectsList => {
-            projectsList.forEach(programs => {
-              programs.projects.forEach(project => {
-                if (project._id == data._id) {
-                  this.project = project;
-                  if (this.project.startDate && this.project.endDate) {
-                    this.startDate = this.datepipe.transform(new Date(this.project.startDate));
-                    this.endDate = this.datepipe.transform(new Date(this.project.endDate));
-                  }
-                }
-              });
-            });
-            // projectsList[0].projects.forEach(project => {
-
-            // });
+        this.storage.get(LocalKeys.newcreatedproject).then(data => {
+          this.checkedCategories = data.category;
+          data.category.forEach(cat => {
+            if (cat == 'Teacher' || cat == 'Student' || cat == 'Community' || cat == 'School process' || cat == 'infrastructure' || cat == 'Education leader') {
+            } else {
+              this.selectedOther = true;
+              this.otherCategory = cat;
+              const index: number = this.checkedCategories.indexOf(cat);
+              if (index !== -1) {
+                this.checkedCategories.splice(index, 1);
+              }
+            }
           })
+          this.project = data;
         })
       }
     })
   }
+
   ionViewDidEnter() {
     this.isValidDate = true;
   }
@@ -94,9 +103,10 @@ export class CreateProjectPage implements OnInit {
     this.createProject = this.formBuilder.group({
       title: ['', Validators.required],
       goal: ['', Validators.required],
-      category: ['', Validators.required],
+      // category: ['', Validators.required],
       startDate: ['', ''],
-      endDate: ['', '']
+      endDate: ['', ''],
+      Othercategory: ['', '']
     })
   }
   // set date
@@ -160,7 +170,14 @@ export class CreateProjectPage implements OnInit {
   }
   // Create project
   public create() {
-    if (this.createProject.status == "INVALID" || !this.isValidDate) {
+    if (this.otherCategory) {
+      const index: number = this.checkedCategories.indexOf(this.otherCategory);
+      if (index == -1) {
+        this.checkedCategories.push(this.otherCategory);
+      }
+    }
+    this.project.category = this.checkedCategories;
+    if (this.createProject.status == "INVALID" || !this.isValidDate && (!this.project.category && this.project.category.length == 0)) {
       this.markLabelsAsInvalid = true;
     } else {
       this.markLabelsAsInvalid = false;
@@ -181,7 +198,7 @@ export class CreateProjectPage implements OnInit {
           programId = env.programId;
         }
       });
-      this.storage.get('latestProjects').then((projectsList: any) => {
+      this.storage.get(LocalKeys.allProjects).then((projectsList: any) => {
         let mapped: boolean = false;
         if (projectsList) {
           projectsList.forEach(programsList => {
@@ -195,9 +212,8 @@ export class CreateProjectPage implements OnInit {
                 if (this.createNewProject) {
                   this.project._id = programsList.projects.length + 1;
                   programsList.projects.push(this.project);
-                  console.log(projectsList, "this.project 196");
-                  this.storage.set('latestProjects', projectsList).then(myProjects => {
-                    this.storage.set('newcreatedproject', this.project).then(cmp => {
+                  this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {
+                    this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
                       this.toastService.successToast('message.project_is_created');
                       // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                     })
@@ -212,10 +228,8 @@ export class CreateProjectPage implements OnInit {
                       project.goal = this.project.goal;
                       project.endDate = this.project.endDate;
                       project.startDate = this.project.startDate;
-                      console.log(projectsList, "this.project 210");
-                      this.storage.set('latestProjects', projectsList).then(myProjects => {
-                        console.log(myProjects, "myProjects after sync 217");
-                        this.storage.set('newcreatedproject', this.project).then(cmp => {
+                      this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {
+                        this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
                           this.toastService.successToast('message.project_is_created');
                           // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
                         })
@@ -238,10 +252,8 @@ export class CreateProjectPage implements OnInit {
           }]
           pro1[0].projects.push(this.project);
           projectsList = pro1;
-          console.log(projectsList, "this.project 234");
-          this.storage.set('latestProjects', projectsList).then(myProjects => {
-            console.log(myProjects, "myProjects after sync 243");
-            this.storage.set('newcreatedproject', this.project).then(cmp => {
+          this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {
+            this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
               this.toastService.successToast('message.project_is_created');
               // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
             })
@@ -266,10 +278,26 @@ export class CreateProjectPage implements OnInit {
               isActionable: '/project-view/project-detail/form',
             }]
         }
-        console.log(this.project, "this.project 264");
-        this.storage.set('projectToBeView', this.project).then(project => {
+        this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
         })
       })
+    }
+  }
+  categorySelected(event) {
+    this.selectedOther = !this.selectedOther;
+    if (!this.selectedOther) {
+      this.otherCategory = '';
+    }
+  }
+
+  selectedCategory(key) {
+    if (!this.checkedCategories.includes(key)) {
+      this.checkedCategories.push(key);
+    } else {
+      const index: number = this.checkedCategories.indexOf(key);
+      if (index !== -1) {
+        this.checkedCategories.splice(index, 1);
+      }
     }
   }
 }

@@ -29,10 +29,12 @@
 
   <ion-tabs>
     <ion-tab-bar slot="top">
-      <ion-tab-button (click)="selectTab('allProjects')" [ngClass]="{'active-tab': activeTab == 'allProjects'}" class="custom-tab"> 
+      <ion-tab-button (click)="selectTab('allProjects')" [ngClass]="{'active-tab': activeTab == 'allProjects'}"
+        class="custom-tab">
         <ion-label>{{ "projects.allProjects" | translate }}</ion-label>
       </ion-tab-button>
-      <ion-tab-button (click)="selectTab('activeProjects')" [ngClass]="{'active-tab':  activeTab == 'activeProjects'}" class="custom-tab">
+      <ion-tab-button (click)="selectTab('activeProjects')" [ngClass]="{'active-tab':  activeTab == 'activeProjects'}"
+        class="custom-tab">
         <ion-label> {{ "projects.activeProjects" | translate }}</ion-label>
       </ion-tab-button>
     </ion-tab-bar>

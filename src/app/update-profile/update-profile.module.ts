@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpdateProfilePage } from './update-profile.page';
-import {SharedModule} from '../shared.module';
+import {SharedModule} from '../shared-module/shared-module';
 import {TranslateModule} from '@ngx-translate/core';
 const routes: Routes = [
   {

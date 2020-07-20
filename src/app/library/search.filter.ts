@@ -9,11 +9,13 @@ export class SearchCategory implements PipeTransform {
         if (!searchText) {
             return items;
         }
+        console.log(searchText, "searchText");
         searchText = searchText.toLowerCase();
         return items.filter(item => {
-                if (item.title.toLowerCase().includes(searchText)) {
-                    return item.title.toLowerCase().includes(searchText);
-                }
+            if (item.title.toLowerCase().includes(searchText)) {
+                console.log(item.title.toLowerCase().includes(searchText));
+                return item.title.toLowerCase().includes(searchText);
+            }
         });
     }
 }

@@ -9,7 +9,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
-  {  
+  {
     path: '',
     component: ProjectViewPage,
     children: [
@@ -51,6 +51,7 @@ const routes: Routes = [
       { path: 'tutorial-videos', loadChildren: '../tutorial-videos/tutorial-videos.module#TutorialVideosPageModule' },
       { path: 'template-view/:templateId', loadChildren: '../template-view/template-view.module#TemplateViewPageModule' },
       { path: 'template-view/:templateId/:programId', loadChildren: '../template-view/template-view.module#TemplateViewPageModule' },
+      { path: 'library-search', loadChildren: '../library-search/library-search.module#LibrarySearchPageModule' },
     ]
   }
 ]

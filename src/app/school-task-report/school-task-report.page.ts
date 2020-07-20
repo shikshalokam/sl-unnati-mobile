@@ -11,7 +11,7 @@ import { Market } from '@ionic-native/market/ngx';
 import { ProjectService } from '../project-view/project.service';
 import { HomeService } from '../home/home.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 @Component({
   selector: 'app-school-task-report',
   templateUrl: './school-task-report.page.html',
@@ -41,18 +41,18 @@ export class SchoolTaskReportPage implements OnInit {
     public schoolTaskService: SchoolTaskService) {
     this.route.params.subscribe(params => {
       this.school = params;
-      this.storage.get('mySchools').then(data => {
+      this.storage.get(LocalKeys.mySchools).then(data => {
         if (data) {
           if (data.find((pro) => pro.id === this.school.id) === undefined) {
             data.push(this.school);
-            this.storage.set('mySchools', data).then((data: any) => {
+            this.storage.set(LocalKeys.mySchools, data).then((data: any) => {
               this.homeservice.loadMyProjects();
             });
           }
         } else {
           let data1: any = [];
           data1.push(this.school);
-          this.storage.set('mySchools', data1).then((data: any) => {
+          this.storage.set(LocalKeys.mySchools, data1).then((data: any) => {
             this.homeservice.loadMyProjects();
           });
         }
@@ -85,7 +85,7 @@ export class SchoolTaskReportPage implements OnInit {
         this.showSkeleton = false;
         this.errorToast(data.message);
       }
-    }, error => { 
+    }, error => {
       this.showSkeleton = false;
     })
   }
@@ -106,7 +106,7 @@ export class SchoolTaskReportPage implements OnInit {
     this.connected = localStorage.getItem("networkStatus");
     let connected = navigator.onLine;
     if (connected) {
-      this.storage.get('latestProjects').then(projects => {
+      this.storage.get(LocalKeys.allProjects).then(projects => {
         if (projects) {
           if (typeof projects == 'string') {
             projects = JSON.parse(projects);
@@ -139,7 +139,7 @@ export class SchoolTaskReportPage implements OnInit {
     let connected = navigator.onLine;
     if (connected) {
       // this.router.navigate(['/project-view/detail', id, 'school']);
-      this.storage.get('latestProjects').then(projects => {
+      this.storage.get(LocalKeys.allProjects).then(projects => {
         if (projects) {
           if (typeof projects == 'string') {
             projects = JSON.parse(projects);
@@ -147,7 +147,7 @@ export class SchoolTaskReportPage implements OnInit {
           projects.forEach(project => {
             if (project._id == id) {
               navigate = true;
-              this.storage.set('projectToBeView', project).then(project => {
+              this.storage.set(LocalKeys.projectToBeView, project).then(project => {
                 this.router.navigate(['/project-view/project-detail', 'schools'])
               })
             } else {
@@ -175,7 +175,7 @@ export class SchoolTaskReportPage implements OnInit {
     this.projectService.projectDetails(value).subscribe((resp: any) => {
       if (resp.status != 'failed') {
         resp.data.projects.forEach(cp => {
-          this.storage.set('projectToBeView', cp).then(project => {
+          this.storage.set(LocalKeys.projectToBeView, cp).then(project => {
             if (path == 'details') {
               this.router.navigate(['/project-view/project-detail', 'schools'])
             } else {
@@ -183,7 +183,7 @@ export class SchoolTaskReportPage implements OnInit {
             }
           })
         });
-        this.storage.get('latestProjects').then((projects: any) => {
+        this.storage.get(LocalKeys.allProjects).then((projects: any) => {
           if (projects) {
             if (typeof projects == 'string') {
               projects = JSON.parse(projects);
@@ -192,9 +192,9 @@ export class SchoolTaskReportPage implements OnInit {
               prjs.projects.forEach(project => {
                 if (project._id === id) {
                   prjs.projects.push(project);
-                  this.storage.set('latestProjects', projects).then(projects => {
+                  this.storage.set(LocalKeys.allProjects, projects).then(projects => {
                   })
-                  this.storage.set('projectToBeView', project).then(project => {
+                  this.storage.set(LocalKeys.projectToBeView, project).then(project => {
                     if (path == 'details') {
                       this.router.navigate(['/project-view/project-detail', 'schools'])
                     } else {
@@ -205,11 +205,11 @@ export class SchoolTaskReportPage implements OnInit {
               });
             });
           } else {
-            this.storage.set('latestProjects', resp).then(projects => {
+            this.storage.set(LocalKeys.allProjects, resp).then(projects => {
               resp.data.projects.forEach(prj => {
-                this.storage.set('projectToBeView', prj).then(project => {
+                this.storage.set(LocalKeys.projectToBeView, prj).then(project => {
                   if (path == 'details') {
-                    this.router.navigate(['/project-view/project-detail', 'schools'])  
+                    this.router.navigate(['/project-view/project-detail', 'schools'])
                   } else {
                     this.router.navigate(['/project-view/status', id]);
                   }

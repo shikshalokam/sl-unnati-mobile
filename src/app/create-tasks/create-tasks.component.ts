@@ -103,7 +103,6 @@ export class CreateTasksComponent implements OnInit {
     } else {
       this.submitAttempt = true;
     }
-
   }
   public setDate(endDate) {
     this.datePicker.show({

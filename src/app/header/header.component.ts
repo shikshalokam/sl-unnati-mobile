@@ -9,8 +9,8 @@ import { HomeService } from '../home/home.service';
 import { Platform } from '@ionic/angular';
 import { UpdateProfileService } from '../update-profile/update-profile.service';
 import { NetworkService } from '../network.service';
-import { AppConfigs } from '../app.config';
-
+import { AppConfigs } from '../core-module/constants/app.config';
+import { Location } from '@angular/common';
 // import { AppVersion } from '@ionic-native/app-version';
 
 @Component({
@@ -41,6 +41,7 @@ export class HeaderComponent implements OnInit {
     public homeService: HomeService,
     public updateProfileService: UpdateProfileService,
     public networkService: NetworkService,
+    public location: Location,
     // public appVersion: AppVersion
   ) {
     this.platform.ready().then(() => {
@@ -125,7 +126,7 @@ export class HeaderComponent implements OnInit {
           }
         })
       }
-    }, 18000);
+    }, 1000);
     this.getNotificationCount();
   }
 
