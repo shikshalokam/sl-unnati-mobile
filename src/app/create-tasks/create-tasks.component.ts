@@ -104,17 +104,18 @@ export class CreateTasksComponent implements OnInit {
       this.submitAttempt = true;
     }
   }
-  public setDate(endDate) {
-    this.datePicker.show({
-      date: new Date(),
-      mode: 'date',
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    }).then(
-      date => {
-        endDate.value = this.datepipe.transform(new Date(date));
-      },
-      err => console.log('Error occurred while getting date: ', err)
-    );
+  public setDate(event, endDate) {
+    endDate.value = this.datepipe.transform(new Date(event.detail.value));
+    // this.datePicker.show({
+    //   date: new Date(),
+    //   mode: 'date',
+    //   androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    // }).then(
+    //   date => {
+    //     endDate.value = this.datepipe.transform(new Date(date));
+    //   },
+    //   err => console.log('Error occurred while getting date: ', err)
+    // );
   }
 
   action(role) {

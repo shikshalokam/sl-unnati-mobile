@@ -1,11 +1,6 @@
 <ion-header>
-  <app-header
-    [title]="'projectDetail.page' | translate"
-    [showMenu]="false"
-    [showBack]="true"
-    [noBorder]="false"
-    [isGoBack]="back"
-  >
+  <app-header [title]="'projectDetail.page' | translate" [showMenu]="false" [showBack]="true" [noBorder]="false"
+    [isGoBack]="back">
   </app-header>
 </ion-header>
 <ion-content (mouseout)="blockEditAll()">
@@ -20,28 +15,13 @@
           {{project?.title}}
         </ion-col>
       </ion-row>
-      <ion-item
-        class="custom-ion-item"
-        *ngIf="editTitle"
-        (mouseout)="blockEdit('title')"
-      >
-        <ion-label
-          class="custom-label"
-          position="floating"
-          [ngClass]="{'required-field':markLabelsAsInvalid && !project.title}"
-        >
-          {{'projectDetail.title' | translate}}</ion-label
-        >
-        <ion-input
-          type="text"
-          #inputBox
-          autofocus
-          [(ngModel)]="project.title"
-          name="title"
-          (mouseout)="blockEdit('title')"
-          placeholder="{{'create_project.placeholder_project_title'| translate}}"
-          maxlength="280"
-        ></ion-input>
+      <ion-item class="custom-ion-item" *ngIf="editTitle" (mouseout)="blockEdit('title')">
+        <ion-label class="custom-label" position="floating"
+          [ngClass]="{'required-field':markLabelsAsInvalid && !project.title}">
+          {{'projectDetail.title' | translate}}</ion-label>
+        <ion-input type="text" #inputBox autofocus [(ngModel)]="project.title" name="title"
+          (mouseout)="blockEdit('title')" placeholder="{{'create_project.placeholder_project_title'| translate}}"
+          maxlength="280"></ion-input>
       </ion-item>
       <ion-row *ngIf="!editGoal">
         <ion-col size="5" class="label-box">
@@ -51,28 +31,13 @@
           {{project?.goal}}
         </ion-col>
       </ion-row>
-      <ion-item
-        class="custom-ion-item"
-        *ngIf="editGoal"
-        (mouseout)="blockEdit('goal')"
-      >
-        <ion-label
-          class="custom-label"
-          position="floating"
-          [ngClass]="{'required-field':markLabelsAsInvalid && !project.goal}"
-        >
-          {{'create_project.goal' | translate}}</ion-label
-        >
-        <ion-textarea
-          type="text"
-          #inputBox
-          [(ngModel)]="project.goal"
-          autofocus
-          name="goal"
-          (mouseout)="blockEdit('goal')"
-          placeholder="{{'create_project.placeholder_goal'| translate}}"
-          maxlength="1000"
-        ></ion-textarea>
+      <ion-item class="custom-ion-item" *ngIf="editGoal" (mouseout)="blockEdit('goal')">
+        <ion-label class="custom-label" position="floating"
+          [ngClass]="{'required-field':markLabelsAsInvalid && !project.goal}">
+          {{'create_project.goal' | translate}}</ion-label>
+        <ion-textarea type="text" #inputBox [(ngModel)]="project.goal" autofocus name="goal"
+          (mouseout)="blockEdit('goal')" placeholder="{{'create_project.placeholder_goal'| translate}}"
+          maxlength="1000"></ion-textarea>
       </ion-item>
       <ion-row *ngIf="project?.duration">
         <ion-col size="5" class="label-box">
@@ -82,39 +47,38 @@
           {{project?.duration}}
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="project?.startDate">
-        <ion-col size="5" class="label-box">
-          {{'projectDetail.start_date' | translate}}
-        </ion-col>
-        <ion-col size="7" (click)="setDate('sd')">
-          {{project?.startDate | date : "dd/MM/yyyy"}}
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="5" class="label-box">
-          {{'projectDetail.end_date' | translate}}
-        </ion-col>
-        <ion-col size="7" (click)="setDate('ed')">
-          {{project?.endDate | date : "dd/MM/yyyy"}}
-        </ion-col>
-      </ion-row>
+      <ion-item class="ion-date-time">
+        <ion-row *ngIf="project?.startDate" style="min-width: 100%;">
+          <ion-col size="5" class="label-box">
+            {{'projectDetail.start_date' | translate}}
+          </ion-col>
+          <ion-col size="7">
+            <ion-datetime (ionChange)="setDate($event,'sd')" min="2000" max="2100" display-timezone="utc"
+              style="padding: 0px; font-weight: 600;" value={{project?.startDate}}>
+            </ion-datetime>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+      <ion-item class="ion-date-time">
+        <ion-row style="min-width: 100%;">
+          <ion-col size="5" class="label-box">
+            {{'projectDetail.end_date' | translate}}
+          </ion-col>
+          <ion-col size="7">
+            <ion-datetime (ionChange)="setDate($event,'ed')" min="2000" max="2100" display-timezone="utc"
+              value={{project?.endDate}} style="padding: 0px; font-weight: 600;">
+            </ion-datetime>
+          </ion-col>
+        </ion-row>
+      </ion-item>
       <ion-row *ngIf="project?.status">
         <ion-col size="5" class="label-box">
           {{'projectDetail.status' | translate}}
         </ion-col>
         <ion-col size="7" *ngIf="project?.status">
-          <ion-select
-            [(ngModel)]="project.status"
-            class="custom-select"
-            placeholder="Select Status"
-            [disabled]="true"
-          >
-            <ion-select-option
-              *ngFor="let status of statuses"
-              value="{{status.title}}"
-              selected="status.title === project.status"
-              >{{status.title}}</ion-select-option
-            >
+          <ion-select [(ngModel)]="project.status" class="custom-select" placeholder="Select Status" [disabled]="true">
+            <ion-select-option *ngFor="let status of statuses" value="{{status.title}}"
+              selected="status.title === project.status">{{status.title}}</ion-select-option>
           </ion-select>
         </ion-col>
       </ion-row>
@@ -127,13 +91,8 @@
       >
         {{'button.learning_resources' | translate}}
       </ion-button> -->
-      <ion-button
-        class="round-corner-btn prjdetail-btn"
-        expand="block"
-        color="secondary"
-        (click)="navigateToResources()"
-        *ngIf="category != 'form'   && project?.resources?.length"
-      >
+      <ion-button class="round-corner-btn prjdetail-btn" expand="block" color="secondary"
+        (click)="navigateToResources()" *ngIf="category != 'form'   && project?.resources?.length">
         {{'button.learning_resources' | translate}}
       </ion-button>
     </div>
@@ -314,19 +273,16 @@
     *ngIf="show && !project.isStarted">
     {{'button.imp_prj' | translate}}
   </ion-button>
-  <div
-    *ngIf="show && project.isStarted && project.tasks"
-    color="file-container"
-    class="file-container"
-    (click)="navigateToFiles()"
-  >
+  <div *ngIf="show && project.isStarted && project.tasks" color="file-container" class="file-container"
+    (click)="navigateToFiles()">
     <div>
       <img src="assets/images/folder.png" />
     </div>
     <div>Files</div>
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" edge  *ngIf="!this.showAddTask && show && addTaskButton  && tasksLength > 0 ">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" edge
+    *ngIf="!this.showAddTask && show && addTaskButton  && tasksLength > 0 ">
     <ion-fab-button (click)="addTask()" style="margin-bottom: 60px;">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

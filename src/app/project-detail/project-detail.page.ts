@@ -367,35 +367,24 @@ export class ProjectDetailPage {
     this.router.navigate(["/project-view/files", this.project._id]);
   }
   // set date
-  public setDate(type) {
-    this.datePicker
-      .show({
-        date: new Date(),
-        mode: "date",
-        androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK,
-      })
-      .then(
-        (date) => {
-          if (type == "sd") {
-            this.project.startDate = this.datepipe.transform(new Date(date));
-            this.startDate = date;
-            if (this.project.endDate) {
-              this.checkDate();
-            }
-          } else if (type == "ed") {
-            this.project.endDate = this.datepipe.transform(new Date(date));
-            this.endDate = date;
-            if (this.project.startDate) {
-              this.checkDate();
-            } else {
-              this.project.startDate = this.datepipe.transform(new Date());
-              this.checkDate();
-            }
-          }
-          this.createProjectService.updateByProjects(this.project);
-        },
-        (err) => console.log("Error occurred while getting date: ", err)
-      );
+  public setDate(event,type) {
+    if (type == "sd") {
+      this.project.startDate = this.datepipe.transform(new Date(event.detail.value));
+      this.startDate = event.detail.value;
+      if (this.project.endDate) {
+        this.checkDate();
+      }
+    } else if (type == "ed") {
+      this.project.endDate = this.datepipe.transform(new Date(event.detail.value));
+      this.endDate = event.detail.value;
+      if (this.project.startDate) {
+        this.checkDate();
+      } else {
+        this.project.startDate = this.datepipe.transform(new Date());
+        this.checkDate();
+      }
+    }
+    this.createProjectService.updateByProjects(this.project);
   }
 
   // validate date
