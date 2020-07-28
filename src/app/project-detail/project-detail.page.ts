@@ -53,17 +53,17 @@ export class ProjectDetailPage {
   menus = [{
     title: 'Share Task',
     value: 'shareTask',
-    icon: 'md-share'
+    icon: 'share'
   },
   {
     title: 'Edit Task',
     value: 'editTask',
-    icon: 'md-create'
+    icon: 'create'
   },
   {
     title: 'Delete Task',
     value: 'deleteTask',
-    icon: 'md-trash'
+    icon: 'trash'
   }
   ]
   statuses = [
@@ -98,7 +98,6 @@ export class ProjectDetailPage {
     this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
     this.rootPath = this.isIos ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory;
     createProjectService.addNewTask.subscribe((data: any) => {
-      console.log(data, "data");
       this.showAddTask = false;
       if (this.project.tasks && this.project.tasks.length > 0) {
         data._id = this.project.tasks.length + 2;
@@ -106,7 +105,6 @@ export class ProjectDetailPage {
         data._id = 1;
       }
       this.project.tasks.push(data);
-      console.log(this.project, "this.project");
       this.tasksLength = this.project.tasks.length;
       if (this.tasksLength > 0 && this.project.isStarted) {
         this.project.tasks.sort((a, b) => {
@@ -235,9 +233,11 @@ export class ProjectDetailPage {
     ) {
       this.project.status = "In Progress";
     }
-    this.project.startDate = new Date();
+    if (!this.project.startDate) {
+      this.project.startDate = new Date();
+    }
     // if (this.category != 'my_projects' && this.category != 'projectsList' && this.category != 'form') {
-    if (this.category != "my_projects" && this.category != "form") {
+    if (this.category != "my_projects" && this.category != "form" && this.category != 'projectsList') {
       this.project.createdType = "by reference";
       this.project.lastUpdate = new Date();
       this.project.isNew = true;
@@ -367,7 +367,7 @@ export class ProjectDetailPage {
     this.router.navigate(["/project-view/files", this.project._id]);
   }
   // set date
-  public setDate(event,type) {
+  public setDate(event, type) {
     if (type == "sd") {
       this.project.startDate = this.datepipe.transform(new Date(event.detail.value));
       this.startDate = event.detail.value;

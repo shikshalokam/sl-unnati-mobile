@@ -13,7 +13,8 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { Platform } from '@ionic/angular';
 import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
-
+import { ActionSheetController } from '@ionic/angular';
+import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
 declare var cordova: any;
 
 @Component({
@@ -60,7 +61,8 @@ export class CurrentTaskViewPage implements OnInit {
     public createProjectService: CreateProjectService,
     public toastService: ToastService,
     public fileChooser: FileChooser,
-
+    public actionSheetController: ActionSheetController,
+    private imagePicker: ImagePicker,
     public camera: Camera) {
     route.params.subscribe(param => {
       this.from = param.from;
@@ -69,9 +71,7 @@ export class CurrentTaskViewPage implements OnInit {
   }
   ionViewDidEnter() {
     this.currentDay = new Date();
-    console.log(this.currentDay, "this.currentDay ");
     this.currentDay = this.datepipe.transform(new Date(this.currentDay));
-    console.log(this.currentDay, "this.currentDay 23");
     this.getTask();
     this.showpopup = false;
     this.enableMarkButton = false;
@@ -116,7 +116,7 @@ export class CurrentTaskViewPage implements OnInit {
     }
   }
   // set date
-  public setDate(event,type) {
+  public setDate(event, type) {
     if (type == 'subtask') {
       this.subtask.endDate = this.datepipe.transform(new Date(event.detail.value));
       this.updateTask();
@@ -124,39 +124,9 @@ export class CurrentTaskViewPage implements OnInit {
       this.task.endDate = this.datepipe.transform(new Date(event.detail.value));
       this.updateTask();
     }
-    // this.datePicker.show({
-    //   date: new Date(),
-    //   mode: 'date',
-    //   androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    // }).then(
-    //   date => {
-    //     if (type == 'subtask') {
-    //       this.subtask.endDate = this.datepipe.transform(new Date(date));
-    //       this.updateTask();
-    //     } else if (type == 'task') {
-    //       this.task.endDate = this.datepipe.transform(new Date(date));
-    //       this.updateTask();
-    //     }
-    //   },
-    //   err => console.log('Error occurred while getting date: ', err)
-    // );
   }
   public setSubTaskDate(event, subTask) {
-
-    // this.datePicker.show({
-    //   date: new Date(),
-    //   mode: 'date',
-    //   androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    // }).then(
-    //   date => {
-    //     subTask.endDate = this.datepipe.transform(new Date(date));
-    //     this.upDateSubTask(subTask, 'update')
-    //   },
-    //   err => console.log('Error occurred while getting date: ', err)
-    // );
-    console.log(event.detail.value);
     subTask.endDate = this.datepipe.transform(new Date(event.detail.value));
-    console.log(subTask.endDate, " subTask.endDate");
     this.upDateSubTask(subTask, 'update')
   }
 
@@ -183,12 +153,10 @@ export class CurrentTaskViewPage implements OnInit {
   }
   public updateCurrentProject(ct) {
     this.createProjectService.updateCurrentMyProject(ct).then(currentMyProject => {
-      //  this.getTask();
     })
   }
   //  update the project after completing task.
   public updateProject(ct) {
-
     let updateProcess = "start";
     localStorage.setItem("updateProcess", updateProcess);
     this.createProjectService.updateCurrentMyProject(ct).then(currentMyProject => {
@@ -407,7 +375,6 @@ export class CurrentTaskViewPage implements OnInit {
               type: fileMIMEType,
               isNew: true
             }
-
             this.checkInLocal(imageData, currentName, fileData);
           } else {
             this.toastService.errorToast('Sorry,Please attach image or pdf.')
@@ -430,7 +397,7 @@ export class CurrentTaskViewPage implements OnInit {
     }
     return MIMETypes[ext];
   }
-  openCamera() {
+  openCamera(type) {
     const options: CameraOptions = {
       quality: 20,
       targetWidth: 600,
@@ -439,7 +406,7 @@ export class CurrentTaskViewPage implements OnInit {
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
-      sourceType: this.camera.PictureSourceType.CAMERA
+      sourceType: type
     }
     this.camera.getPicture(options).then((imageData) => {
       let d = new Date(),
@@ -457,8 +424,6 @@ export class CurrentTaskViewPage implements OnInit {
       // Handle error
     });
   }
-
-
 
   public saveFile(imageData, newFileName, newAttachment) {
     let currentPath = imageData.substr(0, imageData.lastIndexOf('/') + 1).toString();
@@ -517,5 +482,39 @@ export class CurrentTaskViewPage implements OnInit {
         this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
       })
     })
+  }
+
+  async openActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Add Attachments',
+      cssClass: 'my-custom-class',
+      buttons: [{
+        text: 'Camera',
+        role: 'destructive',
+        icon: 'camera',
+        handler: () => {
+          this.openCamera(this.camera.PictureSourceType.CAMERA);
+        }
+      }, {
+        text: 'Upload Image',
+        icon: 'cloud-upload',
+        handler: () => {
+           this.openCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
+        }
+      }, {
+        text: 'Upload File',
+        icon: 'document',
+        handler: () => {
+          this.selectFile();
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+        }
+      }]
+    });
+    await actionSheet.present();
   }
 }

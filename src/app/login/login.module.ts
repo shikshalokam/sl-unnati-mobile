@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-import { FcmProvider } from '../fcm';
+// import { FcmProvider } from '../fcm';
 import { IonicModule } from '@ionic/angular';
 
 import { LoginPage } from './login.page';
@@ -23,6 +23,5 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [LoginPage,SafePipe],
-  providers: [FcmProvider]
 })
 export class LoginPageModule { }

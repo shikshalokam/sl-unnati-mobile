@@ -24,8 +24,8 @@ import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { DatePipe } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { FCM } from '@ionic-native/fcm/ngx';
-import { FcmProvider } from './fcm';
+// import { FCM } from '@ionic-native/fcm/ngx';
+// import { FcmProvider } from './fcm';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { Badge } from '@ionic-native/badge/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
@@ -42,6 +42,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { Market } from '@ionic-native/market/ngx';
 import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
 // export function createTranslateLoader(http:Http ) {
 //   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 // }
@@ -105,6 +106,7 @@ export function HttpLoaderFactory(handler: HttpBackend) {
     AndroidPermissions,
     Deeplinks,
     IOSFilePicker,
+    ImagePicker,
     DocumentViewer,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
@@ -112,8 +114,8 @@ export function HttpLoaderFactory(handler: HttpBackend) {
       useClass: TokenInterceptor,
       multi: true,
     },
-    FCM,
-    FcmProvider,
+    // FCM,
+    // FcmProvider,
     LocalNotifications,
     Badge,
   ],
@@ -125,6 +127,6 @@ export class AppModule {
     this.translate.use("en");
     this.statusBar.overlaysWebView(false);
     this.statusBar.backgroundColorByHexString('#fff');
- }
+  }
 }
 platformBrowserDynamic().bootstrapModule(AppModule);

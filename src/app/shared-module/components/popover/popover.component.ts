@@ -456,18 +456,21 @@ export class PopoverComponent implements OnInit {
     const fileTransfer: FileTransferObject = this.transfer.create();
     const url = data.pdfUrl;
     fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
-      this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
-        let data = base64File.split(',');
-        let base64Data = "data:application/pdf;base64," + data[1];
-        this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+      let fileName1 = entry.nativeURL.split('/').pop();
+      let path = entry.nativeURL.substring(0, entry.nativeURL.lastIndexOf("/") + 1);
+      this.file.readAsDataURL(path, fileName)
+        .then(base64File => {
+          let data = base64File.split(',');
+          let base64Data = "data:application/pdf;base64," + data[1];
+          this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+            this.toastService.stopLoader();
+          }, error => {
+            this.toastService.stopLoader();
+            // intentially left blank
+          });
+        }, (err) => {
           this.toastService.stopLoader();
-        }, error => {
-          this.toastService.stopLoader();
-          // intentially left blank
         });
-      }, (err) => {
-        this.toastService.stopLoader();
-      });
     }, (error) => {
       this.toastService.stopLoader();
     });

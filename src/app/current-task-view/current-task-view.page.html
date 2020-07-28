@@ -132,11 +132,11 @@
           </ion-col>
           <ion-col size="3" class="pop-action">
             <div class="icon-attch" [ngClass]="{'isHaveData': task.imageUrl}">
-              <img src="assets/images/camera.svg" (click)="openCamera()" style="width: 1.8em;">
+              <img src="assets/images/camera.svg" (click)="openActionSheet()" style="width: 1.8em;">
             </div>
           </ion-col>
           <ion-col size="3" class="pop-action">
-            <div class="icon-attch" [ngClass]="{'isHaveData': task.file?.name}" (click)="selectFile()">
+            <div class="icon-attch" [ngClass]="{'isHaveData': task.file?.name}" (click)="openActionSheet()">
               <img src="assets/images/attach_file.svg" style="width: 1.8em;">
             </div>
           </ion-col>

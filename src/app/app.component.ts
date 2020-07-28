@@ -18,7 +18,7 @@ import { ProjectService } from '../app/project-view/project.service';
 import { HomeService } from './home/home.service';
 import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
-import { FcmProvider } from './fcm';
+// import { FcmProvider } from './fcm';
 import * as jwt_decode from "jwt-decode";
 import { NotificationCardService } from './notification-card/notification.service';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
@@ -70,7 +70,7 @@ export class AppComponent {
   constructor(
     private zone: NgZone,
     public storage: Storage,
-    public fcm: FcmProvider,
+    // public fcm: FcmProvider,
     public navController: NavController,
     public alertController: AlertController,
     public router: Router,
@@ -205,8 +205,8 @@ export class AppComponent {
         localStorage.setItem('isPopUpShowen', null);
       });
       // this.fcm.connectSubscription.unsubscribe();
-      this.fcm.subscribeToPushNotifications();
-      this.fcm.localNotificationClickHandler();
+      // this.fcm.subscribeToPushNotifications();
+      // this.fcm.localNotificationClickHandler();
       this.network.onDisconnect()
         .subscribe(() => {
           this.isConnected = false;

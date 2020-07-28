@@ -10,7 +10,7 @@ import { Login } from '../login.service';
 import { TranslateService } from '@ngx-translate/core';
 import * as jwt_decode from "jwt-decode";
 import { IonSlides } from '@ionic/angular';
-import { FcmProvider } from '../fcm';
+// import { FcmProvider } from '../fcm';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -40,7 +40,7 @@ export class LoginPage {
     public menuCtrl: MenuController,
     public networkService: NetworkService,
     public network: Network,
-    public fcm: FcmProvider,
+    // public fcm: FcmProvider,
     public splashScreen: SplashScreen) {
   }
   slideOpts = {
@@ -59,7 +59,6 @@ export class LoginPage {
 
   //Login 
   doOAuthStepOne(): Promise<any> {
-    alert("doOAuthStepOne");
     this.base_url = environment.app_url;
     this.redirect_url = environment.keyCloak.redirection_url;
     this.auth_url = this.base_url + "/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=" + environment.clientId + "&redirect_uri=" +
@@ -77,11 +76,8 @@ export class LoginPage {
           if (responseParameters !== undefined) {
             this.show = false;
             browserRef.close();
-            alert("success doOAuthStepOne" + responseParameters);
             resolve(responseParameters);
           } else {
-            alert("in else doOAuthStepOne");
-
             reject("Problem authenticating with Sunbird");
           }
         }
@@ -92,13 +88,8 @@ export class LoginPage {
   // Login call
   loginClick() {
     // this.showLogin = true;
-    alert("in login");
     this.doOAuthStepOne().then(success => {
-      console.log(success, "success");
-      alert(success + "success");
       this.login.doOAuthStepTwo(success).then(success1 => {
-        console.log(success1, "success1");
-        alert(success1 + "success1");
         this.login.checkForCurrentUserLocalData(success1);
         let userDetails = jwt_decode(success1.access_token);
         this.storage.set('userDetails', userDetails).then(userData => {
@@ -111,7 +102,7 @@ export class LoginPage {
           } else {
             this.router.navigateByUrl('/project-view/home');
           }
-          this.fcm.initializeFCM();
+          // this.fcm.initializeFCM();
           this.login.loggedIn('true');
           this.storage.set('veryFirstTime', 'false').then(data => {
             this.veryFirstTime = false;
@@ -124,22 +115,24 @@ export class LoginPage {
         this.login.loggedIn('true');
         localStorage.setItem("networkStatus", 'true');
       }).catch(error1 => {
-        console.log(error1, "error 118");
-        alert(JSON.stringify(error1) + "error1");
       })
     }).catch(error => {
-      console.log(error, "error 120");
-      alert(JSON.stringify(error) + "error");
     })
   }
 
   slideDidChangePrev(event) {
-    console.log(event, "event event 124");
-    this.buttonTitle = "Skip";
+    if (this.buttonTitle == "Get started") {
+      this.buttonTitle = "Skip";
+    } else if (this.buttonTitle == "") {
+      this.buttonTitle = "Get started";
+    }
   }
   slideDidChangeNext(event) {
-    console.log(event, "event event 128");
-    this.buttonTitle = "Get started";
+    if (this.buttonTitle == "Get started") {
+      this.buttonTitle = "";
+    } else if (this.buttonTitle == "Skip") {
+      this.buttonTitle = "Get started";
+    }
   }
 
   //Check User is logged in or not

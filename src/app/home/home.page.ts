@@ -300,8 +300,11 @@ export class HomePage implements OnInit {
   //  get schools
   public getSchools() {
     this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-      this.mySchools = data.data;
-      this.storage.set(LocalKeys.mySchools, this.mySchools).then(data => { })
+      if (data.status != "failed") {
+        this.mySchools = data.data;
+        this.storage.set(LocalKeys.mySchools, this.mySchools).then(data => { })
+      }
+
     }, error => { })
   }
 

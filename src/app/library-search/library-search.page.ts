@@ -13,6 +13,7 @@ export class LibrarySearchPage implements OnInit {
   back = "/project-view/library";
   searchInput = '';
   title = "Search";
+  bgcolor = "#f7f7f7";
   tiles = [
     { title: "teacher", icon: 'assets/images/libraryTiles/teacher.png', value: 'Teacher' },
     { title: "students", icon: 'assets/images/libraryTiles/students.png', value: 'Student' },

@@ -25,13 +25,13 @@ export class CategoryViewPage {
   menus = [{
     title: 'Delete',
     value: 'deleteProject',
-    icon: 'md-trash'
+    icon: 'trash'
 
   },
   {
     title: 'Share',
     value: 'shareProject',
-    icon: 'md-share'
+    icon: 'share'
   }
   ]
   constructor(public rout: ActivatedRoute,

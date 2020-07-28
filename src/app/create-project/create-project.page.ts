@@ -38,7 +38,7 @@ export class CreateProjectPage implements OnInit {
     { key: 'Student', id: 2, value: false },
     { key: 'Community', id: 3, value: false },
     { key: 'School process', id: 4, value: false },
-    { key: 'infrastructure', id: 5, value: false },
+    { key: 'Infrastructure', id: 5, value: false },
     { key: 'Education leader', id: 6, value: false },
     // { value: 'Other', id: 6, isChecked: false },
   ];
@@ -70,6 +70,7 @@ export class CreateProjectPage implements OnInit {
         this.project = {};
         this.prepareForm();
         this.createNewProject = true;
+        this.checkedCategories = [];
         this.today = this.datepipe.transform(this.today, 'dd-MM-yyyy');
       } else {
         this.createNewProject = false;
@@ -110,35 +111,54 @@ export class CreateProjectPage implements OnInit {
     })
   }
   // set date
-  public setDate(type) {
-    this.datePicker.show({
-      date: new Date(),
-      mode: 'date',
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    }).then(
-      date => {
-        if (type == 'sd') {
-          this.project.startDate = this.datepipe.transform(new Date(date));
-          // this.startDate = date;
-          this.isValidDate = true;
-          this.startDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
-          if (this.project.endDate) {
-            this.checkDate();
-          }
-        } else if (type == "ed") {
-          this.project.endDate = this.datepipe.transform(new Date(date));
-          // this.endDate = date;
-          this.isValidDate = true;
-          this.endDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
-          if (this.project.startDate) {
-            this.checkDate();
-          } else {
-            this.project.startDate = this.datepipe.transform(new Date());
-          }
-        }
-      },
-      err => console.log('Error occurred while getting date: ', err)
-    );
+  public setDate(event, type) {
+    if (type == 'sd') {
+      this.project.startDate = this.datepipe.transform(new Date(event.detail.value));
+      // this.startDate = date;
+      this.isValidDate = true;
+      this.startDate = this.datepipe.transform(new Date(event.detail.value));
+      if (this.project.endDate) {
+        this.checkDate();
+      }
+    } else if (type == "ed") {
+      this.project.endDate = this.datepipe.transform(new Date(event.detail.value));
+      // this.endDate = date;
+      this.isValidDate = true;
+      this.endDate = this.datepipe.transform(new Date(event.detail.value));
+      if (this.project.startDate) {
+        this.checkDate();
+      } else {
+        this.project.startDate = this.datepipe.transform(new Date());
+      }
+    }
+    // this.datePicker.show({
+    //   date: new Date(),
+    //   mode: 'date',
+    //   androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    // }).then(
+    //   date => {
+    //     if (type == 'sd') {
+    //       this.project.startDate = this.datepipe.transform(new Date(date));
+    //       // this.startDate = date;
+    //       this.isValidDate = true;
+    //       this.startDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
+    //       if (this.project.endDate) {
+    //         this.checkDate();
+    //       }
+    //     } else if (type == "ed") {
+    //       this.project.endDate = this.datepipe.transform(new Date(date));
+    //       // this.endDate = date;
+    //       this.isValidDate = true;
+    //       this.endDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
+    //       if (this.project.startDate) {
+    //         this.checkDate();
+    //       } else {
+    //         this.project.startDate = this.datepipe.transform(new Date());
+    //       }
+    //     }
+    //   },
+    //   err => console.log('Error occurred while getting date: ', err)
+    // );
   }
   // validate date
   public checkDate() {
@@ -203,9 +223,7 @@ export class CreateProjectPage implements OnInit {
         if (projectsList) {
           projectsList.forEach(programsList => {
             // already basic structure is there in local
-            console.log(programsList, "programsList programsList");
             if (programsList) {
-              console.log(programsList.programs && programsList.programs._id == programId, "programsList.programs && programsList.programs._id == programId");
               if (programsList.programs && programsList.programs._id == programId) {
                 mapped = true
                 // programsList.projects.forEach(program => {
@@ -220,9 +238,7 @@ export class CreateProjectPage implements OnInit {
                   })
                 } else if (programsList.programs) {
                   programsList.projects.forEach(project => {
-                    console.log(project._id == this.project._id, "project._id == this.project._id");
                     if (project._id == this.project._id) {
-                      console.log(project._id == this.project._id, "project._id == this.project._id");
                       project.category = this.project.category;
                       project.title = this.project.title;
                       project.goal = this.project.goal;

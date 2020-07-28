@@ -13,7 +13,8 @@ import { Platform } from '@ionic/angular';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
-
+import { ActionSheetController } from '@ionic/angular';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 declare var cordova: any;
 
 @Component({
@@ -44,7 +45,9 @@ export class CreateTasksComponent implements OnInit {
     public iosFilePicker: IOSFilePicker,
     public fileChooser: FileChooser,
     public filePath: FilePath,
-    public file: File
+    public file: File,
+    public camera: Camera,
+    public actionSheetController: ActionSheetController
   ) {
     this.platform.ready().then(() => {
       this.isIos = this.platform.is('ios') ? true : false;
@@ -302,5 +305,73 @@ export class CreateTasksComponent implements OnInit {
         this.toastService.errorToast('Unable to upload ' + currentName + ' file.');
       })
     })
+  }
+
+  async openActionSheet() {
+    if (this.attachments.length < 4) {
+      const actionSheet = await this.actionSheetController.create({
+        header: 'Add Attachments',
+        cssClass: 'my-custom-class',
+        buttons: [{
+          text: 'Upload Image',
+          icon: 'cloud-upload',
+          handler: () => {
+            if (this.attachments.length < 4) {
+               this.openCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
+            } else {
+              this.toastService.errorToast('Only 4 files you can add.')
+            }
+          }
+        }, {
+          text: 'Upload File',
+          icon: 'document',
+          handler: () => {
+            if (this.attachments.length < 4) {
+              this.chooseFile();
+            } else {
+              this.toastService.errorToast('Only 4 files you can add.')
+            }
+          }
+        }, {
+          text: 'Cancel',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+          }
+        }]
+      });
+      await actionSheet.present();
+    } else {
+      this.toastService.errorToast('Only 4 files you can add.')
+    }
+
+  }
+
+  openCamera(type) {
+    const options: CameraOptions = {
+      quality: 20,
+      targetWidth: 600,
+      targetHeight: 600,
+      correctOrientation: true,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      sourceType: type
+    }
+    this.camera.getPicture(options).then((imageData) => {
+      let d = new Date(),
+        n = d.getTime(),
+        newFileName = n + ".jpg";
+
+      let data = {
+        data: imageData,
+        name: newFileName,
+        type: 'image/jpeg',
+        isNew: true
+      }
+      this.checkInLocal(imageData, newFileName, data);
+    }, (err) => {
+      // Handle error
+    });
   }
 }
