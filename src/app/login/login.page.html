@@ -1,69 +1,58 @@
 <ion-content class="ion-padding" *ngIf="show">
-  <!-- <iframe style="height: 600px;
-    padding-left: 30px;
-    padding-right: 30px;" *ngIf="showLogin"
-    src="https://dev.shikshalokam.org/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=sl-ionic-connect&redirect_uri=http://localhost:8100/project-view/home"></iframe> -->
-
-  <!-- On boarding screens -->
-
-  <ion-slides pager="true" [options]="slideOpts" #slides (ionSlidePrevEnd)="slideDidChangePrev($event)" style="min-height: 100%;"
-     (ionSlideNextEnd)="slideDidChangeNext($event)">
-    <ion-slide *ngIf="veryFirstTime">
+  <ion-slides pager="true" style="min-height: 100%;" (ionSlidePrevEnd)="slideDidChangePrev($event)"
+    (ionSlideNextEnd)="slideDidChangeNext($event)">
+    <ion-slide>
       <div class="mainContainer">
-        <div class="conatiner">
+        <div class="container">
           <img src="../../assets/images/onboarding1.png" class="maxSize" />
         </div>
         <div class="_flex-box _justify-content-center conatiner">
           <h4 class="blackText"> Planning Improvement Projects</h4>
-          <p class="alignLeft content">
-            Create and track projects towards improving 
+          <ion-text class="alignLeft content ion-text-wrap">
+            Create and track projects towards improving
             school and school
             support system.
-          </p>
+          </ion-text>
         </div>
       </div>
     </ion-slide>
-    <ion-slide *ngIf="veryFirstTime">
+    <ion-slide>
       <div class="mainContainer">
-        <div class="conatiner">
+        <div class="container">
           <img src="../../assets/images/onboarding2.png" class="maxSize" />
         </div>
         <div class="_flex-box _justify-content-center conatiner">
           <h4 class="blackText"> Assign Tasks and Subtasks</h4>
-          <p class="alignLeft content">
+          <ion-text class="alignLeft content ion-text-wrap">
             Divide your plans into tasks and sub-tasks
             and assign it to other
             users.
-          </p>
+          </ion-text>
         </div>
       </div>
     </ion-slide>
-    <ion-slide *ngIf="!veryFirstTime">
-      <ion-grid style="margin-top: 50%;">
-        <ion-col>
-          <ion-icon name="ios-key" style="font-size: 140px;color: #777;"></ion-icon>
-        </ion-col>
-        <ion-col>
-          <br />
-          <br />
-          <a (click)="loginClick()">
-            <div>
-              <h1>
-                LOGIN
-                <span>
-                  <ion-icon name="ios-log-in" style="vertical-align: middle;">
-                  </ion-icon>
-                </span>
-              </h1>
-            </div>
-          </a>
-        </ion-col>
-      </ion-grid>
+    <ion-slide>
+      <div class="mainContainer" style="margin-top: 50%;">
+        <div class="container">
+          <ion-icon name="ios-key" style="font-size: 6em;color: #777;"></ion-icon>
+        </div>
+        <a (click)="loginClick()">
+          <div>
+            <h1>
+              LOGIN
+              <span>
+                <ion-icon name="ios-log-in" style="vertical-align: middle;">
+                </ion-icon>
+              </span>
+            </h1>
+          </div>
+        </a>
+      </div>
     </ion-slide>
   </ion-slides>
 
 </ion-content>
-<ion-footer class="ion-footer-custom" *ngIf="show && veryFirstTime">
+<ion-footer class="ion-footer-custom">
   <ion-button *ngIf="buttonTitle == 'Skip'" expand="block" (click)="loginClick()">
     {{ buttonTitle }}
   </ion-button>

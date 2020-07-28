@@ -1,22 +1,22 @@
-import { Component } from "@angular/core";
-import { Storage } from "@ionic/storage";
-import { ActivatedRoute, Router } from "@angular/router";
-import { CreateProjectService } from "../create-project/create-project.service";
-import { CreateTaskService } from "../create-task/create-task.service";
-import * as moment from "moment";
-import { DatePicker } from "@ionic-native/date-picker/ngx";
-import { DatePipe } from "@angular/common";
-import { ToastService } from "../toast.service";
-import { HomeService } from "../home/home.service";
-import { File } from "@ionic-native/file/ngx";
-import { FileOpener } from "@ionic-native/file-opener/ngx";
-import {
-  FileTransfer,
-  FileTransferObject,
-} from "@ionic-native/file-transfer/ngx";
-import { FilePath } from "@ionic-native/file-path/ngx";
-import { Platform } from "@ionic/angular";
-
+import { Component } from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CreateProjectService } from '../create-project/create-project.service';
+import { CreateTaskService } from '../create-task/create-task.service';
+import * as moment from 'moment';
+import { DatePicker } from '@ionic-native/date-picker/ngx';
+import { DatePipe } from '@angular/common';
+import { ToastService } from '../toast.service';
+import { HomeService } from '../home/home.service';
+import { File } from '@ionic-native/file/ngx';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { Platform } from '@ionic/angular';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { PopoverController } from '@ionic/angular';
+import { PopoverComponent } from '../shared-module/components/popover/popover.component';
+import { ProjectService } from '../project-view/project.service';
 declare var cordova: any;
 
 @Component({
@@ -43,6 +43,29 @@ export class ProjectDetailPage {
   editTitle: boolean = false;
   show: boolean = false;
   showAddTask: boolean = false;
+  past = [];
+  currentTask = [];
+  weekTask = [];
+  upcoming = [];
+  months = [];
+  quarter = [];
+  currentDate = new Date();
+  menus = [{
+    title: 'Share Task',
+    value: 'shareTask',
+    icon: 'share'
+  },
+  {
+    title: 'Edit Task',
+    value: 'editTask',
+    icon: 'create'
+  },
+  {
+    title: 'Delete Task',
+    value: 'deleteTask',
+    icon: 'trash'
+  }
+  ]
   statuses = [
     { title: "Not started" },
     { title: "In Progress" },
@@ -53,8 +76,8 @@ export class ProjectDetailPage {
   constructor(
     public storage: Storage,
     public route: ActivatedRoute,
-    public createProjectService: CreateProjectService,
     public router: Router,
+    public createProjectService: CreateProjectService,
     public datePicker: DatePicker,
     public datepipe: DatePipe,
     public taskService: CreateTaskService,
@@ -63,15 +86,17 @@ export class ProjectDetailPage {
     public file: File,
     public transfer: FileTransfer,
     public filePath: FilePath,
-    public platform: Platform
+    public platform: Platform,
+    public popoverController: PopoverController,
+    public projectService: ProjectService
   ) {
-    this.isIos = this.platform.is("ios") ? true : false;
-    this.appFolderPath = this.isIos
-      ? cordova.file.documentsDirectory + "attachments"
-      : cordova.file.externalDataDirectory + "attachments";
-    this.rootPath = this.isIos
-      ? cordova.file.documentsDirectory
-      : cordova.file.externalDataDirectory;
+    this.projectService.taskDeleteEvent.subscribe((data: any) => {
+      data.isDeleted = true;
+      this.delete(data);
+    })
+    this.isIos = this.platform.is('ios') ? true : false;
+    this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
+    this.rootPath = this.isIos ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory;
     createProjectService.addNewTask.subscribe((data: any) => {
       this.showAddTask = false;
       if (this.project.tasks && this.project.tasks.length > 0) {
@@ -81,6 +106,12 @@ export class ProjectDetailPage {
       }
       this.project.tasks.push(data);
       this.tasksLength = this.project.tasks.length;
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        this.sortTasks();
+      }
       this.updateTask();
     });
     createProjectService.modalCloseEvent.subscribe((data) => {
@@ -91,25 +122,20 @@ export class ProjectDetailPage {
       this.editGoal = false;
       if (param.cat) {
         this.category = param.cat;
-        if (
-          this.category == "my-projects" ||
-          this.category == "active-projects" ||
-          this.category == "all-projects" ||
-          this.category == "projectsList"
-        ) {
-          this.back = "project-view/projects";
-        } else if (this.category == "schools") {
-          localStorage.setItem("entityKey", this.project.entityId);
-          this.back =
-            "project-view/school-task-report/" +
-            this.project.entityId +
-            "/school";
-        } else if (this.category == "home") {
-          this.back = "project-view/home";
-        } else if (this.category == "form") {
-          this.back = "project-view/create-project";
-        } else {
-          this.back = "project-view/category/" + this.category;
+        if (this.category == 'my-projects' || this.category == 'active-projects' || this.category == 'all-projects' || this.category == 'projectsList') {
+          this.back = 'project-view/projects';
+        } else if (this.category == 'schools') {
+          localStorage.setItem('entityKey', this.project.entityId);
+          this.back = 'project-view/school-task-report/' + this.project.entityId + '/school';
+        } else if (this.category == 'home') {
+          this.back = 'project-view/home';
+        } else if (this.category == 'form') {
+          this.back = 'project-view/create-project/no';
+        } else if (this.category == 'search') {
+          this.back = 'project-view/library-search';
+        }
+        else {
+          this.back = 'project-view/category/' + this.category;
         }
       } else {
         this.back = "project-view/category/my_projects";
@@ -117,12 +143,8 @@ export class ProjectDetailPage {
     });
   }
   ionViewDidEnter() {
-    if (
-      this.category == "my_projects" ||
-      this.category == "form" ||
-      this.category == "home" ||
-      this.category == "projectsList"
-    ) {
+    this.projectService.setTitle("project-detail");
+    if (this.category == 'my_projects' || this.category == 'form' || this.category == 'home' || this.category == 'projectsList') {
       this.addTaskButton = true;
     } else {
       this.addTaskButton = false;
@@ -131,7 +153,8 @@ export class ProjectDetailPage {
     this.getProject();
   }
   getProject() {
-    this.storage.get("projectToBeView").then((project) => {
+    this.storage.get(LocalKeys.projectToBeView).then(project => {
+
       let completed = 0;
       let notStarted = 0;
       this.tasksLength = 0;
@@ -140,7 +163,9 @@ export class ProjectDetailPage {
         if (!task.isDeleted) {
           this.tasksLength = this.tasksLength + 1;
         }
-
+        if (this.category == 'search' && project.createdType) {
+          this.addTaskButton = true;
+        }
         //  set the project status if project is started
         if (project.isStarted) {
           if (
@@ -179,13 +204,22 @@ export class ProjectDetailPage {
       if (!project.isStarted) {
         project.isStarted = false;
       }
+      // if (project.category) {
+      //   project.category = project.category.join(', ');
+      // }
       this.project = project;
+
+      this.show = true;
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        this.sortTasks();
+      }
       if (this.project) {
         this.updateTask();
       }
-      this.show = true;
-      this.sortTasks();
-    });
+    })
   }
 
   //  Copy the template project into my project
@@ -199,9 +233,11 @@ export class ProjectDetailPage {
     ) {
       this.project.status = "In Progress";
     }
-    this.project.startDate = new Date();
+    if (!this.project.startDate) {
+      this.project.startDate = new Date();
+    }
     // if (this.category != 'my_projects' && this.category != 'projectsList' && this.category != 'form') {
-    if (this.category != "my_projects" && this.category != "form") {
+    if (this.category != "my_projects" && this.category != "form" && this.category != 'projectsList') {
       this.project.createdType = "by reference";
       this.project.lastUpdate = new Date();
       this.project.isNew = true;
@@ -226,22 +262,37 @@ export class ProjectDetailPage {
           } else {
             task.subTasks = [];
           }
-        });
-      }
-      this.storage.set("projectToBeView", this.project).then((project) => {
-        this.project = project;
-        this.storage.get("latestProjects").then((p) => { });
-        this.createProjectService
-          .insertIntoMyProjects(this.project)
-          .then((data) => {
-            this.project.isStarted = true;
-            this.category = "my_projects";
+        })
+        if (this.tasksLength > 0 && this.project.isStarted) {
+          this.project.tasks.sort((a, b) => {
+            return <any>new Date(a.endDate) - <any>new Date(b.endDate);
           });
-      });
+          this.sortTasks();
+        }
+      }
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        this.sortTasks();
+      }
+      this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
+        this.project = project;
+        this.createProjectService.insertIntoMyProjects(this.project).then(data => {
+          this.project.isStarted = true;
+          this.category = 'my_projects';
+        })
+      })
     } else {
+      if (this.tasksLength > 0 && this.project.isStarted) {
+        this.project.tasks.sort((a, b) => {
+          return <any>new Date(a.endDate) - <any>new Date(b.endDate);
+        });
+        this.sortTasks();
+      }
       this.project.lastUpdate = new Date();
       this.createProjectService.updateByProjects(this.project);
-      this.storage.set("projectToBeView", this.project).then((project) => {
+      this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
         this.project = project;
       });
     }
@@ -316,35 +367,24 @@ export class ProjectDetailPage {
     this.router.navigate(["/project-view/files", this.project._id]);
   }
   // set date
-  public setDate(type) {
-    this.datePicker
-      .show({
-        date: new Date(),
-        mode: "date",
-        androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK,
-      })
-      .then(
-        (date) => {
-          if (type == "sd") {
-            this.project.startDate = this.datepipe.transform(new Date(date));
-            this.startDate = date;
-            if (this.project.endDate) {
-              this.checkDate();
-            }
-          } else if (type == "ed") {
-            this.project.endDate = this.datepipe.transform(new Date(date));
-            this.endDate = date;
-            if (this.project.startDate) {
-              this.checkDate();
-            } else {
-              this.project.startDate = this.datepipe.transform(new Date());
-              this.checkDate();
-            }
-          }
-          this.createProjectService.updateByProjects(this.project);
-        },
-        (err) => console.log("Error occurred while getting date: ", err)
-      );
+  public setDate(event, type) {
+    if (type == "sd") {
+      this.project.startDate = this.datepipe.transform(new Date(event.detail.value));
+      this.startDate = event.detail.value;
+      if (this.project.endDate) {
+        this.checkDate();
+      }
+    } else if (type == "ed") {
+      this.project.endDate = this.datepipe.transform(new Date(event.detail.value));
+      this.endDate = event.detail.value;
+      if (this.project.startDate) {
+        this.checkDate();
+      } else {
+        this.project.startDate = this.datepipe.transform(new Date());
+        this.checkDate();
+      }
+    }
+    this.createProjectService.updateByProjects(this.project);
   }
 
   // validate date
@@ -488,7 +528,7 @@ export class ProjectDetailPage {
   // navigate to view task
   public taskView(task) {
     if (this.project.isStarted) {
-      this.storage.set("newcreatedproject", this.project).then((cmp) => {
+      this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
         task.projectStarted = this.project.isStarted;
         this.storage.set("cTask", task).then((ct) => {
           this.router.navigate(["/project-view/current-task", task._id, "pd"]);
@@ -513,31 +553,54 @@ export class ProjectDetailPage {
     this.createProjectService.updateByProjects(this.project);
   }
   public sortTasks() {
-    let today = this.datepipe.transform(new Date(), "MMM dd, yyyy");
-    let tasksWithEndDate = [];
-    let tasksWithoutEndDate = [];
-    this.project.tasks.forEach((task) => {
-      if (task.endDate && !task.isDeleted) {
-        if (task.endDate >= today) {
-          tasksWithEndDate.push(task);
+    this.past = [];
+    this.currentTask = [];
+    this.weekTask = [];
+    this.upcoming = [];
+    this.months = [];
+    this.quarter = [];
+    let withoutEndDate = [];
+    let today: any = new Date();
+    let st = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+    let et = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 2, 59, 59);
+    let date = new Date(), y = date.getFullYear(), m = date.getMonth(), m1 = date.getMonth() + 4;
+    let month = new Date(y, m + 1, 0);
+    let month1 = new Date(y, m1 + 1, 0);
+    let week = new Date(today.getTime() + (7 - today.getDay()) * 24 * 60 * 60 * 1000);
+    let week1 = new Date(today.getTime() + (14 - today.getDay()) * 24 * 60 * 60 * 1000);
+    this.project.tasks.forEach(task => {
+      if (!task.isDeleted) {
+        if (task.endDate) {
+          task.endDate = new Date(new Date(task.endDate).getFullYear(), new Date(task.endDate).getMonth(), new Date(task.endDate).getDate(), 0, 0, 0);
+          if (new Date(task.endDate) < st) {
+            this.past.push(task);
+          } else if (new Date(task.endDate) >= st && new Date(task.endDate) <= et) {
+            this.currentTask.push(task);
+          } else if (new Date(task.endDate) >= today && new Date(task.endDate) <= week) {
+            this.weekTask.push(task);
+          } else if (new Date(task.endDate) > week && new Date(task.endDate) <= month) {
+            this.months.push(task);
+          } else if (new Date(task.endDate) > month && new Date(task.endDate) <= month1) {
+            this.quarter.push(task);
+          } else {
+            this.upcoming.push(task);
+          }
         } else {
-          tasksWithoutEndDate.push(task);
+          withoutEndDate.push(task);
         }
-      } else {
-        tasksWithoutEndDate.push(task);
+        if (this.upcoming.length > 0) {
+          this.upcoming.concat(withoutEndDate);
+        } else {
+          this.upcoming = withoutEndDate;
+        }
       }
     });
-    tasksWithEndDate.sort((a, b) => {
-      return <any>new Date(a.endDate) - <any>new Date(b.endDate);
-    });
-    this.project.tasks = tasksWithEndDate.concat(tasksWithoutEndDate);
   }
 
   // add created task
   public addNewTask(task) {
-    this.storage.get("latestProjects").then((myProjects) => {
+    this.storage.get(LocalKeys.allProjects).then(myProjects => {
       let mapped;
-
       if (myProjects) {
         if (myProjects.program)
           myProjects.program.forEach((programs) => {
@@ -558,10 +621,10 @@ export class ProjectDetailPage {
           }
         });
       }
-      this.storage.set("latestProjects", myProjects).then((success) => {
-        this.toastService.successToast("message.task_is_created");
-      });
-    });
+      this.storage.set(LocalKeys.allProjects, myProjects).then(success => {
+        this.toastService.successToast('message.task_is_created');
+      })
+    })
   }
   // prepare old apk attachments to new version apk
   prepareAttachments(task) {
@@ -818,5 +881,25 @@ export class ProjectDetailPage {
 
     var blob = new Blob(byteArrays, { type: contentType });
     return blob;
+  }
+  async showMenu(ev: any, task) {
+    let project = {
+      title: this.project.title,
+      goal: this.project.goal,
+      duration: this.project.duration,
+      startDate: this.project.startDate,
+      endDate: this.project.startDate,
+      status: this.project.startDate,
+      tasks: [
+        task
+      ]
+    }
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      componentProps: { project: project, menus: this.menus },
+      event: ev,
+      translucent: true
+    });
+    return await popover.present();
   }
 }

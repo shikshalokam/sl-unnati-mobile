@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { TasksPage } from '../tasks/tasks.page';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { ProjectService } from '../project-view/project.service';
+
 @Component({
   selector: 'app-task-board',
   templateUrl: './task-board.page.html',
@@ -15,10 +17,12 @@ export class TaskBoardPage {
   showSkeleton: boolean = true;
   skeletons = [{}, {}, {}, {}, {}];
   constructor(
-    public storage: Storage
+    public storage: Storage,
+    public projectService: ProjectService
   ) { }
 
   ionViewDidEnter() {
+    this.projectService.setTitle("open-tasks");
     this.searchInput = '';
     this.activeTab = 'ongoing';
     this.getProjects();
@@ -26,7 +30,7 @@ export class TaskBoardPage {
   public getProjects() {
     this.ongoing = [];
     this.past = [];
-    this.storage.get('latestProjects').then(projects => {
+    this.storage.get(LocalKeys.allProjects).then(projects => {
       this.showSkeleton = true;
       projects.forEach(programsList => {
         if (programsList.projects) {
@@ -57,6 +61,5 @@ export class TaskBoardPage {
     this.showSkeleton = true;
     this.activeTab = tab;
     this.showSkeleton = false;
-
   }
 }

@@ -3,7 +3,7 @@
     [isGoBack]="back">
   </app-header>
 </ion-header>
-<ion-content (mouseout)="blockEditAll()">
+<ion-content>
   <!-- <h4 padding style="margin:0px;"> {{project?.title}} </h4> -->
   <div class="project-detail" *ngIf="show">
     <div class="ion-padding">
@@ -11,34 +11,20 @@
         <ion-col size="5" class="label-box">
           {{'projectDetail.title'|translate}}
         </ion-col>
-        <ion-col size="7" (click)="allowEdit('title')">
+        <ion-col size="7" >
           {{project?.title}}
         </ion-col>
       </ion-row>
-      <ion-item class="custom-ion-item" *ngIf="editTitle" (mouseout)="blockEdit('title')">
-        <ion-label class="custom-label" position="floating"
-          [ngClass]="{'required-field':markLabelsAsInvalid && !project.title}">
-          {{'projectDetail.title' | translate}}</ion-label>
-        <ion-input type="text" #inputBox autofocus [(ngModel)]="project.title" name="title"
-          (mouseout)="blockEdit('title')" placeholder="{{'create_project.placeholder_project_title'| translate}}"
-          maxlength="280"></ion-input>
-      </ion-item>
-      <ion-row *ngIf="!editGoal">
+     
+      <ion-row >
         <ion-col size="5" class="label-box">
           {{'projectDetail.goal'|translate}}
         </ion-col>
-        <ion-col size="7" (click)="allowEdit('goal')">
+        <ion-col size="7" >
           {{project?.goal}}
         </ion-col>
       </ion-row>
-      <ion-item class="custom-ion-item" *ngIf="editGoal" (mouseout)="blockEdit('goal')">
-        <ion-label class="custom-label" position="floating"
-          [ngClass]="{'required-field':markLabelsAsInvalid && !project.goal}">
-          {{'create_project.goal' | translate}}</ion-label>
-        <ion-textarea type="text" #inputBox [(ngModel)]="project.goal" autofocus name="goal"
-          (mouseout)="blockEdit('goal')" placeholder="{{'create_project.placeholder_goal'| translate}}"
-          maxlength="1000"></ion-textarea>
-      </ion-item>
+
       <ion-row *ngIf="project?.duration">
         <ion-col size="5" class="label-box">
           {{'projectDetail.duration' | translate}}
@@ -132,7 +118,8 @@
     </div>
     <div>Files</div>
   </div>
-  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;" *ngIf="show && project.isStarted && tasksLength > 0">
+  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;"
+    *ngIf="show && project.isStarted && tasksLength > 0">
     <ion-fab-button (click)="addTask()" style=" margin-bottom: 15px;">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

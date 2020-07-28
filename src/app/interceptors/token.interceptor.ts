@@ -14,7 +14,7 @@ import { map, catchError } from 'rxjs/operators';
 import {
     Router
 } from '@angular/router';
-import { AppConfigs } from '../app.config';
+import { AppConfigs } from '../core-module/constants/app.config';
 import { ToastController, Platform } from '@ionic/angular';
 
 @Injectable()
@@ -27,7 +27,6 @@ export class TokenInterceptor implements HttpInterceptor {
         public platform: Platform,
         public api: ApiProvider) {
     }
-
     intercept(req: HttpRequest<any>, next: HttpHandler) {
         return from(this.handle(req, next))
     }

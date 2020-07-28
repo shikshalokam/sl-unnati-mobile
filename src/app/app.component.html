@@ -47,7 +47,11 @@
     <ion-router-outlet main></ion-router-outlet>
   </ion-split-pane>
   <div *ngIf="showUpdatePop">
-    <app-custom-popup [content]="appUpdate" [showPopup]="showUpdatePopup">
+    <app-custom-popup [content]="appUpdate" [showPopup]="showUpdatePopup" [showAlert]="false">
+    </app-custom-popup>
+  </div>
+  <div *ngIf="showAlert">
+    <app-custom-popup [content]="appUpdate" [showAlert]="true" [showPopup]="false">
     </app-custom-popup>
   </div>
 </ion-app>

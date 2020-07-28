@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage'
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { AppConfigs } from '../app.config'
+import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,20 +13,20 @@ export class CategoryViewService {
     public http: HttpClient) { }
   //  get my projects from local 
   public getMyProjects() {
-    return this.storage.get('latestProjects').then(projects => {
+    return this.storage.get(LocalKeys.allProjects).then(projects => {
       return projects;
     })
   }
 
   // get templates from local
   public getTemplates(type) {
-    return this.storage.get('templates').then(templates => {
+    return this.storage.get(LocalKeys.templates).then(templates => {
       return templates[type];
     })
   }
   //  get projects by category
   public getTemplatesByCategory() {
-    return this.http.get(AppConfigs.api_url + '/unnati/api/v1/template/all')
+    return this.http.get(environment.api_url + '/unnati/api/v1/template/all')
   }
 
   //  delete project event
@@ -35,6 +36,6 @@ export class CategoryViewService {
 
   // get pdf of project
   public getPDF(data) {
-    return this.http.post(AppConfigs.api_url + '/unnati/api/v1/getProjectPdf', data)
+    return this.http.post(environment.api_url + '/unnati/api/v1/getProjectPdf', data)
   }
 }

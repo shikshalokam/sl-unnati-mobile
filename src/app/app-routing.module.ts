@@ -46,6 +46,8 @@ const routes: Routes = [
   { path: 'get-sub-entities', loadChildren: './get-sub-entities/get-sub-entities.module#GetSubEntitiesPageModule' },
   { path: 'app-permissions', loadChildren: './app-permissions/app-permissions.module#AppPermissionsPageModule' },
   { path: 'template-view', loadChildren: './template-view/template-view.module#TemplateViewPageModule' },
+  { path: 'library-search', loadChildren: './library-search/library-search.module#LibrarySearchPageModule' },
+  // { path: 'video-player', loadChildren: './video-player/video-player.module#VideoPlayerPageModule' },
 ];
 
 @NgModule({

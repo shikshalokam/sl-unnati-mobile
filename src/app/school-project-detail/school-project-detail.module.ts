@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { SchoolProjectDetailPage } from './school-project-detail.page';
 import {TranslateModule} from '@ngx-translate/core';
-import {SharedModule} from '../shared.module'; 
+import {SharedModule} from '../shared-module/shared-module'; 
 const routes: Routes = [
   {
     path: '',

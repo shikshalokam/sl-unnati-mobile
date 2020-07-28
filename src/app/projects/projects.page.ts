@@ -12,7 +12,8 @@ import { Network } from '@ionic-native/network/ngx';
 import { ProjectService } from '../project-view/project.service';
 import { HomeService } from '../home/home.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import { AppConfigs } from '../app.config';
+import { AppConfigs } from '../core-module/constants/app.config';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 
 //import { trigger, state, style, animate, transition } from '@angular/animations';
 @Component({
@@ -61,6 +62,7 @@ export class ProjectsPage {
   }
 
   ionViewDidEnter() {
+    this.projectService.setTitle("projects_tab");
     this.environment = AppConfigs.currentEnvironment;
     AppConfigs.environments.forEach(env => {
       if (this.environment === env.name) {
@@ -78,8 +80,8 @@ export class ProjectsPage {
 
   public getActiveProjects() {
     this.showSkeleton = true;
- 
-    this.storage.get('latestProjects').then(projects => {
+
+    this.storage.get(LocalKeys.allProjects).then(projects => {
       if (projects) {
         projects.forEach(programsList => {
           if (programsList.programs) {
@@ -100,7 +102,7 @@ export class ProjectsPage {
   }
 
   public projectView(project) {
-    this.storage.set('projectToBeView', project).then(project => {
+    this.storage.set(LocalKeys.projectToBeView, project).then(project => {
       this.router.navigate(['/project-view/project-detail', 'projectsList'])
     })
   }

@@ -1,11 +1,11 @@
-import { Component } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { CategoryViewService } from "./category.view.service";
-import { Storage } from "@ionic/storage";
-import { ApiProvider } from "../api/api";
-import { PopoverController } from "@ionic/angular";
-import { PopoverComponent } from "../popover/popover.component";
-
+import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CategoryViewService } from './category.view.service';
+import { Storage } from '@ionic/storage';
+import { ApiProvider } from '../api/api';
+import { PopoverController } from '@ionic/angular';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { PopoverComponent } from '../shared-module/components/popover/popover.component';
 @Component({
   selector: "app-category-view",
   templateUrl: "./category-view.page.html",
@@ -22,8 +22,19 @@ export class CategoryViewPage {
   catType;
   showSkeleton: boolean = false;
   skeletons = [{}, {}, {}, {}, {}, {}];
-  constructor(
-    public rout: ActivatedRoute,
+  menus = [{
+    title: 'Delete',
+    value: 'deleteProject',
+    icon: 'trash'
+
+  },
+  {
+    title: 'Share',
+    value: 'shareProject',
+    icon: 'share'
+  }
+  ]
+  constructor(public rout: ActivatedRoute,
     public categaryService: CategoryViewService,
     public storage: Storage,
     public apiProvider: ApiProvider,
@@ -141,31 +152,26 @@ export class CategoryViewPage {
   bgcolor = "#f7f7f7";
   public getMyProjects() {
     this.showSkeleton = true;
-    this.storage.get("latestProjects").then(
-      (projects) => {
-        if (projects) {
-          projects.forEach((programsList) => {
-            return programsList.projects.sort((a, b) => {
-              return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
-            });
+    this.storage.get(LocalKeys.allProjects).then(projects => {
+      if (projects) {
+        projects.forEach(programsList => {
+          return programsList.projects.sort((a, b) => {
+            return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
           });
-          this.projects = projects;
-          this.showSkeleton = false;
-        } else {
-          this.projects = [];
-        }
-        this.showSkeleton = false;
-      },
-      (error) => {
+        })
+        this.projects = projects;
         this.showSkeleton = false;
       }
-    );
+      this.showSkeleton = false;
+    }, error => {
+      this.showSkeleton = false;
+    })
   }
 
   public projectView(project) {
-    this.storage.set("projectToBeView", project).then((project) => {
-      this.router.navigate(["/project-view/project-detail", this.catType]);
-    });
+    this.storage.set(LocalKeys.projectToBeView, project).then(project => {
+      this.router.navigate(['/project-view/project-detail', this.catType])
+    })
   }
   public getTemplates(type) {
     this.showSkeleton = true;
@@ -181,13 +187,12 @@ export class CategoryViewPage {
       }
     );
   }
-
   async showMenu(ev: any, project) {
     let pro = project;
     pro.share = true;
     const popover = await this.popoverController.create({
       component: PopoverComponent,
-      componentProps: { project: pro },
+      componentProps: { project: pro, menus: this.menus },
       event: ev,
       translucent: true,
     });

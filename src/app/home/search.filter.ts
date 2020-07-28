@@ -26,7 +26,6 @@ export class FilterPipe implements PipeTransform {
           return it.title.toLowerCase().includes(searchText);
         }
       }
-
     });
   }
 }

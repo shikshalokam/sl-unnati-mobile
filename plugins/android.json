@@ -10,6 +10,10 @@
     "com-badrit-base64": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
+    "cordova-android-support-gradle-release": {
+      "ANDROID_SUPPORT_VERSION": "27.+",
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
     "cordova-plugin-android-permissions": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
@@ -39,6 +43,9 @@
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
     "cordova-plugin-document-viewer": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-file": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
     "cordova-plugin-file-opener2": {
@@ -85,6 +92,9 @@
     "cordova-plugin-statusbar": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
+    "cordova-plugin-telerik-imagepicker": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
@@ -113,7 +123,7 @@
     }
   },
   "dependent_plugins": {
-    "cordova-plugin-file": {
+    "cordova-plugin-add-swift-support": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
     "es6-promise-plugin": {

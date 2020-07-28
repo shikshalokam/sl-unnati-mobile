@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { AppConfigs } from "./app.config";
 import { URLSearchParams, Http } from '@angular/http';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { CurrentUserProvider } from './current-user'
 import { Subject } from 'rxjs';
-import{Storage} from '@ionic/storage';
+import { Storage } from '@ionic/storage';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -21,14 +20,14 @@ export class Login {
   base_url: string;
 
   logout_redirect_url: string;
-  constructor(public http: Http, 
+  constructor(public http: Http,
     public currentUser: CurrentUserProvider,
-    public storage:Storage) { }
+    public storage: Storage) { }
   doLogin() {
     // var ref = (<any>window).cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
-    this.base_url = AppConfigs.app_url;
-    this.redirect_url = AppConfigs.keyCloak.redirection_url;
-    this.auth_url = this.base_url + "/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=" + AppConfigs.clientId + "&redirect_uri=" +
+    this.base_url = environment.app_url;
+    this.redirect_url = environment.keyCloak.redirection_url;
+    this.auth_url = this.base_url + "/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=" + environment.clientId + "&redirect_uri=" +
       this.redirect_url;
     let that = this;
     return new Promise(function (resolve, reject) {
@@ -56,16 +55,16 @@ export class Login {
     this.emit.next(user);
   }
   public getToken(data) {
-    this.base_url = AppConfigs.app_url;
-    this.redirect_url = AppConfigs.keyCloak.redirection_url;
+    this.base_url = environment.app_url;
+    this.redirect_url = environment.keyCloak.redirection_url;
     const body = new HttpParams();
     body.set('grant_type', "authorization_code");
-    body.set('client_id', AppConfigs.clientId);
+    body.set('client_id', environment.clientId);
     body.set('code', data);
     body.set('redirect_uri', this.redirect_url);
     body.set('scope', "offline_access");
     return new Promise(resolve => {
-      this.http.post(this.base_url + AppConfigs.keyCloak.getAccessToken, body)
+      this.http.post(this.base_url + environment.keyCloak.getAccessToken, body)
         .subscribe((data: any) => {
           //let parsedData = JSON.parse(data._body);
           resolve(data);
@@ -93,8 +92,8 @@ export class Login {
   }
   doLogout(): Promise<any> {
     return new Promise(function (resolve) {
-      let logout_redirect_url = AppConfigs.keyCloak.logout_redirect_url;
-      let logout_url = AppConfigs.app_url + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
+      let logout_redirect_url = environment.keyCloak.logout_redirect_url;
+      let logout_url = environment.app_url + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
       let closeCallback = function (event) {
       };
       let browserRef = (<any>window).cordova.InAppBrowser.open(logout_url, "_blank", "zoom=no");
@@ -111,13 +110,13 @@ export class Login {
   doOAuthStepTwo(token: string): Promise<any> {
     return new Promise(resolve => {
       const body = new URLSearchParams();
-      const params = 'grant_type=authorization_code&client_id=' + AppConfigs.clientId + '&code=' + token + '&redirect_uri=' + AppConfigs.keyCloak.redirection_url + '&scope=offline_access'
+      const params = 'grant_type=authorization_code&client_id=' + environment.clientId + '&code=' + token + '&redirect_uri=' + environment.keyCloak.redirection_url + '&scope=offline_access'
       body.set('grant_type', "authorization_code");
-      body.set('client_id', AppConfigs.clientId);
+      body.set('client_id', environment.clientId);
       body.set('code', token);
-      body.set('redirect_uri', AppConfigs.keyCloak.redirection_url);
+      body.set('redirect_uri', environment.keyCloak.redirection_url);
       body.set('scope', "offline_access");
-      const url = AppConfigs.app_url + AppConfigs.keyCloak.getAccessToken;
+      const url = environment.app_url + environment.keyCloak.getAccessToken;
       this.http.post(url, body)
         .subscribe((data: any) => {
           let parsedData = JSON.parse(data._body);
