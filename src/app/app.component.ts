@@ -18,18 +18,15 @@ import { ProjectService } from '../app/project-view/project.service';
 import { HomeService } from './home/home.service';
 import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
-import { FcmProvider } from './fcm';
+// import { FcmProvider } from './fcm';
 import * as jwt_decode from "jwt-decode";
 import { NotificationCardService } from './notification-card/notification.service';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { AboutPage } from './about/about.page';
-import { ProjectDetailPage } from './project-detail/project-detail.page';
 import { TemplateViewPage } from './template-view/template-view.page';
 import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
-import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
-
 declare var cordova: any;
 
 @Component({
@@ -44,6 +41,7 @@ export class AppComponent {
   showCloseButton: boolean = false;
   body;
   button;
+  showAlert: boolean = false;
   appUpdate: any = {}
   showUpdatePopup: boolean = false;
   mappedProjectsToSync;
@@ -54,7 +52,7 @@ export class AppComponent {
   subscription: Subscription;
   loading;
   type = 'quarter';
-  count = 100;
+  count = 0;
   page = 1;
   showUpdatePop: boolean = false;
   interval = interval(3600000);
@@ -72,7 +70,7 @@ export class AppComponent {
   constructor(
     private zone: NgZone,
     public storage: Storage,
-    public fcm: FcmProvider,
+    // public fcm: FcmProvider,
     public navController: NavController,
     public alertController: AlertController,
     public router: Router,
@@ -101,6 +99,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       toastService.popClose.subscribe(data => {
         this.showUpdatePop = false;
+        this.showAlert = false;
       })
       this.notificationCardService.appUpdatePopUp.subscribe(data => {
         this.showUpdatePop = false;
@@ -129,9 +128,9 @@ export class AppComponent {
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
-          this.subscription = this.interval.subscribe(val => {
-            this.prepareMappedProjectToSync();
-          });
+          // this.subscription = this.interval.subscribe(val => {
+          //   this.prepareMappedProjectToSync();
+          // });
           this.menuCtrl.enable(true, 'unnati');
           this.loggedInUser = value;
           this.appPages = [
@@ -193,7 +192,7 @@ export class AppComponent {
           this.translate.setDefaultLang('en');
           this.translate.use('en');
           this.networkService.setLang('en');
-          this.router.navigateByUrl('/project-view/home');
+          this.router.navigate(['/project-view/home']);
         } else {
           this.router.navigateByUrl('/login');
         }
@@ -206,8 +205,8 @@ export class AppComponent {
         localStorage.setItem('isPopUpShowen', null);
       });
       // this.fcm.connectSubscription.unsubscribe();
-      this.fcm.subscribeToPushNotifications();
-      this.fcm.localNotificationClickHandler();
+      // this.fcm.subscribeToPushNotifications();
+      // this.fcm.localNotificationClickHandler();
       this.network.onDisconnect()
         .subscribe(() => {
           this.isConnected = false;
@@ -231,22 +230,38 @@ export class AppComponent {
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
-      this.platform.backButton.subscribeWithPriority(9999, () => {
+      this.platform.backButton.subscribeWithPriority(99999999999, () => {
+        this.modalController.dismiss();
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
         if (this.router.url == '/login' || this.router.url == '/project-view/home') {
-          //this.presentAlertConfirm();
-          navigator['app'].exitApp();
+          this.presentAlertConfirm();
+          // navigator['app'].exitApp();
         } else if (this.router.url == '/project-view/notifications' || this.router.url == '/project-view/newsfeed' || this.router.url == '/project-view/about' ||
           this.router.url == '/project-view/reports' || this.router.url == '/project-view/my-schools' ||
           this.router.url == '/project-view/projects' || this.router.url == '/project-view/update-profile' ||
-          this.router.url == '/project-view/library' || this.router.url == '/project-view/project-detail/home' || this.router.url == '/project-view/tutorial-videos' || s[1].path == 'create-project' || this.router.url == '/project-view/task-board') {
+          this.router.url == '/project-view/library' || this.router.url == '/project-view/project-detail/home' || s[1].path == 'create-project' || this.router.url == '/project-view/task-board') {
+          this.count = 0;
           this.router.navigateByUrl('project-view/home');
+        } else if (this.router.url == '/project-view/tutorial-videos') {
+          this.count = this.count + 1;
+          switch (this.count) {
+            case 2: {
+              this.router.navigateByUrl('project-view/home');
+              this.count = 0;
+              break;
+            } case 1: {
+              this.modalController.dismiss();
+              break;
+            }
+          }
         } else if (this.router.url == '/project-view/task-view') {
           this.router.navigateByUrl('project-view/detail');
         } else if (this.router.url == '/project-view/project-detail/form') {
           this.router.navigateByUrl('project-view/create-project');
+        } else if (this.router.url == '/project-view/project-detail/search') {
+          this.router.navigateByUrl('project-view/library-search');
         } else if (s[1].path == 'courses' && s[2].path == 'template-view') {
           if (s.length == 5) {
             this.router.navigateByUrl('project-view/template-view/' + s[3].path + '/' + s[4].path);
@@ -890,5 +905,29 @@ export class AppComponent {
         });
       });
     }
+  }
+
+  async presentAlertConfirm() {
+    this.appUpdate.actions = {
+      closeApp: true,
+    }
+    this.appUpdate.showCloseButton = false,
+      this.appUpdate.type = "exitApp";
+    this.appUpdate.text = "Are you sure you wish to leave the app?";
+    this.appUpdate.buttons = [{
+      title: 'Yes',
+      color: 'light',
+      isActionable: 'submit',
+      outline: true
+    },
+    {
+      title: 'No',
+      color: 'primary',
+      isActionable: 'cancel',
+      outline: false
+    }]
+    this.showUpdatePopup = false;
+    this.showUpdatePop = false;
+    this.showAlert = true;
   }
 }

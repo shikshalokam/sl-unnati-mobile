@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import * as Highcharts from 'highcharts';
-import $ from 'jquery';
-import { ApiProvider } from '../api/api';
-import { Storage } from '@ionic/storage';
-import { MyReportsService } from '../my-reports/my-reports.service';
-import { ToastController } from '@ionic/angular';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import { MyschoolsService } from '../myschools/myschools.service';
-import { ToastService } from '../toast.service';
-import { NetworkService } from '../network.service';
+import { Component, OnInit } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
+import * as Highcharts from "highcharts";
+import $ from "jquery";
+import { ApiProvider } from "../api/api";
+import { Storage } from "@ionic/storage";
+import { MyReportsService } from "../my-reports/my-reports.service";
+import { ToastController } from "@ionic/angular";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
+import { MyschoolsService } from "../myschools/myschools.service";
+import { ToastService } from "../toast.service";
+import { NetworkService } from "../network.service";
 @Component({
-  selector: 'app-last-quarter-reports',
-  templateUrl: './last-quarter-reports.page.html',
-  styleUrls: ['./last-quarter-reports.page.scss'],
+  selector: "app-last-quarter-reports",
+  templateUrl: "./last-quarter-reports.page.html",
+  styleUrls: ["./last-quarter-reports.page.scss"],
 })
 export class LastQuarterReportsPage implements OnInit {
   currentMonth;
@@ -25,10 +25,12 @@ export class LastQuarterReportsPage implements OnInit {
   count: number = 5;
   mySchools;
   showSkeleton: boolean = false;
-  skeletons = [{}, {}, {}, {}, {}]
+  skeletons = [{}, {}, {}, {}, {}];
   highcharts = Highcharts;
   color = "#20ba8d";
-  constructor(public router: Router,
+  showNoReports;
+  constructor(
+    public router: Router,
     public myReportsService: MyReportsService,
     public toastController: ToastController,
     public api: ApiProvider,
@@ -36,24 +38,23 @@ export class LastQuarterReportsPage implements OnInit {
     public screenOrientation: ScreenOrientation,
     public mySchoolsService: MyschoolsService,
     public toastService: ToastService,
-    public networkService: NetworkService,
+    public networkService: NetworkService
   ) {
-    this.networkService.emit.subscribe(value => {
+    this.networkService.emit.subscribe((value) => {
       this.connected = value;
     });
   }
   ionViewDidEnter() {
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-    } catch (error) {
-    }
+    } catch (error) {}
     this.getSchools();
   }
   ngOnInit() {
     if (navigator.onLine) {
       this.getData();
     } else {
-      this.errorToast('Please check your internet connection.');
+      this.errorToast("Please check your internet connection.");
     }
   }
 
@@ -63,30 +64,32 @@ export class LastQuarterReportsPage implements OnInit {
 
   public viewFullReport(value) {
     if (navigator.onLine) {
-      this.router.navigate(['project-view/fullreports', value]);
+      this.router.navigate(["project-view/fullreports", value]);
     } else {
-      this.errorToast('Please check your internet connection.');
+      this.errorToast("Please check your internet connection.");
     }
   }
 
   public getData() {
     if (this.connected) {
       this.showSkeleton = true;
-      this.myReportsService.getReports('lastQuarter').subscribe((data: any) => {
-        this.report = data.data;
-        if (data.status != "failed") {
-          this.setupChart();
+      this.myReportsService.getReports("lastQuarter").subscribe(
+        (data: any) => {
+          this.report = data.data;
+          if (data.status != "failed") {
+            this.setupChart();
+          }
+          this.showSkeleton = false;
+        },
+        (error) => {
+          this.showSkeleton = false;
         }
-        this.showSkeleton = false;
-      }, error => {
-        this.showSkeleton = false;
-      })
+      );
     } else {
-      this.toastService.errorToast('message.nerwork_connection_check');
+      this.toastService.errorToast("message.nerwork_connection_check");
     }
   }
   public setupChart() {
-
     let totalTask;
     let completed: any;
     if (this.report.tasksCompleted > 0 || this.report.tasksPending > 0) {
@@ -100,12 +103,12 @@ export class LastQuarterReportsPage implements OnInit {
     }
     this.chartOptions = {
       chart: {
-        type: 'pie'
+        type: "pie",
       },
       title: {
-        verticalAlign: 'middle',
+        verticalAlign: "middle",
         floating: true,
-        text: '<b>' + completed + ' % <br>Completed</b>'
+        text: "<b>" + completed + " % <br>Completed</b>",
       },
       // xAxis: {
       //   categories: data
@@ -113,43 +116,45 @@ export class LastQuarterReportsPage implements OnInit {
       yAxis: {
         min: 0,
         title: {
-          text: ''
-        }
+          text: "",
+        },
       },
       legend: {
-        enabled: false
-      }, credits: {
-        enabled: false
+        enabled: false,
+      },
+      credits: {
+        enabled: false,
       },
       plotOptions: {
         pie: {
           shadow: false,
-          center: ['50%', '50%'],
-          colors: [
-            '#adafad',
-            '#20ba8d'
-          ],
-        }
+          center: ["50%", "50%"],
+          colors: ["#adafad", "#20ba8d"],
+        },
       },
-      series: [{
-        name: "Tasks",
-        data: [["Pending", this.report.tasksPending], ["Completed", this.report.tasksCompleted]],
-        size: '90%',
-        innerSize: '70%',
-        showInLegend: true,
-        dataLabels: {
-          enabled: false
-        }
-      }]
+      series: [
+        {
+          name: "Tasks",
+          data: [
+            ["Pending", this.report.tasksPending],
+            ["Completed", this.report.tasksCompleted],
+          ],
+          size: "90%",
+          innerSize: "70%",
+          showInLegend: true,
+          dataLabels: {
+            enabled: false,
+          },
+        },
+      ],
     };
-
   }
   // Display error Message
   async errorToast(msg) {
     const toast = await this.toastController.create({
       message: msg,
-      color: 'danger',
-      duration: 2000
+      color: "danger",
+      duration: 2000,
     });
     toast.present();
   }
@@ -159,27 +164,30 @@ export class LastQuarterReportsPage implements OnInit {
     if (this.mySchools) {
       this.mySchools[0].type = type;
       this.mySchools[0].isFullReport = false;
-      this.mySchools[0].reportType = 'lastMonth';
+      this.mySchools[0].reportType = "lastMonth";
       obj = this.mySchools[0];
     } else {
       obj1.type = type;
       obj1.isFullReport = false;
-      obj1.reportType = 'lastMonth';
-      obj1.name = '';
-      obj1.entityId = '';
+      obj1.reportType = "lastMonth";
+      obj1.name = "";
+      obj1.entityId = "";
       obj = obj1;
     }
     // this.myReportsService.getReportEvent(obj);
   }
   public getSchools() {
     if (this.connected) {
-      this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-        if (data.status != 'failed') {
-          this.mySchools = data.data;
-        }
-      }, error => { })
+      this.mySchoolsService.getSchools(this.count, this.page).subscribe(
+        (data: any) => {
+          if (data.status != "failed") {
+            this.mySchools = data.data;
+          }
+        },
+        (error) => {}
+      );
     } else {
-      this.toastService.errorToast('message.nerwork_connection_check');
+      this.toastService.errorToast("message.nerwork_connection_check");
     }
   }
 }

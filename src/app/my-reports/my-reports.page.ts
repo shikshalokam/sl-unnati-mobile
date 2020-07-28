@@ -4,6 +4,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { NetworkService } from '../network.service';
 import { Platform } from '@ionic/angular';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
@@ -12,6 +13,7 @@ import { ToastService } from '../toast.service';
 import { MyReportsService } from './my-reports.service';
 import { MyschoolsService } from '../myschools/myschools.service';
 import { ApiProvider } from '../api/api';
+import { ProjectService } from '../project-view/project.service';
 import { Storage } from '@ionic/storage';
 import * as Highcharts from 'highcharts';
 
@@ -63,6 +65,7 @@ export class MyReportsPage {
     public platform: Platform,
     public socialSharing: SocialSharing,
     public fileChooser: FileChooser,
+    public networkService: NetworkService,
     public base64: Base64,
     public fileOpener: FileOpener,
     public transfer: FileTransfer,
@@ -70,7 +73,8 @@ export class MyReportsPage {
     public myReportsService: MyReportsService,
     public mySchoolsService: MyschoolsService,
     public api: ApiProvider,
-    public storage: Storage
+    public storage: Storage,
+    public projectService: ProjectService
   ) {
     activatedRoute.params.subscribe((params: any) => {
       this.mappedSchool = '';
@@ -111,6 +115,11 @@ export class MyReportsPage {
         this.selectTab('school');
       }
     })
+    platform.ready().then(() => {
+      networkService.emit.subscribe(status => {
+        this.connected = status;
+      })
+    })
     myReportsService.reportEvent.subscribe((data: any) => {
       // this.share(data);
       this.platform.ready().then(() => {
@@ -126,6 +135,7 @@ export class MyReportsPage {
 
 
   ionViewDidEnter() {
+    this.projectService.setTitle("reports_tab");
     try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
     } catch (error) {
@@ -159,30 +169,36 @@ export class MyReportsPage {
   }
 
   public getSchools(event?) {
-    this.showSkeleton = true;
-    this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-      if (data.data && data.data.length > 0 && data.status != 'failed') {
-        this.schools = this.schools.concat(data.data);
-        this.page = this.page + 1;
-      } else {
-        this.schools = [];
-        this.tabs = [
-          {
-            title: 'Last Month',
-            id: 'lastMonth',
-            isActive: true
-          },
-          {
-            title: 'Last Quarter',
-            id: 'lastQuarter',
-            isActive: false
-          }];
-        this.selectTab('lastMonth');
-      }
-      this.showSkeleton = false;
-    }, error => {
-      this.showSkeleton = false;
-    })
+    if (this.connected) {
+      this.showSkeleton = true;
+      this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
+        if (data.data && data.data.length > 0 && data.status != 'failed') {
+          this.schools = this.schools.concat(data.data);
+          this.page = this.page + 1;
+        } else {
+          this.schools = [];
+          this.tabs = [
+            {
+              title: 'Last Month',
+              id: 'lastMonth',
+              isActive: true
+            },
+            {
+              title: 'Last Quarter',
+              id: 'lastQuarter',
+              isActive: false
+            }];
+          this.selectTab('lastMonth');
+        }
+        this.showSkeleton = false;
+      }, error => {
+        this.showSkeleton = false;
+      })
+    }
+    else {
+      this.toastService.stopLoader();
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
   }
   // download and Share Reports
   public getReport(type: any) {
@@ -255,7 +271,11 @@ export class MyReportsPage {
     const fileTransfer: FileTransferObject = this.transfer.create();
     const url = data.pdfUrl;
     fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
-      this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
+      let fileName1 = entry.nativeURL.split('/').pop();
+      let path = entry.nativeURL.substring(0, entry.nativeURL.lastIndexOf("/") + 1);
+      this.file.readAsDataURL(path, fileName)
+        .then(base64File => {
+      // this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
         let data = base64File.split(',');
         let base64Data = "data:application/pdf;base64," + data[1];
         this.socialSharing.share("", fileName, base64Data, "").then((data) => {
@@ -382,14 +402,12 @@ export class MyReportsPage {
   }
 
   public viewFullReport() {
-    if (navigator.onLine) {
-
+    if (this.connected) {
       this.router.navigate(['project-view/fullreports', this.activeTab, this.entityId, this.mappedSchool]);
     } else {
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
-
   public getReportsBySchool(entityId, mappedSchool) {
     this.router.navigate(["project-view/my-reports", entityId, mappedSchool]);
   }

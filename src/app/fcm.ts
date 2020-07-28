@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
 // import { FCM } from '@ionic-native/fcm/ngx';
-// import { FCM } from '@ionic-native/fcm';
-import { FCM } from '@ionic-native/fcm/ngx';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ApiProvider } from './api/api';
 import { Platform } from '@ionic/angular';
-// import { LocalNotifications } from '@ionic-native/local-notifications';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { Storage } from '@ionic/storage';
-import { AppConfigs } from './app.config';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { NotificationCardService } from './notification-card/notification.service';
+import { environment } from '../environments/environment';
 @Injectable()
 export class FcmProvider {
 
@@ -19,57 +15,56 @@ export class FcmProvider {
 
     constructor(
         public http: HttpClient, public router: Router,
-        public fcm: FCM,
+        // public fcm: FCM,
         public api: ApiProvider,
         public localNotification: LocalNotifications, public notificationCardService: NotificationCardService,
         public localStorage: Storage,
-        //   public currentUser: CurrentUserProvider,
         public platform: Platform) {
     }
 
     initializeFCM() {
         if (this.platform.is('android')) {
-            this.initializeFirebaseAndroid()
+            // this.initializeFirebaseAndroid()
         } else {
             this.initializeFirebaseIOS()
         }
     }
 
-    async initializeFirebaseAndroid() {
-        this.subscribeToPushNotifications();
-        this.localNotificationClickHandler();
-        this.localStorage.get('deviceId').then(token => {
-            if (token) {
-                this.fcmDeviceId = token;
-            } else {
-                this.fcm.getToken().then(token => {
-                    this.fcmDeviceId = token;
-                    this.localStorage.set('deviceId', token).then(token => {
-                        // this.subscribeToChannels('allUsers');
-                        this.registerDeviceID();
-                    });
-                })
-            }
-        })
-        this.fcm.onTokenRefresh().subscribe(token => {
-            this.fcmDeviceId = token;
-            this.localStorage.set('deviceId', token);
-            this.registerDeviceID();
-        })
-    }
+    // async initializeFirebaseAndroid() {
+    //     this.subscribeToPushNotifications();
+    //     this.localNotificationClickHandler();
+    //     this.localStorage.get('deviceId').then(token => {
+    //         if (token) {
+    //             this.fcmDeviceId = token;
+    //         } else {
+    //             this.fcm.getToken().then(token => {
+    //                 this.fcmDeviceId = token;
+    //                 this.localStorage.set('deviceId', token).then(token => {
+    //                     // this.subscribeToChannels('allUsers');
+    //                     this.registerDeviceID();
+    //                 });
+    //             })
+    //         }
+    //     })
+    //     this.fcm.onTokenRefresh().subscribe(token => {
+    //         this.fcmDeviceId = token;
+    //         this.localStorage.set('deviceId', token);
+    //         this.registerDeviceID();
+    //     })
+    // }
 
-    subscribeToPushNotifications() {
-        this.fcm.onNotification().subscribe(notificationData => {
-            //Will be triggered if the user clicks on the notification and come to the app
-            if (notificationData.wasTapped) {
-                this.onNotificationClick(notificationData);
-            } else {
-                //Will be triggered if the user is using the app(foreground);
-                this.triggerLocalNotification(notificationData);
-            };
-        }, error => {
-        });
-    }
+    // subscribeToPushNotifications() {
+    //     this.fcm.onNotification().subscribe(notificationData => {
+    //         //Will be triggered if the user clicks on the notification and come to the app
+    //         if (notificationData.wasTapped) {
+    //             this.onNotificationClick(notificationData);
+    //         } else {
+    //             //Will be triggered if the user is using the app(foreground);
+    //             this.triggerLocalNotification(notificationData);
+    //         };
+    //     }, error => {
+    //     });
+    // }
 
     localNotificationClickHandler() {
         this.localNotification.on('click').subscribe(success => {
@@ -93,7 +88,7 @@ export class FcmProvider {
                         refresh_token: parsedData.refresh_token,
                     };
                     this.localStorage.set('userTokens', userTokens).then(usertoken => {
-                        const url = AppConfigs.notification.kendra_base_url + 'v1' + AppConfigs.notification.registerDevice;
+                        const url = environment.notification.kendra_base_url + 'v1' + environment.notification.registerDevice;
                         const payload = {
                             deviceId: this.fcmDeviceId,
                             os: this.platform.is('android') ? 'android' : 'ios',
@@ -122,9 +117,9 @@ export class FcmProvider {
     }
 
     subscribeToChannels(topic: string) {
-        this.fcm.subscribeToTopic(topic).then(success => {
-            this.subscribeToPushNotifications();
-        }).catch(error => { })
+        // this.fcm.subscribeToTopic(topic).then(success => {
+        //     this.subscribeToPushNotifications();
+        // }).catch(error => { })
     }
 
     notificationClickActions(notificationMeta) {

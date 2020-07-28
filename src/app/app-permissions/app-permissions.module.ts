@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import {SharedModule} from '../shared.module';
+import {SharedModule} from '../shared-module/shared-module';
 
 import { AppPermissionsPage } from './app-permissions.page';
 

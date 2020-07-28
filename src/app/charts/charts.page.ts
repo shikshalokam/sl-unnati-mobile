@@ -9,6 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiProvider } from '../api/api';
 import { AlertController, Platform } from '@ionic/angular';
 import * as Highcharts from 'highcharts/highcharts-gantt';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
+
 @Component({
   selector: 'app-charts',
   templateUrl: './charts.page.html',
@@ -52,7 +54,7 @@ export class ChartsPage implements OnInit, OnDestroy {
     });
     this.route.params.subscribe(params => {
       this.id = params.id;
-      this.storage.get('latestProjects').then(data => {
+      this.storage.get(LocalKeys.allProjects).then(data => {
         if (typeof data == 'string') {
           data = JSON.parse(data);
         }
@@ -62,7 +64,7 @@ export class ChartsPage implements OnInit, OnDestroy {
             if (data._id == this.id) {
               matched = true;
               this.title = data.title;
-              this.storage.set('projectToBeView', data).then(data => {
+              this.storage.set(LocalKeys.projectToBeView, data).then(data => {
                 this.platform.ready().then(() => {
                   this.setupChart();
                   try {
@@ -101,7 +103,7 @@ export class ChartsPage implements OnInit, OnDestroy {
     var dates = [];
     this.totalTasks = 0;
     this.totalSTasks = 0;
-    this.storage.get('projectToBeView').then(pc => {
+    this.storage.get(LocalKeys.projectToBeView).then(pc => {
       if (!pc) {
         this.getProjectsFromService();
       } else {
@@ -204,12 +206,12 @@ export class ChartsPage implements OnInit, OnDestroy {
       projectId: this.id
     }
     this.projectService.projectDetails(id).subscribe((resp: any) => {
-      this.storage.set('projectToBeView', resp.data).then(pc => {
+      this.storage.set(LocalKeys.projectToBeView, resp.data).then(pc => {
         this.value = [];
         var dates = [];
         this.totalTasks = 0;
         this.totalSTasks = 0;
-        pc.projects.forEach(project => {
+        pc.projects.forEach(project => { 
           this.title = project.title;
           this.status = project.status;
           this.entityId = project.entityId;
