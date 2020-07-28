@@ -76,11 +76,9 @@ export class Login {
 
 
   checkForCurrentUserLocalData(tokens) {
-    // alert(tokens + "data in checkForCurrentUserLocalData");
     const loggedinUserId = this.currentUser.getDecodedAccessToken(tokens.access_token).sub;
     const currentUserId = this.currentUser.getCurrentUserData() ? this.currentUser.getCurrentUserData().sub : null;
     if (loggedinUserId === currentUserId || !currentUserId) {
-      // alert("In IF");
       let userTokens = {
         accessToken: tokens.access_token,
         refreshToken: tokens.refresh_token,

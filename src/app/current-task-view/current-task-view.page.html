@@ -18,9 +18,17 @@
         border-bottom-right-radius: 0px;" autofocus></ion-input>
     </ion-item>
     <ion-row>
-      <ion-col size="3" style="padding: 0px;">
+      <ion-item class="ion-date-time" style="min-width:100%">
+        <img src="assets/images/timetable.png" style="margin-top: 5px;
+              max-width: 40px;
+              float: left;
+              margin-right: 10px;">
+        <ion-datetime (ionChange)="setDate($event,'task')" value={{task?.endDate}} style="margin-left: 14%;"
+          displayFormat="DD/MM/YYYY" min="2000" max="2100" display-timezone="utc"></ion-datetime>
+      </ion-item>
+      <!-- <ion-col size="3" style="padding: 0px;">
         <img src="assets/images/timetable.png" style="max-width: 40%;" (click)="setDate('task')"> </ion-col>
-      <ion-col size="9" class="col-9-custom" (click)="setDate('task')">{{task.endDate | date : "dd-MM-yyyy"}}</ion-col>
+      <ion-col size="9" class="col-9-custom" (click)="setDate('task')">{{task.endDate | date : "dd-MM-yyyy"}}</ion-col> -->
     </ion-row>
     <ion-row>
       <ion-col size="3" style="margin: auto;">
@@ -57,8 +65,14 @@
         <ion-button color="primary" class="text-notransform" (click)="addSubtask()">
           {{'current_task.add_subtask' | translate}}
         </ion-button>
-        <img src="assets/images/timetable.png"
-          style="margin-top: 5px;margin-right: 10px; float: right; max-width: 30px;" (click)="subtaskDate()">
+        <!-- <img src="assets/images/timetable.png"
+          style="margin-top: 5px;margin-right: 10px; float: right; max-width: 30px;" (click)="subtaskDate()"> -->
+
+        <ion-item class="ion-date-time" style="float: right;">
+          <ion-datetime (ionChange)="subtaskDate($event)" min="2000" max="2100" value=null display-timezone="utc" style="max-width: 0px;">
+          </ion-datetime>
+          <img src="assets/images/timetable.png" style="max-width: 35px;">
+        </ion-item>
       </ion-col>
     </ion-row>
     <div class="subtask-box" *ngFor="let subtask of task?.subTasks">
@@ -80,9 +94,13 @@
       </ion-item>
       <ion-row *ngIf="!subtask.isDeleted">
         <ion-col size="1"> </ion-col>
-        <ion-col size="5" (click)="setSubTaskDate(subtask)"> <img src="assets/images/timetable.png"
-            style="margin-top: 5px; max-width: 25px; float: left; margin-right: 10px;">
-          <div style="margin-top: 10px; font-size: 14px;">{{subtask.endDate | date : "dd-MM-yyyy"}}</div>
+        <ion-col size="5">
+          <ion-item class="ion-date-time">
+            <img src="assets/images/timetable.png"
+              style="margin-top: 5px; max-width: 25px; float: left; margin-right: 10px;">
+            <ion-datetime (ionChange)="setSubTaskDate($event,subtask)" value={{subtask?.endDate}}
+              displayFormat="DD/MM/YYYY" min="2000" max="2100" display-timezone="utc"></ion-datetime>
+          </ion-item>
         </ion-col>
         <ion-col size="6">
           <ion-select [(ngModel)]="subtask.status" class="custom-select" placeholder="Select Status"
@@ -114,11 +132,11 @@
           </ion-col>
           <ion-col size="3" class="pop-action">
             <div class="icon-attch" [ngClass]="{'isHaveData': task.imageUrl}">
-              <img src="assets/images/camera.svg" (click)="openCamera()" style="width: 1.8em;">
+              <img src="assets/images/camera.svg" (click)="openActionSheet()" style="width: 1.8em;">
             </div>
           </ion-col>
           <ion-col size="3" class="pop-action">
-            <div class="icon-attch" [ngClass]="{'isHaveData': task.file?.name}" (click)="selectFile()">
+            <div class="icon-attch" [ngClass]="{'isHaveData': task.file?.name}" (click)="openActionSheet()">
               <img src="assets/images/attach_file.svg" style="width: 1.8em;">
             </div>
           </ion-col>

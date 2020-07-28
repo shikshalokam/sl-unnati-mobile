@@ -165,12 +165,10 @@ export class FilesPage implements OnInit {
       this.downloadFile(attachment);
     } else {
       this.fileOpener.open(this.appFolderPath + '/' + attachment.name, attachment.type)
-        .then(() => console.log('File is opened'))
+        .then(() => { console.log('File is opened'); })
         .catch(e => console.log('Error opening file', e));
     }
   }
-
-
 
   downloadFile(attachment) {
     this.toastService.presentLoading('Downloading, Please wait');
@@ -180,7 +178,9 @@ export class FilesPage implements OnInit {
     // attachment.url = this.sanitize.bypassSecurityTrustResourceUrl(win.Ionic.WebView.convertFileSrc(attachment.url));
     fileTransfer.download(attachment.url, this.appFolderPath + '/' + attachment.name).then(success => {
       attachment.notInLocal = false;
-      // this.viewDocument(attachment);
+      if (this.isIos) {
+        this.viewDocument(attachment);
+      }
     }).catch(error => {
     });
   }

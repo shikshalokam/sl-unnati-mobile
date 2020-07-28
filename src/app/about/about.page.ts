@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NetworkService } from '../network.service';
-import { AppConfigs } from '../core-module/constants/app.config';
+import { AppConfigs } from '../app.config';
 import { Network } from '@ionic-native/network/ngx';
 import { CurrentUserProvider } from '../current-user';
 import { Router } from '@angular/router';
@@ -75,7 +75,6 @@ export class AboutPage implements OnInit {
       this.login.loggedIn('false');
       this.router.navigateByUrl('/login');
     }, error => {
-      //  alert(error + "Logout error") 
     })
     if (!localStorage.getItem("token")) {
       this.router.navigateByUrl('/login');

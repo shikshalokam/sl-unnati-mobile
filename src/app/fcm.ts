@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FCM } from '@ionic-native/fcm/ngx';
+// import { FCM } from '@ionic-native/fcm/ngx';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ApiProvider } from './api/api';
 import { Platform } from '@ionic/angular';
@@ -15,7 +15,7 @@ export class FcmProvider {
 
     constructor(
         public http: HttpClient, public router: Router,
-        public fcm: FCM,
+        // public fcm: FCM,
         public api: ApiProvider,
         public localNotification: LocalNotifications, public notificationCardService: NotificationCardService,
         public localStorage: Storage,
@@ -24,47 +24,47 @@ export class FcmProvider {
 
     initializeFCM() {
         if (this.platform.is('android')) {
-            this.initializeFirebaseAndroid()
+            // this.initializeFirebaseAndroid()
         } else {
             this.initializeFirebaseIOS()
         }
     }
 
-    async initializeFirebaseAndroid() {
-        this.subscribeToPushNotifications();
-        this.localNotificationClickHandler();
-        this.localStorage.get('deviceId').then(token => {
-            if (token) {
-                this.fcmDeviceId = token;
-            } else {
-                this.fcm.getToken().then(token => {
-                    this.fcmDeviceId = token;
-                    this.localStorage.set('deviceId', token).then(token => {
-                        // this.subscribeToChannels('allUsers');
-                        this.registerDeviceID();
-                    });
-                })
-            }
-        })
-        this.fcm.onTokenRefresh().subscribe(token => {
-            this.fcmDeviceId = token;
-            this.localStorage.set('deviceId', token);
-            this.registerDeviceID();
-        })
-    }
+    // async initializeFirebaseAndroid() {
+    //     this.subscribeToPushNotifications();
+    //     this.localNotificationClickHandler();
+    //     this.localStorage.get('deviceId').then(token => {
+    //         if (token) {
+    //             this.fcmDeviceId = token;
+    //         } else {
+    //             this.fcm.getToken().then(token => {
+    //                 this.fcmDeviceId = token;
+    //                 this.localStorage.set('deviceId', token).then(token => {
+    //                     // this.subscribeToChannels('allUsers');
+    //                     this.registerDeviceID();
+    //                 });
+    //             })
+    //         }
+    //     })
+    //     this.fcm.onTokenRefresh().subscribe(token => {
+    //         this.fcmDeviceId = token;
+    //         this.localStorage.set('deviceId', token);
+    //         this.registerDeviceID();
+    //     })
+    // }
 
-    subscribeToPushNotifications() {
-        this.fcm.onNotification().subscribe(notificationData => {
-            //Will be triggered if the user clicks on the notification and come to the app
-            if (notificationData.wasTapped) {
-                this.onNotificationClick(notificationData);
-            } else {
-                //Will be triggered if the user is using the app(foreground);
-                this.triggerLocalNotification(notificationData);
-            };
-        }, error => {
-        });
-    }
+    // subscribeToPushNotifications() {
+    //     this.fcm.onNotification().subscribe(notificationData => {
+    //         //Will be triggered if the user clicks on the notification and come to the app
+    //         if (notificationData.wasTapped) {
+    //             this.onNotificationClick(notificationData);
+    //         } else {
+    //             //Will be triggered if the user is using the app(foreground);
+    //             this.triggerLocalNotification(notificationData);
+    //         };
+    //     }, error => {
+    //     });
+    // }
 
     localNotificationClickHandler() {
         this.localNotification.on('click').subscribe(success => {
@@ -117,9 +117,9 @@ export class FcmProvider {
     }
 
     subscribeToChannels(topic: string) {
-        this.fcm.subscribeToTopic(topic).then(success => {
-            this.subscribeToPushNotifications();
-        }).catch(error => { })
+        // this.fcm.subscribeToTopic(topic).then(success => {
+        //     this.subscribeToPushNotifications();
+        // }).catch(error => { })
     }
 
     notificationClickActions(notificationMeta) {

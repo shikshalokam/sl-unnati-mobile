@@ -11,7 +11,8 @@ export class LibraryPage implements OnInit {
   bgcolor = '#f7f7f7';
   searchInput = '';
   constructor(public router: Router,
-    public projectService: ProjectService) { }
+    public projectService: ProjectService,
+  ) { }
   back = "project-view/home";
   tiles = [
     { title: "my projects", icon: 'assets/images/libraryTiles/myprojects.png', value: 'my_projects' },
@@ -31,6 +32,9 @@ export class LibraryPage implements OnInit {
   }
   public navigateToCategoryView(category) {
     this.router.navigate(['/project-view/category', category])
+  }
+  public navigateToSearch() {
+    this.router.navigate(['/project-view/library-search']);
   }
 }
 

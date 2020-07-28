@@ -35,19 +35,21 @@ export class CreateProjectService {
     public updateByProjects(updatedProject) {
         let mapped: boolean = false;
         return this.storage.get('latestProjects').then(projectList => {
-            projectList.forEach(projectsPrograms => {
-                if (projectsPrograms) {
-                    projectsPrograms.projects.forEach(function (project, i) {
-                        if (project._id == updatedProject._id) {
-                            updatedProject.isEdited = true;
-                            projectsPrograms.projects[i] = updatedProject;
-                            mapped = true;
-                        }
-                    });
-                }
-            })
+            if (projectList) {
+                projectList.forEach(projectsPrograms => {
+                    if (projectsPrograms) {
+                        projectsPrograms.projects.forEach(function (project, i) {
+                            if (project._id == updatedProject._id) {
+                                updatedProject.isEdited = true;
+                                projectsPrograms.projects[i] = updatedProject;
+                                mapped = true;
+                            }
+                        });
+                    }
+                })
+            }
             if (!mapped) {
-                if (projectList[0].projects) {
+                if (projectList && projectList[0].projects) {
                     projectList[0].projects.forEach(project => {
                         projectList[0].projects.push(updatedProject);
                     });
@@ -89,8 +91,9 @@ export class CreateProjectService {
                     }
                 })
                 if (!mapped) {
-                    if (projectList.projects) {
-                        projectList.projects.push(project)
+                    if (projectList) {
+                        project._id = projectList[0].projects.length + 1;
+                        projectList[0].projects.push(project)
                     } else {
                         let pro1 = [{
                             projects: [

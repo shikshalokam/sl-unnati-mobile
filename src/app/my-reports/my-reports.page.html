@@ -31,7 +31,7 @@
       <ion-card *ngIf="showNoReports && !showSkeleton">
         <h5 style="text-align: center;"> {{'message.no_data_found' |translate}} </h5>
       </ion-card>
-      <div *ngIf="report">
+      <div *ngIf="report && !showNoReports">
         <ion-fab vertical="top" horizontal="end" style="margin-top: 55px;">
           <ion-fab-button size="small">
             <ion-icon ios="ios-more" md="md-more"></ion-icon>
@@ -95,9 +95,6 @@
           </h5>
           <div>{{ report?.startMonth }} - {{ report?.endMonth }}</div>
         </div>
-
-
-
         <ion-grid style="padding: 0px;
         margin-top: 2.5em;" *ngIf="activeTab == 'lastMonth'">
           <ion-row>

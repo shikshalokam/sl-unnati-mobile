@@ -197,18 +197,22 @@ export class PopoverComponent implements OnInit {
       const fileTransfer: FileTransferObject = this.transfer.create();
       const url = data.pdfUrl;
       fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
-        this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
-          let data = base64File.split(',');
-          let base64Data = "data:application/pdf;base64," + data[1];
-          this.toastService.stopLoader();
-          // this.DismissClick();
-          this.socialSharing.share("", fileName, base64Data, "").then(() => {
-          }, error => {
-            // intentially left blank
+        let fileName1 = entry.nativeURL.split('/').pop();
+        let path = entry.nativeURL.substring(0, entry.nativeURL.lastIndexOf("/") + 1);
+        this.file.readAsDataURL(path, fileName)
+          .then(base64File => {
+            // this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
+            let data = base64File.split(',');
+            let base64Data = "data:application/pdf;base64," + data[1];
+            this.toastService.stopLoader();
+            this.DismissClick();
+            this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+            }, error => {
+              // intentially left blank
+            });
+          }, (err) => {
+            this.toastService.stopLoader();
           });
-        }, (err) => {
-          this.toastService.stopLoader();
-        });
       }, (error) => {
         this.toastService.stopLoader();
       });
@@ -326,6 +330,15 @@ export class PopoverComponent implements OnInit {
             }
           });
         }
+      });
+      this.sync();
+    }
+  }
+
+  sync() {
+    this.toastService.startLoader('Loading, please wait');
+    if (this.projectToSync[0].tasks && this.projectToSync[0].tasks.length > 0) {
+      this.projectToSync[0].tasks.forEach(task => {
         if (task.subTasks && task.subTasks.length > 0) {
           task.subTasks.forEach(subtasks => {
             if (subtasks.isNew && subtasks._id) {
@@ -340,12 +353,7 @@ export class PopoverComponent implements OnInit {
           task.isNew = false;
         }
       });
-      this.sync();
     }
-  }
-
-  sync() {
-    this.toastService.startLoader('Loading, please wait');
     let metaData: any = [];
     metaData.push(this.projectToSync);
     let projects = {
@@ -448,18 +456,21 @@ export class PopoverComponent implements OnInit {
     const fileTransfer: FileTransferObject = this.transfer.create();
     const url = data.pdfUrl;
     fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
-      this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
-        let data = base64File.split(',');
-        let base64Data = "data:application/pdf;base64," + data[1];
-        this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+      let fileName1 = entry.nativeURL.split('/').pop();
+      let path = entry.nativeURL.substring(0, entry.nativeURL.lastIndexOf("/") + 1);
+      this.file.readAsDataURL(path, fileName)
+        .then(base64File => {
+          let data = base64File.split(',');
+          let base64Data = "data:application/pdf;base64," + data[1];
+          this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+            this.toastService.stopLoader();
+          }, error => {
+            this.toastService.stopLoader();
+            // intentially left blank
+          });
+        }, (err) => {
           this.toastService.stopLoader();
-        }, error => {
-          this.toastService.stopLoader();
-          // intentially left blank
         });
-      }, (err) => {
-        this.toastService.stopLoader();
-      });
     }, (error) => {
       this.toastService.stopLoader();
     });

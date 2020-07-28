@@ -18,18 +18,15 @@ import { ProjectService } from '../app/project-view/project.service';
 import { HomeService } from './home/home.service';
 import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
-import { FcmProvider } from './fcm';
+// import { FcmProvider } from './fcm';
 import * as jwt_decode from "jwt-decode";
 import { NotificationCardService } from './notification-card/notification.service';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { AboutPage } from './about/about.page';
-import { ProjectDetailPage } from './project-detail/project-detail.page';
 import { TemplateViewPage } from './template-view/template-view.page';
 import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
-import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
-
 declare var cordova: any;
 
 @Component({
@@ -73,7 +70,7 @@ export class AppComponent {
   constructor(
     private zone: NgZone,
     public storage: Storage,
-    public fcm: FcmProvider,
+    // public fcm: FcmProvider,
     public navController: NavController,
     public alertController: AlertController,
     public router: Router,
@@ -208,8 +205,8 @@ export class AppComponent {
         localStorage.setItem('isPopUpShowen', null);
       });
       // this.fcm.connectSubscription.unsubscribe();
-      this.fcm.subscribeToPushNotifications();
-      this.fcm.localNotificationClickHandler();
+      // this.fcm.subscribeToPushNotifications();
+      // this.fcm.localNotificationClickHandler();
       this.network.onDisconnect()
         .subscribe(() => {
           this.isConnected = false;
@@ -263,6 +260,8 @@ export class AppComponent {
           this.router.navigateByUrl('project-view/detail');
         } else if (this.router.url == '/project-view/project-detail/form') {
           this.router.navigateByUrl('project-view/create-project');
+        } else if (this.router.url == '/project-view/project-detail/search') {
+          this.router.navigateByUrl('project-view/library-search');
         } else if (s[1].path == 'courses' && s[2].path == 'template-view') {
           if (s.length == 5) {
             this.router.navigateByUrl('project-view/template-view/' + s[3].path + '/' + s[4].path);

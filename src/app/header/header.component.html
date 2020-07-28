@@ -12,7 +12,7 @@
     <ion-icon (click)="goBack()" autoHide="false" ios="ios-arrow-back" md="md-arrow-back" color="primary"
       class="header-action-icons" *ngIf="showBack && isGoBack"></ion-icon>
     <ion-title [ngClass]="{  
-      'ios-header': isIos && showMenu,
+      'ios-header': isIos && showMenu, 
       'header-custom ': isIos && showBack,
       'header-custom-android ': !isIos
     }">

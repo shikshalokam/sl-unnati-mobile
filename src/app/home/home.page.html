@@ -87,7 +87,7 @@
     </div>
     <!-- Search Results -->
     <div *ngIf="searchInput">
-      <div class="welcome-card custom-card" *ngFor="let projects of projectList;" style="margin:10px;">
+      <div class="welcome-card custom-card" *ngFor="let projects of myProjects;" style="margin:10px;">
         <div *ngIf="(projects.projects | searchProjects: searchInput).length == 0" style="text-align:center;">
         </div>
         <div *ngFor="let project of projects.projects | searchProjects: searchInput">

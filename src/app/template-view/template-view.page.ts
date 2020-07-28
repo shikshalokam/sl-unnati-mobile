@@ -11,15 +11,15 @@ import { HomeService } from '../home/home.service';
 import { AppConfigs } from '../app.config';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 @Component({
-  selector: 'app-template-view',
-  templateUrl: './template-view.page.html',
-  styleUrls: ['./template-view.page.scss'],
+  selector: "app-template-view",
+  templateUrl: "./template-view.page.html",
+  styleUrls: ["./template-view.page.scss"],
 })
 export class TemplateViewPage {
   project;
   templateId;
   programId;
-  back = 'project-view/home';
+  back = "project-view/home";
   category;
   files: any;
   startDate;
@@ -33,13 +33,13 @@ export class TemplateViewPage {
   show: boolean = false;
   showAddTask: boolean = false;
   statuses = [
-    { title: 'Not started' },
-    { title: 'In Progress' },
-    { title: 'Completed' }
+    { title: "Not started" },
+    { title: "In Progress" },
+    { title: "Completed" },
   ];
   sub;
-  taskCreate = {
-  }
+  taskCreate = {};
+  blockEditAll;
   constructor(
     public storage: Storage,
     public platform: Platform,
@@ -53,61 +53,62 @@ export class TemplateViewPage {
     public homeService: HomeService
   ) {
     platform.ready().then(() => {
-      route.params.subscribe(params => {
+      route.params.subscribe((params) => {
         this.templateId = params.templateId;
         if (this.templateId) {
           this.getProject();
         }
-      })
-      this.sub = this.route
-        .queryParams
-        .subscribe(params => {
-          this.programId = params.programId;
-
-        });
-    })
+      });
+      this.sub = this.route.queryParams.subscribe((params) => {
+        this.programId = params.programId;
+      });
+    });
   }
 
   ionViewDidEnter() {
     this.showAddTask = false;
-
   }
   getProject() {
     this.tasksLength = 0;
-    this.createProjectService.getTemplate(this.templateId).subscribe((data: any) => {
-      if (data.status == "success") {
-        if (data.result[0].tasks && data.result[0].tasks.length > 0) {
-          data.result[0].tasks.forEach(task => {
-            if (!task.isDeleted) {
-              this.tasksLength = this.tasksLength + 1;
-            }
-          });
+    this.createProjectService.getTemplate(this.templateId).subscribe(
+      (data: any) => {
+        if (data.status == "success") {
+          if (data.result[0].tasks && data.result[0].tasks.length > 0) {
+            data.result[0].tasks.forEach((task) => {
+              if (!task.isDeleted) {
+                this.tasksLength = this.tasksLength + 1;
+              }
+            });
+          }
+          if (data.result[0].status == "not yet started") {
+            data.result[0].status = "Not started";
+          }
+          if (data.result[0].status == "not yet started") {
+            data.result[0].status = "Not started";
+          }
+          if (!data.result[0].isStarted) {
+            data.result[0].isStarted = false;
+          }
+          this.project = data.result[0];
+          this.show = true;
         }
-        if (data.result[0].status == 'not yet started') {
-          data.result[0].status = 'Not started';
-        }
-        if (data.result[0].status == 'not yet started') {
-          data.result[0].status = 'Not started';
-        }
-        if (!data.result[0].isStarted) {
-          data.result[0].isStarted = false;
-        }
-        this.project = data.result[0];
-        this.show = true;
-      }
-    }, error => {
-    })
+      },
+      (error) => {}
+    );
   }
   // Copy the template project into my project
   public copyTemplate() {
-    this.projectId = '';
+    this.projectId = "";
     this.project.isStarted = true;
-    if (this.project.status == 'Not started' || this.project.status == 'not yet started') {
-      this.project.status = 'In Progress';
+    if (
+      this.project.status == "Not started" ||
+      this.project.status == "not yet started"
+    ) {
+      this.project.status = "In Progress";
     }
     let environment = AppConfigs.currentEnvironment;
-    let programId = '';
-    AppConfigs.environments.forEach(env => {
+    let programId = "";
+    AppConfigs.environments.forEach((env) => {
       if (environment === env.name) {
         programId = env.programId;
       }
@@ -122,15 +123,15 @@ export class TemplateViewPage {
     }
     this.storage.get(LocalKeys.allProjects).then(projectList => {
       if (projectList) {
-        projectList.forEach(projectsPrograms => {
+        projectList.forEach((projectsPrograms) => {
           if (projectsPrograms.programs) {
             if (projectsPrograms.programs._id == programId) {
               this.project._id = projectsPrograms.projects.length + 10;
             }
           }
-        })
+        });
       }
-    })
+    });
     if (this.project.tasks) {
       let pId = this.project._id;
       this.project.tasks.forEach(function (task, i) {
@@ -139,9 +140,9 @@ export class TemplateViewPage {
           task.isNew = true;
         }
         task.projectId = pId;
-        task.status = 'Not started'
+        task.status = "Not started";
         if (task.subTasks) {
-          task.subTasks.forEach(subtask => {
+          task.subTasks.forEach((subtask) => {
             if (!subtask._id) {
               subtask.isNew = true;
               subtask._id = task.subTasks.length + 1;
@@ -151,20 +152,31 @@ export class TemplateViewPage {
         } else {
           task.subTasks = [];
         }
-      })
+      });
     }
     this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
       this.project = project;
-      this.createProjectService.insertIntoMyProjects(this.project).then(data => {
-        this.router.navigate(['/project-view/project-detail', 'my_projects'])
-      })
-    })
+      this.createProjectService
+        .insertIntoMyProjects(this.project)
+        .then((data) => {
+          this.router.navigate(["/project-view/project-detail", "my_projects"]);
+        });
+    });
   }
   public navigateToResources() {
     if (this.programId) {
-      this.router.navigate(['/project-view/courses/', 'template-view', this.templateId, this.programId]);
+      this.router.navigate([
+        "/project-view/courses/",
+        "template-view",
+        this.templateId,
+        this.programId,
+      ]);
     } else {
-      this.router.navigate(['/project-view/courses/', 'template-view', this.templateId]);
+      this.router.navigate([
+        "/project-view/courses/",
+        "template-view",
+        this.templateId,
+      ]);
     }
   }
 

@@ -47,36 +47,52 @@
           {{project?.duration}}
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="project?.startDate">
-        <ion-col size="5" class="label-box">
-          {{'projectDetail.start_date' | translate}}
-        </ion-col>
-        <ion-col size="7" (click)="setDate('sd')">
-          {{project?.startDate | date : "dd/MM/yyyy"}}
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="5" class="label-box">
-          {{'projectDetail.end_date' | translate}}
-        </ion-col>
-        <ion-col size="7" (click)="setDate('ed')">
-          {{project?.endDate | date : "dd/MM/yyyy"}}
-        </ion-col>
-      </ion-row>
+      <ion-item class="ion-date-time">
+        <ion-row *ngIf="project?.startDate" style="min-width: 100%;">
+          <ion-col size="5" class="label-box">
+            {{'projectDetail.start_date' | translate}}
+          </ion-col>
+          <ion-col size="7">
+            <ion-datetime (ionChange)="setDate($event,'sd')" min="2000" max="2100" display-timezone="utc"
+              style="padding: 0px; font-weight: 600;" value={{project?.startDate}}>
+            </ion-datetime>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+      <ion-item class="ion-date-time">
+        <ion-row style="min-width: 100%;">
+          <ion-col size="5" class="label-box">
+            {{'projectDetail.end_date' | translate}}
+          </ion-col>
+          <ion-col size="7">
+            <ion-datetime (ionChange)="setDate($event,'ed')" min="2000" max="2100" display-timezone="utc"
+              value={{project?.endDate}} style="padding: 0px; font-weight: 600;">
+            </ion-datetime>
+          </ion-col>
+        </ion-row>
+      </ion-item>
       <ion-row *ngIf="project?.status">
         <ion-col size="5" class="label-box">
           {{'projectDetail.status' | translate}}
         </ion-col>
         <ion-col size="7" *ngIf="project?.status">
           <ion-select [(ngModel)]="project.status" class="custom-select" placeholder="Select Status" [disabled]="true">
-            <ion-select-option  *ngFor="let status of statuses"  value="{{status.title}}"
+            <ion-select-option *ngFor="let status of statuses" value="{{status.title}}"
               selected="status.title === project.status">{{status.title}}</ion-select-option>
           </ion-select>
         </ion-col>
       </ion-row>
-      <ion-button class="round-corner-btn prjdetail-btn" expand="block" color="secondary"
+      <!--  <ion-button
+        class="round-corner-btn prjdetail-btn"
+        expand="block"
+        color="secondary"
         (click)="navigateToResources()"
-        *ngIf="category != 'my_projects' &&  category != 'form' &&  category != 'home' && category !='projectsList'">
+        *ngIf="category != 'my_projects' &&  category != 'form' &&  category != 'home' && category !='projectsList' && projectDetail?.resources.length"
+      >
+        {{'button.learning_resources' | translate}}
+      </ion-button> -->
+      <ion-button class="round-corner-btn prjdetail-btn" expand="block" color="secondary"
+        (click)="navigateToResources()" *ngIf="category != 'form'   && project?.resources?.length">
         {{'button.learning_resources' | translate}}
       </ion-button>
     </div>
@@ -100,7 +116,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -121,7 +137,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -142,7 +158,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -163,7 +179,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -184,7 +200,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -205,7 +221,7 @@
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
             <ion-col size="1"> </ion-col>
-            <ion-col size="10">
+            <ion-col size="10" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -226,7 +242,7 @@
             [ngClass]="{'completed-task-left-border' : task.status === 'Completed','pending-task-left-border' : task.status != 'Completed'}">
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
-            <ion-col size="11">
+            <ion-col size="11" (click)="taskView(task)">
               <h5 style="color: #000;"> {{task?.title}} </h5>
               <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
                 {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
@@ -241,15 +257,15 @@
       </div>
     </div>
     <div *ngIf="showAddTask">
-      <app-create-tasks [data]="taskCreate">
-      </app-create-tasks>
+      <app-create-tasks [data]="taskCreate"> </app-create-tasks>
     </div>
     <div *ngIf="tasksLength == 0 && show && addTaskButton " class="tasks-label">
       <!-- && project.isStarted -->
       <!-- <h5> {{'message.add_tasks_to_project' | translate}} <ion-icon name="add-circle" color="primary"
           style="font-size:30px;"></ion-icon>
       </h5> -->
-      <ion-button (click)="addTask()"> {{'button.add_tasks' | translate}}
+      <ion-button (click)="addTask()">
+        {{'button.add_tasks' | translate}}
       </ion-button>
     </div>
   </div>
@@ -260,15 +276,15 @@
   <div *ngIf="show && project.isStarted && project.tasks" color="file-container" class="file-container"
     (click)="navigateToFiles()">
     <div>
-      <img src="assets/images/folder.png">
+      <img src="assets/images/folder.png" />
     </div>
     <div>Files</div>
   </div>
-  <ion-fab vertical="bottom" horizontal="end" style="position: fixed;" mode='ios'
-    *ngIf="show && addTaskButton  && tasksLength > 0 ">
-    <ion-fab-button (click)="addTask()" style=" margin-bottom: 20%;">
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" edge
+    *ngIf="!this.showAddTask && show && addTaskButton  && tasksLength > 0 ">
+    <ion-fab-button (click)="addTask()" style="margin-bottom: 60px;">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
 </ion-content>

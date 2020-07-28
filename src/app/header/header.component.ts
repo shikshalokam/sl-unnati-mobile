@@ -126,10 +126,9 @@ export class HeaderComponent implements OnInit {
           }
         })
       }
-    }, 18000);
+    }, 120000);
     this.getNotificationCount();
   }
-
   stopNotificationPooling() {
 
   }
