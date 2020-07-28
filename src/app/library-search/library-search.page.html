@@ -1,0 +1,37 @@
+<ion-header>
+  <app-header [title]="title" [bg]="bgcolor" [showMenu]="false" [showBack]="true" [isGoBack]="back" [noBorder]="false">
+  </app-header>
+</ion-header>
+<ion-content>
+  <ion-item class="search-bar-custom">
+    <ion-icon name="search" item-left color="dark"></ion-icon>
+    <ion-input type="text" placeholder="SEARCH" [(ngModel)]="searchInput"></ion-input>
+  </ion-item>
+  <ion-card style="margin: 20px;">
+    <div *ngFor="let project of projects; let i = index">
+      <ion-row style="padding: 5px;
+      border-bottom: 1px solid;
+      color: #d33939;
+      background: #f2f2f2;"
+        *ngIf="( project.projects | searchProjects : searchInput).length != 0 && searchInput || !searchInput">
+        <ion-col size="1">
+          <img src={{project.icon}} style="width: 40px; margin-right: 20px; margin-left: 5px;">
+        </ion-col>
+        <ion-col size="11" style="text-transform: capitalize;">
+          {{project.category}}
+        </ion-col>
+      </ion-row>
+      <ion-row *ngFor="let project of project.projects | searchProjects : searchInput" style="padding: 10px;"
+        (click)="viewProject(project)">
+        <ion-col size="1"> <img src={{project.icon}} style="width: 30px; margin-right: 20px;"></ion-col>
+        <ion-col size="11">{{project.title}} </ion-col>
+      </ion-row>
+      <!-- <ion-card class="welcome-card custom-card"
+        *ngIf="( project.projects | searchProjects : searchInput).length == 0">
+        <div class="no-results">
+          No Data available for {{project.category}} .
+        </div>
+      </ion-card> -->
+    </div>
+  </ion-card>
+</ion-content>

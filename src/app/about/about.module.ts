@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
-import {SharedModule} from '../shared.module';
+import {SharedModule} from '../shared-module/shared-module';
 import { IonicModule } from '@ionic/angular';
 
 import { AboutPage } from './about.page';

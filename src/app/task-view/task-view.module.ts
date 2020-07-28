@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import { IonicModule } from '@ionic/angular';
 import { TaskViewPage } from './task-view.page';
-import {SharedModule} from '../shared.module';
+import {SharedModule} from '../shared-module/shared-module';
 
 const routes: Routes = [
   {

@@ -6,7 +6,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { IonicModule } from '@ionic/angular';
 import { ChartsPage } from './charts.page';
 import {TranslateModule} from '@ngx-translate/core';
-import {SharedModule} from '../shared.module';
+import {SharedModule} from '../shared-module/shared-module';
 const routes: Routes = [
   {
     path: '',

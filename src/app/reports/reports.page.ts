@@ -7,6 +7,8 @@ import { ApiProvider } from '../api/api';
 import { IonInfiniteScroll } from '@ionic/angular';
 import { Location } from '@angular/common';
 import { HomeService } from '../home/home.service';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
+
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.page.html',
@@ -80,18 +82,18 @@ export class ReportsPage implements OnInit {
         title: title,
         id: id
       }
-      this.storage.get('myReports').then(rprts => {
+      this.storage.get(LocalKeys.allProjects).then(rprts => {
         if (rprts) {
           if (rprts.find((pro) => pro.id === report.id) === undefined) {
             rprts.push(report);
-            this.storage.set('myReports', rprts).then((uprep: any) => {
+            this.storage.set(LocalKeys.allProjects, rprts).then((uprep: any) => {
               this.homeService.loadMyProjects();
             });
           }
         } else {
           let data1: any = [];
           data1.push(report);
-          this.storage.set('myReports', data1).then((data: any) => {
+          this.storage.set(LocalKeys.allProjects, data1).then((data: any) => {
             this.homeService.loadMyProjects();
           });
         }

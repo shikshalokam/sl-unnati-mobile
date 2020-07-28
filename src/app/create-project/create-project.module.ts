@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 import { CreateProjectPage } from './create-project.page';
-import {SharedModule} from '../shared.module';
+import {SharedModule} from '../shared-module/shared-module';
 
 const routes: Routes = [
   {
