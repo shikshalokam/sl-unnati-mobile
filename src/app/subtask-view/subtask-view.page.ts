@@ -252,7 +252,7 @@ export class SubtaskViewPage implements OnInit {
                   status: this.task.status,
                 }]
               }
-              this.subTasksService.syncSubTask(subTask, data.access_token).subscribe((data: any) => {
+              this.subTasksService.syncSubTask(subTask).subscribe((data: any) => {
                 if (data.status == "success") {
                   ct.subTasks = data.data;
                   this.storage.set('currentTask', ct).then(currentTask => {
@@ -293,7 +293,7 @@ export class SubtaskViewPage implements OnInit {
           })
         }
       }, error => {
-         // TODO :: Intentially left.
+        // TODO :: Intentially left.
       })
     })
   }
@@ -307,7 +307,7 @@ export class SubtaskViewPage implements OnInit {
             refresh_token: parsedData.refresh_token,
           };
           this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.subTasksService.getSubtaskById(userTokens.access_token, parameter).subscribe((data: any) => {
+            this.subTasksService.getSubtaskById(parameter).subscribe((data: any) => {
               this.task = data.data;
             }, error => {
             })

@@ -23,9 +23,13 @@
           <ion-input type="text" *ngIf="data.type == 'text'" placeholder={{data.placeholder}}
             [formControlName]="data.field" [(ngModel)]="data.value">
           </ion-input>
-          <ion-input (click)="setDate(data)" [formControlName]="data.field" *ngIf="data.type == 'date'"
+          <!-- <ion-input (click)="setDate(data)" [formControlName]="data.field" *ngIf="data.type == 'date'"
             placeholder={{data.placeholder}} [(ngModel)]="data.value" type="text" readonly>
-          </ion-input>
+          </ion-input> -->
+          <ion-datetime (ionChange)="setDate($event,data)" min="2000" max="2100" display-timezone="utc"
+            [formControlName]="data.field" *ngIf="data.type == 'date'" value={{data.value}}
+            style="padding: 0px; font-weight: 600;">
+          </ion-datetime>
           <ion-textarea *ngIf="data.type == 'text-area'" [formControlName]="data.field" rows="2"
             [(ngModel)]="data.value">
           </ion-textarea>
@@ -52,7 +56,7 @@
               <ion-col size="6">
                 <a style="color:#6074f9; text-align:right;
                 float: right;
-                margin: 10px 10px; " (click)="chooseFile()">Attach</a>
+                margin: 10px 10px; " (click)="openActionSheet()">Attach</a>
               </ion-col>
             </ion-row>
           </div>

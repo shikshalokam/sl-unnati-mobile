@@ -26,22 +26,28 @@
               {{task.remarks}}
             </ion-col>
             <ion-col size="6" *ngFor="let image of task.imageList">
-              <img src="{{image.imgurl}}">
+              <img src="{{image.imgurl}}" *ngIf="!image.notInLocal && !isIos">
+              <ion-icon ios="ios-image" md="md-image" style="font-size:100px; color:#ccc;" *ngIf="isIos"
+                (click)="downloadFile(image)">
+              </ion-icon>
             </ion-col>
           </ion-row>
         </ion-card-content>
         <ion-card-content *ngIf="!task.remarks && task.imageList && task.imageList.length > 0">
           <ion-row>
             <ion-col size="6" *ngFor="let image of task.imageList">
-              <img src="{{image.imgurl}}" style="    max-height: 160px;
+              <img src="{{image.imgurl}}" style="max-height: 160px;
               max-width: 160px;
               width: 160px;
-              height: 160px;" *ngIf="!image.notInLocal">
+              height: 160px;" *ngIf="!image.notInLocal && !isIos">
+              <ion-icon ios="ios-image" md="md-image" style="font-size:100px; color:#ccc;" *ngIf="isIos"
+                (click)="downloadFile(image)">
+              </ion-icon>
               <img src="../../assets/icon/download_local.jpeg" style="    max-height: 100px;
                 max-width: 100px;
                 width: 100px;
-                height: 100px;" *ngIf="image.notInLocal" (click)="downloadFile(image)">
-              <p *ngIf="image.notInLocal" (click)="downloadFile(image)"> Download {{image.name}}</p>
+                height: 100px;" *ngIf="image.notInLocal && !isIos" (click)="downloadFile(image)">
+              <p *ngIf="image.notInLocal  && !isIos" (click)="downloadFile(image)"> Download {{image.name}}</p>
             </ion-col>
           </ion-row>
         </ion-card-content>

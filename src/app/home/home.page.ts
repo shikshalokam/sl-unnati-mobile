@@ -15,9 +15,9 @@ import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
-import { AppConfigs } from '../app.config';
+import { AppConfigs } from '../core-module/constants/app.config';
 import * as jwt_decode from "jwt-decode";
-
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -66,7 +66,7 @@ export class HomePage implements OnInit {
   projectList;
   searchInput;
   showSkeleton: boolean = false;
-  skeletons = [{}, {}, {}, {}, {}, {}];
+  skeletons = [{}, {}];
   mySchools;
   constructor(
     public datepipe: DatePipe,
@@ -95,7 +95,7 @@ export class HomePage implements OnInit {
       if (data == true) {
         this.menuCtrl.enable(true);
         this.activeProjects = [];
-        this.storage.get('latestProjects').then(projects => {
+        this.storage.get(LocalKeys.allProjects).then(projects => {
           if (!projects) {
             this.getProjects();
           } else {
@@ -115,6 +115,7 @@ export class HomePage implements OnInit {
   }
   ionViewDidEnter() {
     this.platform.ready().then(() => {
+      this.menuCtrl.enable(true);
       this.searchInput = '';
       this.storage.get('userTokens').then(data => {
         if (data) {
@@ -122,19 +123,19 @@ export class HomePage implements OnInit {
           this.setTitle('home_tab');
           this.connected = localStorage.getItem("networkStatus");
           //  this.splashScreen.hide();
-          this.storage.get('templates').then(templates => {
+          this.storage.get(LocalKeys.templates).then(templates => {
             if (!templates) {
               this.getTemplates();
             }
           })
-          this.storage.get('latestProjects').then(projects => {
+          this.storage.get(LocalKeys.allProjects).then(projects => {
             if (!projects) {
               this.getProjects();
             } else {
               this.getActiveProjects();
             }
           })
-          this.storage.get('mySchools').then(schools => {
+          this.storage.get(LocalKeys.mySchools).then(schools => {
             if (!schools) {
               this.getSchools();
             } else {
@@ -154,7 +155,7 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.login.loggedIn('true');
     this.checkUser();
-    this.storage.get('allowProfileUpdateForm').then(data => {
+    this.storage.get(LocalKeys.allowProfileUpdateForm).then(data => {
       if (!data) {
         this.getProfileData();
       }
@@ -206,7 +207,7 @@ export class HomePage implements OnInit {
         programId = env.programId;
       }
     });
-    this.storage.get('latestProjects').then(myProjects => {
+    this.storage.get(LocalKeys.allProjects).then(myProjects => {
       this.myProjects = myProjects;
       if (myProjects) {
         myProjects.forEach(programsList => {
@@ -266,7 +267,7 @@ export class HomePage implements OnInit {
   getTemplates() {
     this.categoryViewService.getTemplatesByCategory().subscribe((data: any) => {
       if (data.data) {
-        this.storage.set('templates', data.data).then(templates => {
+        this.storage.set(LocalKeys.templates, data.data).then(templates => {
         })
       }
     }, error => { })
@@ -287,7 +288,7 @@ export class HomePage implements OnInit {
             project.programName = programs.programs.name;
           });
         });
-        this.storage.set('latestProjects', resp.data).then(resp1 => {
+        this.storage.set(LocalKeys.allProjects, resp.data).then(resp1 => {
           this.getActiveProjects();
         })
       } else {
@@ -295,16 +296,17 @@ export class HomePage implements OnInit {
       }
     }, error => {
     })
-
   }
   //  get schools
   public getSchools() {
     this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-      this.mySchools = data.data;
-      this.storage.set('mySchools', this.mySchools).then(data => { })
+      if (data.status != "failed") {
+        this.mySchools = data.data;
+        this.storage.set(LocalKeys.mySchools, this.mySchools).then(data => { })
+      }
+
     }, error => { })
   }
-
 
   // get profile data
   public getProfileData() {

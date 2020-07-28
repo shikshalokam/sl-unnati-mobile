@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 import { LastMonthReportsPage } from './last-month-reports.page';
-import {SharedModule} from '../shared.module';
+import {SharedModule} from '../shared-module/shared-module';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 const routes: Routes = [
   {

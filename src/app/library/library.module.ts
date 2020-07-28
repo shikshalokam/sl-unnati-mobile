@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { LibraryPage } from './library.page';
 import {TranslateModule} from '@ngx-translate/core';
-import {SharedModule} from '../shared.module';
+import {SharedModule} from '../shared-module/shared-module';
 import {SearchCategory} from './search.filter';
 const routes: Routes = [
   {

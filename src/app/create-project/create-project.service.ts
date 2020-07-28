@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { AppConfigs } from '../app.config';
+import { AppConfigs } from '../core-module/constants/app.config';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -102,20 +104,18 @@ export class CreateProjectService {
                     }
                 }
             } else {
-                projectList.forEach(project => {
-                });
-                if (projectList) {
-                    project._id = projectList.projects.length + 1;
-                    projectList.projects.push(project)
-                } else {
-                    project._id = 1;
-                    let pro1 = [{
-                        projects: [
-                        ]
-                    }]
-                    pro1[0].projects.push(project);
-                    projectList = pro1;
-                }
+                // if (projectList.projects) {
+                //     project._id = projectList.projects.length + 1;
+                //     projectList.projects.push(project)
+                // } else {
+                project._id = 1;
+                let pro1 = [{
+                    projects: [
+                    ]
+                }]
+                pro1[0].projects.push(project);
+                projectList = pro1;
+                // }
             }
             this.storage.set('latestProjects', projectList).then(projects => {
             })
@@ -142,13 +142,13 @@ export class CreateProjectService {
     }
 
     public getTaskPDF(data) {
-        return this.http.post(AppConfigs.api_url + '/unnati/api/v1/reports/shareTaskPdf', data);
+        return this.http.post(environment.api_url + '/unnati/api/v1/reports/shareTaskPdf', data);
     }
     public addNewTaskIntoProject(task) {
         this.addNewTask.next(task);
     }
 
     public getTemplate(templateId) {
-        return this.http.get(AppConfigs.api_url + '/unnati/api/v1/template/getTemplateDetailsById/' + templateId)
+        return this.http.get(environment.api_url + '/unnati/api/v1/template/getTemplateDetailsById/' + templateId)
     }
 }

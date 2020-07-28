@@ -10,7 +10,6 @@
       {{ tab.title }}</div>
   </div>
   <div *ngIf="!showSkeleton" class="ion-padding" style="margin-top:50px;">
-
     <div *ngIf="activeTab == 'school'">
       <div *ngIf="schools">
         <ion-card *ngFor="let school of schools" (click)="getReportsBySchool(school.entityId,school.name)"

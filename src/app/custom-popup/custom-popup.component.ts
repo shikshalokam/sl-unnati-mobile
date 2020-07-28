@@ -15,6 +15,7 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 export class CustomPopupComponent implements OnInit {
   @Input() showPopup: boolean;
   @Input() content;
+  @Input() showAlert: boolean;
   currentAppVersionObj;
   isBorder: boolean;
   releaseNote;
@@ -65,11 +66,13 @@ export class CustomPopupComponent implements OnInit {
         this.router.navigate([url]);
       }
       this.showPopup = false;
+    } else if (this.content.type == 'exitApp') {
+      navigator['app'].exitApp();
     } else {
       this.openApp();
-    }
-    if (this.content.type == 'permissions' && url) {
-      this.toastService.getPermissions();
+      if (this.content.type == 'permissions' && url) {
+        this.toastService.getPermissions();
+      }
     }
   }
 
@@ -82,5 +85,12 @@ export class CustomPopupComponent implements OnInit {
       this.showPopup = false;
       this.market.open(success)
     })
+  }
+  bottompopuPAction(status) {
+    this.closepopup();
+    if (status == 'cancel') {
+    } else if (status == 'submit') {
+      navigator['app'].exitApp();
+    }
   }
 }

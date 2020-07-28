@@ -7,6 +7,7 @@ import { MyschoolsService } from './myschools.service';
 import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
+import { ProjectService } from '../project-view/project.service';
 import * as jwt_decode from "jwt-decode";
 @Component({
   selector: 'app-myschools',
@@ -32,6 +33,7 @@ export class MyschoolsPage {
     public storage: Storage,
     public platform: Platform,
     public appLauncher: AppLauncher,
+    public projectService: ProjectService,
     public market: Market) {
     this.menuCtrl.enable(true);
     this.networkService.emit.subscribe(value => {
@@ -39,6 +41,7 @@ export class MyschoolsPage {
     });
   }
   ionViewDidEnter() {
+    this.projectService.setTitle("schools_tab");
     this.searchInput = '';
     this.menuCtrl.enable(true);
     this.getSchools();
