@@ -61,7 +61,6 @@ export class ApiProvider {
                   this.storage.set('currentUser', data).then(data => { })
                 }
               }, error => {
-                console.log(error, "error in token validation");
                 this.errorHandle.errorHandle(error);
               })
             })
