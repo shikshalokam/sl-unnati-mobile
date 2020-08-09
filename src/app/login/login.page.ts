@@ -93,7 +93,7 @@ export class LoginPage {
       if (localData) {
         let previousUser = jwt_decode(localData.access_token);
         let userDetails = jwt_decode(token.access_token);
-        if (userDetails.sub.split(":").pop() == previousUser.sub) {
+        if (userDetails.sub.split(":").pop() == previousUser.sub.split(":").pop()) {
           this.storeToken(token);
         } else {
           this.confirmPreviousUserName(previousUser.preferred_username, token);
@@ -267,7 +267,7 @@ export class LoginPage {
             this.storage.clear();
             this.storage.set('veryFirstTime', 'false').then(data => {
             });
-            this.storage.get('userTokens').then(token =>{
+            this.storage.get('userTokens').then(token => {
             })
             this.login.loggedIn('false');
             this.storeToken(tokens);
