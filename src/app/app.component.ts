@@ -27,6 +27,7 @@ import { TemplateViewPage } from './template-view/template-view.page';
 import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
+import { ErrorHandle } from './error-handling.service';
 declare var cordova: any;
 
 @Component({
@@ -93,6 +94,7 @@ export class AppComponent {
     public categoryViewService: CategoryViewService,
     public notificationCardService: NotificationCardService,
     private deeplinks: Deeplinks,
+    private errorHandle: ErrorHandle,
     private file: File,
     private transfer: FileTransfer,
   ) {
@@ -128,9 +130,6 @@ export class AppComponent {
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
-          // this.subscription = this.interval.subscribe(val => {
-          //   this.prepareMappedProjectToSync();
-          // });
           this.menuCtrl.enable(true, 'unnati');
           this.loggedInUser = value;
           this.appPages = [
@@ -512,6 +511,7 @@ export class AppComponent {
         }
       }, error => {
         this.toastService.stopLoader();
+        this.errorHandle.errorHandle(error);
       })
     }
     // }
@@ -584,6 +584,7 @@ export class AppComponent {
           }
         }, error => {
           this.toastService.errorToast(error.message);
+          this.errorHandle.errorHandle(error);
         })
       }
     } else {
@@ -606,6 +607,7 @@ export class AppComponent {
           }
         }, error => {
           this.toastService.errorToast(error.message);
+          this.errorHandle.errorHandle(error);
         })
       }
     } else {
@@ -717,6 +719,8 @@ export class AppComponent {
                   ];
                 }
               }
+            }, error => {
+              this.errorHandle.errorHandle(error);
             })
           })
         } else {
@@ -784,6 +788,7 @@ export class AppComponent {
       }
     }, error => {
       this.toastService.stopLoader();
+      this.errorHandle.errorHandle(error);
     })
   }
 

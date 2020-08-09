@@ -4,8 +4,8 @@ import { ApiProvider } from '../api/api';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { ToastController } from '@ionic/angular';
-
 import * as moment from 'moment';
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: 'app-notification-card',
   templateUrl: './notification-card.component.html',
@@ -25,7 +25,8 @@ export class NotificationCardComponent implements OnInit {
     public toastController: ToastController,
     public router: Router,
     public api: ApiProvider,
-    public storage: Storage) {
+    public storage: Storage,
+    public errorHandle: ErrorHandle) {
   }
 
   goToAllNotifications() {
@@ -80,9 +81,11 @@ export class NotificationCardComponent implements OnInit {
           this.notificationCardService.getCount(data1.result.count);
         }, error => {
           this.showSkeleton = false;
+          this.errorHandle.errorHandle(error);
         })
       }, error => {
         this.showSkeleton = false;
+        this.errorHandle.errorHandle(error);
       })
     } else {
       this.errorToast('Please check your internet connection.');

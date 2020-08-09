@@ -12,7 +12,8 @@ import * as jwt_decode from "jwt-decode";
 import { IonSlides } from '@ionic/angular';
 // import { FcmProvider } from '../fcm';
 import { environment } from '../../environments/environment';
-
+import { AlertController } from '@ionic/angular';
+import { ToastService } from '../toast.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -41,6 +42,8 @@ export class LoginPage {
     public networkService: NetworkService,
     public network: Network,
     // public fcm: FcmProvider,
+    public toastService: ToastService,
+    public alertController: AlertController,
     public splashScreen: SplashScreen) {
   }
   slideOpts = {
@@ -85,35 +88,29 @@ export class LoginPage {
     });
   }
 
+  public checkLocalData(token) {
+    this.storage.get('userTokens').then((localData: any) => {
+      if (localData) {
+        let previousUser = jwt_decode(localData.access_token);
+        let userDetails = jwt_decode(token.access_token);
+        if (userDetails.sub.split(":").pop() == previousUser.sub.split(":").pop()) {
+          this.storeToken(token);
+        } else {
+          this.confirmPreviousUserName(previousUser.preferred_username, token);
+        }
+      } else {
+        this.storeToken(token);
+      }
+    })
+  }
   // Login call
   loginClick() {
     // this.showLogin = true;
     this.doOAuthStepOne().then(success => {
       this.login.doOAuthStepTwo(success).then(success1 => {
-        this.login.checkForCurrentUserLocalData(success1);
-        let userDetails = jwt_decode(success1.access_token);
-        this.storage.set('userDetails', userDetails).then(userData => {
-        })
-        this.storage.set('userTokens', success1).then(data => {
-          localStorage.setItem('isPopUpShowen', null);
-          this.menuCtrl.enable(true);
-          if (this.veryFirstTime) {
-            this.router.navigateByUrl('/app-permissions');
-          } else {
-            this.router.navigateByUrl('/project-view/home');
-          }
-          // this.fcm.initializeFCM();
-          this.login.loggedIn('true');
-          this.storage.set('veryFirstTime', 'false').then(data => {
-            this.veryFirstTime = false;
-          })
-        });
-        this.storage.set('currentUser', success1).then(data => {
-        })
-        localStorage.setItem('token', success1);
-        this.networkService.status(true);
-        this.login.loggedIn('true');
-        localStorage.setItem("networkStatus", 'true');
+        if (success1) {
+          this.checkLocalData(success1);
+        }
       }).catch(error1 => {
       })
     }).catch(error => {
@@ -146,5 +143,138 @@ export class LoginPage {
 
   slideChanged(event): void {
     console.log(event, "event");
+  }
+
+  public storeToken(token) {
+    this.login.checkForCurrentUserLocalData(token);
+    let userDetails = jwt_decode(token.access_token);
+    this.storage.set('userDetails', userDetails).then(userData => {
+    })
+    this.storage.set('userTokens', token).then(data => {
+      localStorage.setItem('isPopUpShowen', null);
+      this.menuCtrl.enable(true);
+      if (this.veryFirstTime) {
+        this.router.navigateByUrl('/app-permissions');
+      } else {
+        this.router.navigateByUrl('/project-view/home');
+      }
+      // this.fcm.initializeFCM();
+      this.login.loggedIn('true');
+      this.storage.set('veryFirstTime', 'false').then(data => {
+        this.veryFirstTime = false;
+      })
+    });
+    this.storage.set('currentUser', token).then(data => {
+    })
+    localStorage.setItem('token', token);
+    this.networkService.status(true);
+    this.login.loggedIn('true');
+    localStorage.setItem("networkStatus", 'true');
+  }
+
+  async confirmPreviousUserName(previousUserEmail, tokens) {
+    let translateObject;
+    this.translateService
+      .get([
+        "actionSheet.previousUserName",
+        "actionSheet.userId",
+        "actionSheet.cancel",
+        "actionSheet.send",
+      ])
+      .subscribe((translations) => {
+        translateObject = translations;
+      });
+    const alert = await this.alertController.create({
+      header: translateObject["actionSheet.previousUserName"],
+      inputs: [
+        {
+          name: "userName",
+          placeholder: translateObject["actionSheet.userId"],
+        },
+      ],
+      buttons: [
+        {
+          text: translateObject["actionSheet.cancel"],
+          role: "cancel",
+          handler: (data) => {
+            this.login.doLogout();
+            this.router.navigate(['/login']);
+          },
+        },
+        {
+          text: translateObject["actionSheet.send"],
+          role: "role",
+          handler: (data) => {
+            if (
+              data.userName &&
+              previousUserEmail.toLowerCase() === data.userName.toLowerCase()
+            ) {
+              this.confirmDataClear(tokens);
+            } else {
+              // this.currentUser.deactivateActivateSession(true);
+
+              this.login.doLogout();
+              // this.router.navigate[('/login')];
+              this.translateService
+                .get(["toastMessage.userNameMisMatch"])
+                .subscribe((translations) => {
+                  this.toastService.errorToast(
+                    translations["toastMessage.userNameMisMatch"]
+                  );
+                });
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  async confirmDataClear(tokens) {
+    let translateObject;
+    this.translateService
+      .get([
+        "actionSheet.dataLooseConfirm",
+        "actionSheet.no",
+        "actionSheet.yes",
+      ])
+      .subscribe((translations) => {
+        translateObject = translations;
+      });
+    const alert = await this.alertController.create({
+      header: translateObject["actionSheet.dataLooseConfirm"],
+      buttons: [
+        {
+          text: translateObject["actionSheet.no"],
+          role: "cancel",
+          handler: (data) => {
+            this.login.doLogout();
+            this.router.navigate(['/login']);
+            this.translateService
+              .get(["toastMessage.loginAgain"])
+              .subscribe((translations) => {
+                this.toastService.errorToast(
+                  translations["toastMessage.loginAgain"]
+                );
+              });
+          },
+        },
+        {
+          text: translateObject["actionSheet.yes"],
+          role: "role",
+          handler: (data) => {
+            localStorage.clear();
+            this.storage.clear();
+            this.storage.set('veryFirstTime', 'false').then(data => {
+            });
+            this.storage.get('userTokens').then(token => {
+            })
+            this.login.loggedIn('false');
+            this.storeToken(tokens);
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 }

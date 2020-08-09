@@ -10,6 +10,7 @@ import { ApiProvider } from '../api/api';
 import { AlertController, Platform } from '@ionic/angular';
 import * as Highcharts from 'highcharts/highcharts-gantt';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { ErrorHandle } from '../error-handling.service';
 
 @Component({
   selector: 'app-charts',
@@ -36,7 +37,9 @@ export class ChartsPage implements OnInit, OnDestroy {
     public router: Router,
     public api: ApiProvider,
     public location: Location,
-    public tasksService: TasksService, public screenOrientation: ScreenOrientation) {
+    public tasksService: TasksService, 
+    public screenOrientation: ScreenOrientation,
+    private errorHandle:ErrorHandle) {
     this.projectService.emit.subscribe(value => {
       try {
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
@@ -255,6 +258,7 @@ export class ChartsPage implements OnInit, OnDestroy {
         this.loadChart(this.value, min, max);
       });
     }, error => {
+      this.errorHandle.errorHandle(error);
     })
   }
   async presentAlert() {

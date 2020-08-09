@@ -48,9 +48,6 @@ export class NetworkService {
 
     // Success message
     async networkErrorToast() {
-        // this.translate.get('task_is_created').subscribe((text:string) => {
-        //   msg = text;
-        //  });
         const toast = await this.toastController.create({
             message: 'Please check your internet connection.',
             color: 'danger',

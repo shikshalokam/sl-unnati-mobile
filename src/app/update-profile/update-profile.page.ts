@@ -11,7 +11,7 @@ import { NotificationCardService } from '../notification-card/notification.servi
 import { ModalController } from '@ionic/angular';
 import { GetSubEntitiesPage } from '../get-sub-entities/get-sub-entities.page';
 import { AlertController } from '@ionic/angular';
-import { __core_private_testing_placeholder__ } from '@angular/core/testing';
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.page.html',
@@ -54,7 +54,8 @@ export class UpdateProfilePage {
     public modalController: ModalController,
     public notificationCardService: NotificationCardService,
     public networkService: NetworkService,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public errorHandle: ErrorHandle
   ) {
     toastService.popClose.subscribe(data => {
       this.showUpdatePop = false;
@@ -209,8 +210,9 @@ export class UpdateProfilePage {
             // this.toastService.errorToast('No sub entites found.');
           }
           this.toastService.stopLoader();
-        }, erros => {
+        }, error => {
           this.toastService.stopLoader();
+          this.errorHandle.errorHandle(error);
         })
       }
     }
@@ -268,6 +270,7 @@ export class UpdateProfilePage {
           this.toastService.stopLoader();
         }, error => {
           this.toastService.stopLoader();
+          this.errorHandle.errorHandle(error);
         })
       }
 
@@ -301,6 +304,7 @@ export class UpdateProfilePage {
       }
     }, error => {
       this.toastService.stopLoader();
+      this.errorHandle.errorHandle(error);
     })
   }
   public radioChecked(data, value) {
@@ -333,9 +337,9 @@ export class UpdateProfilePage {
           data.options = entity.result.data;
           this.selectEntity(data);
         }
-
       }, error => {
         this.toastService.stopLoader();
+        this.errorHandle.errorHandle(error);
       })
     }
   }
@@ -435,6 +439,7 @@ export class UpdateProfilePage {
       }
     }, error => {
       this.toastService.stopLoader();
+      this.errorHandle.errorHandle(error);
     })
   }
 

@@ -15,6 +15,7 @@ import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { ActionSheetController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { ErrorHandle } from '../error-handling.service';
 declare var cordova: any;
 
 @Component({
@@ -47,6 +48,7 @@ export class CreateTasksComponent implements OnInit {
     public filePath: FilePath,
     public file: File,
     public camera: Camera,
+    public errorHandle:ErrorHandle,
     public actionSheetController: ActionSheetController
   ) {
     this.platform.ready().then(() => {
@@ -102,6 +104,8 @@ export class CreateTasksComponent implements OnInit {
       this.createProjectService.getTaskPDF(this.data.projectData).subscribe(data => {
         this.toastService.stopLoader();
         this.sharePdf(data);
+      },error =>{
+        this.errorHandle.errorHandle(error);
       })
     } else {
       this.submitAttempt = true;
