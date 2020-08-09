@@ -8,6 +8,7 @@ import { IonInfiniteScroll } from '@ionic/angular';
 import { Location } from '@angular/common';
 import { HomeService } from '../home/home.service';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { ErrorHandle } from '../error-handling.service';
 
 @Component({
   selector: 'app-reports',
@@ -29,7 +30,8 @@ export class ReportsPage implements OnInit {
     public networkService: NetworkService,
     public storage: Storage,
     public reportsService: ReportsService,
-    public api: ApiProvider) {
+    public api: ApiProvider,
+    public errorHandle: ErrorHandle) {
     this.networkService.emit.subscribe(value => {
       this.connected = value;
       localStorage.setItem("networkStatus", this.connected);
@@ -57,6 +59,7 @@ export class ReportsPage implements OnInit {
       this.showSkeleton = false;
     }, error => {
       this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
   // Get reports
@@ -70,6 +73,7 @@ export class ReportsPage implements OnInit {
       this.showSkeleton = false;
     }, error => {
       this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
 
@@ -106,6 +110,7 @@ export class ReportsPage implements OnInit {
       this.showSkeleton = false;
     }, error => {
       this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
   // Search School
@@ -122,6 +127,7 @@ export class ReportsPage implements OnInit {
       this.showSkeleton = false;
     }, error => {
       this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
   public goBack() {

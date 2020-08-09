@@ -4,7 +4,7 @@ import { Login } from '../login.service';
 import { Storage } from '@ionic/storage';
 import * as jwt_decode from "jwt-decode";
 import { environment } from '../../environments/environment';
-
+import { ErrorHandle } from '../error-handling.service';
 
 import { Http } from '@angular/http';
 @Injectable()
@@ -13,6 +13,7 @@ export class ApiProvider {
     public storage: Storage,
     public http: Http,
     public login: Login,
+    public errorHandle: ErrorHandle
   ) { }
 
   errorObj = {
@@ -59,6 +60,9 @@ export class ApiProvider {
                   })
                   this.storage.set('currentUser', data).then(data => { })
                 }
+              }, error => {
+                console.log(error, "error in token validation");
+                this.errorHandle.errorHandle(error);
               })
             })
           } else {

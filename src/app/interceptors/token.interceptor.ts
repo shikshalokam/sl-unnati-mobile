@@ -34,8 +34,8 @@ export class TokenInterceptor implements HttpInterceptor {
         const token: any = await this.api.validateToken();
         const authReq = req.clone({
             setHeaders: {
-                'x-auth-token': token.access_token,
-                'x-authenticated-user-token': token.access_token,
+                'x-auth-token': "vishwa"+token.access_token,
+                'x-authenticated-user-token': "vishwa"+token.access_token,
                 'gpsLocation': '0,0',
                 'appVersion': AppConfigs.appVersion,
                 'appName': AppConfigs.appName,
@@ -43,7 +43,6 @@ export class TokenInterceptor implements HttpInterceptor {
                 'os': this.platform.is('ios') ? 'ios' : 'android'
             }
         })
-        // Important: Note the .toPromise()
         return next.handle(authReq).toPromise()
     }
 }

@@ -16,7 +16,7 @@ import { ApiProvider } from '../api/api';
 import { ProjectService } from '../project-view/project.service';
 import { Storage } from '@ionic/storage';
 import * as Highcharts from 'highcharts';
-
+import { ErrorHandle } from '../error-handling.service';
 declare var cordova: any;
 @Component({
   selector: 'app-my-reports',
@@ -74,7 +74,8 @@ export class MyReportsPage {
     public mySchoolsService: MyschoolsService,
     public api: ApiProvider,
     public storage: Storage,
-    public projectService: ProjectService
+    public projectService: ProjectService,
+    public errorHandle: ErrorHandle
   ) {
     activatedRoute.params.subscribe((params: any) => {
       this.mappedSchool = '';
@@ -193,6 +194,7 @@ export class MyReportsPage {
         this.showSkeleton = false;
       }, error => {
         this.showSkeleton = false;
+        this.errorHandle.errorHandle(error);
       })
     }
     else {
@@ -225,6 +227,7 @@ export class MyReportsPage {
         }
       }, error => {
         this.toastService.stopLoader();
+        this.errorHandle.errorHandle(error);
       })
     } else {
       this.toastService.stopLoader();
@@ -257,6 +260,7 @@ export class MyReportsPage {
         }
       }, error => {
         this.toastService.stopLoader();
+        this.errorHandle.errorHandle(error);
       })
     } else {
       this.toastService.stopLoader();
@@ -275,45 +279,23 @@ export class MyReportsPage {
       let path = entry.nativeURL.substring(0, entry.nativeURL.lastIndexOf("/") + 1);
       this.file.readAsDataURL(path, fileName)
         .then(base64File => {
-      // this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
-        let data = base64File.split(',');
-        let base64Data = "data:application/pdf;base64," + data[1];
-        this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+          // this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
+          let data = base64File.split(',');
+          let base64Data = "data:application/pdf;base64," + data[1];
+          this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+            this.toastService.stopLoader();
+          }, error => {
+            this.toastService.stopLoader();
+            // intentially left blank
+          });
+        }, (err) => {
           this.toastService.stopLoader();
-        }, error => {
-          this.toastService.stopLoader();
-          // intentially left blank
         });
-      }, (err) => {
-        this.toastService.stopLoader();
-      });
     }, (error) => {
       this.toastService.stopLoader();
     });
   }
 
-  // Download the reports
-  // public download(data) {
-  //   const fileTransfer: FileTransferObject = this.transfer.create();
-  //   fetch(data.pdfUrl,
-  //     {
-  //       method: "GET"
-  //     }).then(res => res.blob()).then(blob => {
-  //       this.appFolderPath = decodeURIComponent(this.appFolderPath);
-  //       let filename = decodeURIComponent('Report');
-  //       this.file.writeFile(this.appFolderPath, 'Report', blob, { replace: true }).then(res => {
-  //         this.fileOpener.open(
-  //           res.toInternalURL(),
-  //           'application/pdf'
-  //         ).then((res) => {
-  //         }).catch(err => {
-  //         });
-  //       }).catch(err => {
-  //         console.log("error", err);
-  //       });
-  //     }).catch(err => {
-  //     });
-  // }
   download(data) {
     this.toastService.presentLoading('Downloading, Please wait');
     const fileTransfer: FileTransferObject = this.transfer.create();
@@ -340,6 +322,7 @@ export class MyReportsPage {
       }
     }, error => {
       this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
   public setupChart() {
