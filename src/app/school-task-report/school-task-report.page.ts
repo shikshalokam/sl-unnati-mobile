@@ -12,6 +12,7 @@ import { ProjectService } from '../project-view/project.service';
 import { HomeService } from '../home/home.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: 'app-school-task-report',
   templateUrl: './school-task-report.page.html',
@@ -38,7 +39,8 @@ export class SchoolTaskReportPage implements OnInit {
     public currentUser: CurrentUserProvider,
     public api: ApiProvider,
     public storage: Storage,
-    public schoolTaskService: SchoolTaskService) {
+    public schoolTaskService: SchoolTaskService,
+    public errorHandle: ErrorHandle) {
     this.route.params.subscribe(params => {
       this.school = params;
       this.storage.get(LocalKeys.mySchools).then(data => {
@@ -222,6 +224,7 @@ export class SchoolTaskReportPage implements OnInit {
       }
     }, error => {
       // this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
   //Launch learner App

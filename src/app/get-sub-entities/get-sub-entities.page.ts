@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { UpdateProfileService } from '../update-profile/update-profile.service';
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: 'app-get-sub-entities',
   templateUrl: './get-sub-entities.page.html',
@@ -17,6 +18,7 @@ export class GetSubEntitiesPage implements OnInit {
   constructor(
     public modalController: ModalController,
     public updateProfileService: UpdateProfileService,
+    public errorHandle: ErrorHandle
   ) { }
 
   ngOnInit() {
@@ -103,6 +105,8 @@ export class GetSubEntitiesPage implements OnInit {
         });
       }
       this.toBeSearch = data.result.data;
+    }, error => {
+      this.errorHandle.errorHandle(error);
     })
   }
 }

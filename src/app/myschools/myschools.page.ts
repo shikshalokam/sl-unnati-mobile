@@ -9,6 +9,7 @@ import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { ProjectService } from '../project-view/project.service';
 import * as jwt_decode from "jwt-decode";
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: 'app-myschools',
   templateUrl: './myschools.page.html',
@@ -34,7 +35,8 @@ export class MyschoolsPage {
     public platform: Platform,
     public appLauncher: AppLauncher,
     public projectService: ProjectService,
-    public market: Market) {
+    public market: Market,
+    public errorHandle:ErrorHandle) {
     this.menuCtrl.enable(true);
     this.networkService.emit.subscribe(value => {
       this.connected = value;
@@ -63,7 +65,9 @@ export class MyschoolsPage {
         } else {
           this.noSchools = true;
         }
-      }, error => { })
+      }, error => { 
+        this.errorHandle.errorHandle(error);
+      })
     } else {
       this.networkService.networkErrorToast();
     }
@@ -114,6 +118,7 @@ export class MyschoolsPage {
           this.noSchools = false;
         }
       }, error => {
+        this.errorHandle.errorHandle(error);
       })
     } else {
       this.networkService.networkErrorToast();

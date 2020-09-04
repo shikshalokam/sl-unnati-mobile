@@ -35,6 +35,7 @@ export class CurrentTaskViewPage implements OnInit {
   parameter;
   editGoal;
   subTaskTitle;
+  subTasksLength = 0;
   editTitle;
   isIos;
   appFolderPath: string;
@@ -82,10 +83,19 @@ export class CurrentTaskViewPage implements OnInit {
   }
   getTask() {
     this.storage.get('cTask').then(task => {
-      this.enableMarkTaskComplete(task);
+      // this.enableMarkTaskComplete(task);
+      if (task.staus === 'Completed' || task.status === 'completed') {
+        this.enableMarkButton = true;
+      }
       if (!task.attachments) {
         task.attachments = [];
       }
+      task.subTasks.forEach(subtask => {
+        if (!subtask.title) {
+          subtask.isDeleted = true;
+        }
+      });
+      // this.updateTask();
       this.task = task;
       if (this.from == 'pd') {
         this.back = "project-view/project-detail";
@@ -98,21 +108,24 @@ export class CurrentTaskViewPage implements OnInit {
 
   //  Enable the mark task complete button based on subtasks status and if there is no subtasks it will enable by default
   public enableMarkTaskComplete(task) {
-    if (task.subTasks && task.subTasks.length > 0) {
+    if (task.subTasks && this.subTasksLength > 0) {
       let subTasksCompleted = 0;
-      let count = 0;
       task.subTasks.forEach(subtask => {
         if (!subtask.isDeleted && (subtask.status === 'Completed' || subtask.status === 'completed')) {
           subTasksCompleted + 1;
         }
       });
-      if (subTasksCompleted === task.subTasks.length) {
+      if (subTasksCompleted === this.subTasksLength) {
         this.enableMarkButton = true;
       } else {
         this.enableMarkButton = false;
       }
     } else {
-      this.enableMarkButton = true;
+      if (task.status === "Completed" || task.status === "completed") {
+        this.enableMarkButton = true;
+      } else {
+        this.enableMarkButton = false;
+      }
     }
   }
   // set date
@@ -141,7 +154,14 @@ export class CurrentTaskViewPage implements OnInit {
       }
       this.subtask.isNew = true;
       this.task.subTasks.push(this.subtask);
-      this.updateStatus();
+      if (this.task.status != "In Progress") {
+        this.updateStatus();
+      } else {
+        this.storage.set('cTask', this.task).then(ct => {
+          this.task = ct;
+          this.updateCurrentProject(ct);
+        })
+      }
       this.enableMarkTaskComplete(this.task);
       this.subtask = {};
       this.toastService.successToast('message.subtask_is_created');
@@ -184,10 +204,19 @@ export class CurrentTaskViewPage implements OnInit {
   }
   // task status supdate
   public selectedStatus(event) {
-    if (this.task.status != 'Completed') {
-      this.task.status = event.detail.value;
-      this.updateTask();
-    }
+    this.task.status = event.detail.value;
+    this.updateTask();
+    this.enableMarkTaskComplete(this.task);
+    // if (this.task.status != 'Completed') {
+    //   this.task.status = event.detail.value;
+    //   this.updateTask();
+    // }else {
+    //  if(this.task.subTasks && !this.subTasksLength){
+    //   this.task.status = event.detail.value;
+    //   this.updateTask();
+    //    this.enableMarkButton = true;
+    //  }
+    // }
   }
   //  edit task fields
   public allowEdit(field) {
@@ -260,7 +289,7 @@ export class CurrentTaskViewPage implements OnInit {
   // Delete subtask
   public delete(subtask) {
     subtask.isDeleted = true;
-    subtask.status = 'Completed'
+    // subtask.status = 'Completed'
     this.upDateSubTask(subtask, 'delete');
   }
   public updateTask() {
@@ -274,8 +303,10 @@ export class CurrentTaskViewPage implements OnInit {
   // update subtasks in task
   public upDateSubTask(upDatedsubtask, type) {
     this.task.subTasks.forEach(function (subtask, i) {
-      if (subtask._id == upDatedsubtask._id) {
-        subtask = upDatedsubtask;
+      if (!subtask.isDeleted) {
+        if (subtask._id == upDatedsubtask._id) {
+          subtask = upDatedsubtask;
+        }
       }
     });
     this.updateStatus();
@@ -287,45 +318,53 @@ export class CurrentTaskViewPage implements OnInit {
   }
 
   public updateStatus() {
-    if (this.task.status != 'Completed' || this.task.status != 'completed') {
-      this.enableMarkTaskComplete(this.task);
-      let notStarted = 0, inProgress = 0, completed = 0;
-      if (this.task.subTasks && this.task.subTasks.length > 0) {
-        this.task.subTasks.forEach(subTask => {
-          subTask.status == 'Not started' ? notStarted++
-            : subTask.status == 'In Progress' ? inProgress++
-              : completed++;
-        });
-        this.task.subTasks.length === notStarted ? this.task.status = 'Not started'
-          : this.task.subTasks.length === completed ? this.task.status = 'Completed'
-            : this.task.status = 'In Progress';
-        if (this.task.status == 'Completed' || this.task.status == 'completed') {
-          this.enableMarkButton = true;
+    this.getSubtasksCount(this.task).then(
+      (data: number) => {
+        this.subTasksLength = data;
+        if (this.task.status != 'Completed' || this.task.status != 'completed') {
+          this.enableMarkTaskComplete(this.task);
+          let notStarted = 0, inProgress = 0, completed = 0;
+          if (this.task.subTasks && this.subTasksLength > 0) {
+            this.task.subTasks.forEach(subTask => {
+              if (!subTask.isDeleted) {
+                subTask.status == 'Not started' ? notStarted++
+                  : subTask.status == 'In Progress' ? inProgress++
+                    : completed++;
+              }
+            });
+            this.subTasksLength === notStarted ? this.task.status = 'Not started'
+              : this.subTasksLength === completed ? this.task.status = 'Completed'
+                : this.task.status = 'In Progress';
+            if (this.task.status == 'Completed' || this.task.status == 'completed') {
+              this.enableMarkButton = true;
+            }
+          }
+          this.storage.set('cTask', this.task).then(ct => {
+            this.task = ct;
+            this.updateCurrentProject(ct);
+          })
+        } else {
+          if (this.task.subTask && this.subTasksLength > 0) {
+            this.task.subTask.forEach(subtask => {
+              subtask.status = 'Completed';
+            });
+            this.storage.set('cTask', this.task).then(ct => {
+              this.task = ct;
+              this.enableMarkTaskComplete(this.task);
+              this.updateCurrentProject(ct);
+            })
+          } else {
+            this.task.status = 'Completed';
+            this.storage.set('cTask', this.task).then(ct => {
+              this.task = ct;
+              this.enableMarkTaskComplete(this.task);
+              this.updateCurrentProject(ct);
+            })
+          }
         }
       }
-      this.storage.set('cTask', this.task).then(ct => {
-        this.task = ct;
-        this.updateCurrentProject(ct);
-      })
-    } else {
-      if (this.task.subTask && this.task.subTask.length > 0) {
-        this.task.subTask.forEach(subtask => {
-          subtask.status = 'Completed';
-        });
-        this.storage.set('cTask', this.task).then(ct => {
-          this.task = ct;
-          this.enableMarkTaskComplete(this.task);
-          this.updateCurrentProject(ct);
-        })
-      } else {
-        this.task.status = 'Completed';
-        this.storage.set('cTask', this.task).then(ct => {
-          this.task = ct;
-          this.enableMarkTaskComplete(this.task);
-          this.updateCurrentProject(ct);
-        })
-      }
-    }
+    );
+
   }
   close() {
     this.showpopup = false;
@@ -412,7 +451,6 @@ export class CurrentTaskViewPage implements OnInit {
       let d = new Date(),
         n = d.getTime(),
         newFileName = n + ".jpg";
-
       let data = {
         data: imageData,
         name: newFileName,
@@ -470,7 +508,7 @@ export class CurrentTaskViewPage implements OnInit {
   }
   checkInLocal(file, name, newAttachment) {
     let currentPath = file.substr(0, file.lastIndexOf('/') + 1).toString();
-    let currentName = file.substring(file.lastIndexOf('/') + 1, file.length).toString();
+    let currentName = file.substr(file.lastIndexOf('/') + 1, file.length).toString();
     this.files.checkFile(currentPath, currentName).then(success => {
       this.saveFile(file, name, newAttachment);
     }, error => {
@@ -499,7 +537,7 @@ export class CurrentTaskViewPage implements OnInit {
         text: 'Upload Image',
         icon: 'cloud-upload',
         handler: () => {
-           this.openCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
+          this.openCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
         }
       }, {
         text: 'Upload File',
@@ -516,5 +554,30 @@ export class CurrentTaskViewPage implements OnInit {
       }]
     });
     await actionSheet.present();
+  }
+
+  getSubtasksCount(task) {
+    return new Promise(function (resolve) {
+      let count = 0;
+      if (task.subTasks && task.subTasks.length) {
+        task.subTasks.forEach(function (subtask, i) {
+          if (!subtask.isDeleted) {
+            count = count + 1;
+          }
+        });
+        resolve(count);
+      } else {
+        resolve()
+      }
+    })
+  }
+  public openTaskResources() {
+    if (this.task.resources && this.task.resources.length > 1) {
+      this.storage.set('resourcesofTask', this.task).then(data => {
+        this.router.navigate(["/project-view/courses", 'current-task', 'task']);
+      })
+    } else {
+      window.open(this.task.resources[0].link, '_self')
+    }
   }
 }

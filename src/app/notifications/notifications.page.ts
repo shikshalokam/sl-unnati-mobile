@@ -4,7 +4,7 @@ import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
 import * as jwt_decode from "jwt-decode";
 import { UpdateProfileService } from '../update-profile/update-profile.service';
-
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.page.html',
@@ -21,6 +21,7 @@ export class NotificationsPage implements OnInit {
   constructor(public notificationCardService: NotificationCardService,
     public api: ApiProvider,
     public storage: Storage,
+    public errorHandle: ErrorHandle,
     public updateProfileService: UpdateProfileService) { }
   ngOnInit() {
     // this.fetchAllNotifications();
@@ -37,6 +38,7 @@ export class NotificationsPage implements OnInit {
       this.showSkeleton = false;
     }, error => {
       this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
 

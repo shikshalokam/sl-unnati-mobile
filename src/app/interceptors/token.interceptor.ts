@@ -43,7 +43,6 @@ export class TokenInterceptor implements HttpInterceptor {
                 'os': this.platform.is('ios') ? 'ios' : 'android'
             }
         })
-        // Important: Note the .toPromise()
         return next.handle(authReq).toPromise()
     }
 }

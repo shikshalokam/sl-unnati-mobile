@@ -11,8 +11,8 @@ import { UpdateProfileService } from '../update-profile/update-profile.service';
 import { NetworkService } from '../network.service';
 import { AppConfigs } from '../core-module/constants/app.config';
 import { Location } from '@angular/common';
+import { ErrorHandle } from '../error-handling.service';
 // import { AppVersion } from '@ionic-native/app-version';
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -42,6 +42,7 @@ export class HeaderComponent implements OnInit {
     public updateProfileService: UpdateProfileService,
     public networkService: NetworkService,
     public location: Location,
+    public errorHandle: ErrorHandle
     // public appVersion: AppVersion
   ) {
     this.platform.ready().then(() => {
@@ -52,6 +53,8 @@ export class HeaderComponent implements OnInit {
       notificationCardService.notificationCount.subscribe((count: any) => {
         this.notificationCount = count;
         this.badge.set(this.notificationCount);
+      }, error => {
+        this.errorHandle.errorHandle(error);
       })
       this.startNotificationPooling();
     })
@@ -75,6 +78,7 @@ export class HeaderComponent implements OnInit {
         this.initiatePopup(data.result.data);
       }
     }, error => {
+      this.errorHandle.errorHandle(error);
     })
   }
   // Navigate to notification screen
