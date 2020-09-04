@@ -71,7 +71,7 @@ export class CreateProjectPage implements OnInit {
         this.prepareForm();
         this.createNewProject = true;
         this.checkedCategories = [];
-        this.today = this.datepipe.transform(this.today, 'dd-MM-yyyy');
+        this.today = this.datepipe.transform(this.today, 'MM-dd-yyyy');
       } else {
         this.createNewProject = false;
         this.storage.get(LocalKeys.newcreatedproject).then(data => {

@@ -8,7 +8,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { MyschoolsService } from '../myschools/myschools.service';
 import { NetworkService } from '../network.service';
 import { ToastService } from '../toast.service';
-
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: 'app-fullreports',
   templateUrl: './fullreports.page.html',
@@ -40,6 +40,7 @@ export class FullreportsPage implements OnInit {
     public mySchoolsService: MyschoolsService,
     public networkService: NetworkService,
     public toastService: ToastService,
+    public errorHandle:ErrorHandle
   ) {
     this.networkService.emit.subscribe(value => {
       this.connected = value;
@@ -61,8 +62,8 @@ export class FullreportsPage implements OnInit {
   }
   public getReports(state) {
     this.showSkeleton = true;
-    this.myReportsService.getFullReports(state,this.entityId).subscribe((data: any) => {
-      if(data.data){
+    this.myReportsService.getFullReports(state, this.entityId).subscribe((data: any) => {
+      if (data.data) {
         this.reports = data.data;
         if (this.reports.length > 0) {
           setTimeout(() => {
@@ -76,6 +77,7 @@ export class FullreportsPage implements OnInit {
       this.showSkeleton = false;
     }, error => {
       this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
   public setUpChart(data) {
@@ -112,19 +114,7 @@ export class FullreportsPage implements OnInit {
     }
     this.showSkeleton = false;
   }
-
-  // public getSchools() {
-  //   if (this.connected) {
-  //     this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
-  //       if (data.status != 'failed') {
-  //         this.mySchools = data.data;
-  //       }
-  //     }, error => { })
-  //   } else {
-  //     this.toastService.errorToast('message.nerwork_connection_check');
-  //   }
-  // }
-
+  
   public getReport(type) {
     let obj: any;
     let obj1: any = {};

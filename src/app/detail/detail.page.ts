@@ -12,6 +12,7 @@ import { ApiProvider } from '../api/api';
 import { Location } from '@angular/common';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { HomeService } from '../home/home.service';
+import { ErrorHandle } from '../error-handling.service';
 
 @Component({
   selector: 'app-detail',
@@ -33,8 +34,24 @@ export class DetailPage implements OnInit {
   public pfrom;
   public back;
   public language: string = this.translateService.currentLang;
-  constructor(public tasksService: TasksService, public storage: Storage, public homeService: HomeService, public screenOrientation: ScreenOrientation, public location: Location, public translate: TranslateService, public modalController: ModalController, public apiProvider: ApiProvider,
-    public projectsService: ProjectsService, public api: ApiProvider, public alertController: AlertController, public toastController: ToastController, public translateService: TranslateService, public projectService: ProjectService, public networkService: NetworkService, public route: ActivatedRoute, public router: Router) {
+  constructor(public tasksService: TasksService, 
+    public storage: Storage, 
+    public homeService: HomeService, 
+    public screenOrientation: ScreenOrientation, 
+    public location: Location, 
+    public translate: TranslateService, 
+    public modalController: ModalController, 
+    public apiProvider: ApiProvider,
+    public projectsService: ProjectsService, 
+    public api: ApiProvider, 
+    public alertController: AlertController, 
+    public toastController: ToastController, 
+    public translateService: TranslateService, 
+    public projectService: ProjectService, 
+    public networkService: NetworkService, 
+    public route: ActivatedRoute, 
+    public router: Router,
+    public errorHandle:ErrorHandle) {
     this.tasksService.emit.subscribe(value => {
       if (this.pfrom != 'goBack' && this.back && this.back != '/notifications') {
         this.getProject();
@@ -166,6 +183,7 @@ export class DetailPage implements OnInit {
     }, error => {
       this.showSkeleton = false;
       this.errorToast(error.message);
+      this.errorHandle.errorHandle(error);
     })
   }
   // Get projects 
@@ -197,6 +215,7 @@ export class DetailPage implements OnInit {
       }
     }, error => {
       this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
   // Display error Message
