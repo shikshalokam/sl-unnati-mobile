@@ -10,6 +10,7 @@ import { ToastService } from '../toast.service';
 import { HomeService } from '../home/home.service';
 import { AppConfigs } from '../app.config';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: "app-template-view",
   templateUrl: "./template-view.page.html",
@@ -50,7 +51,8 @@ export class TemplateViewPage {
     public datepipe: DatePipe,
     public taskService: CreateTaskService,
     public toastService: ToastService,
-    public homeService: HomeService
+    public homeService: HomeService,
+    public errorHandle:ErrorHandle
   ) {
     platform.ready().then(() => {
       route.params.subscribe((params) => {
@@ -93,7 +95,9 @@ export class TemplateViewPage {
           this.show = true;
         }
       },
-      (error) => {}
+      (error) => {
+        this.errorHandle.errorHandle(error);
+      }
     );
   }
   // Copy the template project into my project

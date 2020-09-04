@@ -24,7 +24,7 @@
               float: left;
               margin-right: 10px;">
         <ion-datetime (ionChange)="setDate($event,'task')" value={{task?.endDate}} style="margin-left: 14%;"
-          displayFormat="DD/MM/YYYY" min="2000" max="2100" display-timezone="utc"></ion-datetime>
+          display-timezone="utc" min="2000" max="2100" display-timezone="utc"></ion-datetime>
       </ion-item>
       <!-- <ion-col size="3" style="padding: 0px;">
         <img src="assets/images/timetable.png" style="max-width: 40%;" (click)="setDate('task')"> </ion-col>
@@ -69,7 +69,8 @@
           style="margin-top: 5px;margin-right: 10px; float: right; max-width: 30px;" (click)="subtaskDate()"> -->
 
         <ion-item class="ion-date-time" style="float: right;">
-          <ion-datetime (ionChange)="subtaskDate($event)" min="2000" max="2100" value=null display-timezone="utc" style="max-width: 0px;">
+          <ion-datetime (ionChange)="subtaskDate($event)" min="2000" max="2100" value=null display-timezone="utc"
+            style="max-width: 0px;">
           </ion-datetime>
           <img src="assets/images/timetable.png" style="max-width: 35px;">
         </ion-item>
@@ -112,13 +113,25 @@
       </ion-row>
     </div>
   </div>
-  <div style="margin-top:30px;">
+  <div style="margin-top:30px;" *ngIf="!task.resources || !task?.resources.length">
     <ion-button (click)="openPopup()" color="secondary" class="round-corner-btn" expand="block"
       [disabled]="!enableMarkButton">
       {{'button.mark_task_complete' | translate}}
     </ion-button>
   </div>
+  <ion-row *ngIf="task?.resources && task?.resources.length">
+    <ion-col size="6">
 
+      <ion-button expand="block" (click)="openTaskResources()" color="secondary" style="text-transform: none;">
+        {{'button.viewResources' | translate}}
+      </ion-button>
+    </ion-col>
+    <ion-col size="6">
+      <ion-button expand="block" (click)="markTaskAsCompleted()" color="secondary" style="text-transform: none;"
+        [disabled]="!enableMarkButton">
+        {{'button.mark_task_complete' | translate}} </ion-button>
+    </ion-col>
+  </ion-row>
   <!-- Popup -->
   <div *ngIf="showpopup" class="custom-popup">
     <div class="pop-container">

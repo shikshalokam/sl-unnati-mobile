@@ -18,6 +18,7 @@ import { ToastService } from '../toast.service';
 import { AppConfigs } from '../core-module/constants/app.config';
 import * as jwt_decode from "jwt-decode";
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -85,7 +86,8 @@ export class HomePage implements OnInit {
     public menuCtrl: MenuController,
     public reportsService: ReportsService,
     public mySchoolsService: MyschoolsService,
-    public toastService: ToastService) {
+    public toastService: ToastService,
+    public errorHandle: ErrorHandle) {
     this.menuCtrl.enable(true);
     this.networkService.emit.subscribe(value => {
       this.connected = value;
@@ -107,7 +109,6 @@ export class HomePage implements OnInit {
     this.homeService.localDataUpdated.subscribe(value => {
       this.getActiveProjects();
     })
-
     this.networkService.langEmit.subscribe((value: any) => {
       translate.use(value);
     });
@@ -121,7 +122,6 @@ export class HomePage implements OnInit {
         if (data) {
           this.menuCtrl.enable(true, 'unnati');
           this.setTitle('home_tab');
-          this.connected = localStorage.getItem("networkStatus");
           //  this.splashScreen.hide();
           this.storage.get(LocalKeys.templates).then(templates => {
             if (!templates) {
@@ -265,12 +265,17 @@ export class HomePage implements OnInit {
   }
   // get templates
   getTemplates() {
-    this.categoryViewService.getTemplatesByCategory().subscribe((data: any) => {
-      if (data.data) {
-        this.storage.set(LocalKeys.templates, data.data).then(templates => {
-        })
-      }
-    }, error => { })
+    if (this.networkService.isConnected) {
+      this.categoryViewService.getTemplatesByCategory().subscribe((data: any) => {
+        console.log(data.data, "get templates");
+        if (data.data) {
+          this.storage.set(LocalKeys.templates, data.data).then(templates => {
+          })
+        }
+      }, error => {
+        this.errorHandle.errorHandle(error);
+      })
+    }
   }
   // get Projects
   public getProjects() {
@@ -282,6 +287,7 @@ export class HomePage implements OnInit {
             project.isSync = true;
             project.isEdited = false;
             project.isNew = false;
+            console.log(project, "project getAssignedProjects");
             if (project.status != 'not yet started' && project.status != 'Not started') {
               project.isStarted = true;
             }
@@ -295,6 +301,7 @@ export class HomePage implements OnInit {
         this.activeProjects = [];
       }
     }, error => {
+      this.errorHandle.errorHandle(error);
     })
   }
   //  get schools
@@ -305,7 +312,9 @@ export class HomePage implements OnInit {
         this.storage.set(LocalKeys.mySchools, this.mySchools).then(data => { })
       }
 
-    }, error => { })
+    }, error => {
+      this.errorHandle.errorHandle(error);
+    })
   }
 
   // get profile data
@@ -326,6 +335,8 @@ export class HomePage implements OnInit {
               this.homeService.showProfileUpdate('inmenu');
             }
           }
+        }, error => {
+          this.errorHandle.errorHandle(error);
         })
       } else {
         this.getProfileData();

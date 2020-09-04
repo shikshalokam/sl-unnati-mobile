@@ -7,6 +7,7 @@ import { ProjectService } from '../project-view/project.service';
 import { ToastController, ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { ApiProvider } from '../api/api';
+import {ErrorHandle} from '../error-handling.service';
 @Component({
   selector: 'app-school-project-detail',
   templateUrl: './school-project-detail.page.html',
@@ -25,7 +26,8 @@ export class SchoolProjectDetailPage implements OnInit {
     public alertController: AlertController,
     public toastController: ToastController,
     public translateService: TranslateService,
-    public modalController: ModalController
+    public modalController: ModalController,
+    public errorHandle:ErrorHandle
   ) {
     parameter.params.subscribe(data => {
       this.getProjectDetail(data.id);
@@ -56,6 +58,7 @@ export class SchoolProjectDetailPage implements OnInit {
       }
     }, error => {
       this.showSkeleton = false;
+      this.errorHandle.errorHandle(error);
     })
   }
 

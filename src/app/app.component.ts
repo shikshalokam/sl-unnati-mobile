@@ -18,6 +18,9 @@ import { ProjectService } from '../app/project-view/project.service';
 import { HomeService } from './home/home.service';
 import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { AppConfigs } from './core-module/constants/app.config';
+
 // import { FcmProvider } from './fcm';
 import * as jwt_decode from "jwt-decode";
 import { NotificationCardService } from './notification-card/notification.service';
@@ -27,6 +30,7 @@ import { TemplateViewPage } from './template-view/template-view.page';
 import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
+import { ErrorHandle } from './error-handling.service';
 declare var cordova: any;
 
 @Component({
@@ -75,6 +79,7 @@ export class AppComponent {
     public alertController: AlertController,
     public router: Router,
     public menuCtrl: MenuController,
+    public iab: InAppBrowser,
     public platform: Platform,
     public splashScreen: SplashScreen,
     public statusBar: StatusBar,
@@ -93,6 +98,7 @@ export class AppComponent {
     public categoryViewService: CategoryViewService,
     public notificationCardService: NotificationCardService,
     private deeplinks: Deeplinks,
+    private errorHandle: ErrorHandle,
     private file: File,
     private transfer: FileTransfer,
   ) {
@@ -128,9 +134,6 @@ export class AppComponent {
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
-          // this.subscription = this.interval.subscribe(val => {
-          //   this.prepareMappedProjectToSync();
-          // });
           this.menuCtrl.enable(true, 'unnati');
           this.loggedInUser = value;
           this.appPages = [
@@ -163,7 +166,12 @@ export class AppComponent {
                   icon: 'globe'
                 },
               ]
-            }
+            },
+            {
+              title: "FAQ's",
+              url: 'https://wiki.shikshalokam.org/faqs/',
+              icon: 'help'
+            },
           ];
         } else {
           this.appPages = [];
@@ -207,23 +215,7 @@ export class AppComponent {
       // this.fcm.connectSubscription.unsubscribe();
       // this.fcm.subscribeToPushNotifications();
       // this.fcm.localNotificationClickHandler();
-      this.network.onDisconnect()
-        .subscribe(() => {
-          this.isConnected = false;
-          this.networkService.networkErrorToast();
-          this.networkService.status(this.isConnected);
-          localStorage.setItem("networkStatus", this.isConnected);
-        });
-      this.network.onConnect()
-        .subscribe(() => {
-          this.isConnected = true;
-          this.networkService.status(this.isConnected);
-          setTimeout(() => {
-            if (this.network.type === 'wifi') {
-            }
-          }, 15000);
-          localStorage.setItem("networkStatus", this.isConnected);
-        });
+      this.networkService.getNetworkStatus();
       if (this.isConnected) {
         // this.getOldDataToSync();
       }
@@ -379,6 +371,8 @@ export class AppComponent {
       // this.prepareMappedProjectToSync();
       // this.getOldDataToSync();
       this.getAttachments();
+    } else if (title == "FAQ's") {
+      let browserRef = (<any>window).cordova.InAppBrowser.open(url, "_blank", "zoom=no");
     } else if (url) {
       this.router.navigate([url]);
     }
@@ -442,6 +436,7 @@ export class AppComponent {
             if (project.isEdited || project.isNew) {
               if (project.isNew) {
                 delete project._id;
+                project.isEdited = false;
               }
               this.mappedProjectsToSync = true;
               if (project.tasks && project.tasks.length > 0) {
@@ -494,6 +489,16 @@ export class AppComponent {
   public autoSync() {
     // if (this.isConnected) {
     if (this.projectsToSync.length > 0) {
+      this.projectsToSync.forEach(project => {
+        if (!project.programId) {
+          let environment = AppConfigs.currentEnvironment;
+          AppConfigs.environments.forEach(env => {
+            if (environment === env.name) {
+              project.programId = env.programId;
+            }
+          });
+        }
+      });
       let projects = {
         projects: this.projectsToSync
       }
@@ -512,6 +517,7 @@ export class AppComponent {
         }
       }, error => {
         this.toastService.stopLoader();
+        this.errorHandle.errorHandle(error);
       })
     }
     // }
@@ -584,6 +590,7 @@ export class AppComponent {
           }
         }, error => {
           this.toastService.errorToast(error.message);
+          this.errorHandle.errorHandle(error);
         })
       }
     } else {
@@ -606,6 +613,7 @@ export class AppComponent {
           }
         }, error => {
           this.toastService.errorToast(error.message);
+          this.errorHandle.errorHandle(error);
         })
       }
     } else {
@@ -717,6 +725,8 @@ export class AppComponent {
                   ];
                 }
               }
+            }, error => {
+              this.errorHandle.errorHandle(error);
             })
           })
         } else {
@@ -768,7 +778,6 @@ export class AppComponent {
         }
       }
     })
-
   }
   public getUploadUrl(attachmentsList, filesList) {
     this.toastService.startLoader('Loading, Please wait');
@@ -784,6 +793,7 @@ export class AppComponent {
       }
     }, error => {
       this.toastService.stopLoader();
+      this.errorHandle.errorHandle(error);
     })
   }
 
@@ -839,6 +849,7 @@ export class AppComponent {
             if (project.isNew || project.isEdited) {
               if (project.isNew) {
                 delete project._id;
+                project.isEdited = false;
               }
               if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(task => {
