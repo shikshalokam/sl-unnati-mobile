@@ -23,12 +23,12 @@ export class AppPermissionsPage implements OnInit {
     showCloseButton: false,
     titleCss: {
       fontSize: "24px",
-      color: "#b23e33",
+      color: "#024F9D",
       bottomBorder: false,
     },
     textCss: {
       fontSize: "16px",
-      color: "#b23e33;",
+      color: "#024F9D;",
     },
     buttons: [
       {

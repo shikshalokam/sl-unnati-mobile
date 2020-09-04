@@ -1,3 +1,5 @@
+@import'../../theme/colors.scss';
+
 .welcome-card ion-img {
   max-height: 35vh;
   overflow: hidden;
@@ -14,7 +16,7 @@
 .inner-card
   {
     margin: 5px 0px;
-    color: #000;
+    color: $black-color;
     border-radius: 0px;
     .arrow-mark{
       margin: auto;
@@ -29,7 +31,7 @@
   }
 .card-custom-content
 {
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid $light;
   padding:0px !important;
   padding-bottom:15px;
 }
@@ -37,8 +39,8 @@
   margin-top: 10px !important;
   margin-bottom: 10px !important;
   border-radius: 0px;;
-  color: #000;
-  background: #f5f5f5;
+  color: $black-color;
+  background: $light;
 }
 
 // New Ui CSS
@@ -53,7 +55,7 @@ margin-bottom: 5px;
   ion-card
   {
     border-radius: 15px;
-    background: #f2efef;
+    background: $light;
     max-height: 100%;
     min-height: 100%;
     margin: 4px;
@@ -72,7 +74,7 @@ margin-bottom: 5px;
     padding: 0px;
     margin: 0px 0px 5px 0px;
     font-weight: bold;
-    color: #000;
+    color: $black-color;
     height: 1.5em;
   }
 }
@@ -84,17 +86,17 @@ margin-bottom: 5px;
     text-transform: uppercase;
     padding: 10px 35px;
     margin: 0px 0px 0px 0px;
-    color: #000;
+    color: $black-color;
     font-weight: 600;
     font-size: 18px;
   }
   ion-card{
     border-radius: 15px;
-    background: #f2efef;
+    background: $light;
     border-top-left-radius: 0px;
     .collection-label{
-      background: #442c2e;
-      color: #fff;
+      background: $secondary;
+      color: $white-color;
       padding: 5px 5px 5px 25px;
       font-size: 14px;
       min-width: auto;
@@ -104,7 +106,7 @@ margin-bottom: 5px;
     .date-col{
       max-width: 15%;
       text-align: right;
-      color: #b23e33;
+      color: $primary;
       padding: 0px 0px;
       margin-right: 10px;
       h3{
@@ -120,7 +122,7 @@ margin-bottom: 5px;
       font-size: 17px;
       font-weight: 900;
       margin-top: 5px;
-      color: #000;
+      color: $black-color;
     }
   }
   .activeproject-btn

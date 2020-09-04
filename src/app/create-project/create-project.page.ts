@@ -285,7 +285,7 @@ export class CreateProjectPage implements OnInit {
           },
           textCss: {
             fontSize: '16px',
-            color: '#b23e33;'
+            color: '#024F9D;'
           },
           buttons: [
             {

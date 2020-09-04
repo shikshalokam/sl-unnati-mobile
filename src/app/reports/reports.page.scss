@@ -1,14 +1,15 @@
+@import'../../theme/colors.scss';
 
 .report-card
 {
-        font-size: 30px;
-    color: #000;
+    font-size: 30px;
+    color: $black-color;
     margin-top: 5%;
-    background:#e3e3e3;
+    background:$light;
     ion-card-content
     {
         padding-inline-start: 10px !important;
-        color: #000;
+        color: $black-color;
     }
     ion-col,ion-row,ion-grid{
         padding: 0px !important;

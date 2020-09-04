@@ -1,3 +1,5 @@
+@import'../../theme/colors.scss';
+
 .create-project{
     ion-col{
         padding:0px;
@@ -14,7 +16,7 @@
     .right-icon
     {
     margin: auto;
-    background: #f3f3f3;
+    background: $light;
     border: 1px solid;
     border-left: none;
     border-bottom-right-radius: 4px;
@@ -38,14 +40,14 @@
 }
 .custom-radio
 {
-    --background-checked: #b23e33;
-    --border-color-checked: #b23e33;
-    --checkmark-color: #b23e33;
+    --background-checked: $primary;
+    --border-color-checked: $primary;
+    --checkmark-color: $primary;
     --border-radius: 20px;
     padding: 2px;
     height: 20px;
     width:20px;
-    border: 2px solid #b23e33;
+    border: 2px solid $primary;
     margin-inline-end: 8px;
     border-radius: 20px;
     --border-color: transparent;
@@ -54,7 +56,7 @@
 .project-date{
     padding: 0px;
     font-weight: 600;
-    border: 1px solid #86888f;
+    border: 1px solid $dark-grey-color;
     width: 100%;
     min-height: 2.1em;
     margin: auto;

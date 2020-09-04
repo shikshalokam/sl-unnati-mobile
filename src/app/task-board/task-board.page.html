@@ -25,10 +25,10 @@
     </ion-tab-bar>
   </ion-tabs> -->
   <ion-segment (ionChange)="selectTab($event)" value="ongoing">
-    <ion-segment-button value="ongoing" [ngClass]="{'active-tab': activeTab == 'ongoing'}" style="border-bottom: 2px solid #b23e33;">
+    <ion-segment-button value="ongoing" [ngClass]="{'active-tab': activeTab == 'ongoing'}" style="border-bottom: 2px solid #024F9D;">
       <ion-label>{{ "open_tasks.ongoing" | translate }}</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="past" [ngClass]="{'active-tab':  activeTab == 'past'}" style="border-bottom: 2px solid #b23e33;">
+    <ion-segment-button value="past" [ngClass]="{'active-tab':  activeTab == 'past'}" style="border-bottom: 2px solid #024F9D;">
       <ion-label> {{ "open_tasks.past" | translate }}</ion-label>
     </ion-segment-button>
   </ion-segment>

@@ -1,3 +1,4 @@
+@import'../../theme/colors.scss';
 
 .ion-color.sc-ion-searchbar-md-h .searchbar-input.sc-ion-searchbar-md
 {
@@ -20,14 +21,14 @@ ion-tab-button {
 }
 .project-card
 {
-  background: #e3e3e3;
+  background: $light;
   font-size: 18px;
   color: #000;
   font-weight: 600;
   ion-card-header{
-        background: #e3e3e3;
+        background: $light;
         font-size: 18px;
-        color: #000;
+        color: $black-color;
         font-weight: 600;
           ion-icon{
             float: right;
@@ -38,19 +39,19 @@ ion-tab-button {
  }
   .inner-card
   {
-    background: #fff;
+    background: $white-color;
     padding:0px;
     margin:0px;
     ion-icon{
       float: right;
     }
     ion-card-content{
-    background: #fff;
+    background: $white-color;
     padding: 10px;
     font-size: 18px;
     color: #000;
     font-weight: 600;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid $grey-color;
         ion-icon{
           float: right;
         }
@@ -59,61 +60,35 @@ ion-tab-button {
 }
 .custom-arrow{
         margin: auto;
-        color:#000;
+        color:$black-color;
         font-size:22px;
         text-align: end;
         font-weight: 600;
         text-align: right;
 }
-// .inner-card
-//   {
-//     margin: 5px 0px;
-//     color: #000;
-//     border-radius: 0px;
-//     .arrow-mark{
-//       margin: auto;
-//       font-size:22px;
-//       text-align: end;
-//     }
-//   }
-//   ion-card-header{
-//     background: #e3e3e3;
-//     padding: 10px;
-//     font-size: 18px;
-//     color: #000;
-//     font-weight: 600;
-//         ion-icon{
-//           float: right;
-//         }
-//     }
-// .tabs-list{
-//   position: fixed;
-//   width: 100%;
-//   z-index: 999;
-// }
 .custom-card
 {
   margin: 0px;
-  background:#fff;
+  background:$white-color;
   ion-card-content{
   padding: 0px;
   font-size: 16px;
-  color: #000;
+  color: $grey-color;
   }
 }
 .custom-tab{
   max-width: 50%;
   min-width: 50%;
-  background:#fff;
+  background:$white-color;
   color: #000;
     float: left;
     padding: 15px;
     text-align: center;
     font-size: 18px;
-    border-bottom: 2px solid #b23e33;
+    border-bottom: 2px solid $primary;
     font-weight: 600;
 }
 .active-tab{
-  background: #b23e33;
-  color: #fff;
+  background: $primary;
+  color: $white-color;
 }
