@@ -27,7 +27,7 @@
     </div>
   </div> -->
 
-  <ion-tabs>
+  <!-- <ion-tabs>
     <ion-tab-bar slot="top">
       <ion-tab-button (click)="selectTab('allProjects')" [ngClass]="{'active-tab': activeTab == 'allProjects'}"
         class="custom-tab">
@@ -38,9 +38,19 @@
         <ion-label> {{ "projects.activeProjects" | translate }}</ion-label>
       </ion-tab-button>
     </ion-tab-bar>
-  </ion-tabs>
-  <div class="ion-padding" style="margin-top: 30px;" *ngIf="!showSkeleton">
-    <ion-item class="search-bar-custom" style="margin: 20px 0px 15px 0px;">
+  </ion-tabs> -->
+
+  <ion-segment (ionChange)="selectTab($event)"  value="activeProjects">
+    <ion-segment-button value="allProjects" [ngClass]="{'active-tab': activeTab == 'allProjects'}" style="border-bottom: 2px solid #b23e33;">
+      <ion-label>{{ "projects.allProjects" | translate }}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="activeProjects" [ngClass]="{'active-tab':  activeTab == 'activeProjects'}" style="border-bottom: 2px solid #b23e33;">
+      <ion-label>{{ "projects.activeProjects" | translate }}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div class="ion-padding" *ngIf="!showSkeleton">
+    <ion-item class="search-bar-custom" style="margin: 0px 0px 15px 0px;">
       <ion-icon name="search" item-left color="dark"></ion-icon>
       <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
     </ion-item>

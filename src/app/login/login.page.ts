@@ -14,6 +14,7 @@ import { IonSlides } from '@ionic/angular';
 import { environment } from '../../environments/environment';
 import { AlertController } from '@ionic/angular';
 import { ToastService } from '../toast.service';
+import { ErrorHandle } from '../error-handling.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -44,7 +45,8 @@ export class LoginPage {
     // public fcm: FcmProvider,
     public toastService: ToastService,
     public alertController: AlertController,
-    public splashScreen: SplashScreen) {
+    public splashScreen: SplashScreen,
+    public errorHandle: ErrorHandle) {
   }
   slideOpts = {
     initialSlide: 0,
@@ -142,7 +144,6 @@ export class LoginPage {
   }
 
   slideChanged(event): void {
-    console.log(event, "event");
   }
 
   public storeToken(token) {
@@ -153,6 +154,7 @@ export class LoginPage {
     this.storage.set('userTokens', token).then(data => {
       localStorage.setItem('isPopUpShowen', null);
       this.menuCtrl.enable(true);
+      this.errorHandle.setPopup();
       if (this.veryFirstTime) {
         this.router.navigateByUrl('/app-permissions');
       } else {

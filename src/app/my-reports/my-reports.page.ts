@@ -116,11 +116,6 @@ export class MyReportsPage {
         this.selectTab('school');
       }
     })
-    platform.ready().then(() => {
-      networkService.emit.subscribe(status => {
-        this.connected = status;
-      })
-    })
     myReportsService.reportEvent.subscribe((data: any) => {
       // this.share(data);
       this.platform.ready().then(() => {
@@ -170,12 +165,13 @@ export class MyReportsPage {
   }
 
   public getSchools(event?) {
-    if (this.connected) {
+    if (this.networkService.isConnected) {
       this.showSkeleton = true;
       this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
         if (data.data && data.data.length > 0 && data.status != 'failed') {
           this.schools = this.schools.concat(data.data);
           this.page = this.page + 1;
+          this.showSkeleton = false;
         } else {
           this.schools = [];
           this.tabs = [
@@ -189,9 +185,9 @@ export class MyReportsPage {
               id: 'lastQuarter',
               isActive: false
             }];
+          this.showSkeleton = false;
           this.selectTab('lastMonth');
         }
-        this.showSkeleton = false;
       }, error => {
         this.showSkeleton = false;
         this.errorHandle.errorHandle(error);
@@ -204,7 +200,7 @@ export class MyReportsPage {
   }
   // download and Share Reports
   public getReport(type: any) {
-    if (this.connected) {
+    if (this.networkService.isConnected) {
       this.toastService.startLoader('Loading, Please wait');
       let tempData = {
         type: type,
@@ -237,7 +233,7 @@ export class MyReportsPage {
 
   // download and Share Full Reports
   public getFullReport(type: any) {
-    if (this.connected) {
+    if (this.networkService.isConnected) {
       this.toastService.startLoader('Loading, Please wait');
       let tempData = {
         type: type.type,
@@ -263,7 +259,6 @@ export class MyReportsPage {
         this.errorHandle.errorHandle(error);
       })
     } else {
-      this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
@@ -275,7 +270,6 @@ export class MyReportsPage {
     const fileTransfer: FileTransferObject = this.transfer.create();
     const url = data.pdfUrl;
     fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
-      let fileName1 = entry.nativeURL.split('/').pop();
       let path = entry.nativeURL.substring(0, entry.nativeURL.lastIndexOf("/") + 1);
       this.file.readAsDataURL(path, fileName)
         .then(base64File => {
@@ -310,31 +304,33 @@ export class MyReportsPage {
     });
   }
   public getData() {
-    this.showSkeleton = true;
-    this.myReportsService.getReports(this.activeTab, this.entityId).subscribe((data: any) => {
-      this.report = data.data;
-      if (data.status != "failed" && data.data) {
-        this.showNoReports = false;
-        this.setupChart();
-      } else {
-        this.showNoReports = true;
+    if (this.networkService.isConnected) {
+      this.showSkeleton = true;
+      this.myReportsService.getReports(this.activeTab, this.entityId).subscribe((data: any) => {
+        if (data.status != "failed" && data.data) {
+          this.setupChart(data.data);
+        } else {
+          this.showNoReports = true;
+          this.showSkeleton = false;
+        }
+      }, error => {
         this.showSkeleton = false;
-      }
-    }, error => {
-      this.showSkeleton = false;
-      this.errorHandle.errorHandle(error);
-    })
+        this.errorHandle.errorHandle(error);
+      })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
   }
-  public setupChart() {
+  public setupChart(data) {
     let totalTask;
     let completed: any;
-    if (this.report.tasksCompleted > 0 || this.report.tasksPending > 0) {
-      totalTask = this.report.tasksCompleted + this.report.tasksPending;
-      completed = (this.report.tasksCompleted / totalTask) * 100;
+    if (data.tasksCompleted > 0 || data.tasksPending > 0) {
+      totalTask = data.tasksCompleted + data.tasksPending;
+      completed = (data.tasksCompleted / totalTask) * 100;
       completed = completed.toFixed(0);
     } else {
-      this.report.tasksCompleted = 0;
-      this.report.tasksPending = 0;
+      data.tasksCompleted = 0;
+      data.tasksPending = 0;
       completed = 0;
     }
     this.chartOptions = {
@@ -372,7 +368,7 @@ export class MyReportsPage {
       },
       series: [{
         name: "Tasks",
-        data: [["Pending", this.report.tasksPending], ["Completed", this.report.tasksCompleted]],
+        data: [["Pending", data.tasksPending], ["Completed", data.tasksCompleted]],
         size: '90%',
         innerSize: '70%',
         showInLegend: true,
@@ -381,6 +377,7 @@ export class MyReportsPage {
         }
       }]
     };
+    this.report = data;
     this.showSkeleton = false;
   }
 

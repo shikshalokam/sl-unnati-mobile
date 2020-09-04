@@ -27,7 +27,8 @@
         "update": "Update",
         "save_info": "Save info",
         "post": "Post",
-        "add_tasks": "Add Tasks"
+        "add_tasks": "Add Tasks",
+        "viewResources":"View Resources"
     },
     "message": {
         "fileds_mandatory": "Please fill Mandatory Fields",

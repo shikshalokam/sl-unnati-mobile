@@ -11,7 +11,8 @@
         <div *ngFor="let data of data.formData">
           <div *ngIf="data.label"
             [ngClass]="{'label-margin':data.type != text-area, 'label-top-margin' :data.type == text-area}">
-            <img [src]="data.icon" *ngIf="data.icon" class="label-icon">
+            <img [src]="data.icon" *ngIf="data.icon" class="label-icon"
+              [ngStyle]="{'margin-bottom': data.type == 'date' ? '-11px' : '-7px'}">
             <ion-icon ios="ios-share" md="md-share" *ngIf="data.share" style="float: right;
             font-size: 30px;
             color: #000;
@@ -23,12 +24,9 @@
           <ion-input type="text" *ngIf="data.type == 'text'" placeholder={{data.placeholder}}
             [formControlName]="data.field" [(ngModel)]="data.value">
           </ion-input>
-          <!-- <ion-input (click)="setDate(data)" [formControlName]="data.field" *ngIf="data.type == 'date'"
-            placeholder={{data.placeholder}} [(ngModel)]="data.value" type="text" readonly>
-          </ion-input> -->
           <ion-datetime (ionChange)="setDate($event,data)" min="2000" max="2100" display-timezone="utc"
             [formControlName]="data.field" *ngIf="data.type == 'date'" value={{data.value}}
-            style="padding: 0px; font-weight: 600;">
+            style="font-weight: 600; border-bottom: 1px solid #ccc;">
           </ion-datetime>
           <ion-textarea *ngIf="data.type == 'text-area'" [formControlName]="data.field" rows="2"
             [(ngModel)]="data.value">
@@ -40,11 +38,6 @@
                   <img src="assets/images/attachment.png" class="img"> {{file.name}}
                 </p>
               </div>
-              <!-- <div *ngIf="images.length > 0">
-                <p *ngFor="let file of images">
-                  <img src="assets/images/picture.png" class="img"> {{file.name}}
-                </p>
-              </div> -->
             </div>
             <ion-row class="file-box">
               <ion-col size="6" style="margin: auto; font-size: 24px;">

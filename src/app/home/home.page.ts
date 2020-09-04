@@ -109,7 +109,6 @@ export class HomePage implements OnInit {
     this.homeService.localDataUpdated.subscribe(value => {
       this.getActiveProjects();
     })
-
     this.networkService.langEmit.subscribe((value: any) => {
       translate.use(value);
     });
@@ -123,7 +122,6 @@ export class HomePage implements OnInit {
         if (data) {
           this.menuCtrl.enable(true, 'unnati');
           this.setTitle('home_tab');
-          this.connected = localStorage.getItem("networkStatus");
           //  this.splashScreen.hide();
           this.storage.get(LocalKeys.templates).then(templates => {
             if (!templates) {
@@ -267,14 +265,17 @@ export class HomePage implements OnInit {
   }
   // get templates
   getTemplates() {
-    this.categoryViewService.getTemplatesByCategory().subscribe((data: any) => {
-      if (data.data) {
-        this.storage.set(LocalKeys.templates, data.data).then(templates => {
-        })
-      }
-    }, error => {
-      this.errorHandle.errorHandle(error);
-    })
+    if (this.networkService.isConnected) {
+      this.categoryViewService.getTemplatesByCategory().subscribe((data: any) => {
+        console.log(data.data, "get templates");
+        if (data.data) {
+          this.storage.set(LocalKeys.templates, data.data).then(templates => {
+          })
+        }
+      }, error => {
+        this.errorHandle.errorHandle(error);
+      })
+    }
   }
   // get Projects
   public getProjects() {
@@ -286,6 +287,7 @@ export class HomePage implements OnInit {
             project.isSync = true;
             project.isEdited = false;
             project.isNew = false;
+            console.log(project, "project getAssignedProjects");
             if (project.status != 'not yet started' && project.status != 'Not started') {
               project.isStarted = true;
             }

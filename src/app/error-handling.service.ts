@@ -44,11 +44,13 @@ export class ErrorHandle {
                     handler: (data) => {
                         this.login.doLogout();
                         this.router.navigateByUrl(`/login`);
-                        this.popOpen = false;
                     },
                 },
             ],
         });
         await alert.present();
+    }
+    setPopup(){
+        this.popOpen = false;
     }
 }

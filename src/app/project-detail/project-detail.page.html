@@ -110,126 +110,182 @@
     <div *ngIf="project.isStarted && tasksLength > 0">
       <h3 *ngIf="past.length > 0" class="date-label"> Past </h3>
       <div *ngFor="let task of past">
-        <ion-card>
+        <ion-card *ngIf="!task.isDeleted">
           <div class="left-border"
             [ngClass]="{'completed-task-left-border' : task.status === 'Completed','pending-task-left-border' : task.status != 'Completed'}">
           </div>
           <ion-row class="task-list" *ngIf="!task.isDeleted">
-            <ion-col size="1"> </ion-col>
-            <ion-col size="10" (click)="taskView(task)">
+            <ion-col size="1" class="first-row"> </ion-col>
+            <ion-col size="10" (click)="taskView(task)" class="first-row">
               <h5 style="color: #000;"> {{task?.title}} </h5>
-              <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
-                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
             </ion-col>
-            <ion-col size="1" style="text-align: right;color: #b23e33;
-            font-size: 26px;">
+            <ion-col size="1" class="show-menu first-row">
               <ion-icon *ngIf="project.isStarted" name="more" class="popover-menu" (click)="showMenu($event, task)">
               </ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row class="task-list">
+            <ion-col size="1" (click)="taskView(task)" class="sec-row"> </ion-col>
+            <ion-col size="6" (click)="taskView(task)" class="sec-row"> 
+              <h5 class="task-endDate"> {{'projectDetail.end_date' | translate}} :
+                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
+            </ion-col>
+            <ion-col size="5" class="text-right sec-row" *ngIf="task.resources && task.resources.length">
+              <ion-button size="small" (click)="openTaskResources(task)">
+                {{'projectDetail.view_resources' | translate}}
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-card>
       </div>
       <h3 *ngIf="currentTask.length > 0" class="date-label"> Today , {{currentDate |date : 'dd/MM/yyyy'}} </h3>
       <div *ngFor="let task of currentTask">
-        <ion-card>
+        <ion-card *ngIf="!task.isDeleted">
           <div class="left-border"
             [ngClass]="{'completed-task-left-border' : task.status === 'Completed','pending-task-left-border' : task.status != 'Completed'}">
           </div>
-          <ion-row class="task-list" *ngIf="!task.isDeleted">
-            <ion-col size="1"> </ion-col>
-            <ion-col size="10" (click)="taskView(task)">
+          <ion-row class="task-list">
+            <ion-col size="1" class="first-row"> </ion-col>
+            <ion-col size="10" (click)="taskView(task)" class="first-row">
               <h5 style="color: #000;"> {{task?.title}} </h5>
-              <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
-                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
             </ion-col>
-            <ion-col size="1" style="text-align: right;color: #b23e33;
-            font-size: 26px;">
+            <ion-col size="1"  class="show-menu first-row">
               <ion-icon *ngIf="project.isStarted" name="more" class="popover-menu" (click)="showMenu($event, task)">
               </ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row class="task-list">
+            <ion-col size="1" (click)="taskView(task)" class="sec-row"> </ion-col>
+            <ion-col size="6" (click)="taskView(task)" class="sec-row">
+              <h5 class="task-endDate"> {{'projectDetail.end_date' | translate}} :
+                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
+            </ion-col>
+            <ion-col size="5" class="text-right sec-row" *ngIf="task.resources && task.resources.length">
+              <ion-button size="small" (click)="openTaskResources(task)">
+                {{'projectDetail.view_resources' | translate}}
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-card>
       </div>
       <h3 *ngIf="weekTask.length > 0" class="date-label"> This Week </h3>
       <div *ngFor="let task of weekTask">
-        <ion-card>
+        <ion-card *ngIf="!task.isDeleted">
           <div class="left-border"
             [ngClass]="{'completed-task-left-border' : task.status === 'Completed','pending-task-left-border' : task.status != 'Completed'}">
           </div>
-          <ion-row class="task-list" *ngIf="!task.isDeleted">
-            <ion-col size="1"> </ion-col>
-            <ion-col size="10" (click)="taskView(task)">
+          <ion-row class="task-list">
+            <ion-col size="1"  class="first-row"> </ion-col>
+            <ion-col size="10" (click)="taskView(task)"  class="first-row">
               <h5 style="color: #000;"> {{task?.title}} </h5>
-              <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
-                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
             </ion-col>
-            <ion-col size="1" style="text-align: right;color: #b23e33;
-            font-size: 26px;">
+            <ion-col size="1"  class="show-menu first-row">
               <ion-icon *ngIf="project.isStarted" name="more" class="popover-menu" (click)="showMenu($event, task)">
               </ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row class="task-list">
+            <ion-col size="1" (click)="taskView(task)" class="sec-row"> </ion-col>
+            <ion-col size="6" (click)="taskView(task)" class="sec-row">
+              <h5 class="task-endDate"> {{'projectDetail.end_date' | translate}} :
+                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
+            </ion-col>
+            <ion-col size="5" class="text-right sec-row" *ngIf="task.resources && task.resources.length">
+              <ion-button size="small" (click)="openTaskResources(task)">
+                {{'projectDetail.view_resources' | translate}}
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-card>
       </div>
       <h3 *ngIf="months.length > 0" class="date-label"> This Month </h3>
       <div *ngFor="let task of months">
-        <ion-card>
+        <ion-card *ngIf="!task.isDeleted">
           <div class="left-border"
             [ngClass]="{'completed-task-left-border' : task.status === 'Completed','pending-task-left-border' : task.status != 'Completed'}">
           </div>
-          <ion-row class="task-list" *ngIf="!task.isDeleted">
-            <ion-col size="1"> </ion-col>
-            <ion-col size="10" (click)="taskView(task)">
+          <ion-row class="task-list">
+            <ion-col size="1" class="first-row"> </ion-col>
+            <ion-col size="10" (click)="taskView(task)" class="first-row">
               <h5 style="color: #000;"> {{task?.title}} </h5>
-              <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
-                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
+
             </ion-col>
-            <ion-col size="1" style="text-align: right;color: #b23e33;
-            font-size: 26px;">
+            <ion-col size="1"  class="show-menu first-row">
               <ion-icon *ngIf="project.isStarted" name="more" class="popover-menu" (click)="showMenu($event, task)">
               </ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row class="task-list">
+            <ion-col size="1" (click)="taskView(task)" class="sec-row"> </ion-col>
+
+            <ion-col size="6" (click)="taskView(task)" class="sec-row">
+              <h5 class="task-endDate"> {{'projectDetail.end_date' | translate}} :
+                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
+            </ion-col>
+            <ion-col size="5" class="text-right sec-row" *ngIf="task.resources && task.resources.length">
+              <ion-button size="small" (click)="openTaskResources(task)">
+                {{'projectDetail.view_resources' | translate}}
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-card>
       </div>
       <h3 *ngIf="quarter.length > 0" class="date-label"> This Quarter </h3>
       <div *ngFor="let task of quarter">
-        <ion-card>
+        <ion-card *ngIf="!task.isDeleted">
           <div class="left-border"
             [ngClass]="{'completed-task-left-border' : task.status === 'Completed','pending-task-left-border' : task.status != 'Completed'}">
           </div>
-          <ion-row class="task-list" *ngIf="!task.isDeleted">
-            <ion-col size="1"> </ion-col>
-            <ion-col size="10" (click)="taskView(task)">
+          <ion-row class="task-list">
+            <ion-col size="1" class="first-row"> </ion-col>
+            <ion-col size="10" (click)="taskView(task)" class="first-row">
               <h5 style="color: #000;"> {{task?.title}} </h5>
-              <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
-                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
             </ion-col>
-            <ion-col size="1" style="text-align: right;color: #b23e33;
-            font-size: 26px;">
+            <ion-col size="1" class="show-menu first-row">
               <ion-icon *ngIf="project.isStarted" name="more" class="popover-menu" (click)="showMenu($event, task)">
               </ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row class="task-list">
+            <ion-col size="1" (click)="taskView(task)"  class="sec-row"> </ion-col>
+            <ion-col size="6" (click)="taskView(task)"  class="sec-row">
+              <h5 class="task-endDate"> {{'projectDetail.end_date' | translate}} :
+                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
+            </ion-col>
+            <ion-col size="5" class="text-right sec-row" *ngIf="task.resources && task.resources.length">
+              <ion-button size="small" (click)="openTaskResources(task)">
+                {{'projectDetail.view_resources' | translate}}
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-card>
       </div>
       <h3 *ngIf="upcoming.length > 0" class="date-label"> Upcoming </h3>
       <div *ngFor="let task of upcoming">
-        <ion-card>
+        <ion-card *ngIf="!task.isDeleted">
           <div class="left-border"
             [ngClass]="{'completed-task-left-border' : task.status === 'Completed','pending-task-left-border' : task.status != 'Completed'}">
           </div>
-          <ion-row class="task-list" *ngIf="!task.isDeleted">
-            <ion-col size="1"> </ion-col>
-            <ion-col size="10" (click)="taskView(task)">
+          <ion-row class="task-list">
+            <ion-col size="1" class="first-row"> </ion-col>
+            <ion-col size="10" (click)="taskView(task)" class="first-row">
               <h5 style="color: #000;"> {{task?.title}} </h5>
-              <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
-                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
             </ion-col>
-            <ion-col size="1" style="text-align: right;color: #b23e33;
-            font-size: 26px;">
+            <ion-col size="1" class="show-menu first-row">
               <ion-icon *ngIf="project.isStarted" name="more" class="popover-menu" (click)="showMenu($event, task)">
               </ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row class="task-list">
+            <ion-col size="1" (click)="taskView(task)" class="sec-row"> </ion-col>
+            <ion-col size="6" (click)="taskView(task)" class="sec-row">
+              <h5 class="task-endDate"> {{'projectDetail.end_date' | translate}} :
+                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
+            </ion-col>
+            <ion-col size="5" class="text-right sec-row" *ngIf="task.resources && task.resources.length">
+              <ion-button size="small" (click)="openTaskResources(task)">
+                {{'projectDetail.view_resources' | translate}}
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-card>
@@ -237,20 +293,28 @@
     </div>
     <div *ngIf="!project.isStarted">
       <div *ngFor="let task of project.tasks">
-        <ion-card>
+        <ion-card *ngIf="!task.isDeleted">
           <div class="left-border"
             [ngClass]="{'completed-task-left-border' : task.status === 'Completed','pending-task-left-border' : task.status != 'Completed'}">
           </div>
-          <ion-row class="task-list" *ngIf="!task.isDeleted">
-            <ion-col size="11" (click)="taskView(task)">
+          <ion-row class="task-list">
+            <ion-col size="11" (click)="taskView(task)" class="first-row">
               <h5 style="color: #000;"> {{task?.title}} </h5>
-              <h5 style="color:#af4038; font-size: 16px; margin-top: 5px;"> {{'projectDetail.end_date' | translate}} :
-                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
             </ion-col>
-            <ion-col size="1" style="text-align: right;color: #b23e33;
-              font-size: 26px;">
+            <ion-col size="1" class="show-menu first-row">
               <ion-icon *ngIf="project.isStarted" name="more" class="popover-menu" (click)="showMenu($event, task)">
               </ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row class="task-list">
+            <ion-col size="6" (click)="taskView(task)" class="sec-row">
+              <h5 class="task-endDate"> {{'projectDetail.end_date' | translate}} :
+                {{task.endDate | date : 'dd/MM/yyyy'}} </h5>
+            </ion-col>
+            <ion-col size="6" class="text-right sec-row" *ngIf="task.resources && task.resources.length">
+              <ion-button size="small" (click)="openTaskResources(task)">
+                {{'projectDetail.view_resources' | translate}}
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-card>
