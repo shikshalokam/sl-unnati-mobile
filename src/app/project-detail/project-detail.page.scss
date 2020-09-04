@@ -37,16 +37,27 @@
     background: #828386;
 }
     .task-list{
-        padding: 5px 15px 5px 15px;
+        padding: 0px 15px 0px 15px;
         .task-endDate{
-        font-size: 1.3em;
-        color: #b23e33;
-        text-align: center;
+        color:#af4038;
+        font-size: 16px;
+         margin-top: 5px;
+        }
+        .show-menu{
+            text-align: right;
+            color: #b23e33;
+            font-size: 26px;
         }
 
         .checkBoxes{
             width: 25px;
             height: 25px;
+        }
+        .sec-row{
+            padding:0px 0px 5px 0px;
+        }
+        .first-row{
+            padding: 10px 0px 0px 0px;
         }
        
     }

@@ -25,7 +25,7 @@ export class ProjectsPage {
   connected: any = localStorage.getItem('networkStatus')
   skeletons = [{}, {}, {}, {}, {}, {}];
   projectList;
-  activeTab = 'allProjects';
+  activeTab = 'activeProjects';
   back = "project-view/home";
   showSkeleton: boolean = false;
   showNoDataCard = '';
@@ -53,7 +53,6 @@ export class ProjectsPage {
     public activatedRoute: ActivatedRoute) {
     activatedRoute.params.subscribe(data => {
       this.getActiveProjects();
-      this.selectTab('activeProjects');
     })
     this.networkService.emit.subscribe(value => {
       this.connected = value;
@@ -80,7 +79,6 @@ export class ProjectsPage {
 
   public getActiveProjects() {
     this.showSkeleton = true;
-
     this.storage.get(LocalKeys.allProjects).then(projects => {
       if (projects) {
         projects.forEach(programsList => {
@@ -107,8 +105,6 @@ export class ProjectsPage {
     })
   }
   public selectTab(tab) {
-    this.showSkeleton = true;
-    this.activeTab = tab;
-    this.showSkeleton = false;
+    this.activeTab = tab.detail.value;
   }
 }

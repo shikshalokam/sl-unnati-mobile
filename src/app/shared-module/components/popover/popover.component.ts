@@ -18,6 +18,7 @@ import { LoadingController } from '@ionic/angular';
 import { LocalKeys } from '../../../core-module/constants/localstorage-keys';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorHandle } from '../../../error-handling.service';
+import { NetworkService } from '../../../network.service';
 declare var cordova: any;
 @Component({
   selector: 'app-popover',
@@ -57,7 +58,8 @@ export class PopoverComponent implements OnInit {
     public loadingController: LoadingController,
     public route: ActivatedRoute,
     public errorHandle: ErrorHandle,
-    public router: Router) { }
+    public router: Router,
+    public networkService: NetworkService) { }
   ngOnInit() {
     this.platform.ready().then(() => {
       this.projectToSync.push(this.project);
@@ -198,7 +200,6 @@ export class PopoverComponent implements OnInit {
       const fileTransfer: FileTransferObject = this.transfer.create();
       const url = data.pdfUrl;
       fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
-        let fileName1 = entry.nativeURL.split('/').pop();
         let path = entry.nativeURL.substring(0, entry.nativeURL.lastIndexOf("/") + 1);
         this.file.readAsDataURL(path, fileName)
           .then(base64File => {
@@ -393,7 +394,12 @@ export class PopoverComponent implements OnInit {
         break;
       }
       case 'shareProject': {
-        this.syncProject();
+        if (this.networkService.isConnected) {
+          this.syncProject();
+        } else {
+          this.toastService.errorToast('Your offline, Please try again')
+        }
+
         break;
       }
       case 'shareTask': {

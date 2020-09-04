@@ -80,6 +80,7 @@ export class CreateProjectService {
                 programId = env.programId;
             }
         });
+
         return this.storage.get('latestProjects').then(projectList => {
             if (projectList) {
                 projectList.forEach(projectsPrograms => {
