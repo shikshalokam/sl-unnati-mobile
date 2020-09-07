@@ -1,3 +1,5 @@
+@import'../../theme/colors.scss';
+
 .custom-popup
     {
     position: fixed;
@@ -11,8 +13,8 @@
     {
         margin: auto;
         max-width: 80%;
-        box-shadow: 0px 3px 8px 4px #e2e2e2;
-        background: #fff;
+        box-shadow: 0px 3px 8px 4px $grey-color;
+        background: $white-color;
         padding: 10px;
         .pop-ion{
             text-align: center;
@@ -35,18 +37,18 @@
     }
 
 .profile-card{
-    box-shadow: 0px 3px 8px 4px #e2e2e2;
+    box-shadow: 0px 3px 8px 4px $grey-color;
     margin-bottom: 1em;
     margin-top: 2em;
     border-radius: 0.5em;
     .profile-container{
     margin: auto;
-    background: #fff;
+    background: $white-color;
     padding: 10px;
     border-radius: 0.5em;
     .usrname{
-        background: #af4038; 
-        color:#fff;  
+        background: $primary; 
+        color:$white-color;  
         padding: 5px 1em;
         border-radius: 1em;
     }
@@ -77,7 +79,7 @@
     // border-radius: 4px;
     // margin: 5px 0px;
     // padding-left: 5px;
-    border: 1px solid #000;
+    border: 1px solid $black-color;
     border-radius: 4px;
     margin: 5px 0px;
     padding: 15px 1em 5px 5px;

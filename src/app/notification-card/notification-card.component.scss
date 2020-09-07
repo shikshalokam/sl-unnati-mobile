@@ -1,8 +1,10 @@
+@import'../../theme/colors.scss';
+
 .dot {
   width: 10px;
   height: 10px;
   margin-right: 10px;
-  background-color: #b23d33;
+  background-color: $primary;
   border-radius: 50%;
 }
 
@@ -18,7 +20,7 @@
   --border-color: transparent;
 }
 .inactiveDot {
-  background-color: #000;
+  background-color: $black-color;
 }
 
 .action-notifications {
@@ -26,14 +28,14 @@
 }
 
 .old-notification {
-  background: #ebebeb;
-  color: #000;
+  background: $grey-color;
+  color: $black-color;
   padding: 10px 25px;
 }
 
 .new-notification {
-  background: #b23d33;
-  color: #fff;
+  background: $primary;
+  color: $white-color;
   padding: 10px 25px;
 }
 
@@ -60,14 +62,14 @@
 }
 
 .time {
-  color: #080808;
+  color: $black-color;
   font-size: 12px;
 }
 .time-ago {
-  color: #000;
+  color: $black-color;
 }
 .errorMessage {
-  color: #080808;
+  color: $black-color;
 }
 .vertical-align-text {
   margin: 0;

@@ -1,9 +1,11 @@
+@import'../../theme/colors.scss';
+
 .custom-card
 {
     ion-card-header{
-        background: #e3e3e3;
+        background: $grey-color;
         padding: 10px;
-        color: #000;
+        color: $black-color;
     }
     ion-button{
         --border-radius:20px;

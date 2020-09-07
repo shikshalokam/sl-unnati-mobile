@@ -157,16 +157,16 @@ export class AppComponent {
               url: '/project-view/about',
               icon: 'information-circle'
             },
-            {
-              title: 'Settings',
-              icon: 'md-settings',
-              children: [
-                {
-                  title: 'Languages',
-                  icon: 'globe'
-                },
-              ]
-            },
+            // {
+            //   title: 'Settings',
+            //   icon: 'md-settings',
+            //   children: [
+            //     {
+            //       title: 'Languages',
+            //       icon: 'globe'
+            //     },
+            //   ]
+            // },
             {
               title: "FAQ's",
               url: 'https://wiki.shikshalokam.org/faqs/',
@@ -712,16 +712,16 @@ export class AppComponent {
                       url: '/project-view/about',
                       icon: 'information-circle'
                     },
-                    {
-                      title: 'Settings',
-                      icon: 'md-settings',
-                      children: [
-                        {
-                          title: 'Languages',
-                          icon: 'globe'
-                        },
-                      ]
-                    }
+                    // {
+                    //   title: 'Settings',
+                    //   icon: 'md-settings',
+                    //   children: [
+                    //     {
+                    //       title: 'Languages',
+                    //       icon: 'globe'
+                    //     },
+                    //   ]
+                    // }
                   ];
                 }
               }

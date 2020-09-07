@@ -1,9 +1,11 @@
+@import'../../theme/colors.scss';
+
 .can-go-back header-component ion-back-button {
     display: block;
   }
   ion-col div 
 {
-    color:#000;
+    color:$black-color;
     ion-label{
     font-weight: 600;
 
@@ -17,7 +19,7 @@ ion-col
 }
 .accordion-style {
  transition: 0.09s all linear;
- border-left: 2px solid #397efa;
+ border-left: 2px solid $primary;
 }
 .task-title
 {

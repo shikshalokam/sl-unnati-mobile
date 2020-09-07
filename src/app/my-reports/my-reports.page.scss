@@ -1,13 +1,5 @@
-// .tab-selected
-// {
-//     background: #024F9D;
-//     color:#fff;
-// }
-// ion-tab-button {
-//     ion-label {
-//         font-size:16px;
-//     }
-// }
+@import'../../theme/colors.scss';
+
 .tabs-list{
     position: fixed;
     width: 100%;
@@ -17,42 +9,42 @@
   .custom-card
   {
     margin: 0px;
-    background:#fff;
+    background:$white-color;
     ion-card-content{
     padding: 0px;
     font-size: 16px;
-    color: #000;
+    color: $black-color;
     }
   }
   .custom-tab{
-    background:#fff;
-    color: #000;
+    background:$white-color;
+    color: $black-color;
       float: left;
     width:50%;
       padding: 15px;
       text-align: center;
       font-size: 14px;
-      border-bottom: 2px solid #024F9D;
+      border-bottom: 2px solid $primary;
       font-weight: 600;
   }
   .active-tab{
-    background: #024F9D;
-    color: #fff;
+    background: $primary;
+    color: $white-color;
   }
   .tab-width{
     width:33.33%;
   }
   .card-custom{
     padding: 5px;
-    color: #000;
+    color: $black-color;
     font-size: 16px;
   }
 
   .status-card {
     border-radius: 5px;
-    color: #fff;
+    color: $white-color;
     span {
-      border-bottom: 2px solid #fff;
+      border-bottom: 2px solid $white-color;
       font-size: 36px;
     }
     h1 {
@@ -68,23 +60,23 @@
     margin-left: 3px;
   }
   .action-item {
-    color: #3b86ff;
+    color:$primary;
     text-align: center;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid $black-color;
     margin: 30px 0px;
     padding-bottom: 10px;
   }
   .dot-pending {
     height: 16px;
     width: 16px;
-    background-color: #bfbfbf;
+    background-color: $dark-grey-color;
     border-radius: 50%;
     display: inline-block;
   }
   .dot-completed {
     height: 16px;
     width: 16px;
-    background-color: #20ba8d;
+    background-color: $secondary;
     border-radius: 50%;
     display: inline-block;
   }

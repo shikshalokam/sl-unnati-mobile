@@ -1,9 +1,11 @@
+@import'../../theme/colors.scss';
+
 #create-task-popup{
     left: 0;
     right: 0;
     z-index: 9999999999;
     width: 100%;
-    background: #cccccc4d;
+    background: $dark-grey-color;
     top: 0;
     height: 100%;
     position: fixed;
@@ -11,8 +13,8 @@
 .pop-container{
     margin: 0px 0px 0px 10px;
     border-radius: 4px;
-    box-shadow: 0px 3px 8px 4px #e2e2e2;
-    background: #fff;
+    box-shadow: 0px 3px 8px 4px $grey-color;
+    background: $white-color;
     padding: 10px;
     padding-top: 5%;
     position: absolute;
@@ -24,9 +26,9 @@
     }
     #popup-input
     {
-        background: #f4f4f4;
+        background: $grey-color;
         text-align: center;
-        color: #000;
+        color: $black-color;
     }
     .form-header{
     font-size: 18px;
@@ -36,17 +38,17 @@
     .task-create{
         margin-bottom:40px;
         ion-input{
-            border-bottom: 1px solid #9a9a9a;
+            border-bottom: 1px solid $dark-grey-color;
             margin: 0px 0px 10px 30px;
             max-width: 90%;
         }
         .label{
-        color: #9a9a9a;
+        color: $dark-grey-color;
         font-size: 18px;
         font-weight: 400;
         }
         ion-textarea{
-            border: 1px solid #ccc;
+            border: 1px solid $grey-color;
             border-radius: 4px;
         }
     }
@@ -80,7 +82,7 @@
         margin-top:15px;
     }
     .attachments-box{
-        background: #eaeaea;
+        background: $dark-grey-color;
         margin-bottom: 35px;
         height: auto;
         padding: 5px 10px;

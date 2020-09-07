@@ -1,6 +1,8 @@
+@import'../../theme/colors.scss';
+
 .project-detail{
-    background:#f7f7f7;
-    border-bottom:2px solid #b23d33;
+    background:$white-color;
+    border-bottom:2px solid $primary;
     font-family: 'SourceSansPro-Bold';
     font-weight: 600;
     .label-box{
@@ -14,17 +16,17 @@
     }
 }
 .tasks-box{
-    background:#fff;
+    background:$white-color;
     font-family: 'SourceSansPro-Bold';
     font-weight: 600;
     margin-bottom: 3em;
     min-height: 9em;
     .task-list{
-        border-bottom: 1px solid #b23d33;
+        border-bottom: 1px solid $primary;
         padding: 5px 15px 5px 15px;
         .task-endDate{
         font-size: 1.3em;
-        color: #024F9D;
+        color: $primary;
         text-align: center;
         }
     }
@@ -39,7 +41,7 @@
     }
 }
 .custom-select{
-    border: 1px solid #ccc;
+    border: 1px solid $grey-color;
     padding: 5px;
     min-width: 70%;
     max-width: 70%;

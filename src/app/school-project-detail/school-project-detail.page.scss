@@ -1,12 +1,14 @@
+@import'../../theme/colors.scss';
+
 ion-col div 
 {
-    color:#000;
+    color:$black-color;
     ion-label{
     font-weight: 600;
 }
 }
 .label-divider{
-    border-bottom:1px solid #eee;
+    border-bottom:1px solid $grey-color;
     p{
         text-align: justify;
     }
@@ -35,12 +37,12 @@ ion-progress-bar
     font-size:1.3em;
  }
  .task-board{
-    background:#e4e4e4;
+    background:$grey-color;
     margin:10px;
     padding-bottom: 5px;
     ion-card{
-        background: #fff;
-        color: #000;
+        background: $white-color;
+        color: $black-color;
         border-radius: 0px;
     }
     ion-button{
@@ -53,19 +55,19 @@ ion-progress-bar
  }
  .status{
     float: right;
-    color: #fff;
+    color: $white-color;
     padding: 0px 10px 0px 10px;
     border-radius: 20px;
  }
  .inprogress
  {
-     background: #ef4e35;
+     background: $orange-color;
  }
  .completed
  {
-     background: #70ef35;
+     background: $secondary;
  }
  .notyetstarted
  {
-     background: #e4e4e4
+     background: $dark-grey-color
  }

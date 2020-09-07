@@ -1,7 +1,9 @@
+@import'../../theme/colors.scss';
+
 .right-icon{
     margin: auto;
     padding: 5px;
-    border: 1px solid #000;
+    border: 1px solid $black-color;
     border-left: none;
     height: 3.3em;
     width: 3.2em;
@@ -37,7 +39,7 @@ ion-label{
         font-family: 'SourceSansPro-Bold' !important;
         h4{
             margin: 0px;
-            color: #000;
+            color: $black-color;
         }
      }
      ion-card-content {
@@ -60,15 +62,15 @@ ion-label{
         }
         .notyetstart
         {
-            background: #e6e6e6;
+            background: $dark-grey-color;
         }
         .completed
         {
-            background: #66f271;
+            background: $secondry-color;
         }
         .inprogress
         {
-            background: #ed8e3b;
+            background: $orange-color;
         }
     }
      }

@@ -1,11 +1,10 @@
 
 
-// .footer-md:before {
-//   background-image: none !important;
-// }
+@import'../../theme/colors.scss';
+
 .ion-footer-custom {
   text-align: center !important;
-  background: #fff !important;
+  background: $white-color !important;
   .brdr-radius-30 {
     --border-radius: 30px;
   }
@@ -25,7 +24,7 @@
 }
 
 .content {
-  color: #777;
+  color: $dark-grey-color;
   margin-top: 30px;
 }
 
@@ -58,7 +57,7 @@
 }
 
 .blackText {
-  color: #000;
+  color: $black-color;
   margin-top: 60px;
 }
 

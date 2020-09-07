@@ -1,3 +1,5 @@
+@import'../../theme/colors.scss';
+
 .tabs-list{
     position: fixed;
     width: 100%;
@@ -6,28 +8,28 @@
   .custom-card
   {
     margin: 0px;
-    background:#fff;
+    background:$white-color;
     ion-card-content{
     padding: 0px;
     font-size: 16px;
-    color: #000;
+    color: $black-color;
     }
   }
   .custom-tab{
     min-width:50%;
     max-width:50%;
-    background:#fff;
-    color: #000;
+    background:$white-color;
+    color: $black-color;
       float: left;
       padding: 15px;
       text-align: center;
       font-size: 18px;
-      border-bottom: 2px solid #024F9D;
+      border-bottom: 2px solid $primary;
       font-weight: 600;
   }
   .active-tab{
-    background: #024F9D;
-    color: #fff;
+    background: $primary;
+    color: $white-color;
   }
   .ongoing-container{
     margin-bottom:3em;
@@ -38,7 +40,7 @@
     .title-section{
       font-family: sans-serif;
       text-transform: capitalize;
-      color: #000;
+      color: $black-color;
       font-weight: 600;
       margin: 5px 0px;
       font-size: 1.2em;
@@ -58,15 +60,15 @@
   }
   .notyetstart
   {
-      background: #e6e6e6;
+      background: $dark-grey-color;
   }
   .completed
   {
-      background: #66f271;
+      background: $secondary;
   }
   .inprogress
   {
-      background: #ed8e3b;
+      background: $orange-color;
   }
   }
   
