@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { VideoPlayerComponent } from '../video-player/video-player.component';
 import { ModalController } from '@ionic/angular';
+import { NetworkService } from '../network.service';
+import { ToastService } from '../toast.service';
 @Component({
   selector: 'app-tutorial-videos',
   templateUrl: './tutorial-videos.page.html',
@@ -13,9 +15,11 @@ export class TutorialVideosPage implements OnInit {
     url: 'https://youtu.be/G9c3xQP_ZEU'
     // https://youtu.be/G9c3xQP_ZEU
   }];
-  opened:boolean = false;
+  opened: boolean = false;
   constructor(
-    public modalController: ModalController
+    public modalController: ModalController,
+    public network: NetworkService,
+    public toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -26,7 +30,7 @@ export class TutorialVideosPage implements OnInit {
   // }
 
   async open(video) {
-    this.opened= true;
+    this.opened = true;
     const modal = await this.modalController.create({
       component: VideoPlayerComponent,
       componentProps: {
@@ -34,8 +38,11 @@ export class TutorialVideosPage implements OnInit {
       }
     });
     modal.onDidDismiss().then((data: any) => {
-      this.opened= false;
+      this.opened = false;
     })
     return await modal.present();
+  }
+  openVideo(video) {
+    this.network.isConnected ? this.open(video) : this.toastService.errorToast('message.nerwork_connection_check');
   }
 }
