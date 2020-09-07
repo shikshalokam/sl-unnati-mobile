@@ -1,18 +1,18 @@
 <ion-header>
-  <app-header
-    [title]="'resources.title' | translate"
-    [showMenu]="false"
-    [showBack]="true"
-    [isGoBack]="back"
-    [noBorder]="false"
-    [isParam]="parameter"
+  <app-header 
+  [title]="'resources.title' | translate"
+  [showMenu]="false"
+  [showBack]="true" 
+  [isGoBack]="back"
+  [noBorder]="false" 
+  [isParam]="parameter"
   >
   </app-header>
 </ion-header>
 <ion-content>
-  <ion-card
-    *ngFor="let resource of projectResources"
-    (click)="openBodh(resource.link)"
+  <ion-card 
+  *ngFor="let resource of projectResources" 
+  (click)="openBodh(resource.link)"
   >
     <ion-card-content>
       <ion-grid>

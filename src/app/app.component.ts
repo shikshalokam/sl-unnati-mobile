@@ -370,9 +370,10 @@ export class AppComponent {
       this.files = [];
       // this.prepareMappedProjectToSync();
       // this.getOldDataToSync();
-      this.getAttachments();
+      this.networkService.isConnected ? this.getAttachments() : this.toastService.errorToast('message.nerwork_connection_check');
     } else if (title == "FAQ's") {
-      let browserRef = (<any>window).cordova.InAppBrowser.open(url, "_blank", "zoom=no");
+      this.networkService.isConnected ? (<any>window).cordova.InAppBrowser.open(url, "_blank", "zoom=no") : this.toastService.errorToast('message.nerwork_connection_check');
+      // let browserRef = (<any>window).cordova.InAppBrowser.open(url, "_blank", "zoom=no");
     } else if (url) {
       this.router.navigate([url]);
     }
@@ -465,8 +466,10 @@ export class AppComponent {
         if (!this.mappedProjectsToSync) {
           this.toastService.successToast('message.already_sync');
         } else {
-          if (this.isConnected) {
+          if (this.networkService.isConnected) {
             this.autoSync();
+          } else {
+            this.toastService.errorToast('message.nerwork_connection_check')
           }
         }
       } else {
@@ -770,7 +773,6 @@ export class AppComponent {
             }
           });
         })
-
         if (this.attachmentsList.length > 0) {
           this.getUploadUrl(this.attachmentsList, filesList);
         } else {
@@ -892,8 +894,10 @@ export class AppComponent {
         });
       }
       this.toastService.stopLoader();
-      if (this.isConnected) {
+      if (this.networkService.isConnected) {
         this.autoSync();
+      } else {
+        this.toastService.errorToast('message.nerwork_connection_check')
       }
     }
     )
