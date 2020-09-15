@@ -267,7 +267,6 @@ export class HomePage implements OnInit {
   getTemplates() {
     if (this.networkService.isConnected) {
       this.categoryViewService.getTemplatesByCategory().subscribe((data: any) => {
-        console.log(data.data, "get templates");
         if (data.data) {
           this.storage.set(LocalKeys.templates, data.data).then(templates => {
           })
@@ -287,7 +286,6 @@ export class HomePage implements OnInit {
             project.isSync = true;
             project.isEdited = false;
             project.isNew = false;
-            console.log(project, "project getAssignedProjects");
             if (project.status != 'not yet started' && project.status != 'Not started') {
               project.isStarted = true;
             }
