@@ -19,6 +19,7 @@ import { AppConfigs } from '../core-module/constants/app.config';
 import * as jwt_decode from "jwt-decode";
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { ErrorHandle } from '../error-handling.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -278,7 +279,9 @@ export class HomePage implements OnInit {
   }
   // get Projects
   public getProjects() {
+    this.toastService.startLoader('Loading, please wait');
     this.projectsService.getAssignedProjects(this.type).subscribe((resp: any) => {
+      this.toastService.stopLoader();
       if (resp.status != 'failed') {
         resp.data.forEach(programs => {
           programs.projects.forEach(project => {
@@ -299,6 +302,7 @@ export class HomePage implements OnInit {
         this.activeProjects = [];
       }
     }, error => {
+      this.toastService.stopLoader();
       this.errorHandle.errorHandle(error);
     })
   }

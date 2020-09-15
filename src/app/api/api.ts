@@ -42,43 +42,42 @@ export class ApiProvider {
     return this.https.post(url, obj, options);
   }
 
-
-
-
-
   validateToken() {
     return new Promise(resolve => {
-      return this.storage.get('userDetails').then(data => {
-        if (data) {
-          if (data.exp <= (Date.now() / 1000)) {
-          this.storage.get('userTokens').then(usertoken => {
-            this.refershToken(usertoken.refresh_token).subscribe((data: any) => {
-              // let parsedData = JSON.parse(data._body);
-              if (data && data.access_token) {
-                let userTokens = {
-                  access_token: data.access_token,
-                  refresh_token: data.refresh_token,
-                  expires_in: data.expires_in
-                };
-                let userDetails = jwt_decode(userTokens.access_token);
-                this.storage.set('userDetails', userDetails).then(userData => {
-                })
-                this.storage.set('userTokens', userTokens).then(data => {
-                  resolve(userTokens);
-                })
-                this.storage.set('currentUser', data).then(data => { })
-              }
-            }, error => {
-              this.errorHandle.errorHandle(error);
-            })
-          })
-          } else {
-            this.storage.get('userTokens').then(token => {
-              resolve(token);
-            })
-          }
-        }
+      this.storage.get('userTokens').then(token => {
+        resolve(token);
       })
+      // return this.storage.get('userDetails').then(data => {
+      //   if (data) {
+      //     if (data.exp <= (Date.now() / 1000)) {
+      //     this.storage.get('userTokens').then(usertoken => {
+      //       this.refershToken(usertoken.refresh_token).subscribe((data: any) => {
+      //         // let parsedData = JSON.parse(data._body);
+      //         if (data && data.access_token) {
+      //           let userTokens = {
+      //             access_token: data.access_token,
+      //             refresh_token: data.refresh_token,
+      //             expires_in: data.expires_in
+      //           };
+      //           let userDetails = jwt_decode(userTokens.access_token);
+      //           this.storage.set('userDetails', userDetails).then(userData => {
+      //           })
+      //           this.storage.set('userTokens', userTokens).then(data => {
+      //             resolve(userTokens);
+      //           })
+      //           this.storage.set('currentUser', data).then(data => { })
+      //         }
+      //       }, error => {
+      //         this.errorHandle.errorHandle(error);
+      //       })
+      //     })
+      //     } else {
+      //       this.storage.get('userTokens').then(token => {
+      //         resolve(token);
+      //       })
+      //     }
+      //   }
+      // })
     })
   }
 } 

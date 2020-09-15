@@ -2,15 +2,11 @@ import { Injectable } from '@angular/core';
 import {
     HttpRequest,
     HttpHandler,
-    HttpEvent,
-    HttpInterceptor,
-    HttpResponse,
-    HttpErrorResponse
+    HttpInterceptor
 } from '@angular/common/http';
 import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
-import { Observable, throwError, from } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import {from } from 'rxjs';
 import {
     Router
 } from '@angular/router';
