@@ -31,18 +31,25 @@ export class TokenInterceptor implements HttpInterceptor {
         return from(this.handle(req, next))
     }
     async handle(req: HttpRequest<any>, next: HttpHandler) {
-        const token: any = await this.api.validateToken();
-        const authReq = req.clone({
-            setHeaders: {
-                'x-auth-token': token.access_token,
-                'x-authenticated-user-token': token.access_token,
-                'gpsLocation': '0,0',
-                'appVersion': AppConfigs.appVersion,
-                'appName': AppConfigs.appName,
-                'appType': "improvement-project",
-                'os': this.platform.is('ios') ? 'ios' : 'android'
-            }
-        })
+        let authReq;
+        if (!req.headers.get('skip') || req.headers.get("skip") === 'false') {
+            const token: any = await this.api.validateToken();
+            authReq = req.clone({
+                setHeaders: {
+                    'x-auth-token': token.access_token,
+                    'x-authenticated-user-token': token.access_token,
+                    'gpsLocation': '0,0',
+                    'appVersion': AppConfigs.appVersion,
+                    'appName': AppConfigs.appName,
+                    'appType': "improvement-project",
+                    'os': this.platform.is('ios') ? 'ios' : 'android'
+                }
+            })
+        } else {
+            authReq = req.clone({
+                headers: req.headers.delete('skip')
+            })
+        }
         return next.handle(authReq).toPromise()
     }
 }

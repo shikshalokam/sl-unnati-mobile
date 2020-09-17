@@ -101,6 +101,7 @@ export class LoginPage {
           this.confirmPreviousUserName(previousUser.preferred_username, token);
         }
       } else {
+        console.log(token, "token 104");
         this.storeToken(token);
       }
     })
@@ -109,7 +110,9 @@ export class LoginPage {
   loginClick() {
     // this.showLogin = true;
     this.doOAuthStepOne().then(success => {
+      console.log(success, "success");
       this.login.doOAuthStepTwo(success).then(success1 => {
+        console.log(success1, "success1");
         if (success1) {
           this.checkLocalData(success1);
         }
@@ -147,8 +150,10 @@ export class LoginPage {
   }
 
   public storeToken(token) {
-    this.login.checkForCurrentUserLocalData(token);
+    // this.login.checkForCurrentUserLocalData(token);
+    console.log(token, "token in");
     let userDetails = jwt_decode(token.access_token);
+    console.log(userDetails, "userDetails in");
     this.storage.set('userDetails', userDetails).then(userData => {
     })
     this.storage.set('userTokens', token).then(data => {

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams, Http } from '@angular/http';
-import { HttpParams } from '@angular/common/http';
+import { URLSearchParams, Headers, Http, RequestOptions } from '@angular/http';
+import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { CurrentUserProvider } from './current-user'
 import { Subject } from 'rxjs';
 import { Storage } from '@ionic/storage';
 import { environment } from '../environments/environment';
-
+import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
@@ -20,7 +20,7 @@ export class Login {
   base_url: string;
 
   logout_redirect_url: string;
-  constructor(public http: Http,
+  constructor(public http: HttpClient,
     public currentUser: CurrentUserProvider,
     public storage: Storage) { }
   doLogin() {
@@ -109,16 +109,27 @@ export class Login {
 
   doOAuthStepTwo(token: string): Promise<any> {
     return new Promise(resolve => {
-      const body = new URLSearchParams();
+      // const body = new URLSearchParams();
       const params = 'grant_type=authorization_code&client_id=' + environment.clientId + '&code=' + token + '&redirect_uri=' + environment.keyCloak.redirection_url + '&scope=offline_access'
-      body.set('grant_type', "authorization_code");
-      body.set('client_id', environment.clientId);
-      body.set('code', token);
-      body.set('redirect_uri', environment.keyCloak.redirection_url);
-      body.set('scope', "offline_access");
+      // body.set('grant_type', "authorization_code");
+      // body.set('client_id', environment.clientId);
+      // body.set('code', token);
+      // body.set('redirect_uri', environment.keyCloak.redirection_url);
+      // body.set('scope', "offline_access");
+      let body = {
+        'grant_type': "authorization_code",
+        'client_id': environment.clientId,
+        'code': token,
+        'redirect_uri': environment.keyCloak.redirection_url,
+        'scope': "offline_access"
+      }
       const url = environment.app_url + environment.keyCloak.getAccessToken;
-      this.http.post(url, body)
+      const headers = new HttpHeaders({
+        'skip': 'true'
+      })
+      this.http.post(url, body, { headers: headers })
         .subscribe((data: any) => {
+          console.log(data, " @ 125");
           let parsedData = JSON.parse(data._body);
           resolve(parsedData);
         }, error => {
