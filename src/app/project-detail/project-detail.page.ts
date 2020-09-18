@@ -160,7 +160,6 @@ export class ProjectDetailPage {
   }
   getProject() {
     this.storage.get(LocalKeys.projectToBeView).then(project => {
-      console.log(project, "project in details");
       let completed = 0;
       let notStarted = 0;
       this.tasksLength = 0;
