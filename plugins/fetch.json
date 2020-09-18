@@ -193,14 +193,6 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova-plugin-add-swift-support": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-add-swift-support@*"
-    },
-    "is_top_level": false,
-    "variables": {}
-  },
   "cordova-plugin-android-permissions": {
     "source": {
       "type": "registry",
@@ -286,6 +278,30 @@
     "source": {
       "type": "registry",
       "id": "cordova-android-support-gradle-release"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-sqlite-storage": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-sqlite-storage@2.6.0"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-add-swift-support": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-add-swift-support"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-advanced-http": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-advanced-http"
     },
     "is_top_level": true,
     "variables": {}
