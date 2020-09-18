@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { Storage } from '@ionic/storage';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { HTTP } from '@ionic-native/http/ngx';
 @Injectable({
   providedIn: 'root',
 })
@@ -21,6 +22,7 @@ export class Login {
 
   logout_redirect_url: string;
   constructor(public http: HttpClient,
+    public nativeHttp :HTTP,
     public currentUser: CurrentUserProvider,
     public storage: Storage) { }
   doLogin() {
@@ -116,21 +118,25 @@ export class Login {
       // body.set('code', token);
       // body.set('redirect_uri', environment.keyCloak.redirection_url);
       // body.set('scope', "offline_access");
-      let body = {
-        'grant_type': "authorization_code",
-        'client_id': environment.clientId,
-        'code': token,
-        'redirect_uri': environment.keyCloak.redirection_url,
-        'scope': "offline_access"
-      }
+      // let body = {
+      //   'grant_type': "authorization_code",
+      //   'client_id': environment.clientId,
+      //   'code': token,
+      //   'redirect_uri': environment.keyCloak.redirection_url,
+      //   'scope': "offline_access"
+      // }
+      let obj = {
+        grant_type: "authorization_code",
+        client_id: environment.clientId,
+        code: token,
+        redirect_uri: environment.keyCloak.redirection_url,
+        scope: "offline_access",
+      };
       const url = environment.app_url + environment.keyCloak.getAccessToken;
-      const headers = new HttpHeaders({
-        'skip': 'true'
-      })
-      this.http.post(url, body, { headers: headers })
-        .subscribe((data: any) => {
+      this.nativeHttp.post(url, obj, {})
+        .then((data: any) => {
           console.log(data, " @ 125");
-          let parsedData = JSON.parse(data._body);
+          let parsedData = JSON.parse(data.data);
           resolve(parsedData);
         }, error => {
           resolve(error);
