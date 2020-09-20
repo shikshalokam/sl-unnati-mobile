@@ -120,12 +120,15 @@
       "DEEPLINK_5_SCHEME": " ",
       "DEEPLINK_5_HOST": " ",
       "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-add-swift-support": {
+      "PACKAGE_NAME": "in.gov.diksha.projects.app"
+    },
+    "cordova-plugin-advanced-http": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
     }
   },
   "dependent_plugins": {
-    "cordova-plugin-add-swift-support": {
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
     "es6-promise-plugin": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     }

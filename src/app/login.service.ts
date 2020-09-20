@@ -22,7 +22,7 @@ export class Login {
 
   logout_redirect_url: string;
   constructor(public http: HttpClient,
-    public nativeHttp :HTTP,
+    public nativeHttp: HTTP,
     public currentUser: CurrentUserProvider,
     public storage: Storage) { }
   doLogin() {
@@ -135,7 +135,6 @@ export class Login {
       const url = environment.app_url + environment.keyCloak.getAccessToken;
       this.nativeHttp.post(url, obj, {})
         .then((data: any) => {
-          console.log(data, " @ 125");
           let parsedData = JSON.parse(data.data);
           resolve(parsedData);
         }, error => {
