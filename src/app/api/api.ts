@@ -7,6 +7,10 @@ import { environment } from '../../environments/environment';
 import { ErrorHandle } from '../error-handling.service';
 import { Http } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HomeService } from '../home/home.service';
+import { NetworkService } from '../network.service';
+import { ToastService } from '../toast.service';
+ToastService
 @Injectable()
 export class ApiProvider {
   constructor(
@@ -14,7 +18,10 @@ export class ApiProvider {
     public http: Http,
     public login: Login,
     public https: HttpClient,
-    public errorHandle: ErrorHandle
+    public errorHandle: ErrorHandle,
+    public homeService: HomeService,
+    public networkService: NetworkService,
+    public toastService: ToastService
   ) { }
 
   errorObj = {
@@ -79,5 +86,39 @@ export class ApiProvider {
       //   }
       // })
     })
+  }
+  checkAppUpdate() {
+    if (this.networkService.isConnected) {
+      return new Promise(resolve => {
+        let appUpdate;
+        this.homeService.checkAppUpdate().subscribe((data: any) => {
+          console.log(data, "data");
+          if (data.result && !data.result.isVersionValid) {
+            appUpdate = data.result.data;
+            appUpdate.actions = {
+              showCloseButton: false,
+              showUpdatePopup: true,
+            }
+            appUpdate.showCloseButton = false,
+              appUpdate.type = "appUpdate"
+            appUpdate.buttons = [{
+              title: 'Update',
+              color: 'primary',
+              isActionable: 'submit'
+            }]
+            // this.homeService.forceAppUpdate(appUpdate);
+            resolve(appUpdate);
+          } else {
+            resolve(appUpdate);
+          }
+        }, error => {
+          resolve();
+          this.errorHandle.errorHandle(error);
+          console.log(error, "error");
+        })
+      })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
   }
 } 

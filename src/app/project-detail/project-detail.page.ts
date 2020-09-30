@@ -19,6 +19,7 @@ import { AppConfigs } from '../core-module/constants/app.config';
 
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
 import { ProjectService } from '../project-view/project.service';
+import * as uuid from 'uuid';
 declare var cordova: any;
 
 @Component({
@@ -241,13 +242,20 @@ export class ProjectDetailPage {
     if (!this.project.startDate) {
       this.project.startDate = new Date();
     }
-
+    if (!this.project.appReferenceKey) {
+      const myId = uuid.v4();
+      console.log(myId, "myId");
+      this.project.appReferenceKey = myId;
+    }
+    console.log(this.project,"this.project");
     // if (this.category != 'my_projects' && this.category != 'projectsList' && this.category != 'form') {
     if (this.category != "my_projects" && this.category != "form" && this.category != 'projectsList') {
+      console.log(this.project._id, "this.project._id", this.project)
       this.project.createdType = "by reference";
       this.project.lastUpdate = new Date();
       this.project.isNew = true;
       this.project.templateId = this.project._id;
+      // this.project.templateId = 9;
       this.project._id = +new Date();
       let environment = AppConfigs.currentEnvironment;
       AppConfigs.environments.forEach(env => {
