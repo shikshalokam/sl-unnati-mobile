@@ -48,7 +48,6 @@ export class HomeService {
     return this.http.get(environment.api_url + '/unnati/api/v1/forceAppUpdateCheck');
   }
   public forceAppUpdate(data) {
-    console.log(data, "forceAppUpdate");
     this.isForceAppUpdate.next(data);
   }
 }

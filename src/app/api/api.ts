@@ -92,7 +92,6 @@ export class ApiProvider {
       return new Promise(resolve => {
         let appUpdate;
         this.homeService.checkAppUpdate().subscribe((data: any) => {
-          console.log(data, "data");
           if (data.result && !data.result.isVersionValid) {
             appUpdate = data.result.data;
             appUpdate.actions = {
@@ -114,7 +113,6 @@ export class ApiProvider {
         }, error => {
           resolve();
           this.errorHandle.errorHandle(error);
-          console.log(error, "error");
         })
       })
     } else {

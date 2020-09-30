@@ -189,7 +189,6 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      console.log('in checkAppUpdate appcomponent');
       this.storage.get('userTokens').then(data => {
         if (data != null) {
           this.isIos = this.platform.is('ios') ? true : false;
@@ -207,7 +206,6 @@ export class AppComponent {
           this.translate.setDefaultLang('en');
           this.translate.use('en');
           this.networkService.setLang('en');
-          console.log('in checkAppUpdate appcomponent');
           this.checkAppUpdate();
           this.router.navigate(['/project-view/home']);
         } else {
@@ -228,8 +226,6 @@ export class AppComponent {
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
       this.platform.backButton.subscribeWithPriority(99999999999, () => {
-        console.log(this.modalController, "this.modalController");
-        console.log(this.popoverController, "this.popoverController");
         if (this.modalController) {
           this.modalController.dismiss();
         }
@@ -379,7 +375,6 @@ export class AppComponent {
 
   public navigate(url, title) {
     this.api.checkAppUpdate().then(data => {
-      console.log(data, "data");
       if (data) {
         this.homeService.forceAppUpdate(data);
       } else {
@@ -485,7 +480,6 @@ export class AppComponent {
         if (!this.mappedProjectsToSync) {
           this.toastService.successToast('message.already_sync');
         } else {
-          console.log(this.networkService.isConnected, "this.networkService.isConnected");
           if (this.networkService.isConnected) {
             this.autoSync();
           }
@@ -792,7 +786,6 @@ export class AppComponent {
             }
           });
         })
-        console.log('this.attachmentsList.', this.attachmentsList);
         if (this.attachmentsList.length > 0) {
           this.getUploadUrl(this.attachmentsList, filesList);
         } else {
@@ -966,12 +959,9 @@ export class AppComponent {
 
   checkAppUpdate() {
     this.api.checkAppUpdate().then(data => {
-      console.log(data, "data");
       if (data) {
         this.homeService.forceAppUpdate(data);
-        console.log('data is there');
       } else {
-        console.log('data is not there')
       }
     })
   }

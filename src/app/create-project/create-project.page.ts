@@ -220,7 +220,6 @@ export class CreateProjectPage implements OnInit {
           programId = env.programId;
         }
       });
-      console.log(this.project, "this.project._id");
       this.storage.get(LocalKeys.allProjects).then((projectsList: any) => {
         let mapped: boolean = false;
         if (projectsList) {

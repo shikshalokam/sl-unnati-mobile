@@ -407,7 +407,6 @@ export class PopoverComponent implements OnInit {
   public action(action) {
     this.toastService.startLoader('Loading, Please wait');
     this.apiProvider.checkAppUpdate().then(data => {
-      console.log(data, "checkAppUpdate in popover");
       this.toastService.stopLoader();
       if (data) {
         this.homeService.forceAppUpdate(data);
