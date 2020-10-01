@@ -19,6 +19,8 @@ import { LocalKeys } from '../../../core-module/constants/localstorage-keys';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorHandle } from '../../../error-handling.service';
 import { NetworkService } from '../../../network.service';
+import { HomeService } from 'src/app/home/home.service';
+
 declare var cordova: any;
 @Component({
   selector: 'app-popover',
@@ -48,6 +50,7 @@ export class PopoverComponent implements OnInit {
     public toastService: ToastService,
     public alertController: AlertController,
     public apiProvider: ApiProvider,
+    public homeService: HomeService,
     public projectService: ProjectService,
     public transfer: FileTransfer,
     public file: File,
@@ -158,19 +161,33 @@ export class PopoverComponent implements OnInit {
 
   // Sync project before share
   public syncProject() {
-    if (this.projectToSync[0].isEdited || this.projectToSync[0].isNew) {
-      if (this.projectToSync[0].isNew) {
-        delete this.projectToSync[0]._id;
-      }
-      if (this.projectToSync[0].tasks && this.projectToSync[0].tasks.length > 0) {
-        this.getAttachments();
-      } else {
-        this.sync();
-      }
+    if (this.networkService.isConnected) {
+      this.toastService.startLoader('Loading, Please wait');
+      this.apiProvider.checkAppUpdate().then(data => {
+        this.toastService.stopLoader();
+        if (data) {
+          this.homeService.forceAppUpdate(data);
+        } else {
+          if (this.projectToSync[0].isEdited || this.projectToSync[0].isNew) {
+            if (this.projectToSync[0].isNew) {
+              delete this.projectToSync[0]._id;
+            }
+            if (this.projectToSync[0].tasks && this.projectToSync[0].tasks.length > 0) {
+              this.getAttachments();
+            } else {
+              this.sync();
+            }
+          } else {
+            this.toastService.startLoader('Loading, please wait');
+            this.getPDF(this.project._id);
+            // this.DismissClick();
+          }
+        }
+      }, error => {
+        this.toastService.stopLoader();
+      })
     } else {
-      this.toastService.startLoader('Loading, please wait');
-      this.getPDF(this.project._id);
-      // this.DismissClick();
+      this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
   syncUpdateInLocal(syncedProjects) {
@@ -388,33 +405,42 @@ export class PopoverComponent implements OnInit {
   }
 
   public action(action) {
-    switch (action) {
-      case 'deleteProject': {
-        this.deleteConfirmation('project', this.deleteProjectConfirm);
-        break;
-      }
-      case 'shareProject': {
-        if (this.networkService.isConnected) {
-          this.syncProject();
-        } else {
-          this.toastService.errorToast('Your offline, Please try again')
+    this.toastService.startLoader('Loading, Please wait');
+    this.apiProvider.checkAppUpdate().then(data => {
+      this.toastService.stopLoader();
+      if (data) {
+        this.homeService.forceAppUpdate(data);
+      } else {
+        switch (action) {
+          case 'deleteProject': {
+            this.deleteConfirmation('project', this.deleteProjectConfirm);
+            break;
+          }
+          case 'shareProject': {
+            if (this.networkService.isConnected) {
+              this.syncProject();
+            } else {
+              this.toastService.errorToast('Your offline, Please try again')
+            }
+            break;
+          }
+          case 'shareTask': {
+            this.shareTask();
+            break;
+          }
+          case 'deleteTask': {
+            this.deleteConfirmation('task', this.deleteTaskConfirm);
+            break;
+          }
+          case 'editTask': {
+            this.taskView();
+            break;
+          }
         }
-
-        break;
       }
-      case 'shareTask': {
-        this.shareTask();
-        break;
-      }
-      case 'deleteTask': {
-        this.deleteConfirmation('task', this.deleteTaskConfirm);
-        break;
-      }
-      case 'editTask': {
-        this.taskView();
-        break;
-      }
-    }
+    }, error => {
+      this.toastService.stopLoader();
+    })
     this.DismissClick();
   }
   public shareTask() {

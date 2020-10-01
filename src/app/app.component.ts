@@ -20,7 +20,7 @@ import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppConfigs } from './core-module/constants/app.config';
-
+import { PopoverController } from '@ionic/angular';
 // import { FcmProvider } from './fcm';
 import * as jwt_decode from "jwt-decode";
 import { NotificationCardService } from './notification-card/notification.service';
@@ -79,6 +79,7 @@ export class AppComponent {
     public alertController: AlertController,
     public router: Router,
     public menuCtrl: MenuController,
+    public popoverController: PopoverController,
     public iab: InAppBrowser,
     public platform: Platform,
     public splashScreen: SplashScreen,
@@ -109,6 +110,11 @@ export class AppComponent {
       })
       this.notificationCardService.appUpdatePopUp.subscribe(data => {
         this.showUpdatePop = false;
+      })
+      this.homeService.isForceAppUpdate.subscribe(data => {
+        this.appUpdate = data;
+        this.showUpdatePopup = true;
+        this.showUpdatePop = true;
       })
       this.notificationCardService.appUpdate.subscribe(payload => {
         if (payload) {
@@ -200,15 +206,15 @@ export class AppComponent {
           this.translate.setDefaultLang('en');
           this.translate.use('en');
           this.networkService.setLang('en');
+          this.checkAppUpdate();
           this.router.navigate(['/project-view/home']);
         } else {
           this.router.navigateByUrl('/login');
         }
       })
-      if (!this.isConnected && !navigator.onLine) {
+      if (!this.networkService.isConnected && !navigator.onLine) {
         this.networkService.networkErrorToast();
       }
-
       this.platform.pause.subscribe(() => {
         localStorage.setItem('isPopUpShowen', null);
       });
@@ -216,14 +222,16 @@ export class AppComponent {
       // this.fcm.subscribeToPushNotifications();
       // this.fcm.localNotificationClickHandler();
       this.networkService.getNetworkStatus();
-      if (this.isConnected) {
-        // this.getOldDataToSync();
-      }
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
       this.platform.backButton.subscribeWithPriority(99999999999, () => {
-        this.modalController.dismiss();
+        if (this.modalController) {
+          this.modalController.dismiss();
+        }
+        if (this.popoverController) {
+          this.popoverController.dismiss();
+        }
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
@@ -366,16 +374,23 @@ export class AppComponent {
   }
 
   public navigate(url, title) {
-    if (title == 'Sync') {
-      this.files = [];
-      // this.prepareMappedProjectToSync();
-      // this.getOldDataToSync();
-      this.getAttachments();
-    } else if (title == "FAQ's") {
-      let browserRef = (<any>window).cordova.InAppBrowser.open(url, "_blank", "zoom=no");
-    } else if (url) {
-      this.router.navigate([url]);
-    }
+    this.api.checkAppUpdate().then(data => {
+      if (data) {
+        this.homeService.forceAppUpdate(data);
+      } else {
+        if (title == 'Sync') {
+          this.files = [];
+          // this.prepareMappedProjectToSync();
+          // this.getOldDataToSync();
+          this.getAttachments();
+        } else if (title == "FAQ's") {
+          let browserRef = (<any>window).cordova.InAppBrowser.open(url, "_blank", "zoom=no");
+        } else if (url) {
+          this.router.navigate([url]);
+        }
+      }
+    })
+
   }
   async presentAlertCheckbox() {
     let language: string = this.translate.currentLang;
@@ -465,7 +480,7 @@ export class AppComponent {
         if (!this.mappedProjectsToSync) {
           this.toastService.successToast('message.already_sync');
         } else {
-          if (this.isConnected) {
+          if (this.networkService.isConnected) {
             this.autoSync();
           }
         }
@@ -498,6 +513,7 @@ export class AppComponent {
             }
           });
         }
+        project._id = '5f6c21eacd2916221a377f9f';
       });
       let projects = {
         projects: this.projectsToSync
@@ -574,7 +590,7 @@ export class AppComponent {
     })
   }
   public syncOldProjects(oldProjectsToSync) {
-    if (this.isConnected) {
+    if (this.networkService.isConnected) {
       if (oldProjectsToSync.length > 0) {
         let projects = {
           projects: oldProjectsToSync
@@ -598,7 +614,7 @@ export class AppComponent {
     }
   }
   public syncOldMyProjects(oldProjectsToSync) {
-    if (this.isConnected) {
+    if (this.networkService.isConnected) {
       if (oldProjectsToSync.length > 0) {
         let projects = {
           projects: oldProjectsToSync
@@ -642,7 +658,7 @@ export class AppComponent {
 
   // get profile data
   public getProfileData() {
-    if (this.isConnected) {
+    if (this.networkService.isConnected) {
       this.storage.get('userTokens').then(data => {
         if (data) {
           let userDetails;
@@ -770,7 +786,6 @@ export class AppComponent {
             }
           });
         })
-
         if (this.attachmentsList.length > 0) {
           this.getUploadUrl(this.attachmentsList, filesList);
         } else {
@@ -892,7 +907,7 @@ export class AppComponent {
         });
       }
       this.toastService.stopLoader();
-      if (this.isConnected) {
+      if (this.networkService.isConnected) {
         this.autoSync();
       }
     }
@@ -940,5 +955,14 @@ export class AppComponent {
     this.showUpdatePopup = false;
     this.showUpdatePop = false;
     this.showAlert = true;
+  }
+
+  checkAppUpdate() {
+    this.api.checkAppUpdate().then(data => {
+      if (data) {
+        this.homeService.forceAppUpdate(data);
+      } else {
+      }
+    })
   }
 }

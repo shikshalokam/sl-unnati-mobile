@@ -10,6 +10,7 @@ import { ToastService } from '../toast.service';
 import { AppConfigs } from '../core-module/constants/app.config';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { ProjectService } from '../project-view/project.service';
+import * as uuid from 'uuid';
 @Component({
   selector: 'app-create-project',
   templateUrl: './create-project.page.html',
@@ -206,6 +207,7 @@ export class CreateProjectPage implements OnInit {
       this.project.isNew = true;
       this.project.lastUpdate = new Date();
       this.project.isStarted = false;
+      this.project.appReferenceKey = uuid.v4();
       if (!this.project.tasks) {
         this.project.tasks = [];
       }

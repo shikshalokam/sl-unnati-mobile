@@ -111,10 +111,10 @@ export class LoginPage {
     this.doOAuthStepOne().then(success => {
       this.toastService.startLoader('Loading, please wait');
       this.login.doOAuthStepTwo(success).then(success1 => {
+        this.toastService.stopLoader();
         if (success1) {
           this.checkLocalData(success1);
         }
-        this.toastService.stopLoader();
       }).catch(error1 => {
         this.toastService.stopLoader();
       })
