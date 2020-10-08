@@ -423,7 +423,7 @@ export class PopoverComponent implements OnInit {
               this.toastService.errorToast('Your offline, Please try again')
             }
             break;
-          }
+          } 
           case 'shareTask': {
             this.shareTask();
             break;
