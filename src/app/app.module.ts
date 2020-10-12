@@ -44,6 +44,7 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { Market } from '@ionic-native/market/ngx';
 import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { HTTP } from '@ionic-native/http/ngx';
 // export function createTranslateLoader(http:Http ) {
 //   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 // }
@@ -109,6 +110,7 @@ export function HttpLoaderFactory(handler: HttpBackend) {
     IOSFilePicker,
     ImagePicker,
     DocumentViewer,
+    HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: HTTP_INTERCEPTORS,

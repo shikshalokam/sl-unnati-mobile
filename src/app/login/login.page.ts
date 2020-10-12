@@ -150,9 +150,9 @@ export class LoginPage {
   }
 
   public storeToken(token) {
-    this.login.checkForCurrentUserLocalData(token);
+    // this.login.checkForCurrentUserLocalData(token);
     let userDetails = jwt_decode(token.access_token);
-    this.storage.set('userDetails', userDetails).then(userData => {
+     this.storage.set('userDetails', userDetails).then(userData => {
     })
     this.storage.set('userTokens', token).then(data => {
       localStorage.setItem('isPopUpShowen', null);
@@ -226,7 +226,6 @@ export class LoginPage {
                 });
               this.login.doLogout();
               // this.router.navigate[('/login')];
-
             }
           },
         },
