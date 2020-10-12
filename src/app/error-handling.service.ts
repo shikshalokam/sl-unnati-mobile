@@ -50,7 +50,7 @@ export class ErrorHandle {
         });
         await alert.present();
     }
-    setPopup(){
+    setPopup() {
         this.popOpen = false;
     }
 }

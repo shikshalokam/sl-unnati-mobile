@@ -109,11 +109,14 @@ export class LoginPage {
   loginClick() {
     // this.showLogin = true;
     this.doOAuthStepOne().then(success => {
+      this.toastService.startLoader('Loading, please wait');
       this.login.doOAuthStepTwo(success).then(success1 => {
+        this.toastService.stopLoader();
         if (success1) {
           this.checkLocalData(success1);
         }
       }).catch(error1 => {
+        this.toastService.stopLoader();
       })
     }).catch(error => {
     })
@@ -154,17 +157,17 @@ export class LoginPage {
     this.storage.set('userTokens', token).then(data => {
       localStorage.setItem('isPopUpShowen', null);
       this.menuCtrl.enable(true);
-      this.errorHandle.setPopup();
       if (this.veryFirstTime) {
         this.router.navigateByUrl('/app-permissions');
       } else {
         this.router.navigateByUrl('/project-view/home');
       }
       // this.fcm.initializeFCM();
-      this.login.loggedIn('true');
+      this.login.loggedIn(true);
       this.storage.set('veryFirstTime', 'false').then(data => {
         this.veryFirstTime = false;
       })
+      this.errorHandle.setPopup();
     });
     this.storage.set('currentUser', token).then(data => {
     })
@@ -214,9 +217,6 @@ export class LoginPage {
               this.confirmDataClear(tokens);
             } else {
               // this.currentUser.deactivateActivateSession(true);
-
-              this.login.doLogout();
-              // this.router.navigate[('/login')];
               this.translateService
                 .get(["toastMessage.userNameMisMatch"])
                 .subscribe((translations) => {
@@ -224,6 +224,9 @@ export class LoginPage {
                     translations["toastMessage.userNameMisMatch"]
                   );
                 });
+              this.login.doLogout();
+              // this.router.navigate[('/login')];
+
             }
           },
         },
