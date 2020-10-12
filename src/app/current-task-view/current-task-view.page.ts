@@ -15,6 +15,7 @@ import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { ActionSheetController } from '@ionic/angular';
 import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
+import { AppAvailability } from '@ionic-native/app-availability';
 declare var cordova: any;
 
 @Component({
@@ -577,7 +578,19 @@ export class CurrentTaskViewPage implements OnInit {
         this.router.navigate(["/project-view/courses", 'current-task', 'task']);
       })
     } else {
-      window.open(this.task.resources[0].link, '_self')
+      this.launchExternalApp('', 'org.shikshalokam.bodh', 'bodh://play/content/do_11309585387098112011502', this.task.resources[0].link);
     }
+  }
+  launchExternalApp(iosSchemaName: string, androidPackageName: string, appUrl: string, httpUrl: string) {
+    let app: string;
+    app = 'org.shikshalokam.bodh';
+    AppAvailability.check(app).then(
+      () => { // success callback
+        (<any>window).cordova.InAppBrowser.open(httpUrl, '_system');
+      },
+      () => { // error callback
+        (<any>window).cordova.InAppBrowser.open(httpUrl, '_system');
+      }
+    );
   }
 }

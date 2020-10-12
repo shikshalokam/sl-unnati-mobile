@@ -84,6 +84,8 @@ export class ProjectsPage {
         projects.forEach(programsList => {
           if (programsList.programs) {
             if (programsList.programs._id == this.programId) {
+              // let data = new Set(programsList.projects);
+              // console.log(data, "data");
               this.showHardcodedMyprojects = false;
             }
             programsList.projects.sort((a, b) => {
