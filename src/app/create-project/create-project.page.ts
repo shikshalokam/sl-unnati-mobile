@@ -226,7 +226,7 @@ export class CreateProjectPage implements OnInit {
           projectsList.forEach(programsList => {
             // already basic structure is there in local
             if (programsList) {
-              if (programsList.programs && programsList.programs._id == programId) {
+              if (programsList.programs && programsList.programs._id == programId && !mapped) {
                 mapped = true
                 // programsList.projects.forEach(program => {
                 if (this.createNewProject) {
@@ -256,18 +256,27 @@ export class CreateProjectPage implements OnInit {
                   });
                 }
                 // });
-              } else {
-                this.project._id = programsList.projects.length + 1;
               }
+              //  else {
+              //   this.project._id = programsList.projects.length + 1;
+              // }
             }
           });
+          this.storage.get(LocalKeys.allProjects).then(data => {
+          })
         } else {
           // if there is no basic structure is in local
           mapped = true;
           this.project._id = 1;
-          let pro1 = [{
-            projects: []
-          }]
+          let pro1 = [
+            {
+              programs: {
+                name: 'My Projects',
+                _id: programId
+              },
+              projects: []
+            }
+          ]
           pro1[0].projects.push(this.project);
           projectsList = pro1;
           this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {

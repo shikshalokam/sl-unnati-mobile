@@ -8,6 +8,8 @@ import { Network } from "@ionic-native/network/ngx";
 import { Storage } from "@ionic/storage";
 import { ToastController } from "@ionic/angular";
 import { ActivatedRoute } from "@angular/router";
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { AppAvailability } from '@ionic-native/app-availability';
 @Component({
   selector: "app-courses",
   templateUrl: "./courses.page.html",
@@ -28,7 +30,8 @@ export class CoursesPage implements OnInit {
     public location: Location,
     public appLauncher: AppLauncher,
     public toastController: ToastController,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    public inAppBrowser: InAppBrowser,
   ) {
     route.params.subscribe((param) => {
       this.level = param.level;
@@ -90,10 +93,32 @@ export class CoursesPage implements OnInit {
     }
   }
 
-  openBodh(link) {
-    // window.open(link, "_system");
-    window.open(link, '_self');
+  // openBodh(link) {
+  //   // window.open(link, "_blank");
+  //   // window.open(link, '_self');
+  //   // this.inAppBrowser.create(link, '_blank');
+  //   (<any>window).cordova.InAppBrowser.open(link, "_blank", "zoom=no");
+  // }
+
+
+
+  launchExternalApp(iosSchemaName: string, androidPackageName: string, appUrl: string, httpUrl: string) {
+    let app: string;
+    app = 'org.shikshalokam.bodh';
+    AppAvailability.check(app).then(
+      () => { // success callback
+        (<any>window).cordova.InAppBrowser.open(httpUrl, '_system');
+      },
+      () => { // error callback
+        (<any>window).cordova.InAppBrowser.open(httpUrl, '_system');
+      }
+    );
   }
+
+  openBodh(link: string) {
+    this.launchExternalApp('', 'org.shikshalokam.bodh', 'bodh://play/content/do_11309585387098112011502', link);
+  }
+
   // Location Back
   public goBack() {
     this.location.back();

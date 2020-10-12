@@ -31,6 +31,8 @@ import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-nat
 import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
 import { ErrorHandle } from './error-handling.service';
+import { LocalKeys } from './core-module/constants/localstorage-keys';
+
 declare var cordova: any;
 
 @Component({
@@ -374,23 +376,16 @@ export class AppComponent {
   }
 
   public navigate(url, title) {
-    this.api.checkAppUpdate().then(data => {
-      if (data) {
-        this.homeService.forceAppUpdate(data);
-      } else {
-        if (title == 'Sync') {
-          this.files = [];
-          // this.prepareMappedProjectToSync();
-          // this.getOldDataToSync();
-          this.getAttachments();
-        } else if (title == "FAQ's") {
-          let browserRef = (<any>window).cordova.InAppBrowser.open(url, "_blank", "zoom=no");
-        } else if (url) {
-          this.router.navigate([url]);
-        }
-      }
-    })
-
+    if (title == 'Sync') {
+      this.files = [];
+      // this.prepareMappedProjectToSync();
+      // this.getOldDataToSync();
+      this.getAttachments();
+    } else if (title == "FAQ's") {
+      let browserRef = (<any>window).cordova.InAppBrowser.open(url, "_blank", "zoom=no");
+    } else if (url) {
+      this.router.navigate([url]);
+    }
   }
   async presentAlertCheckbox() {
     let language: string = this.translate.currentLang;
@@ -443,7 +438,7 @@ export class AppComponent {
   public prepareMappedProjectToSync() {
     this.mappedProjectsToSync = false;
     this.projectsToSync = [];
-    this.storage.get('latestProjects').then(myProjects => {
+    this.storage.get(LocalKeys.allProjects).then(myProjects => {
       if (myProjects) {
         myProjects.forEach(projectList => {
           projectList.projects.forEach(project => {
@@ -513,7 +508,6 @@ export class AppComponent {
             }
           });
         }
-        project._id = '5f6c21eacd2916221a377f9f';
       });
       let projects = {
         projects: this.projectsToSync
@@ -642,7 +636,9 @@ export class AppComponent {
         sproject.isNew = false;
         sproject.isSync = true;
         sproject.isEdited = false;
-        sproject.lastUpdate = sproject.lastSync;
+        if (!sproject.lastUpdate) {
+          sproject.lastUpdate = sproject.lastSync;
+        }
         if (sproject.tasks && sproject.tasks.length > 0) {
           sproject.tasks.forEach(task => {
             task.isSync = true;
@@ -650,7 +646,7 @@ export class AppComponent {
         }
       })
     });
-    this.storage.set('latestProjects', syncedProjects).then(myprojectsff => {
+    this.storage.set(LocalKeys.allProjects, syncedProjects).then(myprojectsff => {
       this.toastService.successToast('message.sync_success');
       this.homeService.syncUpdated();
     })
@@ -753,44 +749,50 @@ export class AppComponent {
   }
 
   public getAttachments() {
-    let filesList = [];
-    this.attachmentsList = [];
-    this.projectsToSync = [];
-    this.storage.get('latestProjects').then(myProjects => {
-      if (myProjects) {
-        myProjects.forEach(projectList => {
-          projectList.projects.forEach(project => {
-            project.share = false;
-            if (project.isEdited || project.isNew) {
-              if (!project.isDeleted) {
-                if (project.tasks && project.tasks.length > 0) {
-                  project.tasks.forEach(task => {
-                    if (task.attachments) {
-                      task.attachments.forEach(attachment => {
-                        if (attachment.isNew) {
-                          let data = {
-                            taskId: task._id,
-                            data: attachment.data,
-                            name: attachment.name,
-                            type: attachment.type,
-                            isUploaded: false
-                          }
-                          this.attachmentsList.push(data);
-                          filesList.push(attachment.name)
+    this.api.checkAppUpdate().then(data => {
+      if (data) {
+        this.homeService.forceAppUpdate(data);
+      } else {
+        let filesList = [];
+        this.attachmentsList = [];
+        this.projectsToSync = [];
+        this.storage.get(LocalKeys.allProjects).then(myProjects => {
+          if (myProjects) {
+            myProjects.forEach(projectList => {
+              projectList.projects.forEach(project => {
+                project.share = false;
+                if (project.isEdited || project.isNew) {
+                  if (!project.isDeleted) {
+                    if (project.tasks && project.tasks.length > 0) {
+                      project.tasks.forEach(task => {
+                        if (task.attachments) {
+                          task.attachments.forEach(attachment => {
+                            if (attachment.isNew) {
+                              let data = {
+                                taskId: task._id,
+                                data: attachment.data,
+                                name: attachment.name,
+                                type: attachment.type,
+                                isUploaded: false
+                              }
+                              this.attachmentsList.push(data);
+                              filesList.push(attachment.name)
+                            }
+                          });
                         }
                       });
                     }
-                  });
+                  }
                 }
-              }
+              });
+            })
+            if (this.attachmentsList.length > 0) {
+              this.getUploadUrl(this.attachmentsList, filesList);
+            } else {
+              this.prepareMappedProjectToSync();
             }
-          });
+          }
         })
-        if (this.attachmentsList.length > 0) {
-          this.getUploadUrl(this.attachmentsList, filesList);
-        } else {
-          this.prepareMappedProjectToSync();
-        }
       }
     })
   }
@@ -857,7 +859,7 @@ export class AppComponent {
   }
   // map attachments to task and sync
   mapAttachments() {
-    this.storage.get('latestProjects').then(myProjects => {
+    this.storage.get(LocalKeys.allProjects).then(myProjects => {
       if (myProjects) {
         myProjects.forEach(projectList => {
           projectList.projects.forEach(project => {

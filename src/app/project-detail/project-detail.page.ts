@@ -19,6 +19,8 @@ import { AppConfigs } from '../core-module/constants/app.config';
 
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
 import { ProjectService } from '../project-view/project.service';
+import { AppAvailability } from '@ionic-native/app-availability';
+
 import * as uuid from 'uuid';
 declare var cordova: any;
 
@@ -222,7 +224,7 @@ export class ProjectDetailPage {
         });
         this.sortTasks();
       }
-      if (this.project) {
+      if (this.project && this.project.isStarted) {
         this.updateTask();
       }
     })
@@ -294,7 +296,7 @@ export class ProjectDetailPage {
         });
         this.sortTasks();
       }
-      this.storage.get('latestProjects').then(projectList => {
+      this.storage.get(LocalKeys.allProjects).then(projectList => {
         this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
           this.project = project;
           this.createProjectService.insertIntoMyProjects(this.project).then(data => {
@@ -505,7 +507,7 @@ export class ProjectDetailPage {
     cp.lastUpdate = new Date();
     this.createProjectService.updateByProjects(this.project);
     let mapped: boolean = false;
-    return this.storage.get("latestProjects").then((projectList) => {
+    return this.storage.get(LocalKeys.allProjects).then((projectList) => {
       if (projectList) {
         projectList.forEach((projectsPrograms) => {
           if (projectsPrograms) {
@@ -526,11 +528,22 @@ export class ProjectDetailPage {
                 }
               });
             } else {
+              let environment = AppConfigs.currentEnvironment;
+              let programId = '';
+              AppConfigs.environments.forEach(env => {
+                if (environment === env.name) {
+                  programId = env.programId;
+                }
+              });
               let pro1 = [
                 {
-                  projects: [],
-                },
-              ];
+                  programs: {
+                    name: 'My Projects',
+                    _id: programId
+                  },
+                  projects: []
+                }
+              ]
               pro1[0].projects.push(this.project);
               projectList = pro1;
             }
@@ -930,7 +943,21 @@ export class ProjectDetailPage {
         this.router.navigate(["/project-view/courses", this.category, 'task']);
       })
     } else {
-      window.open(task.resources[0].link, "_self");
+      this.launchExternalApp('', 'org.shikshalokam.bodh', 'bodh://play/content/do_11309585387098112011502', task.resources[0].link);
     }
+  }
+
+
+  launchExternalApp(iosSchemaName: string, androidPackageName: string, appUrl: string, httpUrl: string) {
+    let app: string;
+    app = 'org.shikshalokam.bodh';
+    AppAvailability.check(app).then(
+      () => { // success callback
+        (<any>window).cordova.InAppBrowser.open(httpUrl, '_system');
+      },
+      () => { // error callback
+        (<any>window).cordova.InAppBrowser.open(httpUrl, '_system');
+      }
+    );
   }
 }

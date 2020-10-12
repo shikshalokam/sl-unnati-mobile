@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage'
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 @Injectable({
     providedIn: 'root'
 })
@@ -7,7 +8,7 @@ export class CreateTaskService {
     project;
     constructor(public storage: Storage) { }
     public getProjectById(projectId) {
-        return this.storage.get('latestProjects').then(projectList => {
+        return this.storage.get(LocalKeys.allProjects).then(projectList => {
             projectList.forEach(programs => {
                 programs.projects.forEach(project => {
                     if (project._id == projectId) {
@@ -20,7 +21,7 @@ export class CreateTaskService {
     }
     public updateByProjects(updatedProject) {
         let mapped: boolean = false;
-        return this.storage.get('latestProjects').then(projectList => {
+        return this.storage.get(LocalKeys.allProjects).then(projectList => {
             if (projectList) {
                 projectList.forEach(projectsPrograms => {
                     if (projectsPrograms) {
