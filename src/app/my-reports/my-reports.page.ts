@@ -17,6 +17,7 @@ import { ProjectService } from '../project-view/project.service';
 import { Storage } from '@ionic/storage';
 import * as Highcharts from 'highcharts';
 import { ErrorHandle } from '../error-handling.service';
+import { HomeService } from '../home/home.service';
 declare var cordova: any;
 @Component({
   selector: 'app-my-reports',
@@ -73,6 +74,7 @@ export class MyReportsPage {
     public myReportsService: MyReportsService,
     public mySchoolsService: MyschoolsService,
     public api: ApiProvider,
+    public homeService: HomeService,
     public storage: Storage,
     public projectService: ProjectService,
     public errorHandle: ErrorHandle
@@ -147,21 +149,31 @@ export class MyReportsPage {
   }
 
   selectTab(tab) {
-    this.activeTab = tab;
-    this.tabs.forEach(element => {
-      if (element.id == tab) {
-        element.isActive = true;
+    this.toastService.startLoader('Loading, Please wait');
+    this.api.checkAppUpdate().then(data => {
+      this.toastService.stopLoader();
+      if (data) {
+        this.homeService.forceAppUpdate(data);
       } else {
-        element.isActive = false;
+        this.activeTab = tab;
+        this.tabs.forEach(element => {
+          if (element.id == tab) {
+            element.isActive = true;
+          } else {
+            element.isActive = false;
+          }
+        });
+        if (this.activeTab != 'school') {
+          this.getData();
+        } else {
+          this.schools = [];
+          this.page = 1;
+          this.getSchools();
+        }
       }
-    });
-    if (this.activeTab != 'school') {
-      this.getData();
-    } else {
-      this.schools = [];
-      this.page = 1;
-      this.getSchools();
-    }
+    }, error => {
+      this.toastService.stopLoader();
+    })
   }
 
   public getSchools(event?) {
@@ -202,29 +214,37 @@ export class MyReportsPage {
   public getReport(type: any) {
     if (this.networkService.isConnected) {
       this.toastService.startLoader('Loading, Please wait');
-      let tempData = {
-        type: type,
-        reportType: this.activeTab,
-        entityId: this.entityId,
-        name: this.mappedSchool,
-        isFullReport: false
-      }
-      this.myReportsService.getReportData(tempData).subscribe((data: any) => {
+      this.api.checkAppUpdate().then(data => {
         this.toastService.stopLoader();
-        if (data.status != 'failed') {
-          if (tempData.type === 'share') {
-            this.share(data);
-          } else {
-            this.toastService.stopLoader();
-            this.download(data);
-          }
+        if (data) {
+          this.homeService.forceAppUpdate(data);
         } else {
-          this.toastService.errorToast(data.message);
+          this.toastService.startLoader('Loading, Please wait');
+          let tempData = {
+            type: type,
+            reportType: this.activeTab,
+            entityId: this.entityId,
+            name: this.mappedSchool,
+            isFullReport: false
+          }
+          this.myReportsService.getReportData(tempData).subscribe((data: any) => {
+            this.toastService.stopLoader();
+            if (data.status != 'failed') {
+              if (tempData.type === 'share') {
+                this.share(data);
+              } else {
+                this.toastService.stopLoader();
+                this.download(data);
+              }
+            } else {
+              this.toastService.errorToast(data.message);
+            }
+          }, error => {
+            this.toastService.stopLoader();
+            this.errorHandle.errorHandle(error);
+          })
         }
-      }, error => {
-        this.toastService.stopLoader();
-        this.errorHandle.errorHandle(error);
-      })
+      }, error => { this.toastService.stopLoader(); })
     } else {
       this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');

@@ -3,9 +3,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CategoryViewService } from './category.view.service';
 import { Storage } from '@ionic/storage';
 import { ApiProvider } from '../api/api';
+import { AppConfigs } from '../core-module/constants/app.config';
 import { PopoverController } from '@ionic/angular';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: "app-category-view",
   templateUrl: "./category-view.page.html",
@@ -15,6 +17,8 @@ export class CategoryViewPage {
   back = "project-view/library";
   projects = [];
   searchInput;
+  environment;
+  programId;
   searchProjects;
   templates;
   from;
@@ -152,14 +156,31 @@ export class CategoryViewPage {
   bgcolor = "#f7f7f7";
   public getMyProjects() {
     this.showSkeleton = true;
+    let defaultProgram = [];
+    let otherPrograms = [];
+    this.environment = AppConfigs.currentEnvironment;
+    AppConfigs.environments.forEach(env => {
+      if (this.environment === env.name) {
+        this.programId = env.programId;
+      }
+    });
     this.storage.get(LocalKeys.allProjects).then(projects => {
       if (projects) {
         projects.forEach(programsList => {
-          return programsList.projects.sort((a, b) => {
-            return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
-          });
+          if (programsList.programs._id == this.programId) {
+            programsList.projects.sort((a, b) => {
+              return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+            });
+            defaultProgram.push(programsList);
+          } else {
+            programsList.projects.sort((a, b) => {
+              return <any>new Date(b.lastUpdate) - <any>new Date(a.lastUpdate);
+            });
+            otherPrograms.push(programsList);
+          }
         })
-        this.projects = projects;
+        defaultProgram = defaultProgram.concat(otherPrograms);
+        this.projects = defaultProgram;
         this.showSkeleton = false;
       }
       this.showSkeleton = false;

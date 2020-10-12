@@ -37,7 +37,6 @@ export class ErrorHandle {
             });
         const alert = await this.alertController.create({
             header: translateObject["actionSheet.sessionExpired"],
-            backdropDismiss: false,
             buttons: [
                 {
                     text: translateObject["actionSheet.login"],

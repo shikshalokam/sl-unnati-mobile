@@ -10,6 +10,7 @@ import { Storage } from '@ionic/storage';
 import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
 import { ToastService } from '../toast.service';
 import { DomSanitizer } from "@angular/platform-browser";
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 declare var cordova: any;
 
 @Component({
@@ -53,7 +54,7 @@ export class FilesPage implements OnInit {
   public getCurrentProject(id) {
     this.showSkeleton = true;
     let win: any = window;
-    this.storage.get('latestProjects').then(projectList => {
+    this.storage.get(LocalKeys.allProjects).then(projectList => {
       if (projectList.programs) {
         projectList.programs.forEach(programsList => {
           programsList.projects.forEach(project => {
