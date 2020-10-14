@@ -45,6 +45,7 @@ import { Market } from '@ionic-native/market/ngx';
 import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { HTTP } from '@ionic-native/http/ngx';
+// import { OnboardingEntityListingModalPage } from './onboarding/onboarding-entity-listing-modal/onboarding-entity-listing-modal';
 // export function createTranslateLoader(http:Http ) {
 //   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 // }
@@ -57,8 +58,10 @@ export function HttpLoaderFactory(handler: HttpBackend) {
   declarations: [
     AppComponent,
     // GetSubEntitiesPage
+    // OnboardingEntityListingModalPage
   ],
   entryComponents: [
+    // OnboardingEntityListingModalPage
   ],
   imports: [
     BrowserModule,

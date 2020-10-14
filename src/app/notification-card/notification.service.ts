@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs/Subject';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
-import {environment} from '../../environments/environment';
+import { environment } from '../../environments/environment';
 import { AppConfigs } from '../core-module/constants/app.config';
 
 @Injectable({
@@ -25,11 +25,11 @@ export class NotificationCardService {
     }
 
     markAsRead(id) {
-        return this.http.get(environment.kendra_base_url + 'v1' + AppConfigs.notification.markAsRead + id + '?appName=diksha-projects')
+        return this.http.get(environment.kendra_base_url + 'v1' + AppConfigs.notification.markAsRead + id + '?appName=dikshaprojects')
     }
 
     checkForNotificationApi() {
-        return this.http.get(environment.kendra_base_url + 'v1' + AppConfigs.notification.getUnreadNotificationCount + '?appName=diksha-projects')
+        return this.http.get(environment.kendra_base_url + 'v1' + AppConfigs.notification.getUnreadNotificationCount + '?appName=dikshaprojects')
     }
     //   getMappedAssessment(notificationMeta) {
     //     switch (notificationMeta.payload.type) {

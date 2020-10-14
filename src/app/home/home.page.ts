@@ -19,7 +19,7 @@ import { AppConfigs } from '../core-module/constants/app.config';
 import * as jwt_decode from "jwt-decode";
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { ErrorHandle } from '../error-handling.service';
-import { OnboadringServiceService } from '../core-module/onboardingService/onboadring-service.service';
+// import { OnboadringServiceService } from '../core-module/onboardingService/onboadring-service.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -91,7 +91,8 @@ export class HomePage implements OnInit {
     public mySchoolsService: MyschoolsService,
     public toastService: ToastService,
     public errorHandle: ErrorHandle,
-    public onboadringServiceService: OnboadringServiceService) {
+    // public onboadringServiceService: OnboadringServiceService
+    ) {
     this.menuCtrl.enable(true);
     this.networkService.emit.subscribe(value => {
       this.connected = value;
@@ -171,14 +172,14 @@ export class HomePage implements OnInit {
   }
 
   // Diksha profile data
-  public dikshaProfileData() {
-    this.onboadringServiceService.getProfile().then(data => {
-      // if ((data.result.roles && !data.result.roles.length) || !data.result.roles) {
-      this.openUpdateProfileAlert();
-      // }
-    }).catch(error => {
-    })
-  }
+  // public dikshaProfileData() {
+  //   this.onboadringServiceService.getProfile().then(data => {
+  //     // if ((data.result.roles && !data.result.roles.length) || !data.result.roles) {
+  //     this.openUpdateProfileAlert();
+  //     // }
+  //   }).catch(error => {
+  //   })
+  // }
 
   //  Diksha profile alert
   // async openUpdateProfileAlert() {
@@ -229,8 +230,7 @@ export class HomePage implements OnInit {
           handler: data => {
             updateClick = true;
             // this.app.getRootNav().push('OnboardingPage')
-            this.router.navigate(['/onboarding']);
-            console.log('Cancel clicked');
+            this.router.navigate(['project-view/profile-onbaording']);
           }
         },
       ],

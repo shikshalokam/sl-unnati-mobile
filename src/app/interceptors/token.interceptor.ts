@@ -6,7 +6,7 @@ import {
 } from '@angular/common/http';
 import { ApiProvider } from '../api/api';
 import { Storage } from '@ionic/storage';
-import {from } from 'rxjs';
+import { from } from 'rxjs';
 import {
     Router
 } from '@angular/router';
@@ -36,7 +36,7 @@ export class TokenInterceptor implements HttpInterceptor {
                     'x-authenticated-user-token': token.access_token,
                     'gpsLocation': '0,0',
                     'appVersion': AppConfigs.appVersion,
-                    'appName': AppConfigs.appName,
+                    'appName': 'dikshaprojects',
                     'appType': "improvement-project",
                     'os': this.platform.is('ios') ? 'ios' : 'android'
                 }
