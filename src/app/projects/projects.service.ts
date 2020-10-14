@@ -17,6 +17,6 @@ export class ProjectsService {
         return this.storage.get('projectsList');
     }
     public getAssignedProjects(type?) {
-        return this.http.get(environment.api_url + '/unnati/api/v1/all?type=' + type)
+        return this.http.get(environment.api_url + '/improvement-project/api/v1/all?type=' + type)
     }
 }

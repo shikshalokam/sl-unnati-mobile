@@ -285,7 +285,7 @@ export class TasksService {
         }
       ]
     }
-    return this.http.post(environment.api_url + '/unnati/api/v1/taskSync', jsonPrepare, { headers: httpHeaders });
+    return this.http.post(environment.api_url + '/improvement-project/api/v1/taskSync', jsonPrepare, { headers: httpHeaders });
   }
 
   public modalActive(value) {
@@ -297,6 +297,6 @@ export class TasksService {
     let httpHeaders = new HttpHeaders({
       'x-auth-token': token
     })
-    return this.http.get(environment.api_url + '/unnati/api/v1/getTaskDetailsById/' + data.taskId, { headers: httpHeaders })
+    return this.http.get(environment.api_url + '/improvement-project/api/v1/getTaskDetailsById/' + data.taskId, { headers: httpHeaders })
   }
 }

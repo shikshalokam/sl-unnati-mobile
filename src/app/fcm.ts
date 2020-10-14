@@ -8,6 +8,7 @@ import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { NotificationCardService } from './notification-card/notification.service';
 import { environment } from '../environments/environment';
+import { AppConfigs } from './core-module/constants/app.config';
 @Injectable()
 export class FcmProvider {
 
@@ -88,7 +89,7 @@ export class FcmProvider {
                         refresh_token: parsedData.refresh_token,
                     };
                     this.localStorage.set('userTokens', userTokens).then(usertoken => {
-                        const url = environment.notification.kendra_base_url + 'v1' + environment.notification.registerDevice;
+                        const url = environment.kendra_base_url + 'v1' + AppConfigs.notification.registerDevice;
                         const payload = {
                             deviceId: this.fcmDeviceId,
                             os: this.platform.is('android') ? 'android' : 'ios',

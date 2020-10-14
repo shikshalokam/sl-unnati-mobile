@@ -132,4 +132,4 @@ export class AppModule {
     this.statusBar.backgroundColorByHexString('#fff');
   }
 }
-platformBrowserDynamic().bootstrapModule(AppModule);
+// platformBrowserDynamic().bootstrapModule(AppModule);

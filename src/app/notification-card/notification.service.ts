@@ -4,6 +4,8 @@ import { Subject } from 'rxjs/Subject';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
 import {environment} from '../../environments/environment';
+import { AppConfigs } from '../core-module/constants/app.config';
+
 @Injectable({
     providedIn: 'root',
 })
@@ -19,15 +21,15 @@ export class NotificationCardService {
         // this.startNotificationPooling();
     }
     public getAllNotifications(pageCount, limit) {
-        return this.http.get(environment.notification.kendra_base_url + 'v1' + environment.notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit)
+        return this.http.get(environment.kendra_base_url + 'v1' + AppConfigs.notification.getAllNotifications + '?page=' + pageCount + '&limit=' + limit)
     }
 
     markAsRead(id) {
-        return this.http.get(environment.notification.kendra_base_url + 'v1' + environment.notification.markAsRead + id + '?appName=unnati')
+        return this.http.get(environment.kendra_base_url + 'v1' + AppConfigs.notification.markAsRead + id + '?appName=diksha-projects')
     }
 
     checkForNotificationApi() {
-        return this.http.get(environment.notification.kendra_base_url + 'v1' + environment.notification.getUnreadNotificationCount + '?appName=unnati')
+        return this.http.get(environment.kendra_base_url + 'v1' + AppConfigs.notification.getUnreadNotificationCount + '?appName=diksha-projects')
     }
     //   getMappedAssessment(notificationMeta) {
     //     switch (notificationMeta.payload.type) {

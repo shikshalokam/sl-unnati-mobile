@@ -19,16 +19,16 @@ export class MyReportsService {
     ) {
     }
     public getReports(state, entity?) {
-        return this.http.get(environment.api_url + '/unnati/api/v1/reports/getMonthViseReport?reportType=' + state + '?entityId=' + entity)
+        return this.http.get(environment.api_url + '/improvement-project/api/v1/reports/getMonthViseReport?reportType=' + state + '?entityId=' + entity)
     }
     public getFullReports(state, entity) {
-        return this.http.get(environment.api_url + '/unnati/api/v1/reports/getDetailViewReport?reportType=' + state + '?entityId=' + entity)
+        return this.http.get(environment.api_url + '/improvement-project/api/v1/reports/getDetailViewReport?reportType=' + state + '?entityId=' + entity)
     }
     public getReportData(entity) {
-        return this.http.get(environment.api_url + '/unnati/api/v1/reports/getMonthlyOrQuarterReportPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
+        return this.http.get(environment.api_url + '/improvement-project/api/v1/reports/getMonthlyOrQuarterReportPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
     }
     public getFullReportData(entity) {
-        return this.http.get(environment.api_url + '/unnati/api/v1/reports/getFullMonthlyOrQuarterPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
+        return this.http.get(environment.api_url + '/improvement-project/api/v1/reports/getFullMonthlyOrQuarterPdf?reportType=' + entity.reportType + '&schoolName=' + entity.name + '&' + entity.entityId)
     }
     public share(data) {
         this.shareEvent.next(data);

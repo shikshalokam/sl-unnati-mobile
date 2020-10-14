@@ -45,7 +45,7 @@ export class HomeService {
     this.profileUpdateEvent.next(data);
   }
   public checkAppUpdate() {
-    return this.http.get(environment.api_url + '/unnati/api/v1/forceAppUpdateCheck');
+    return this.http.get(environment.api_url + '/improvement-project/api/v1/forceAppUpdateCheck');
   }
   public forceAppUpdate(data) {
     this.isForceAppUpdate.next(data);

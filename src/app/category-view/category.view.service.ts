@@ -26,7 +26,7 @@ export class CategoryViewService {
   }
   //  get projects by category
   public getTemplatesByCategory() {
-    return this.http.get(environment.api_url + '/unnati/api/v1/template/all')
+    return this.http.get(environment.api_url + '/improvement-project/api/v1/template/all')
   }
 
   //  delete project event
@@ -36,6 +36,6 @@ export class CategoryViewService {
 
   // get pdf of project
   public getPDF(data) {
-    return this.http.post(environment.api_url + '/unnati/api/v1/getProjectPdf', data)
+    return this.http.post(environment.api_url + '/improvement-project/api/v1/getProjectPdf', data)
   }
 }

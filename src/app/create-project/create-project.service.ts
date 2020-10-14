@@ -160,13 +160,13 @@ export class CreateProjectService {
     }
 
     public getTaskPDF(data) {
-        return this.http.post(environment.api_url + '/unnati/api/v1/reports/shareTaskPdf', data);
+        return this.http.post(environment.api_url + '/improvement-project/api/v1/reports/shareTaskPdf', data);
     }
     public addNewTaskIntoProject(task) {
         this.addNewTask.next(task);
     }
 
     public getTemplate(templateId) {
-        return this.http.get(environment.api_url + '/unnati/api/v1/template/getTemplateDetailsById/' + templateId)
+        return this.http.get(environment.api_url + '/improvement-project/api/v1/template/getTemplateDetailsById/' + templateId)
     }
 }

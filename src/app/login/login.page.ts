@@ -15,6 +15,7 @@ import { environment } from '../../environments/environment';
 import { AlertController } from '@ionic/angular';
 import { ToastService } from '../toast.service';
 import { ErrorHandle } from '../error-handling.service';
+import { DikshaLoginService } from '../core-module/diksha-login/diksha-login.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -46,7 +47,8 @@ export class LoginPage {
     public toastService: ToastService,
     public alertController: AlertController,
     public splashScreen: SplashScreen,
-    public errorHandle: ErrorHandle) {
+    public errorHandle: ErrorHandle,
+    public dikshaLoginService: DikshaLoginService) {
   }
   slideOpts = {
     initialSlide: 0,
@@ -105,21 +107,27 @@ export class LoginPage {
       }
     })
   }
+
+  
   // Login call
   loginClick() {
     // this.showLogin = true;
-    this.doOAuthStepOne().then(success => {
-      this.toastService.startLoader('Loading, please wait');
-      this.login.doOAuthStepTwo(success).then(success1 => {
-        this.toastService.stopLoader();
-        if (success1) {
-          this.checkLocalData(success1);
-        }
-      }).catch(error1 => {
-        this.toastService.stopLoader();
-      })
-    }).catch(error => {
-    })
+    // this.doOAuthStepOne().then(success => {
+    //   this.toastService.startLoader('Loading, please wait');
+    //   this.login.doOAuthStepTwo(success).then(success1 => {
+    //     this.toastService.stopLoader();
+    //     if (success1) {
+    //       this.checkLocalData(success1);
+    //     }
+    //   }).catch(error1 => {
+    //     this.toastService.stopLoader();
+    //   })
+    // }).catch(error => {
+    // })
+  }
+
+  dikshaLogin() {
+    this.dikshaLoginService.getFormApi();
   }
 
   slideDidChangePrev(event) {
@@ -152,7 +160,7 @@ export class LoginPage {
   public storeToken(token) {
     // this.login.checkForCurrentUserLocalData(token);
     let userDetails = jwt_decode(token.access_token);
-     this.storage.set('userDetails', userDetails).then(userData => {
+    this.storage.set('userDetails', userDetails).then(userData => {
     })
     this.storage.set('userTokens', token).then(data => {
       localStorage.setItem('isPopUpShowen', null);

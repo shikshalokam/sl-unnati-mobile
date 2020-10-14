@@ -12,15 +12,15 @@ export class ReportsService {
     }
     public getReports(limit, page) {
 
-        return this.http.get(environment.api_url + '/unnati/api/v1/reports/reportsList?limit=100&page=0&search=' + limit + '&page=' + page)
+        return this.http.get(environment.api_url + '/improvement-project/api/v1/reports/reportsList?limit=100&page=0&search=' + limit + '&page=' + page)
     }
 
     public getReportFile(id) {
 
-        return this.http.get(environment.api_url + '/unnati/api/v1/reports/getObservationReport?observationId=' + id)
+        return this.http.get(environment.api_url + '/improvement-project/api/v1/reports/getObservationReport?observationId=' + id)
     }
     //  search reports
     public searchReports(keyword) {
-        return this.http.get(environment.api_url + '/unnati/api/v1/reports/reportsList?limit=100&page=0&search=' + keyword)
+        return this.http.get(environment.api_url + '/improvement-project/api/v1/reports/reportsList?limit=100&page=0&search=' + keyword)
     }
 }

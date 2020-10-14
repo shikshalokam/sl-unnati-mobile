@@ -36,7 +36,7 @@
         <div class="container">
           <ion-icon name="ios-key" style="font-size: 6em;color: #777;"></ion-icon>
         </div>
-        <a (click)="loginClick()">
+        <a (click)="dikshaLogin()">
           <div>
             <h1>
               LOGIN
@@ -53,10 +53,10 @@
 
 </ion-content>
 <ion-footer class="ion-footer-custom">
-  <ion-button *ngIf="buttonTitle == 'Skip'" expand="block" (click)="loginClick()">
+  <ion-button *ngIf="buttonTitle == 'Skip'" expand="block" (click)="dikshaLogin()">
     {{ buttonTitle }}
   </ion-button>
-  <ion-button *ngIf="buttonTitle == 'Get started'" class="brdr-radius-30" (click)="loginClick()">
+  <ion-button *ngIf="buttonTitle == 'Get started'" class="brdr-radius-30" (click)="dikshaLogin()">
     {{ buttonTitle }}
   </ion-button>
 </ion-footer>
