@@ -15,7 +15,7 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { Platform } from '@ionic/angular';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { PopoverController } from '@ionic/angular';
-import { AppConfigs } from '../core-module/constants/app.config';
+import { AppConfigs } from '../core-module/constants/api.config';
 
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
 import { ProjectService } from '../project-view/project.service';

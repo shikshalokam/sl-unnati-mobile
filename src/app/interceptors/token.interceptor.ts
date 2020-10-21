@@ -10,7 +10,7 @@ import {from } from 'rxjs';
 import {
     Router
 } from '@angular/router';
-import { AppConfigs } from '../core-module/constants/app.config';
+import { AppConfigs } from '../core-module/constants/api.config';
 import { ToastController, Platform } from '@ionic/angular';
 
 @Injectable()

@@ -19,7 +19,7 @@ import { HomeService } from './home/home.service';
 import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { AppConfigs } from './core-module/constants/app.config';
+import { AppConfigs } from './core-module/constants/api.config';
 import { PopoverController } from '@ionic/angular';
 // import { FcmProvider } from './fcm';
 import * as jwt_decode from "jwt-decode";

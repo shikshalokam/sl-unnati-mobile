@@ -57,6 +57,8 @@ export class CreateTaskPage implements OnInit {
     this.prepareForm();
     this.today = this.datepipe.transform(this.today, 'dd-MM-yyyy');
   }
+
+  
   //Form preparing
   public prepareForm() {
     this.addTask = this.formBuilder.group({

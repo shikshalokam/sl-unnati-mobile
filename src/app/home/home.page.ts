@@ -15,7 +15,7 @@ import { MyschoolsService } from '../myschools/myschools.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
-import { AppConfigs } from '../core-module/constants/app.config';
+import { AppConfigs } from '../core-module/constants/api.config';
 import * as jwt_decode from "jwt-decode";
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { ErrorHandle } from '../error-handling.service';

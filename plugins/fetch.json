@@ -269,18 +269,23 @@
   "cordova-plugin-telerik-imagepicker": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-telerik-imagepicker"
+      "id": "cordova-plugin-telerik-imagepicker@^2.3.3"
     },
     "is_top_level": true,
-    "variables": {}
+    "variables": {
+      "PHOTO_LIBRARY_USAGE_DESCRIPTION": " ",
+      "ANDROID_SUPPORT_V7_VERSION": "27.+"
+    }
   },
   "cordova-android-support-gradle-release": {
     "source": {
       "type": "registry",
-      "id": "cordova-android-support-gradle-release"
+      "id": "cordova-android-support-gradle-release@^3.0.1"
     },
     "is_top_level": true,
-    "variables": {}
+    "variables": {
+      "ANDROID_SUPPORT_VERSION": "27.+"
+    }
   },
   "cordova-sqlite-storage": {
     "source": {
@@ -293,7 +298,7 @@
   "cordova-plugin-add-swift-support": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-add-swift-support"
+      "id": "cordova-plugin-add-swift-support@2.0.2"
     },
     "is_top_level": true,
     "variables": {}
@@ -301,7 +306,7 @@
   "cordova-plugin-advanced-http": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-advanced-http"
+      "id": "cordova-plugin-advanced-http@^3.0.1"
     },
     "is_top_level": true,
     "variables": {}
