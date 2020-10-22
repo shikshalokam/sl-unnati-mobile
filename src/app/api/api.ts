@@ -10,8 +10,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HomeService } from '../home/home.service';
 import { NetworkService } from '../network.service';
 import { ToastService } from '../toast.service';
-import { AppConfigs } from '../core-module/constants/app.config'
-ToastService
+
 @Injectable()
 export class ApiProvider {
   constructor(
@@ -32,10 +31,6 @@ export class ApiProvider {
   }
 
   errorTokenRetryCount: number = 0;
-
-
-
-
 
   refershToken(refreshToken) {
     const body = new URLSearchParams();
