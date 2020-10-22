@@ -32,7 +32,7 @@ import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
 import { ErrorHandle } from './error-handling.service';
 import { LocalKeys } from './core-module/constants/localstorage-keys';
-
+import * as uuid from 'uuid';
 declare var cordova: any;
 
 @Component({
@@ -477,6 +477,8 @@ export class AppComponent {
         } else {
           if (this.networkService.isConnected) {
             this.autoSync();
+          }else{
+            this.toastService.errorToast('message.nerwork_connection_check');
           }
         }
       } else {
@@ -507,6 +509,9 @@ export class AppComponent {
               project.programId = env.programId;
             }
           });
+        }
+        if (!project.appReferenceKey) {
+          project.appReferenceKey = uuid.v4();
         }
       });
       let projects = {
@@ -911,6 +916,8 @@ export class AppComponent {
       this.toastService.stopLoader();
       if (this.networkService.isConnected) {
         this.autoSync();
+      }else{
+        this.toastService.errorToast('message.nerwork_connection_check');
       }
     }
     )
