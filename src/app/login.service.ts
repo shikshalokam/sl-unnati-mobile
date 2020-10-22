@@ -74,7 +74,6 @@ export class Login {
     });
   }
 
-
   checkForCurrentUserLocalData(tokens) {
     const loggedinUserId = this.currentUser.getDecodedAccessToken(tokens.access_token).sub;
     const currentUserId = this.currentUser.getCurrentUserData() ? this.currentUser.getCurrentUserData().sub : null;

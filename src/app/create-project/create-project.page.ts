@@ -198,7 +198,7 @@ export class CreateProjectPage implements OnInit {
       }
     }
     this.project.category = this.checkedCategories;
-    if (this.createProject.status == "INVALID" || !this.isValidDate && (!this.project.category && this.project.category.length == 0)) {
+    if (this.project.category.length <1 || (this.createProject.status == "INVALID" || !this.isValidDate)) {
       this.markLabelsAsInvalid = true;
     } else {
       this.markLabelsAsInvalid = false;
