@@ -146,4 +146,5 @@
     <allow-navigation href="http://localhost:8104" sessionid="e0fe3cd2" />
     <engine name="android" spec="^8.1.0" />
     <engine name="ios" spec="^5.1.1" />
+    <engine name="android" spec="^9.0.0" />
 </widget>

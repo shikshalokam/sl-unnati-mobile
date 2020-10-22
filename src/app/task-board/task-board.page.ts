@@ -31,30 +31,32 @@ export class TaskBoardPage {
     this.ongoing = [];
     this.past = [];
     this.storage.get(LocalKeys.allProjects).then(projects => {
-      this.showSkeleton = true;
-      projects.forEach(programsList => {
-        if (programsList.projects) {
-          programsList.projects.forEach(project => {
-            let count = 0;
-            if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
-              project.tasks.forEach(task => {
-                task.status = task.status.toLowerCase()
-                if (task.status == 'completed') {
-                  if (count == 0) {
-                    this.ongoing.push(task);
-                    count++;
+      if(projects){
+        this.showSkeleton = true;
+        projects.forEach(programsList => {
+          if (programsList.projects) {
+            programsList.projects.forEach(project => {
+              let count = 0;
+              if (!project.isDeleted && project.isStarted && project.tasks && project.tasks.length > 0) {
+                project.tasks.forEach(task => {
+                  task.status = task.status.toLowerCase()
+                  if (task.status == 'completed') {
+                    if (count == 0) {
+                      this.ongoing.push(task);
+                      count++;
+                    } else {
+                      this.past.push(task);
+                    }
                   } else {
-                    this.past.push(task);
+                    this.ongoing.push(task);
                   }
-                } else {
-                  this.ongoing.push(task);
-                }
-              });
-            }
-          });
-          this.showSkeleton = false;
-        }
-      });
+                });
+              }
+            });
+            this.showSkeleton = false;
+          }
+        });
+      }
     })
   }
   public selectTab(tab) {
