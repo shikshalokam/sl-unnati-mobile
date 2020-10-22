@@ -287,6 +287,16 @@
       "ANDROID_SUPPORT_VERSION": "27.+"
     }
   },
+  "cordova-sqlite-storage": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-sqlite-storage@2.6.0"
+    },
+    "is_top_level": true,
+    "variables": {
+      "ANDROID_SUPPORT_VERSION": "27.+"
+    }
+  },
   "cordova-plugin-add-swift-support": {
     "source": {
       "type": "registry",
