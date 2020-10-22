@@ -264,6 +264,7 @@ export class CreateTasksComponent implements OnInit {
   public saveFile(imageData, newFileName, newAttachment) {
     let currentPath = imageData.substr(0, imageData.lastIndexOf('/') + 1).toString();
     let currentName = imageData.substring(imageData.lastIndexOf('/') + 1, imageData.length).toString();
+    currentName=currentName.split("?")[0]
     if (this.isIos) {
       this.file.checkDir(this.file.documentsDirectory, 'attachments').then(_ => {
         this.file.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {
