@@ -17,7 +17,7 @@
             font-size: 30px;
             color: #000;
             margin-top: 5px;" (click)="share()"></ion-icon>
-            <span class="label"
+            <span class="label" (click) = "openDate(data.label)"
               [ngClass]="{'required-field':submitAttempt && data.required && !data.value}">{{data.label}} <span
                 *ngIf="data.required" class="required-field"> * </span></span>
           </div>
@@ -25,7 +25,7 @@
             [formControlName]="data.field" [(ngModel)]="data.value">
           </ion-input>
           <ion-datetime (ionChange)="setDate($event,data)" min="2000" max="2100" display-timezone="utc"
-            [formControlName]="data.field" *ngIf="data.type == 'date'" value={{data.value}}
+            [formControlName]="data.field" *ngIf="data.type == 'date'" #picker value={{data.value}}
             style="font-weight: 600; border-bottom: 1px solid #ccc;">
           </ion-datetime>
           <ion-textarea *ngIf="data.type == 'text-area'" [formControlName]="data.field" rows="2"
