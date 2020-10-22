@@ -33,10 +33,6 @@ export class ApiProvider {
   errorTokenRetryCount: number = 0;
 
   refershToken(refreshToken) {
-    const body = new URLSearchParams();
-    body.set('grant_type', "refresh_token");
-    body.set('client_id', environment.clientId);
-    body.set('client_secret', environment.api_key);
     const obj = 'grant_type=refresh_token&refresh_token=' + refreshToken + "&client_id=" + environment.clientId;
     const url = environment.app_url + environment.keyCloak.getAccessToken;
     let options = {
