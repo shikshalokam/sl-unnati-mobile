@@ -8,7 +8,7 @@ import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../toast.service';
 import { HomeService } from '../home/home.service';
-import { AppConfigs } from '../core-module/constants/api.config';
+import { AppConfigs } from '../core-module/constants/app.config';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { ErrorHandle } from '../error-handling.service';
 @Component({

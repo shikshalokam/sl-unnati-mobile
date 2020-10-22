@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { HomeService } from '../home/home.service';
 import { ToastService } from '../toast.service';
-import { AppConfigs } from '../core-module/constants/api.config';
+import { AppConfigs } from '../core-module/constants/app.config';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { ProjectService } from '../project-view/project.service';
 import * as uuid from 'uuid';

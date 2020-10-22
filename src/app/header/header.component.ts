@@ -9,7 +9,7 @@ import { HomeService } from '../home/home.service';
 import { Platform } from '@ionic/angular';
 import { UpdateProfileService } from '../update-profile/update-profile.service';
 import { NetworkService } from '../network.service';
-import { AppConfigs } from '../core-module/constants/api.config';
+import { AppConfigs } from '../core-module/constants/app.config';
 import { Location } from '@angular/common';
 import { ErrorHandle } from '../error-handling.service';
 // import { AppVersion } from '@ionic-native/app-version';

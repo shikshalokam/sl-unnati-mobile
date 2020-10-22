@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CategoryViewService } from './category.view.service';
 import { Storage } from '@ionic/storage';
 import { ApiProvider } from '../api/api';
-import { AppConfigs } from '../core-module/constants/api.config';
+import { AppConfigs } from '../core-module/constants/app.config';
 import { PopoverController } from '@ionic/angular';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
