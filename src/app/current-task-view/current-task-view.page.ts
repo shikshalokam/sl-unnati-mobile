@@ -467,6 +467,7 @@ export class CurrentTaskViewPage implements OnInit {
   public saveFile(imageData, newFileName, newAttachment) {
     let currentPath = imageData.substr(0, imageData.lastIndexOf('/') + 1).toString();
     let currentName = imageData.substring(imageData.lastIndexOf('/') + 1, imageData.length).toString();
+        currentName = currentName.split("?")[0];
     if (this.isIos) {
       this.files.checkDir(this.files.documentsDirectory, 'attachments').then(_ => {
         this.files.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {

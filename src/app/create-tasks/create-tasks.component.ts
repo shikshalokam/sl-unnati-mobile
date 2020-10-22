@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
@@ -9,7 +9,7 @@ import { CreateProjectService } from '../create-project/create-project.service';
 import { MyReportsService } from '../my-reports/my-reports.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
-import { Platform } from '@ionic/angular';
+import { IonDatetime, Platform } from '@ionic/angular';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
@@ -36,6 +36,7 @@ export class CreateTasksComponent implements OnInit {
   showForm: boolean = false
   formContent: FormGroup;
   connected;
+  @ViewChild('picker') picker;
   constructor(
     private base64: Base64,
     public datepipe: DatePipe,
@@ -66,6 +67,13 @@ export class CreateTasksComponent implements OnInit {
   ngOnInit() {
     if (this.data) {
       this.prepareForm();
+    }
+  }
+
+
+  openDate(data){
+    if(data === 'End Date') {
+      this.picker.open()
     }
   }
 
@@ -264,6 +272,7 @@ export class CreateTasksComponent implements OnInit {
   public saveFile(imageData, newFileName, newAttachment) {
     let currentPath = imageData.substr(0, imageData.lastIndexOf('/') + 1).toString();
     let currentName = imageData.substring(imageData.lastIndexOf('/') + 1, imageData.length).toString();
+    currentName=currentName.split("?")[0]
     if (this.isIos) {
       this.file.checkDir(this.file.documentsDirectory, 'attachments').then(_ => {
         this.file.copyFile(currentPath, currentName, this.appFolderPath, newFileName).then(success => {

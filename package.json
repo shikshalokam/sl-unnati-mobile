@@ -56,7 +56,7 @@
     "@ionic-native/status-bar": "^5.17.0",
     "@ionic/angular": "^4.11.0",
     "@ionic/pro": "2.0.4",
-    "@ionic/storage": "^2.2.0",
+    "@ionic/storage": "2.2.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "build": "0.1.4",
@@ -204,7 +204,8 @@
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-telerik-imagepicker": {
-        "PHOTO_LIBRARY_USAGE_DESCRIPTION": " "
+        "PHOTO_LIBRARY_USAGE_DESCRIPTION": " ",
+        "ANDROID_SUPPORT_V7_VERSION": "27.+"
       },
       "cordova-android-support-gradle-release": {
         "ANDROID_SUPPORT_VERSION": "27.+"
