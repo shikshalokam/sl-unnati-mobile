@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NetworkService } from '../network.service';
-import { AppConfigs } from '../app.config';
+import { AppConfigs } from '../core-module/constants/app.config';
 import { Network } from '@ionic-native/network/ngx';
 import { CurrentUserProvider } from '../current-user';
 import { Router } from '@angular/router';
