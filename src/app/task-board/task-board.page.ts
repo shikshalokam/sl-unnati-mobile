@@ -59,7 +59,7 @@ export class TaskBoardPage {
   }
   public selectTab(tab) {
     this.showSkeleton = true;
-    this.activeTab = tab;
+    this.activeTab = tab.detail.value;
     this.showSkeleton = false;
   }
 }

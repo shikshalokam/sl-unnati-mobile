@@ -27,7 +27,7 @@ const routes: Routes = [
       { path: 'school-task-report/:id/:name', loadChildren: '../school-task-report/school-task-report.module#SchoolTaskReportPageModule' },
       { path: 'subtask-status', loadChildren: '../subtask-status/subtask-status.module#SubtaskStatusPageModule' },
       { path: 'courses', loadChildren: '../courses/courses.module#CoursesPageModule' },
-      { path: 'courses/:cat', loadChildren: '../courses/courses.module#CoursesPageModule' },
+      { path: 'courses/:cat/:level', loadChildren: '../courses/courses.module#CoursesPageModule' },
       { path: 'courses/:cat/:projectId', loadChildren: '../courses/courses.module#CoursesPageModule' },
       { path: 'courses/:cat/:projectId/:programId', loadChildren: '../courses/courses.module#CoursesPageModule' },
       { path: 'status/:id', loadChildren: '../charts/charts.module#ChartsPageModule' },

@@ -10,6 +10,7 @@ import { ToastService } from '../toast.service';
 import { AppConfigs } from '../core-module/constants/app.config';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { ProjectService } from '../project-view/project.service';
+import * as uuid from 'uuid';
 @Component({
   selector: 'app-create-project',
   templateUrl: './create-project.page.html',
@@ -71,7 +72,7 @@ export class CreateProjectPage implements OnInit {
         this.prepareForm();
         this.createNewProject = true;
         this.checkedCategories = [];
-        this.today = this.datepipe.transform(this.today, 'dd-MM-yyyy');
+        this.today = this.datepipe.transform(this.today, 'MM-dd-yyyy');
       } else {
         this.createNewProject = false;
         this.storage.get(LocalKeys.newcreatedproject).then(data => {
@@ -206,6 +207,7 @@ export class CreateProjectPage implements OnInit {
       this.project.isNew = true;
       this.project.lastUpdate = new Date();
       this.project.isStarted = false;
+      this.project.appReferenceKey = uuid.v4();
       if (!this.project.tasks) {
         this.project.tasks = [];
       }
@@ -224,7 +226,7 @@ export class CreateProjectPage implements OnInit {
           projectsList.forEach(programsList => {
             // already basic structure is there in local
             if (programsList) {
-              if (programsList.programs && programsList.programs._id == programId) {
+              if (programsList.programs && programsList.programs._id == programId && !mapped) {
                 mapped = true
                 // programsList.projects.forEach(program => {
                 if (this.createNewProject) {
@@ -254,18 +256,27 @@ export class CreateProjectPage implements OnInit {
                   });
                 }
                 // });
-              } else {
-                this.project._id = programsList.projects.length + 1;
               }
+              //  else {
+              //   this.project._id = programsList.projects.length + 1;
+              // }
             }
           });
+          this.storage.get(LocalKeys.allProjects).then(data => {
+          })
         } else {
           // if there is no basic structure is in local
           mapped = true;
           this.project._id = 1;
-          let pro1 = [{
-            projects: []
-          }]
+          let pro1 = [
+            {
+              programs: {
+                name: 'My Projects',
+                _id: programId
+              },
+              projects: []
+            }
+          ]
           pro1[0].projects.push(this.project);
           projectsList = pro1;
           this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {

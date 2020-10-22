@@ -18,6 +18,9 @@ import { ProjectService } from '../app/project-view/project.service';
 import { HomeService } from './home/home.service';
 import { ToastService } from './toast.service';
 import { LoadingController } from '@ionic/angular';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { AppConfigs } from './core-module/constants/app.config';
+import { PopoverController } from '@ionic/angular';
 // import { FcmProvider } from './fcm';
 import * as jwt_decode from "jwt-decode";
 import { NotificationCardService } from './notification-card/notification.service';
@@ -27,6 +30,9 @@ import { TemplateViewPage } from './template-view/template-view.page';
 import { FileTransfer, FileTransferObject, FileUploadOptions, } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { NgZone } from '@angular/core';
+import { ErrorHandle } from './error-handling.service';
+import { LocalKeys } from './core-module/constants/localstorage-keys';
+
 declare var cordova: any;
 
 @Component({
@@ -75,6 +81,8 @@ export class AppComponent {
     public alertController: AlertController,
     public router: Router,
     public menuCtrl: MenuController,
+    public popoverController: PopoverController,
+    public iab: InAppBrowser,
     public platform: Platform,
     public splashScreen: SplashScreen,
     public statusBar: StatusBar,
@@ -93,6 +101,7 @@ export class AppComponent {
     public categoryViewService: CategoryViewService,
     public notificationCardService: NotificationCardService,
     private deeplinks: Deeplinks,
+    private errorHandle: ErrorHandle,
     private file: File,
     private transfer: FileTransfer,
   ) {
@@ -103,6 +112,11 @@ export class AppComponent {
       })
       this.notificationCardService.appUpdatePopUp.subscribe(data => {
         this.showUpdatePop = false;
+      })
+      this.homeService.isForceAppUpdate.subscribe(data => {
+        this.appUpdate = data;
+        this.showUpdatePopup = true;
+        this.showUpdatePop = true;
       })
       this.notificationCardService.appUpdate.subscribe(payload => {
         if (payload) {
@@ -128,9 +142,6 @@ export class AppComponent {
       this.loginService.emit.subscribe(value => {
         this.loggedInUser = value;
         if (this.loggedInUser) {
-          // this.subscription = this.interval.subscribe(val => {
-          //   this.prepareMappedProjectToSync();
-          // });
           this.menuCtrl.enable(true, 'unnati');
           this.loggedInUser = value;
           this.appPages = [
@@ -163,7 +174,12 @@ export class AppComponent {
                   icon: 'globe'
                 },
               ]
-            }
+            },
+            {
+              title: "FAQ's",
+              url: 'https://wiki.shikshalokam.org/faqs/',
+              icon: 'help'
+            },
           ];
         } else {
           this.appPages = [];
@@ -192,46 +208,32 @@ export class AppComponent {
           this.translate.setDefaultLang('en');
           this.translate.use('en');
           this.networkService.setLang('en');
+          this.checkAppUpdate();
           this.router.navigate(['/project-view/home']);
         } else {
           this.router.navigateByUrl('/login');
         }
       })
-      if (!this.isConnected && !navigator.onLine) {
+      if (!this.networkService.isConnected && !navigator.onLine) {
         this.networkService.networkErrorToast();
       }
-
       this.platform.pause.subscribe(() => {
         localStorage.setItem('isPopUpShowen', null);
       });
       // this.fcm.connectSubscription.unsubscribe();
       // this.fcm.subscribeToPushNotifications();
       // this.fcm.localNotificationClickHandler();
-      this.network.onDisconnect()
-        .subscribe(() => {
-          this.isConnected = false;
-          this.networkService.networkErrorToast();
-          this.networkService.status(this.isConnected);
-          localStorage.setItem("networkStatus", this.isConnected);
-        });
-      this.network.onConnect()
-        .subscribe(() => {
-          this.isConnected = true;
-          this.networkService.status(this.isConnected);
-          setTimeout(() => {
-            if (this.network.type === 'wifi') {
-            }
-          }, 15000);
-          localStorage.setItem("networkStatus", this.isConnected);
-        });
-      if (this.isConnected) {
-        // this.getOldDataToSync();
-      }
+      this.networkService.getNetworkStatus();
       // this.networkSubscriber();
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#fff');
       this.platform.backButton.subscribeWithPriority(99999999999, () => {
-        this.modalController.dismiss();
+        if (this.modalController) {
+          this.modalController.dismiss();
+        }
+        if (this.popoverController) {
+          this.popoverController.dismiss();
+        }
         const tree: UrlTree = this.router.parseUrl(this.router.url);
         const g: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
         const s: UrlSegment[] = g.segments;
@@ -379,6 +381,8 @@ export class AppComponent {
       // this.prepareMappedProjectToSync();
       // this.getOldDataToSync();
       this.getAttachments();
+    } else if (title == "FAQ's") {
+      let browserRef = (<any>window).cordova.InAppBrowser.open(url, "_blank", "zoom=no");
     } else if (url) {
       this.router.navigate([url]);
     }
@@ -434,7 +438,7 @@ export class AppComponent {
   public prepareMappedProjectToSync() {
     this.mappedProjectsToSync = false;
     this.projectsToSync = [];
-    this.storage.get('latestProjects').then(myProjects => {
+    this.storage.get(LocalKeys.allProjects).then(myProjects => {
       if (myProjects) {
         myProjects.forEach(projectList => {
           projectList.projects.forEach(project => {
@@ -442,6 +446,7 @@ export class AppComponent {
             if (project.isEdited || project.isNew) {
               if (project.isNew) {
                 delete project._id;
+                project.isEdited = false;
               }
               this.mappedProjectsToSync = true;
               if (project.tasks && project.tasks.length > 0) {
@@ -470,7 +475,7 @@ export class AppComponent {
         if (!this.mappedProjectsToSync) {
           this.toastService.successToast('message.already_sync');
         } else {
-          if (this.isConnected) {
+          if (this.networkService.isConnected) {
             this.autoSync();
           }
         }
@@ -494,6 +499,16 @@ export class AppComponent {
   public autoSync() {
     // if (this.isConnected) {
     if (this.projectsToSync.length > 0) {
+      this.projectsToSync.forEach(project => {
+        if (!project.programId) {
+          let environment = AppConfigs.currentEnvironment;
+          AppConfigs.environments.forEach(env => {
+            if (environment === env.name) {
+              project.programId = env.programId;
+            }
+          });
+        }
+      });
       let projects = {
         projects: this.projectsToSync
       }
@@ -512,6 +527,7 @@ export class AppComponent {
         }
       }, error => {
         this.toastService.stopLoader();
+        this.errorHandle.errorHandle(error);
       })
     }
     // }
@@ -568,7 +584,7 @@ export class AppComponent {
     })
   }
   public syncOldProjects(oldProjectsToSync) {
-    if (this.isConnected) {
+    if (this.networkService.isConnected) {
       if (oldProjectsToSync.length > 0) {
         let projects = {
           projects: oldProjectsToSync
@@ -584,6 +600,7 @@ export class AppComponent {
           }
         }, error => {
           this.toastService.errorToast(error.message);
+          this.errorHandle.errorHandle(error);
         })
       }
     } else {
@@ -591,7 +608,7 @@ export class AppComponent {
     }
   }
   public syncOldMyProjects(oldProjectsToSync) {
-    if (this.isConnected) {
+    if (this.networkService.isConnected) {
       if (oldProjectsToSync.length > 0) {
         let projects = {
           projects: oldProjectsToSync
@@ -606,6 +623,7 @@ export class AppComponent {
           }
         }, error => {
           this.toastService.errorToast(error.message);
+          this.errorHandle.errorHandle(error);
         })
       }
     } else {
@@ -618,7 +636,9 @@ export class AppComponent {
         sproject.isNew = false;
         sproject.isSync = true;
         sproject.isEdited = false;
-        sproject.lastUpdate = sproject.lastSync;
+        if (!sproject.lastUpdate) {
+          sproject.lastUpdate = sproject.lastSync;
+        }
         if (sproject.tasks && sproject.tasks.length > 0) {
           sproject.tasks.forEach(task => {
             task.isSync = true;
@@ -626,7 +646,7 @@ export class AppComponent {
         }
       })
     });
-    this.storage.set('latestProjects', syncedProjects).then(myprojectsff => {
+    this.storage.set(LocalKeys.allProjects, syncedProjects).then(myprojectsff => {
       this.toastService.successToast('message.sync_success');
       this.homeService.syncUpdated();
     })
@@ -634,7 +654,7 @@ export class AppComponent {
 
   // get profile data
   public getProfileData() {
-    if (this.isConnected) {
+    if (this.networkService.isConnected) {
       this.storage.get('userTokens').then(data => {
         if (data) {
           let userDetails;
@@ -717,6 +737,8 @@ export class AppComponent {
                   ];
                 }
               }
+            }, error => {
+              this.errorHandle.errorHandle(error);
             })
           })
         } else {
@@ -727,48 +749,52 @@ export class AppComponent {
   }
 
   public getAttachments() {
-    let filesList = [];
-    this.attachmentsList = [];
-    this.projectsToSync = [];
-    this.storage.get('latestProjects').then(myProjects => {
-      if (myProjects) {
-        myProjects.forEach(projectList => {
-          projectList.projects.forEach(project => {
-            project.share = false;
-            if (project.isEdited || project.isNew) {
-              if (!project.isDeleted) {
-                if (project.tasks && project.tasks.length > 0) {
-                  project.tasks.forEach(task => {
-                    if (task.attachments) {
-                      task.attachments.forEach(attachment => {
-                        if (attachment.isNew) {
-                          let data = {
-                            taskId: task._id,
-                            data: attachment.data,
-                            name: attachment.name,
-                            type: attachment.type,
-                            isUploaded: false
-                          }
-                          this.attachmentsList.push(data);
-                          filesList.push(attachment.name)
+    this.api.checkAppUpdate().then(data => {
+      if (data) {
+        this.homeService.forceAppUpdate(data);
+      } else {
+        let filesList = [];
+        this.attachmentsList = [];
+        this.projectsToSync = [];
+        this.storage.get(LocalKeys.allProjects).then(myProjects => {
+          if (myProjects) {
+            myProjects.forEach(projectList => {
+              projectList.projects.forEach(project => {
+                project.share = false;
+                if (project.isEdited || project.isNew) {
+                  if (!project.isDeleted) {
+                    if (project.tasks && project.tasks.length > 0) {
+                      project.tasks.forEach(task => {
+                        if (task.attachments) {
+                          task.attachments.forEach(attachment => {
+                            if (attachment.isNew) {
+                              let data = {
+                                taskId: task._id,
+                                data: attachment.data,
+                                name: attachment.name,
+                                type: attachment.type,
+                                isUploaded: false
+                              }
+                              this.attachmentsList.push(data);
+                              filesList.push(attachment.name)
+                            }
+                          });
                         }
                       });
                     }
-                  });
+                  }
                 }
-              }
+              });
+            })
+            if (this.attachmentsList.length > 0) {
+              this.getUploadUrl(this.attachmentsList, filesList);
+            } else {
+              this.prepareMappedProjectToSync();
             }
-          });
+          }
         })
-
-        if (this.attachmentsList.length > 0) {
-          this.getUploadUrl(this.attachmentsList, filesList);
-        } else {
-          this.prepareMappedProjectToSync();
-        }
       }
     })
-
   }
   public getUploadUrl(attachmentsList, filesList) {
     this.toastService.startLoader('Loading, Please wait');
@@ -784,6 +810,7 @@ export class AppComponent {
       }
     }, error => {
       this.toastService.stopLoader();
+      this.errorHandle.errorHandle(error);
     })
   }
 
@@ -832,13 +859,14 @@ export class AppComponent {
   }
   // map attachments to task and sync
   mapAttachments() {
-    this.storage.get('latestProjects').then(myProjects => {
+    this.storage.get(LocalKeys.allProjects).then(myProjects => {
       if (myProjects) {
         myProjects.forEach(projectList => {
           projectList.projects.forEach(project => {
             if (project.isNew || project.isEdited) {
               if (project.isNew) {
                 delete project._id;
+                project.isEdited = false;
               }
               if (project.tasks && project.tasks.length > 0) {
                 project.tasks.forEach(task => {
@@ -881,7 +909,7 @@ export class AppComponent {
         });
       }
       this.toastService.stopLoader();
-      if (this.isConnected) {
+      if (this.networkService.isConnected) {
         this.autoSync();
       }
     }
@@ -929,5 +957,14 @@ export class AppComponent {
     this.showUpdatePopup = false;
     this.showUpdatePop = false;
     this.showAlert = true;
+  }
+
+  checkAppUpdate() {
+    this.api.checkAppUpdate().then(data => {
+      if (data) {
+        this.homeService.forceAppUpdate(data);
+      } else {
+      }
+    })
   }
 }

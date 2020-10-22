@@ -13,7 +13,7 @@
     </div>
   </div> -->
 
-  <ion-tabs>
+  <!-- <ion-tabs>
     <ion-tab-bar slot="top">
       <ion-tab-button class="custom-tab" (click)="selectTab('ongoing')"
         [ngClass]="{'active-tab': activeTab == 'ongoing'}">
@@ -23,8 +23,15 @@
         <ion-label> {{ "open_tasks.past" | translate }}</ion-label>
       </ion-tab-button>
     </ion-tab-bar>
-  </ion-tabs>
-
+  </ion-tabs> -->
+  <ion-segment (ionChange)="selectTab($event)" value="ongoing">
+    <ion-segment-button value="ongoing" [ngClass]="{'active-tab': activeTab == 'ongoing'}" style="border-bottom: 2px solid #b23e33;">
+      <ion-label>{{ "open_tasks.ongoing" | translate }}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="past" [ngClass]="{'active-tab':  activeTab == 'past'}" style="border-bottom: 2px solid #b23e33;">
+      <ion-label> {{ "open_tasks.past" | translate }}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
   <div *ngIf="showSkeleton == true">
     <div class="skeleton-card-content">
@@ -46,7 +53,7 @@
     </div>
   </div>
   <div *ngIf="showSkeleton == false">
-    <ion-item class="search-bar-custom" style="margin-top: 70px;">
+    <ion-item class="search-bar-custom">
       <ion-icon name="search" item-left color="dark"></ion-icon>
       <ion-input type="text" placeholder="{{'home.search' | translate }}" [(ngModel)]="searchInput"></ion-input>
       <!-- (keyup)="searchSchool(searchInput)" -->

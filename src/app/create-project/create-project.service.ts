@@ -4,6 +4,7 @@ import { AppConfigs } from '../core-module/constants/app.config';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { LocalKeys } from '../core-module/constants/localstorage-keys';
 
 @Injectable({
     providedIn: 'root'
@@ -34,12 +35,19 @@ export class CreateProjectService {
     //  Update project in my projects list.
     public updateByProjects(updatedProject) {
         let mapped: boolean = false;
-        return this.storage.get('latestProjects').then(projectList => {
+        let programId = '';
+        let environment = AppConfigs.currentEnvironment;
+        AppConfigs.environments.forEach(env => {
+            if (environment === env.name) {
+                programId = env.programId;
+            }
+        })
+        return this.storage.get(LocalKeys.allProjects).then(projectList => {
             if (projectList) {
                 projectList.forEach(projectsPrograms => {
                     if (projectsPrograms) {
                         projectsPrograms.projects.forEach(function (project, i) {
-                            if (project._id == updatedProject._id) {
+                            if (project._id == updatedProject._id && !mapped) {
                                 updatedProject.isEdited = true;
                                 projectsPrograms.projects[i] = updatedProject;
                                 mapped = true;
@@ -54,10 +62,15 @@ export class CreateProjectService {
                         projectList[0].projects.push(updatedProject);
                     });
                 } else {
-                    let pro1 = [{
-                        projects: [
-                        ]
-                    }]
+                    let pro1 = [
+                        {
+                            programs: {
+                                name: 'My Projects',
+                                _id: programId
+                            },
+                            projects: []
+                        }
+                    ]
                     pro1[0].projects.push(updatedProject);
                     projectList = pro1;
                 }
@@ -66,7 +79,7 @@ export class CreateProjectService {
                 this.storage.set('projectToBeView', updatedProject).then(updatedProject => {
                 })
             })
-            this.storage.set('latestProjects', projectList).then(projects => {
+            this.storage.set(LocalKeys.allProjects, projectList).then(projects => {
             })
         })
     }
@@ -80,11 +93,11 @@ export class CreateProjectService {
                 programId = env.programId;
             }
         });
-        return this.storage.get('latestProjects').then(projectList => {
+        return this.storage.get(LocalKeys.allProjects).then(projectList => {
             if (projectList) {
                 projectList.forEach(projectsPrograms => {
                     if (projectsPrograms.programs) {
-                        if (projectsPrograms.programs._id == programId) {
+                        if (projectsPrograms.programs._id == programId && !mapped) {
                             projectsPrograms.projects.push(project);
                             mapped = true;
                         }
@@ -95,29 +108,34 @@ export class CreateProjectService {
                         project._id = projectList[0].projects.length + 1;
                         projectList[0].projects.push(project)
                     } else {
-                        let pro1 = [{
-                            projects: [
-                            ]
-                        }]
+                        let pro1 = [
+                            {
+                                programs: {
+                                    name: 'My Projects',
+                                    _id: programId
+                                },
+                                projects: []
+                            }
+                        ]
                         pro1[0].projects.push(project);
                         projectList = pro1;
                     }
                 }
             } else {
-                // if (projectList.projects) {
-                //     project._id = projectList.projects.length + 1;
-                //     projectList.projects.push(project)
-                // } else {
                 project._id = 1;
-                let pro1 = [{
-                    projects: [
-                    ]
-                }]
+                let pro1 = [
+                    {
+                        programs: {
+                            name: 'My Projects',
+                            _id: programId
+                        },
+                        projects: []
+                    }
+                ]
                 pro1[0].projects.push(project);
                 projectList = pro1;
-                // }
             }
-            this.storage.set('latestProjects', projectList).then(projects => {
+            this.storage.set(LocalKeys.allProjects, projectList).then(projects => {
             })
         });
     }

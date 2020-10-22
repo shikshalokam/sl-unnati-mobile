@@ -15,6 +15,9 @@ import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { ActionSheetController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { ErrorHandle } from '../error-handling.service';
+import { NetworkService } from '../network.service';
+
 declare var cordova: any;
 
 @Component({
@@ -32,6 +35,7 @@ export class CreateTasksComponent implements OnInit {
   files = [];
   showForm: boolean = false
   formContent: FormGroup;
+  connected;
   constructor(
     private base64: Base64,
     public datepipe: DatePipe,
@@ -45,13 +49,18 @@ export class CreateTasksComponent implements OnInit {
     public iosFilePicker: IOSFilePicker,
     public fileChooser: FileChooser,
     public filePath: FilePath,
+    public networkService: NetworkService,
     public file: File,
     public camera: Camera,
+    public errorHandle: ErrorHandle,
     public actionSheetController: ActionSheetController
   ) {
     this.platform.ready().then(() => {
       this.isIos = this.platform.is('ios') ? true : false;
       this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
+    })
+    networkService.emit.subscribe(status => {
+      this.connected = status;
     })
   }
   ngOnInit() {
@@ -59,8 +68,6 @@ export class CreateTasksComponent implements OnInit {
       this.prepareForm();
     }
   }
-
-
 
   public prepareForm() {
     const controls = {};
@@ -80,31 +87,37 @@ export class CreateTasksComponent implements OnInit {
   }
 
   public share() {
-    let files = [];
-    this.attachments.forEach(element => {
-      let data = {
-        name: element.name
+    if (this.networkService.isConnected) {
+      let files = [];
+      this.attachments.forEach(element => {
+        let data = {
+          name: element.name
+        }
+        files.push(data);
+      });
+      let obj: any = {
+        attachments: files,
+        subTasks: []
       }
-      files.push(data);
-    });
-    let obj: any = {
-      attachments: files,
-      subTasks: []
-    }
-    this.data.formData.forEach(element => {
-      if (element.type != 'attachment') {
-        obj[element.field] = element.value;
+      this.data.formData.forEach(element => {
+        if (element.type != 'attachment') {
+          obj[element.field] = element.value;
+        }
+      });
+      if (obj.title) {
+        this.data.projectData.tasks = obj;
+        this.toastService.startLoader('Loading, please wait');
+        this.createProjectService.getTaskPDF(this.data.projectData).subscribe(data => {
+          this.toastService.stopLoader();
+          this.sharePdf(data);
+        }, error => {
+          this.errorHandle.errorHandle(error);
+        })
+      } else {
+        this.submitAttempt = true;
       }
-    });
-    if (obj.title) {
-      this.data.projectData.tasks = obj;
-      this.toastService.startLoader('Loading, please wait');
-      this.createProjectService.getTaskPDF(this.data.projectData).subscribe(data => {
-        this.toastService.stopLoader();
-        this.sharePdf(data);
-      })
     } else {
-      this.submitAttempt = true;
+      this.toastService.errorToast('You are offline, Try again.');
     }
   }
   public setDate(event, endDate) {
@@ -318,7 +331,7 @@ export class CreateTasksComponent implements OnInit {
           icon: 'cloud-upload',
           handler: () => {
             if (this.attachments.length < 4) {
-               this.openCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
+              this.openCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
             } else {
               this.toastService.errorToast('Only 4 files you can add.')
             }

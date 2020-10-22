@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateProjectService } from '../create-project/create-project.service';
@@ -15,8 +15,13 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { Platform } from '@ionic/angular';
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { PopoverController } from '@ionic/angular';
+import { AppConfigs } from '../core-module/constants/app.config';
+
 import { PopoverComponent } from '../shared-module/components/popover/popover.component';
 import { ProjectService } from '../project-view/project.service';
+import { AppAvailability } from '@ionic-native/app-availability';
+
+import * as uuid from 'uuid';
 declare var cordova: any;
 
 @Component({
@@ -94,9 +99,13 @@ export class ProjectDetailPage {
       data.isDeleted = true;
       this.delete(data);
     })
-    this.isIos = this.platform.is('ios') ? true : false;
-    this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
-    this.rootPath = this.isIos ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory;
+    if (this.platform.is('cordova')) {
+      this.platform.ready().then(() => {
+        this.isIos = this.platform.is('ios') ? true : false;
+        this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'attachments' : cordova.file.externalDataDirectory + 'attachments';
+        this.rootPath = this.isIos ? cordova.file.documentsDirectory : cordova.file.externalDataDirectory;
+      })
+    }
     createProjectService.addNewTask.subscribe((data: any) => {
       this.showAddTask = false;
       if (this.project.tasks && this.project.tasks.length > 0) {
@@ -154,7 +163,6 @@ export class ProjectDetailPage {
   }
   getProject() {
     this.storage.get(LocalKeys.projectToBeView).then(project => {
-
       let completed = 0;
       let notStarted = 0;
       this.tasksLength = 0;
@@ -216,7 +224,7 @@ export class ProjectDetailPage {
         });
         this.sortTasks();
       }
-      if (this.project) {
+      if (this.project && this.project.isStarted) {
         this.updateTask();
       }
     })
@@ -229,12 +237,16 @@ export class ProjectDetailPage {
     this.addTaskButton = true;
     if (
       this.project.status == "Not started" ||
-      this.project.status == "not yet started"
+      this.project.status == "not yet started" || !this.project.status
     ) {
       this.project.status = "In Progress";
     }
     if (!this.project.startDate) {
       this.project.startDate = new Date();
+    }
+    if (!this.project.appReferenceKey) {
+      const myId = uuid.v4();
+      this.project.appReferenceKey = myId;
     }
     // if (this.category != 'my_projects' && this.category != 'projectsList' && this.category != 'form') {
     if (this.category != "my_projects" && this.category != "form" && this.category != 'projectsList') {
@@ -242,6 +254,14 @@ export class ProjectDetailPage {
       this.project.lastUpdate = new Date();
       this.project.isNew = true;
       this.project.templateId = this.project._id;
+      // this.project.templateId = 9;
+      this.project._id = +new Date();
+      let environment = AppConfigs.currentEnvironment;
+      AppConfigs.environments.forEach(env => {
+        if (environment === env.name) {
+          this.project.programId = env.programId;
+        }
+      });
       if (this.project.tasks) {
         let pId = this.project._id;
         this.project.tasks.forEach(function (task, i) {
@@ -276,13 +296,16 @@ export class ProjectDetailPage {
         });
         this.sortTasks();
       }
-      this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
-        this.project = project;
-        this.createProjectService.insertIntoMyProjects(this.project).then(data => {
-          this.project.isStarted = true;
-          this.category = 'my_projects';
+      this.storage.get(LocalKeys.allProjects).then(projectList => {
+        this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
+          this.project = project;
+          this.createProjectService.insertIntoMyProjects(this.project).then(data => {
+            this.project.isStarted = true;
+            this.category = 'my_projects';
+          })
         })
       })
+
     } else {
       if (this.tasksLength > 0 && this.project.isStarted) {
         this.project.tasks.sort((a, b) => {
@@ -298,7 +321,7 @@ export class ProjectDetailPage {
     }
   }
   public navigateToResources() {
-    this.router.navigate(["/project-view/courses", this.category]);
+    this.router.navigate(["/project-view/courses", this.category, 'project']);
   }
   public addTask() {
     this.taskCreate = {
@@ -484,7 +507,7 @@ export class ProjectDetailPage {
     cp.lastUpdate = new Date();
     this.createProjectService.updateByProjects(this.project);
     let mapped: boolean = false;
-    return this.storage.get("latestProjects").then((projectList) => {
+    return this.storage.get(LocalKeys.allProjects).then((projectList) => {
       if (projectList) {
         projectList.forEach((projectsPrograms) => {
           if (projectsPrograms) {
@@ -505,11 +528,22 @@ export class ProjectDetailPage {
                 }
               });
             } else {
+              let environment = AppConfigs.currentEnvironment;
+              let programId = '';
+              AppConfigs.environments.forEach(env => {
+                if (environment === env.name) {
+                  programId = env.programId;
+                }
+              });
               let pro1 = [
                 {
-                  projects: [],
-                },
-              ];
+                  programs: {
+                    name: 'My Projects',
+                    _id: programId
+                  },
+                  projects: []
+                }
+              ]
               pro1[0].projects.push(this.project);
               projectList = pro1;
             }
@@ -901,5 +935,29 @@ export class ProjectDetailPage {
       translucent: true
     });
     return await popover.present();
+  }
+
+  public openTaskResources(task) {
+    if (task.resources && task.resources.length > 1) {
+      this.storage.set('resourcesofTask', task).then(data => {
+        this.router.navigate(["/project-view/courses", this.category, 'task']);
+      })
+    } else {
+      this.launchExternalApp('', 'org.shikshalokam.bodh', 'bodh://play/content/do_11309585387098112011502', task.resources[0].link);
+    }
+  }
+
+
+  launchExternalApp(iosSchemaName: string, androidPackageName: string, appUrl: string, httpUrl: string) {
+    let app: string;
+    app = 'org.shikshalokam.bodh';
+    AppAvailability.check(app).then(
+      () => { // success callback
+        (<any>window).cordova.InAppBrowser.open(httpUrl, '_system');
+      },
+      () => { // error callback
+        (<any>window).cordova.InAppBrowser.open(httpUrl, '_system');
+      }
+    );
   }
 }

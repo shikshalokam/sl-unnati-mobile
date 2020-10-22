@@ -16,7 +16,8 @@ import { ApiProvider } from '../api/api';
 import { ProjectService } from '../project-view/project.service';
 import { Storage } from '@ionic/storage';
 import * as Highcharts from 'highcharts';
-
+import { ErrorHandle } from '../error-handling.service';
+import { HomeService } from '../home/home.service';
 declare var cordova: any;
 @Component({
   selector: 'app-my-reports',
@@ -73,8 +74,10 @@ export class MyReportsPage {
     public myReportsService: MyReportsService,
     public mySchoolsService: MyschoolsService,
     public api: ApiProvider,
+    public homeService: HomeService,
     public storage: Storage,
-    public projectService: ProjectService
+    public projectService: ProjectService,
+    public errorHandle: ErrorHandle
   ) {
     activatedRoute.params.subscribe((params: any) => {
       this.mappedSchool = '';
@@ -115,11 +118,6 @@ export class MyReportsPage {
         this.selectTab('school');
       }
     })
-    platform.ready().then(() => {
-      networkService.emit.subscribe(status => {
-        this.connected = status;
-      })
-    })
     myReportsService.reportEvent.subscribe((data: any) => {
       // this.share(data);
       this.platform.ready().then(() => {
@@ -151,30 +149,41 @@ export class MyReportsPage {
   }
 
   selectTab(tab) {
-    this.activeTab = tab;
-    this.tabs.forEach(element => {
-      if (element.id == tab) {
-        element.isActive = true;
+    this.toastService.startLoader('Loading, Please wait');
+    this.api.checkAppUpdate().then(data => {
+      this.toastService.stopLoader();
+      if (data) {
+        this.homeService.forceAppUpdate(data);
       } else {
-        element.isActive = false;
+        this.activeTab = tab;
+        this.tabs.forEach(element => {
+          if (element.id == tab) {
+            element.isActive = true;
+          } else {
+            element.isActive = false;
+          }
+        });
+        if (this.activeTab != 'school') {
+          this.getData();
+        } else {
+          this.schools = [];
+          this.page = 1;
+          this.getSchools();
+        }
       }
-    });
-    if (this.activeTab != 'school') {
-      this.getData();
-    } else {
-      this.schools = [];
-      this.page = 1;
-      this.getSchools();
-    }
+    }, error => {
+      this.toastService.stopLoader();
+    })
   }
 
   public getSchools(event?) {
-    if (this.connected) {
+    if (this.networkService.isConnected) {
       this.showSkeleton = true;
       this.mySchoolsService.getSchools(this.count, this.page).subscribe((data: any) => {
         if (data.data && data.data.length > 0 && data.status != 'failed') {
           this.schools = this.schools.concat(data.data);
           this.page = this.page + 1;
+          this.showSkeleton = false;
         } else {
           this.schools = [];
           this.tabs = [
@@ -188,11 +197,12 @@ export class MyReportsPage {
               id: 'lastQuarter',
               isActive: false
             }];
+          this.showSkeleton = false;
           this.selectTab('lastMonth');
         }
-        this.showSkeleton = false;
       }, error => {
         this.showSkeleton = false;
+        this.errorHandle.errorHandle(error);
       })
     }
     else {
@@ -202,30 +212,39 @@ export class MyReportsPage {
   }
   // download and Share Reports
   public getReport(type: any) {
-    if (this.connected) {
+    if (this.networkService.isConnected) {
       this.toastService.startLoader('Loading, Please wait');
-      let tempData = {
-        type: type,
-        reportType: this.activeTab,
-        entityId: this.entityId,
-        name: this.mappedSchool,
-        isFullReport: false
-      }
-      this.myReportsService.getReportData(tempData).subscribe((data: any) => {
+      this.api.checkAppUpdate().then(data => {
         this.toastService.stopLoader();
-        if (data.status != 'failed') {
-          if (tempData.type === 'share') {
-            this.share(data);
-          } else {
-            this.toastService.stopLoader();
-            this.download(data);
-          }
+        if (data) {
+          this.homeService.forceAppUpdate(data);
         } else {
-          this.toastService.errorToast(data.message);
+          this.toastService.startLoader('Loading, Please wait');
+          let tempData = {
+            type: type,
+            reportType: this.activeTab,
+            entityId: this.entityId,
+            name: this.mappedSchool,
+            isFullReport: false
+          }
+          this.myReportsService.getReportData(tempData).subscribe((data: any) => {
+            this.toastService.stopLoader();
+            if (data.status != 'failed') {
+              if (tempData.type === 'share') {
+                this.share(data);
+              } else {
+                this.toastService.stopLoader();
+                this.download(data);
+              }
+            } else {
+              this.toastService.errorToast(data.message);
+            }
+          }, error => {
+            this.toastService.stopLoader();
+            this.errorHandle.errorHandle(error);
+          })
         }
-      }, error => {
-        this.toastService.stopLoader();
-      })
+      }, error => { this.toastService.stopLoader(); })
     } else {
       this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');
@@ -234,7 +253,7 @@ export class MyReportsPage {
 
   // download and Share Full Reports
   public getFullReport(type: any) {
-    if (this.connected) {
+    if (this.networkService.isConnected) {
       this.toastService.startLoader('Loading, Please wait');
       let tempData = {
         type: type.type,
@@ -257,9 +276,9 @@ export class MyReportsPage {
         }
       }, error => {
         this.toastService.stopLoader();
+        this.errorHandle.errorHandle(error);
       })
     } else {
-      this.toastService.stopLoader();
       this.toastService.errorToast('message.nerwork_connection_check');
     }
   }
@@ -271,49 +290,26 @@ export class MyReportsPage {
     const fileTransfer: FileTransferObject = this.transfer.create();
     const url = data.pdfUrl;
     fileTransfer.download(url, this.appFolderPath + '/' + fileName).then((entry) => {
-      let fileName1 = entry.nativeURL.split('/').pop();
       let path = entry.nativeURL.substring(0, entry.nativeURL.lastIndexOf("/") + 1);
       this.file.readAsDataURL(path, fileName)
         .then(base64File => {
-      // this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
-        let data = base64File.split(',');
-        let base64Data = "data:application/pdf;base64," + data[1];
-        this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+          // this.base64.encodeFile(entry.nativeURL).then((base64File: string) => {
+          let data = base64File.split(',');
+          let base64Data = "data:application/pdf;base64," + data[1];
+          this.socialSharing.share("", fileName, base64Data, "").then((data) => {
+            this.toastService.stopLoader();
+          }, error => {
+            this.toastService.stopLoader();
+            // intentially left blank
+          });
+        }, (err) => {
           this.toastService.stopLoader();
-        }, error => {
-          this.toastService.stopLoader();
-          // intentially left blank
         });
-      }, (err) => {
-        this.toastService.stopLoader();
-      });
     }, (error) => {
       this.toastService.stopLoader();
     });
   }
 
-  // Download the reports
-  // public download(data) {
-  //   const fileTransfer: FileTransferObject = this.transfer.create();
-  //   fetch(data.pdfUrl,
-  //     {
-  //       method: "GET"
-  //     }).then(res => res.blob()).then(blob => {
-  //       this.appFolderPath = decodeURIComponent(this.appFolderPath);
-  //       let filename = decodeURIComponent('Report');
-  //       this.file.writeFile(this.appFolderPath, 'Report', blob, { replace: true }).then(res => {
-  //         this.fileOpener.open(
-  //           res.toInternalURL(),
-  //           'application/pdf'
-  //         ).then((res) => {
-  //         }).catch(err => {
-  //         });
-  //       }).catch(err => {
-  //         console.log("error", err);
-  //       });
-  //     }).catch(err => {
-  //     });
-  // }
   download(data) {
     this.toastService.presentLoading('Downloading, Please wait');
     const fileTransfer: FileTransferObject = this.transfer.create();
@@ -328,30 +324,33 @@ export class MyReportsPage {
     });
   }
   public getData() {
-    this.showSkeleton = true;
-    this.myReportsService.getReports(this.activeTab, this.entityId).subscribe((data: any) => {
-      this.report = data.data;
-      if (data.status != "failed" && data.data) {
-        this.showNoReports = false;
-        this.setupChart();
-      } else {
-        this.showNoReports = true;
+    if (this.networkService.isConnected) {
+      this.showSkeleton = true;
+      this.myReportsService.getReports(this.activeTab, this.entityId).subscribe((data: any) => {
+        if (data.status != "failed" && data.data) {
+          this.setupChart(data.data);
+        } else {
+          this.showNoReports = true;
+          this.showSkeleton = false;
+        }
+      }, error => {
         this.showSkeleton = false;
-      }
-    }, error => {
-      this.showSkeleton = false;
-    })
+        this.errorHandle.errorHandle(error);
+      })
+    } else {
+      this.toastService.errorToast('message.nerwork_connection_check');
+    }
   }
-  public setupChart() {
+  public setupChart(data) {
     let totalTask;
     let completed: any;
-    if (this.report.tasksCompleted > 0 || this.report.tasksPending > 0) {
-      totalTask = this.report.tasksCompleted + this.report.tasksPending;
-      completed = (this.report.tasksCompleted / totalTask) * 100;
+    if (data.tasksCompleted > 0 || data.tasksPending > 0) {
+      totalTask = data.tasksCompleted + data.tasksPending;
+      completed = (data.tasksCompleted / totalTask) * 100;
       completed = completed.toFixed(0);
     } else {
-      this.report.tasksCompleted = 0;
-      this.report.tasksPending = 0;
+      data.tasksCompleted = 0;
+      data.tasksPending = 0;
       completed = 0;
     }
     this.chartOptions = {
@@ -389,7 +388,7 @@ export class MyReportsPage {
       },
       series: [{
         name: "Tasks",
-        data: [["Pending", this.report.tasksPending], ["Completed", this.report.tasksCompleted]],
+        data: [["Pending", data.tasksPending], ["Completed", data.tasksCompleted]],
         size: '90%',
         innerSize: '70%',
         showInLegend: true,
@@ -398,6 +397,7 @@ export class MyReportsPage {
         }
       }]
     };
+    this.report = data;
     this.showSkeleton = false;
   }
 

@@ -65,8 +65,6 @@ export class AboutPage implements OnInit {
     // localStorage.removeItem("token");
     localStorage.clear();
     this.storage.clear();
-    this.storage.get('latestProjects').then(projects => {
-    })
     this.storage.set('veryFirstTime', 'false').then(data => {
     });
     this.login.loggedIn('false');
