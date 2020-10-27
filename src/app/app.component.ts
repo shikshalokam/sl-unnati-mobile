@@ -161,6 +161,11 @@ export class AppComponent {
               url: '/project-view/tutorial-videos',
             },
             {
+              title: 'Profile',
+              icon: 'contact',
+              url: '/profile-onbaording',
+            },
+            {
               title: 'About',
               url: '/project-view/about',
               icon: 'information-circle'
@@ -713,6 +718,11 @@ export class AppComponent {
                       title: 'Tutorial Video',
                       icon: 'play',
                       url: '/project-view/tutorial-videos',
+                    },
+                    {
+                      title: 'Profile Update',
+                      icon: 'person',
+                      url: '/update-profile',
                     },
                     {
                       title: 'Profile Update',

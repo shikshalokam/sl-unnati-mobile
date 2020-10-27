@@ -12,6 +12,8 @@ import { NetworkService } from '../network.service';
 import { AppConfigs } from '../core-module/constants/app.config';
 import { Location } from '@angular/common';
 import { ErrorHandle } from '../error-handling.service';
+import { ToastService } from '../toast.service';
+
 // import { AppVersion } from '@ionic-native/app-version';
 @Component({
   selector: 'app-header',
@@ -42,7 +44,8 @@ export class HeaderComponent implements OnInit {
     public updateProfileService: UpdateProfileService,
     public networkService: NetworkService,
     public location: Location,
-    public errorHandle: ErrorHandle
+    public errorHandle: ErrorHandle,
+    public toast : ToastService
     // public appVersion: AppVersion
   ) {
     this.platform.ready().then(() => {
@@ -88,7 +91,13 @@ export class HeaderComponent implements OnInit {
 
   public goBack() {
     if (this.isParam) {
-      this.router.navigate([this.isGoBack, this.isParam]);
+      if (this.isParam == 'profileUpdated') {
+        this.router.navigate([this.isGoBack]);
+      } else if (this.isParam == 'profileNotUpdated') {
+        this.toast.errorToast("Please update the profile to continue");
+      } else {
+        this.router.navigate([this.isGoBack, this.isParam]);
+      }
     } else {
       this.router.navigate([this.isGoBack]);
     }

@@ -19,7 +19,7 @@ import { AppConfigs } from '../core-module/constants/app.config';
 import * as jwt_decode from "jwt-decode";
 import { LocalKeys } from '../core-module/constants/localstorage-keys';
 import { ErrorHandle } from '../error-handling.service';
-// import { OnboadringServiceService } from '../core-module/onboardingService/onboadring-service.service';
+import { OnboadringServiceService } from '../core-module/onboardingService/onboadring-service.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -62,7 +62,7 @@ export class HomePage implements OnInit {
   tiles = [
     { title: "create project", icon: 'assets/images/homeTiles/createproject.png', url: '/project-view/create-project' },
     { title: "library", icon: 'assets/images/homeTiles/library.png', url: '/project-view/library' },
-    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.svg', url: '/project-view/task-board' }, // /project-view/task-board
+    { title: "open tasks", icon: 'assets/images/homeTiles/tasksclipboard.png', url: '/project-view/task-board' }, // /project-view/task-board
     { title: "reports", icon: 'assets/images/homeTiles/reports.png', url: '/project-view/my-reports/last-month-reports' }
   ]
   activeProjects = [];
@@ -91,8 +91,8 @@ export class HomePage implements OnInit {
     public mySchoolsService: MyschoolsService,
     public toastService: ToastService,
     public errorHandle: ErrorHandle,
-    // public onboadringServiceService: OnboadringServiceService
-    ) {
+    public onboadringServiceService: OnboadringServiceService
+  ) {
     this.menuCtrl.enable(true);
     this.networkService.emit.subscribe(value => {
       this.connected = value;
@@ -126,6 +126,7 @@ export class HomePage implements OnInit {
       this.storage.get('userTokens').then(data => {
         if (data) {
           this.menuCtrl.enable(true, 'unnati');
+          this.dikshaProfileData();
           this.setTitle('home_tab');
           //  this.splashScreen.hide();
           this.storage.get(LocalKeys.templates).then(templates => {
@@ -168,55 +169,17 @@ export class HomePage implements OnInit {
     this.translate.setDefaultLang('en');
     this.translate.use('en');
     this.networkService.setLang('en');
-    // this.dikshaProfileData();
   }
 
   // Diksha profile data
-  // public dikshaProfileData() {
-  //   this.onboadringServiceService.getProfile().then(data => {
-  //     // if ((data.result.roles && !data.result.roles.length) || !data.result.roles) {
-  //     this.openUpdateProfileAlert();
-  //     // }
-  //   }).catch(error => {
-  //   })
-  // }
-
-  //  Diksha profile alert
-  // async openUpdateProfileAlert() {
-  //   let updateClick = false;
-  //   let alert = this.alertCtrl.create({
-  //     header: 'Profile Update',
-  //     subHeader: 'Please update your profile to continue.',
-  //     buttons: [
-  //       {
-  //         text: 'Update Profile',
-  //         handler: data => {
-  //           updateClick = true;
-  //           this.app.getRootNav().push('OnboardingPage')
-  //           console.log('Cancel clicked');
-  //         }
-  //       },
-  //     ],
-  //     backdropDismiss: false
-  //   });
-  //   // alert.onDidDismiss(success => {
-  //   //   if(updateClick){
-  //   //     updateClick = false;
-  //   //   } else {
-  //   //     this.openUpdateProfileAlert()
-  //   //   }
-  //   // })
-  //   alert.onDidDismiss().then(data => {
-  //     if (updateClick) {
-  //       updateClick = false;
-  //     } else {
-  //       this.openUpdateProfileAlert()
-  //     }
-  //   })
-  //   alert.present();
-  // }
-
-
+  public dikshaProfileData() {
+    this.onboadringServiceService.getProfile().then(data => {
+      if ((data.result.roles && !data.result.roles.length) || !data.result.roles) {
+        this.openUpdateProfileAlert();
+      }
+    }).catch(error => {
+    })
+  }
 
 
   async openUpdateProfileAlert() {
@@ -230,7 +193,7 @@ export class HomePage implements OnInit {
           handler: data => {
             updateClick = true;
             // this.app.getRootNav().push('OnboardingPage')
-            this.router.navigate(['project-view/profile-onbaording']);
+            this.router.navigate(['/profile-onbaording']);
           }
         },
       ],

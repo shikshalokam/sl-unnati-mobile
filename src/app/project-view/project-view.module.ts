@@ -52,7 +52,6 @@ const routes: Routes = [
       { path: 'template-view/:templateId', loadChildren: '../template-view/template-view.module#TemplateViewPageModule' },
       { path: 'template-view/:templateId/:programId', loadChildren: '../template-view/template-view.module#TemplateViewPageModule' },
       { path: 'library-search', loadChildren: '../library-search/library-search.module#LibrarySearchPageModule' },
-      // { path: 'profile-onbaording', loadChildren: '../profile-onbaording/profile-onbaording.module#ProfileOnbaordingPageModule' },
     ]
   }
 ]

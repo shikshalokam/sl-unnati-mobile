@@ -48,7 +48,8 @@ const routes: Routes = [
   { path: 'app-permissions', loadChildren: './app-permissions/app-permissions.module#AppPermissionsPageModule' },
   { path: 'template-view', loadChildren: './template-view/template-view.module#TemplateViewPageModule' },
   { path: 'library-search', loadChildren: './library-search/library-search.module#LibrarySearchPageModule' },
-  // { path: 'onboarding', loadChildren: './onboarding/onboarding.module#OnboardingPageModule' },
+   { path: 'onboarding', loadChildren: './onboarding/onboarding.module#OnboardingPageModule' },
+   { path: 'profile-onbaording', loadChildren: './profile-onbaording/profile-onbaording.module#ProfileOnbaordingPageModule' },
   // { path: 'video-player', loadChildren: './video-player/video-player.module#VideoPlayerPageModule' },
 ];
 

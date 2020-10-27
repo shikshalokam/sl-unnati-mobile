@@ -56,8 +56,6 @@ export class TaskBoardPage {
             this.showSkeleton = false;
           }
         });
-      } {
-        console.log('no projects ');
       }
     })
   }
