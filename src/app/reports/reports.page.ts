@@ -1,136 +1,227 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Network } from '@ionic-native/network/ngx';
-import { NetworkService } from '../network.service';
-import { ReportsService } from './reports.service';
-import { Storage } from '@ionic/storage';
-import { ApiProvider } from '../api/api';
-import { IonInfiniteScroll } from '@ionic/angular';
-import { Location } from '@angular/common';
-import { HomeService } from '../home/home.service';
-import { LocalKeys } from '../core-module/constants/localstorage-keys';
-import { ErrorHandle } from '../error-handling.service';
-
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import { AlertController, IonSelect, ModalController } from "@ionic/angular";
+import { TranslateService } from "@ngx-translate/core";
+import { UnnatiDataService, urlConstants } from "../core";
+import { ReportsService } from "../core/services/reports.service";
+import { UtilsService } from "../core/services/utils.service";
+import { FilterModalComponent } from "../shared/components/filter-modal/filter-modal.component";
 @Component({
-  selector: 'app-reports',
-  templateUrl: './reports.page.html',
-  styleUrls: ['./reports.page.scss'],
+  selector: "app-reports",
+  templateUrl: "./reports.page.html",
+  styleUrls: ["./reports.page.scss"],
 })
-export class ReportsPage implements OnInit {
-  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
-  public skeletons = [{}, {}, {}, {}, {}];
-  public showSkeleton: boolean = false;
-  public noReports: boolean = false;
-  public connected: any = localStorage.getItem('networkStatus');
-  public page: number = 0;
-  public reports;
-  back = 'project-view/my-schools';
-  constructor(public network: Network,
-    public homeService: HomeService,
-    public location: Location,
-    public networkService: NetworkService,
-    public storage: Storage,
-    public reportsService: ReportsService,
-    public api: ApiProvider,
-    public errorHandle: ErrorHandle) {
-    this.networkService.emit.subscribe(value => {
-      this.connected = value;
-      localStorage.setItem("networkStatus", this.connected);
-    });
+export class ReportsPage {
+  reportData: any;
+  filterType: { label: string; value: number }[];
+  filter = { type: 1, entity: undefined, program: undefined };
+  @ViewChild("mySelect") selectRef: IonSelect;
+  texts: any;
+  constructor(
+    public router: Router,
+    public reportSrvc: ReportsService,
+    public unnatiSrvc: UnnatiDataService,
+    public utils: UtilsService,
+    public modalController: ModalController,
+    public alertController: AlertController,
+    private translate: TranslateService
+  ) {
+    this.translate
+      .get([
+        "LABELS.PLEASE_SELECT_ENTITY",
+        "LABELS.SELECT_ENTITY_TO_SELECT_PROGRAM",
+        "LABELS.NO_DATA_AVAILABLE",
+        "LABELS.NO_DATA_AVAILABLE_FOR_ENTITY_OR_PROGRAM",
+        "LABELS.OK",
+      ])
+      .subscribe((data) => {
+        this.texts = data;
+      });
   }
 
-  ngOnInit() {
-  }
-  ionViewDidEnter() {
-    if (!this.reports) {
-      this.getReports();
-    }
+  projectsArr = [
+    {
+      name: "Total Projects",
+      img: "../../assets/images/reports-page/Note 1.svg",
+      key: "total",
+    },
+    {
+      name: "Projects Completed",
+      img: "../../assets/images/reports-page/note.svg",
+      key: "completed",
+    },
+    {
+      name: "Projects In Progress",
+      img: "../../assets/images/reports-page/Note 4.svg",
+      key: "inProgress",
+    },
+    {
+      name: "Projects Overdue",
+      img: "../../assets/images/reports-page/Note 3.svg",
+      key: "overdue",
+    },
+  ];
+
+  ionViewWillEnter() {
+    this.getReports();
+    this.loadFilterType();
   }
 
-  // infinite scroll
-  loadData(event) {
-    event.target.complete();
-    //getReports(data,limit,page)
-    this.showSkeleton = true;
-    this.page = this.page + 1;
-    this.reportsService.getReports(10, this.page).subscribe((data: any) => {
-      event.target.disabled = true;
-      // this.reports.push(data.data);
-      this.reports = data.data;
-      this.showSkeleton = false;
-    }, error => {
-      this.showSkeleton = false;
-      this.errorHandle.errorHandle(error);
-    })
-  }
-  // Get reports
-  public getReports() {
-    this.showSkeleton = true;
-    this.page = this.page + 1;
-    this.reportsService.getReports(10, this.page).subscribe((data: any) => {
-      if (data.data) {
-        this.reports = data.data;
-      }
-      this.showSkeleton = false;
-    }, error => {
-      this.showSkeleton = false;
-      this.errorHandle.errorHandle(error);
-    })
-  }
-
-  // get report file
-  public getReportFile(id, title) {
-    this.showSkeleton = true;
-    this.reportsService.getReportFile(id).subscribe((data: any) => {
-      //  window.open(data.pdfUrl)
-      let report = {
-        title: title,
-        id: id
-      }
-      this.storage.get(LocalKeys.allProjects).then(rprts => {
-        if (rprts) {
-          if (rprts.find((pro) => pro.id === report.id) === undefined) {
-            rprts.push(report);
-            this.storage.set(LocalKeys.allProjects, rprts).then((uprep: any) => {
-              this.homeService.loadMyProjects();
-            });
-          }
-        } else {
-          let data1: any = [];
-          data1.push(report);
-          this.storage.set(LocalKeys.allProjects, data1).then((data: any) => {
-            this.homeService.loadMyProjects();
-          });
+  loadFilterType() {
+    const config = {
+      url: urlConstants.API_URLS.GET_REPORT_TYPES,
+    };
+    this.unnatiSrvc.get(config).subscribe(
+      (res) => {
+        if (res.result) {
+          this.filterType = res.result;
         }
-      })
+      },
+      (err) => {
+        this.filterType = [];
+      }
+    );
+  }
 
-      var link = document.createElement('a');
-      link.href = data.pdfUrl;
-      link.download = "report.pdf";
-      link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-      this.showSkeleton = false;
-    }, error => {
-      this.showSkeleton = false;
-      this.errorHandle.errorHandle(error);
-    })
+  async openFilterModal(type) {
+    if (type == "program" && this.filter.entity == undefined) {
+      this.presentAlert(
+        this.texts["LABELS.PLEASE_SELECT_ENTITY"],
+        this.texts["LABELS.SELECT_ENTITY_TO_SELECT_PROGRAM"]
+      );
+      return;
+    }
+    let preFilter = JSON.stringify(this.filter);
+
+    const modal = await this.modalController.create({
+      component: FilterModalComponent,
+      cssClass: "my-custom-class",
+      componentProps: {
+        type: type,
+        entityId: this.filter.entity ? this.filter.entity._id : null,
+      },
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    type == "entity" ? (this.filter.entity = data) : (this.filter.program = data);
+    JSON.stringify(this.filter) !== preFilter ? this.getReports(preFilter) : null;
   }
-  // Search School
-  public searchReport(keyword) {
-    this.showSkeleton = true;
-    this.page = this.page + 1;
-    this.reportsService.searchReports(keyword).subscribe((data: any) => {
-      if (data.data) {
-        this.reports = data.data;
-      }
-      if (data.data.length == 0) {
-        this.noReports = true;
-      }
-      this.showSkeleton = false;
-    }, error => {
-      this.showSkeleton = false;
-      this.errorHandle.errorHandle(error);
-    })
+
+  getReports(preFilter?) {
+    const entityId = this.filter.entity ? this.filter.entity._id : null;
+
+    let url;
+    if (entityId) {
+      url = urlConstants.API_URLS.GET_REPORT + entityId; // to get entity report
+    } else {
+      url = urlConstants.API_URLS.GET_REPORT; // overall report
+    }
+    const query = {
+      reportType: this.filter.type,
+      programId: this.filter.program ? this.filter.program._id : null,
+    };
+
+    url = this.utils.queryUrl(url, query);
+    const config = {
+      url: url,
+    };
+    this.unnatiSrvc.get(config).subscribe(
+      (data) => {
+        if (data.result && !data.result.dataAvailable) {
+          this.presentAlert(
+            this.texts["LABELS.NO_DATA_AVAILABLE"],
+            this.texts["LABELS.NO_DATA_AVAILABLE_FOR_ENTITY_OR_PROGRAM"]
+          );
+          preFilter ? (this.filter = JSON.parse(preFilter)) : null;
+          if (this.reportData) {
+            return;
+          }
+        }
+        this.reportData = data.result ? data.result.data : {};
+        this.reportData.tasks.series = this.generateCircleData(this.reportData.tasks, 80);
+        this.reportData.categories.series = this.generateCircleData(this.reportData.categories, 50);
+      },
+      (err) => {}
+    );
   }
-  public goBack() {
-    this.location.back();
+
+  // move to utils
+  generateCircleData(obj, innerRadius) {
+    let data = [];
+    for (const key in obj) {
+      if (key == "total") {
+        continue;
+      }
+      let x = {};
+      x["name"] = this.utils.cameltoNormalCase(key);
+      x["value"] = ((obj[key] / obj.total) * 100).toFixed() + "%";
+      x["y"] = obj[key];
+      x["z"] = 0;
+      if (key == "completed") {
+        x["color"] = "green";
+      }
+
+      if (key == "notStarted") {
+        x["color"] = "#B80000  ";
+      }
+
+      data.push(x);
+    }
+    let series = [
+      {
+        minPointSize: 100 - innerRadius,
+        innerSize: innerRadius + "%",
+        zMin: 0,
+        showInLegend: true,
+        data: data,
+      },
+    ];
+    return series;
+  }
+
+  ionViewDidLeave() {
+    this.filter = { type: 1, entity: null, program: null };
+  }
+
+  reportTypeChange() {
+    this.getReports();
+  }
+
+  async presentAlert(heading, msg) {
+    const alert = await this.alertController.create({
+      header: heading,
+      message: msg,
+      buttons: [this.texts["LABELS.OK"]],
+    });
+
+    await alert.present();
+  }
+
+  viewFullReport() {
+    this.reportSrvc.filterForReport = this.filter;
+    this.router.navigate(["/menu/full-report"]);
+  }
+
+  fileName() {
+    let arr = ["report"];
+    this.filter.program ? arr.push(this.filter.program.name) : null;
+    return arr;
+  }
+
+  downloadUrl() {
+    let url = urlConstants.API_URLS.GET_REPORT;
+    if (this.filter.entity) {
+      url = url + this.filter.entity._id;
+    }
+
+    let query = {
+      requestPdf: true,
+      reportType: this.filter.type,
+      programId: this.filter.program ? this.filter.program._id : null,
+    };
+
+    url = this.utils.queryUrl(url, query);
+
+    return url;
   }
 }

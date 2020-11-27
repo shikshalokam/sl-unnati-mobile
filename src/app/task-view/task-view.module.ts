@@ -1,27 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
+
 import { IonicModule } from '@ionic/angular';
+
+import { TaskViewPageRoutingModule } from './task-view-routing.module';
+
 import { TaskViewPage } from './task-view.page';
-import {SharedModule} from '../shared-module/shared-module';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: TaskViewPage
-  }
-];
-
+import { CoreModule } from '../core/core.module';
+import { SharedModule } from '../shared/shared.module';
 @NgModule({
   imports: [
-    CommonModule,SharedModule,
+    CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes),
-    TranslateModule.forChild({
-  })
+    CoreModule,
+    SharedModule,      
+    TaskViewPageRoutingModule
   ],
   declarations: [TaskViewPage]
 })

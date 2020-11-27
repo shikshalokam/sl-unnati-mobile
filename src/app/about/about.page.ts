@@ -1,110 +1,101 @@
 import { Component, OnInit } from '@angular/core';
-import { NetworkService } from '../network.service';
-import { AppConfigs } from '../core-module/constants/app.config';
-import { Network } from '@ionic-native/network/ngx';
-import { CurrentUserProvider } from '../current-user';
+import { AuthService } from '../core/services/auth/auth.service';
 import { Router } from '@angular/router';
-import { Login } from '../login.service';
-import { Storage } from '@ionic/storage';
-import * as jwt_decode from "jwt-decode";
-import { Badge } from '@ionic-native/badge/ngx';
-import { AlertController } from '@ionic/angular';
+import { AppVersion } from '@ionic-native/app-version/ngx';
+import {
+  LoggerService, CurrentUserService, DbService, LocalStorageService,
+  urlConstants, SunbirdService, localStorageConstants, NotificationService
+} from '../core';
+import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { HomeService } from '../home/home.service';
-import { ToastService } from '../toast.service';
+
+
 @Component({
   selector: 'app-about',
   templateUrl: './about.page.html',
   styleUrls: ['./about.page.scss'],
 })
 export class AboutPage implements OnInit {
-  public connected: any = false;
-  public token;
-  back = "project-view/home"
   public userDetails;
-  public infoData = {
-    showEraseBtn: true,
-    app_name: ` ${AppConfigs.appName}`,
-    app_version: `${AppConfigs.appVersion}`
+  appVersion: string;
+  appName: string;
+  profileInfo: any;
 
-  }
-  constructor(public storage: Storage,
+  constructor(private auth: AuthService,
     public router: Router,
-    public badge: Badge,
-    public networkService: NetworkService,
-    public login: Login,
-    public network: Network,
-    public currentUser: CurrentUserProvider,
-    public alertController: AlertController,
-    public homeService: HomeService,
-    public ToastService: ToastService,
-    public translateService: TranslateService) {
-    if (localStorage.getItem('networkStatus') != null) {
-      this.connected = localStorage.getItem('networkStatus');
-    } else {
-      this.connected = false;
-    }
-    this.networkService.emit.subscribe(value => {
-      this.connected = value;
-      localStorage.setItem('networkStatus', this.connected);
-    });
-  }
-  ionViewDidEnter() {
-    this.storage.get('userTokens').then(data => {
-      this.userDetails = jwt_decode(data.access_token);
-    })
-  }
+    public appDetails: AppVersion,
+    public loger: LoggerService,
+    public currentUser: CurrentUserService,
+    public storage: LocalStorageService,
+    private alertController: AlertController,
+    private translate: TranslateService,
+    public db: DbService,
+    private sunbird: SunbirdService,
+    private notificationServ: NotificationService
+  ) { }
+
   ngOnInit() {
-    if (localStorage.getItem('networkStatus') != null) {
-      this.connected = localStorage.getItem('networkStatus');
-    } else {
-      this.connected = false;
-    }
-  }
-  public logout() {
-    // localStorage.removeItem("token");
-    localStorage.clear();
-    this.storage.clear();
-    this.storage.set('veryFirstTime', 'false').then(data => {
-    });
-    this.login.loggedIn('false');
-    this.login.doLogout().then(data => {
-      this.badge.clear();
-      this.login.loggedIn('false');
-      this.router.navigateByUrl('/login');
-    }, error => {
+    this.getAppDetails();
+    this.storage.getLocalStorage(localStorageConstants.USER_DETAILS).then(data => {
+      this.profileInfo = data;
+    }).catch(error => {
+      
     })
-    if (!localStorage.getItem("token")) {
-      this.router.navigateByUrl('/login');
-    }
+
   }
-  public checkLocalData() {
-    let isDirty: boolean = false;
+  async getAppDetails() {
+    this.appVersion = await this.appDetails.getVersionNumber();
+    this.appName = await this.appDetails.getAppName();
   }
 
-  async showConfirmAlert() {
-    let alertTexts;
-    this.translateService.get(['message.local_data_changes'], ['message.please_sync_before_logout']).subscribe((texts: string) => {
-      alertTexts = texts;
-    });
+
+  confirmLogout() {
+    this.confirmData('LABELS.WARNING', 'MESSAGES.LOGOUT_CONFIRMATION', 'LABELS.BACK', 'LABELS.CONTINUE');
+  }
+
+  doLogout() {
+    this.auth.doLogout().then(data => {
+      this.notificationServ.stopNotificationPooling();
+      this.storage.deleteAllStorage();
+      this.currentUser.deleteUser().then(user => {
+        this.db.dropDb();
+        this.router.navigateByUrl('/login');
+      }, error => {
+        this.loger.log(error, "error CurrentUserService 35")
+      })
+      this.storage.setLocalStorage(localStorageConstants.FIRST_TIME, "false")
+    }, error => {
+      this.loger.log(error, "error doLogout 39")
+    })
+  }
+
+  async confirmData(title, body, btnback, btnContinue) {
+    let texts;
+    this.translate.get([title, body, btnback, btnContinue]).subscribe(data => {
+      texts = data;
+    })
     const alert = await this.alertController.create({
-      header: alertTexts['message.local_data_changes'],
-      message: alertTexts['message.want_sync_before_erase'],
+      cssClass: 'c-permission',
+      header: texts[title],
+      message: texts[body],
       buttons: [
         {
-          text: 'Okay',
-          role: 'cancel',
+          text: texts[btnback],
+          role: "cancel",
           cssClass: 'secondary',
-          handler: (blah) => {
-          }
+          handler: (data) => {
+
+          },
         },
         {
-          text: 'Logout',
-          handler: () => {
-            this.logout();
-          }
-        }
-      ]
+          text: texts[btnContinue],
+          role: "role",
+          cssClass: 'secondary',
+          handler: (data) => {
+            this.doLogout();
+          },
+        },
+      ],
     });
     await alert.present();
   }

@@ -1,0 +1,20 @@
+@import'../../../theme/colors.scss';
+
+.filterContainer {
+    padding: 15px 10px;
+    ;
+}
+
+.selectedFilter {
+    background-color: var(--ion-color-primary);
+    color: $white-color;
+
+    ion-icon {
+        color: $white-color;
+
+    }
+}
+
+.capitalize {
+    text-transform: capitalize;
+}

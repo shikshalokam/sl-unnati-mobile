@@ -1,50 +1,12 @@
 <ion-header>
-  <app-header [title]="'newsfeed.title' | translate" [showMenu]="false" [showBack]="true" [isGoBack]="back"
-    [noBorder]="false">
+  <app-header title="LABELS.NEWSFEED" [showMenu]="true" (onSearch)="onSearcBtnClick()" [showSearch]="true">
+    <ion-back-button></ion-back-button>
   </app-header>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <h2>{{'message.comingsoon' | translate}}</h2>
-    </ion-card-header>
-  </ion-card>
 
-  <!-- <p>{{'message.share_success' | translate}}</p>
-  <div class="pop-container">
-    <div class="pop-msg">
-      <div>
-        <ion-textarea placeholder="{{'current_task.add_remarks' | translate}}" [(ngModel)]="post.comment"
-          maxlength="512" rows="7">
-        </ion-textarea>
-      </div>
-    </div>
-    <ion-row>
-      <ion-col size="6">
-        <ion-row class="icon-attch" [ngClass]="{'isHaveData': post.imageUrl}">
-          <ion-col size="6" class="fileUpload">
-            <img src="assets/images/picture.png" style="width: 1.8em;">
-            <input #imageInputFile type="file" class="upload" (change)="selectedFile(imageInputFile,'image')"
-              accept="image/*" />
-          </ion-col>
-          <ion-col size="6">
-            <form class="icon-attch" [ngClass]="{'isHaveData': post.file?.name}">
-              <div class="fileUpload">
-                <img src="assets/images/attachment.png" style="width: 1.8em;">
-                <input #imageInputFile type="file" class="upload" (change)="selectedFile(imageInputFile,'file')" />
-              </div>
-            </form>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-      <ion-col size="6">
-        <div class="pop-btn">
-          <ion-button color="primary" expand="block" (click)="postNews()">
-            {{'button.post' | translate}}
-          </ion-button>
-        </div>
-      </ion-col>
-    </ion-row>
-  </div> -->
+<ion-content>
+<ion-card style="text-align:center"> 
+  <h2> Coming Soon ! </h2> 
+  </ion-card>
 </ion-content>

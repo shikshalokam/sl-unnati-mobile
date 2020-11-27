@@ -1,133 +1,90 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy } from '@angular/router';
-import { IonicStorageModule } from '@ionic/storage';
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Network } from '@ionic-native/network/ngx';
-import { NetworkService } from './network.service';
-import { CurrentUserProvider } from './current-user';
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS, HttpBackend } from '@angular/common/http';
-import { TranslateService } from '@ngx-translate/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { RouteReuseStrategy } from "@angular/router";
 
-import { HttpModule } from '@angular/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { ApiProvider } from '../app/api/api';
-import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { DatePipe } from '@angular/common';
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
+import { SplashScreen } from "@ionic-native/splash-screen/ngx";
+import { StatusBar } from "@ionic-native/status-bar/ngx";
+
 // import { FCM } from '@ionic-native/fcm/ngx';
-// import { FcmProvider } from './fcm';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
-import { Badge } from '@ionic-native/badge/ngx';
-import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
-import { File } from '@ionic-native/file/ngx';
-import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
-import { FileChooser } from '@ionic-native/file-chooser/ngx';
-import { FilePath } from '@ionic-native/file-path/ngx';
-import { Base64 } from '@ionic-native/base64/ngx';
-import { AppVersion } from '@ionic-native/app-version/ngx';
-import { SharedModule } from './shared-module/shared-module';
-import { TokenInterceptor } from './interceptors/token.interceptor';
-import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-import { Deeplinks } from '@ionic-native/deeplinks/ngx';
-import { Market } from '@ionic-native/market/ngx';
-import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
-import { ImagePicker } from '@ionic-native/image-picker/ngx';
-// export function createTranslateLoader(http:Http ) {
-//   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-// }
-export function HttpLoaderFactory(handler: HttpBackend) {
-  const http = new HttpClient(handler);
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
+import { HttpModule } from "@angular/http";
+import { IonicStorageModule } from "@ionic/storage";
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { ApiInterceptor } from "./core";
+import { AppVersion } from "@ionic-native/app-version/ngx";
+import { MomentModule } from "ngx-moment";
+import { Network } from "@ionic-native/network/ngx";
+import { FileTransfer } from "@ionic-native/file-transfer/ngx";
+import { Deeplinks } from "@ionic-native/deeplinks/ngx";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+// import { FCM } from '@ionic-native/fcm/ngx';
+import { LocalNotifications } from "@ionic-native/local-notifications/ngx";
+import { DatePicker } from "@ionic-native/date-picker/ngx";
+import { Camera } from "@ionic-native/camera/ngx";
+import { File } from "@ionic-native/file/ngx";
+import { WebView } from "@ionic-native/ionic-webview/ngx";
+import { FilePath } from "@ionic-native/file-path/ngx";
+import { Chooser } from "@ionic-native/chooser/ngx";
+import { IOSFilePicker } from "@ionic-native/file-picker/ngx";
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    // GetSubEntitiesPage
-  ],
-  entryComponents: [
-  ],
+  declarations: [AppComponent],
+  entryComponents: [],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,
-    HttpModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
+
     IonicModule.forRoot(),
-    SharedModule,
     AppRoutingModule,
+    HttpClientModule,
+    HttpModule,
+    ReactiveFormsModule,
+    FormsModule,
     IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
-      // loader: {
-      //   provide: TranslateLoader,
-      //   useFactory: (createTranslateLoader),
-      //   deps: [HttpClient]
-      // }
+      // defaultLanguage: "en",
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpBackend],
+        deps: [HttpClient],
       },
     }),
+    MomentModule,
   ],
   providers: [
     StatusBar,
-    Network,
-    NetworkService,
-    CurrentUserProvider,
-    InAppBrowser,
-    AppLauncher,
-    ApiProvider,
-    Market,
-    DatePicker,
-    DatePipe,
-    SocialSharing,
     SplashScreen,
+    InAppBrowser,
+    Network,
     FileTransfer,
-    FileTransferObject,
-    File,
-    FileChooser,
-    Camera,
-    FilePath,
-    AppVersion,
-    FileOpener,
-    Base64,
-    AndroidPermissions,
     Deeplinks,
-    IOSFilePicker,
-    ImagePicker,
-    DocumentViewer,
+    TranslateModule,
+    // FCM,
+    DatePicker,
+    LocalNotifications,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
+      useClass: ApiInterceptor,
       multi: true,
     },
-    // FCM,
-    // FcmProvider,
-    LocalNotifications,
-    Badge,
+    AppVersion,
+    Camera,
+    File,
+    WebView,
+    FilePath,
+    Chooser,
+    IOSFilePicker,
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-  constructor(public statusBar: StatusBar, public translate: TranslateService) {
-    this.translate.setDefaultLang("en");
-    this.translate.use("en");
-    this.statusBar.overlaysWebView(false);
-    this.statusBar.backgroundColorByHexString('#fff');
-  }
-}
-// platformBrowserDynamic().bootstrapModule(AppModule);
+export class AppModule {}

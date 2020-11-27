@@ -1,0 +1,16 @@
+<ion-header>
+  <app-header title="LABELS.SETTINGS" [showMenu]="false" [showReload]="false" [showSearch]="false">
+    <ion-back-button></ion-back-button>
+  </app-header>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>{{'LABELS.CHANGE_LANGUAGE' | translate}}</ion-label>
+      <ion-select  [(ngModel)]='language' (ionChange)='languageChange()'>
+        <ion-select-option *ngFor ="let data of languages" [value] ="data.value">{{data.lang | translate}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    </ion-list>
+</ion-content>

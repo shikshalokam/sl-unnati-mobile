@@ -1,0 +1,7 @@
+<ion-toolbar color="primary">
+  <ion-searchbar [debounce]="500" animated="true" [(ngModel)]="value" placeholder="{{placeholder|translate}}" (ionChange)="search($event)" >
+  </ion-searchbar>
+  <ion-buttons (click)="close()" slot="end">
+    <ion-icon slot="icon-only" name="close" color="light"></ion-icon>
+  </ion-buttons>
+</ion-toolbar>

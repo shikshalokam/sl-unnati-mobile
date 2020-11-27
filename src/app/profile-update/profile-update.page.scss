@@ -1,0 +1,25 @@
+@import '../../theme/colors.scss';
+.selection {
+    background: $white-color;
+    border-bottom: 2px solid #eee;
+    padding: 15px 15px;
+    color: #777;
+}
+.chipContainer {
+    padding-top: 5px;
+}
+.innerContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+ }
+
+ .longText {
+    display: inline-block;
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}

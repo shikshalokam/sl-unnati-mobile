@@ -1,27 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
-// import { FcmProvider } from '../fcm';
 import { IonicModule } from '@ionic/angular';
-
+import { LoginPageRoutingModule } from './login-routing.module';
 import { LoginPage } from './login.page';
-import {SafePipe} from '../safe-pipe';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: LoginPage
-  }
-];
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    LoginPageRoutingModule,
+    SharedModule
   ],
-  declarations: [LoginPage,SafePipe],
+  declarations: [LoginPage]
 })
-export class LoginPageModule { }
+export class LoginPageModule {}

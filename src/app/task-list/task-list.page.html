@@ -1,0 +1,33 @@
+<ion-header>
+  <app-header title="LABELS.TASKS" [showMenu]="true"></app-header>
+  <ion-back-button></ion-back-button>
+</ion-header>
+<ion-content>
+  <ion-segment (ionChange)="tabChanged($event)" value="{{taskTabs[0].value}}">
+    <ion-segment-button value="{{tab.value}}" *ngFor="let tab of taskTabs">
+      <ion-label>{{tab.name | translate}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-item class="search-bar-custom">
+    <ion-icon name="search" item-left color="dark"></ion-icon>
+    <ion-input type="text" placeholder="{{'LABELS.SEARCH' | translate }}" [(ngModel)]="searchInput" (ionChange)="taskListSearch($event)"></ion-input>
+  </ion-item>
+  <div [ngSwitch]="type">
+    <div *ngSwitchCase="'ongoing'">
+      <div *ngIf="(ongoing | filter:searchInput)?.length === 0">
+        <app-no-data [message]="'MESSAGES.NO_DATA_AVAILABLE'"></app-no-data>
+      </div>
+      <div *ngFor="let result of ongoing | filter:searchInput">
+        <app-tasklist-card [cardData]="result"></app-tasklist-card>
+      </div>
+    </div>
+    <div *ngSwitchCase="'past'">
+      <div *ngIf="(past | filter:searchInput)?.length === 0">
+        <app-no-data [message]="'MESSAGES.NO_DATA_AVAILABLE'"></app-no-data>
+      </div>
+      <div *ngFor="let result of past | filter:searchInput">
+        <app-tasklist-card [cardData]="result"></app-tasklist-card>
+      </div>
+    </div>
+  </div>
+</ion-content>

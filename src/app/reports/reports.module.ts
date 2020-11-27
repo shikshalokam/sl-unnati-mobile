@@ -1,28 +1,16 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
-import { IonicModule } from '@ionic/angular';
-import {SharedModule} from '../shared-module/shared-module';
-import { ReportsPage } from './reports.page';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: ReportsPage
-  }
-];
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { IonicModule } from "@ionic/angular";
+import { ReportsPageRoutingModule } from "./reports-routing.module";
+import { ReportsPage } from "./reports.page";
+import { CoreModule } from "../core/core.module";
+import { SharedModule } from "../shared/shared.module";
+import { SocialSharing } from "@ionic-native/social-sharing/ngx";
 
 @NgModule({
-  imports: [
-    CommonModule,SharedModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes),
-    TranslateModule.forChild({
-    })
-  ],
-  declarations: [ReportsPage]
+  imports: [CommonModule, FormsModule, IonicModule, ReportsPageRoutingModule, CoreModule, SharedModule],
+  declarations: [ReportsPage],
+  providers: [SocialSharing],
 })
 export class ReportsPageModule {}

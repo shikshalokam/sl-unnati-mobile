@@ -1,0 +1,29 @@
+<ion-header>
+  <app-header title="{{categoryTitle}}" [bottomBorder]="true" [showMenu]="false" [showReload]="false">
+    <ion-back-button></ion-back-button>
+  </app-header>
+</ion-header>
+<ion-content>
+  <div *ngIf="templates">
+    <app-search-bar (onFocus)="templateSerach()">
+    </app-search-bar>
+    <ion-item class="sort-box">
+      <ion-label position="floating">{{'LABELS.SORT_BY' | translate}}</ion-label>
+      <ion-select (ionChange)="selectSort($event)">
+        <ion-select-option *ngFor="let opt of sortOptions" value={{opt.value}}>
+          {{opt?.title | translate}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <!-- <div class="sort-box">
+      <span *ngFor="let opt of sortOptions" (click)="selectSort(opt.value)" class="sort-options"
+        [ngClass]="{'selected-option':opt.isSelected == true}"> {{opt.title | translate}} </span>
+    </div> -->
+    <app-project-card [data]="templates" (onGetTemplate)="getTemplate($event)"></app-project-card>
+    <div class="loadmore-btn" *ngIf="templates.length && templatesCount > templates.length">
+      <ion-button (click)="loadMoreTemplates()">
+        {{'LABELS.LOAD_MORE' | translate}}</ion-button>
+    </div>
+  </div>
+  <app-no-data *ngIf="noTemplates"></app-no-data>
+</ion-content>

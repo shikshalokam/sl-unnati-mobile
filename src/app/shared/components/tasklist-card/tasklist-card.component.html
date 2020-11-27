@@ -1,0 +1,22 @@
+
+<ion-card>
+  <div style="margin: 15px;">
+  <div style="font-weight: 600;">
+   {{cardData.name}}
+  </div>
+  <div style="padding-top: 10px;"  >
+  {{cardData?.endDate | date :'dd MMM yyyy'}}
+  </div>
+  <ion-row>
+    <ion-col size="5" *ngIf="cardData?.status" style="margin:auto;">
+      <ion-progress-bar *ngIf="cardData?.status == 'Completed' || cardData?.status == 'completed'" value="1" color="success"></ion-progress-bar>
+      <ion-progress-bar *ngIf="cardData?.status == 'In Progress' || cardData?.status == 'inProgress'" value="0.5" color="warning"></ion-progress-bar>
+      <ion-progress-bar *ngIf="cardData?.status == 'Not started' || cardData?.status == 'not started' || cardData?.status == 'notStarted'" value="1" color="medium"></ion-progress-bar>
+    </ion-col>
+    <ion-col size="7" style="text-align:right;">
+      <span> {{'LABELS.SUB_TASKS' | translate}} : {{cardData?.children?.length ? cardData?.children?.length : 0}}
+       </span>
+    </ion-col>
+  </ion-row>
+</div>
+</ion-card>

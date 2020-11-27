@@ -1,330 +1,264 @@
 import { Component, OnInit } from '@angular/core';
+import { DbService, UnnatiDataService, ToastMessageService, LocalStorageService, localStorageConstants, LoaderService, UtilsService } from '../core';
+import { AlertController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { Storage } from '@ionic/storage';
-import * as moment from 'moment';
-import { HomeService } from '../home/home.service';
-import { ToastService } from '../toast.service';
-import { AppConfigs } from '../core-module/constants/app.config';
-import { LocalKeys } from '../core-module/constants/localstorage-keys';
-import { ProjectService } from '../project-view/project.service';
-import * as uuid from 'uuid';
+import { TranslateService } from '@ngx-translate/core';
+import { environment } from 'src/environments/environment';
+import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-create-project',
   templateUrl: './create-project.page.html',
   styleUrls: ['./create-project.page.scss'],
 })
 export class CreateProjectPage implements OnInit {
-  back = 'project-view/home';
-  isValidDate: boolean = true;
-  otherCategory;
-  withinTitleLimit;
-  withinGoalLimit;
-  createProject: FormGroup;
-  startDate;
-  selectedOther: boolean = false;
-  popupshow: boolean = false;
-  endDate;
-  today: any = new Date();
-  projectCreatePopUp: any = {};
-  project: any = {};
-  markLabelsAsInvalid: boolean = false;
-  createNewProject: boolean;
-
-  checkedCategories = [];
-  categories: any = [
-    { key: 'Teacher', id: 1, value: false },
-    { key: 'Student', id: 2, value: false },
-    { key: 'Community', id: 3, value: false },
-    { key: 'School process', id: 4, value: false },
-    { key: 'Infrastructure', id: 5, value: false },
-    { key: 'Education leader', id: 6, value: false },
-    // { value: 'Other', id: 6, isChecked: false },
-  ];
-
+  projectFormData;
+  parameters;
+  project;
+  projectForm: FormGroup;
+  categories;
+  projectId;
+  button = "LABELS.NEXT";
+  showCategories = false;
+  showTask: boolean = true;
+  selectedCategories = [];
+  enableInput: boolean = false;
+  tasks = [];
   constructor(
-    public formBuilder: FormBuilder,
-    public router: Router,
-    public route: ActivatedRoute,
-    public datepipe: DatePipe,
-    public datePicker: DatePicker,
-    public storage: Storage,
-    public homeService: HomeService,
-    public toastService: ToastService,
-    public projectService: ProjectService
+    private db: DbService,
+    private loader: LoaderService,
+    private unnatiService: UnnatiDataService,
+    private storage: LocalStorageService,
+    private fb: FormBuilder,
+    private alert: AlertController,
+    private router: Router,
+    private translate: TranslateService,
+    private toast: ToastMessageService,
+    private location: Location,
+    private utilsService: UtilsService,
+    private route: ActivatedRoute
   ) {
-    toastService.popClose.subscribe(data => {
-      this.popupshow = false;
-    })
-    this.homeService.clearMyProject.subscribe(data => {
-      this.prepareForm();
-      this.createNewProject = true;
-    })
-    route.params.subscribe(param => {
-      this.projectService.setTitle('createProject');
-      // this.categories.forEach((cat, i) => {
-      //   this.categories[i].isChecked = false;
-      // });
-      if (param.clearData == 'yes') {
-        this.project = {};
-        this.prepareForm();
-        this.createNewProject = true;
-        this.checkedCategories = [];
-        this.today = this.datepipe.transform(this.today, 'MM-dd-yyyy');
-      } else {
-        this.createNewProject = false;
-        this.storage.get(LocalKeys.newcreatedproject).then(data => {
-          this.checkedCategories = data.category;
-          data.category.forEach(cat => {
-            if (cat == 'Teacher' || cat == 'Student' || cat == 'Community' || cat == 'School process' || cat == 'infrastructure' || cat == 'Education leader') {
-            } else {
-              this.selectedOther = true;
-              this.otherCategory = cat;
-              const index: number = this.checkedCategories.indexOf(cat);
-              if (index !== -1) {
-                this.checkedCategories.splice(index, 1);
-              }
-            }
-          })
-          this.project = data;
-        })
+    route.queryParams.subscribe(parameters => {
+      if (parameters.projectId) {
+        this.parameters = parameters;
+        this.showTask = false;
+        this.button = "LABELS.SAVE_EDITS"
+        this.getProjectFromLocal();
       }
     })
   }
 
-  ionViewDidEnter() {
-    this.isValidDate = true;
-  }
   ngOnInit() {
-    this.prepareForm();
+    this.getForm();
   }
-  //Form preparing
-  public prepareForm() {
-    this.createProject = this.formBuilder.group({
-      title: ['', Validators.required],
-      goal: ['', Validators.required],
-      // category: ['', Validators.required],
-      startDate: ['', ''],
-      endDate: ['', ''],
-      Othercategory: ['', '']
+  getProjectFromLocal() {
+    this.db.query({ _id: this.parameters.projectId }).then(success => {
+      this.project = success.docs.length ? success.docs[0] : {};
+      console.log(this.categories, "this.project.categories", this.project.categories);
+      if (this.project.categories.length) {
+        this.project.categories.forEach(element => {
+          element.isChecked = true;
+        });
+        this.selectedCategories = this.project.categories;
+
+      }
+      console.log(this.selectedCategories, " this.selectedCategories", this.project.categories);
+    }, error => {
     })
   }
-  // set date
-  public setDate(event, type) {
-    if (type == 'sd') {
-      this.project.startDate = this.datepipe.transform(new Date(event.detail.value));
-      // this.startDate = date;
-      this.isValidDate = true;
-      this.startDate = this.datepipe.transform(new Date(event.detail.value));
-      if (this.project.endDate) {
-        this.checkDate();
-      }
-    } else if (type == "ed") {
-      this.project.endDate = this.datepipe.transform(new Date(event.detail.value));
-      // this.endDate = date;
-      this.isValidDate = true;
-      this.endDate = this.datepipe.transform(new Date(event.detail.value));
-      if (this.project.startDate) {
-        this.checkDate();
+  getForm() {
+    this.storage.getLocalStorage(localStorageConstants.PROJECT_META_FORM).then(projectData => {
+      this.projectFormData = projectData;
+      this.storage.getLocalStorage(localStorageConstants.TASK_META_FORM).then(taskData => {
+        let taskForm = {
+          taskData
+        }
+        this.projectFormData.push(taskForm);
+        console.log(this.projectFormData, "this.projectFormData");
+        this.prepareForm();
+      })
+    })
+  }
+  close() {
+    this.location.back();
+  }
+  async confirmToClose() {
+    let text;
+    this.translate.get(['LABELS.DISCARD_PROJECT', 'MESSAGES.DISCARD_PROJECT', 'LABELS.DISCARD', 'LABELS.CONTINUE']).subscribe(data => {
+      text = data;
+    });
+    const alert = await this.alert.create({
+      cssClass: 'my-custom-class',
+      header: text['LABELS.DISCARD_PROJECT'],
+      message: text['MESSAGES.DISCARD_PROJECT'],
+      buttons: [
+        {
+          text: text['LABELS.DISCARD'],
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            this.close();
+          }
+        }, {
+          text: text['LABELS.CONTINUE'],
+          handler: () => {
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async confirmToDelete(data, type) {
+    let text;
+    this.translate.get(['MESSAGES.DELETE_CONFIRM', 'LABELS.CANCEL', 'LABELS.DELETE']).subscribe(data => {
+      text = data;
+    });
+    const alert = await this.alert.create({
+      cssClass: 'my-custom-class',
+      // header: text['LABELS.DISCARD_PROJECT'],
+      message: text['MESSAGES.DELETE_CONFIRM'] + type,
+      buttons: [
+        {
+          text: text['LABELS.CANCEL'],
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            this.close();
+          }
+        }, {
+          text: text['LABELS.DELETE'],
+          handler: () => {
+            if (type == 'task') {
+              this.removeTask(data);
+            } else if (type == 'category') {
+              this.removeCategory(data);
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+  public prepareForm() {
+    const controls = {};
+    this.projectFormData.forEach(res => {
+      const validationsArray = [];
+      if (!res.taskData) {
+        if (res.field != 'categories') {
+          if (res.validation) {
+            if (res.validation.required) {
+              res.validation.name = "required",
+                validationsArray.push(
+                  Validators.required
+                );
+            }
+            controls[res.field] = new FormControl(this.project ? this.project[res.field] : '', validationsArray);
+          }
+        }
       } else {
-        this.project.startDate = this.datepipe.transform(new Date());
+        res.taskData.forEach(element => {
+          if (element.validation) {
+            if (element.validation.required) {
+              element.validation.name = "required",
+                validationsArray.push(
+                  Validators.required
+                );
+            }
+            controls[element.field] = new FormControl('', validationsArray);
+          }
+        });
       }
-    }
-    // this.datePicker.show({
-    //   date: new Date(),
-    //   mode: 'date',
-    //   androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    // }).then(
-    //   date => {
-    //     if (type == 'sd') {
-    //       this.project.startDate = this.datepipe.transform(new Date(date));
-    //       // this.startDate = date;
-    //       this.isValidDate = true;
-    //       this.startDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
-    //       if (this.project.endDate) {
-    //         this.checkDate();
-    //       }
-    //     } else if (type == "ed") {
-    //       this.project.endDate = this.datepipe.transform(new Date(date));
-    //       // this.endDate = date;
-    //       this.isValidDate = true;
-    //       this.endDate = this.datepipe.transform(new Date(date), "dd-MM-yyyy");
-    //       if (this.project.startDate) {
-    //         this.checkDate();
-    //       } else {
-    //         this.project.startDate = this.datepipe.transform(new Date());
-    //       }
-    //     }
-    //   },
-    //   err => console.log('Error occurred while getting date: ', err)
-    // );
+    });
+    this.projectForm = this.fb.group(
+      controls
+    );
   }
-  // validate date
-  public checkDate() {
-    let projectStartDate = this.datepipe.transform(new Date(this.project.startDate));
-    let projectEndDate = this.datepipe.transform(new Date(this.project.endDate));
-    if (new Date(projectStartDate) <= new Date(projectEndDate)) {
-      this.isValidDate = true;
-      let sDay = new Date(projectStartDate).getDate();
-      let sMonth = new Date(projectStartDate).getMonth();
-      let sYear = new Date(projectStartDate).getFullYear();
-      let eDay = new Date(projectEndDate).getDate();
-      let eMonth = new Date(projectEndDate).getMonth();
-      let eYear = new Date(projectEndDate).getFullYear();
-      var startDate = moment([sYear, sMonth, sDay]);
-      var endDate = moment([eYear, eMonth, eDay]);
-      let diffInMonths = endDate.diff(startDate, 'months');
-      let diffInDays = endDate.diff(startDate, 'days');
-      let diffInYears = endDate.diff(startDate, 'years');
-      if (diffInMonths) {
-        this.project.duration = diffInMonths + ' months';
-      } else if (diffInDays || !diffInDays) {
-        this.project.duration = diffInDays + ' days';
-      } else if (diffInYears) {
-        this.project.duration = diffInYears + ' years';
-      }
-    } else {
-      this.isValidDate = false;
+  // event triger when user click on add category
+  openCatgoryList(categories) {
+    this.categories = categories;
+    this.showCategories = true;
+  }
+  // event trigger from category list page
+  selectCategories(data) {
+    this.selectedCategories = data;
+    this.showCategories = false;
+  }
+  removeCategory(category) {
+    const index = this.selectedCategories.indexOf(category, 0);
+    if (index > -1) {
+      this.selectedCategories.splice(index, 1);
     }
   }
-  // Create project
-  public create() {
-    if (this.otherCategory) {
-      const index: number = this.checkedCategories.indexOf(this.otherCategory);
-      if (index == -1) {
-        this.checkedCategories.push(this.otherCategory);
-      }
+  removeTask(task) {
+    const index = this.tasks.indexOf(task, 0);
+    if (index > -1) {
+      this.tasks.splice(index, 1);
     }
-    this.project.category = this.checkedCategories;
-    if (this.project.category.length <1 || (this.createProject.status == "INVALID" || !this.isValidDate)) {
-      this.markLabelsAsInvalid = true;
-    } else {
-      this.markLabelsAsInvalid = false;
-      this.project.isSync = false;
-      this.project.status = "Not started";
-      this.project.isNew = true;
-      this.project.lastUpdate = new Date();
-      this.project.isStarted = false;
-      this.project.appReferenceKey = uuid.v4();
-      if (!this.project.tasks) {
-        this.project.tasks = [];
-      }
-      this.project.createdType = 'by self';
-      // this.project.createdType ='by referance';
-      let environment = AppConfigs.currentEnvironment;
-      let programId = '';
-      AppConfigs.environments.forEach(env => {
-        if (environment === env.name) {
-          programId = env.programId;
+  }
+  next() {
+    if (this.projectForm.value.description && this.projectForm.value.title && this.selectedCategories.length) {
+      delete this.projectForm.value.name;
+      this.selectedCategories.forEach(category => {
+        'isChecked' in category ? delete category.isChecked : ''
+        if (category.label == 'Others') {
+          category.label = category.value;
+          category.value = '';
+          delete category._id;
+        } else {
+          category.value = category._id;
+          delete category._id;
         }
       });
-      this.storage.get(LocalKeys.allProjects).then((projectsList: any) => {
-        let mapped: boolean = false;
-        if (projectsList) {
-          projectsList.forEach(programsList => {
-            // already basic structure is there in local
-            if (programsList) {
-              if (programsList.programs && programsList.programs._id == programId && !mapped) {
-                mapped = true
-                // programsList.projects.forEach(program => {
-                if (this.createNewProject) {
-                  this.project._id = programsList.projects.length + 1;
-                  programsList.projects.push(this.project);
-                  this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {
-                    this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
-                      this.toastService.successToast('message.project_is_created');
-                      // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
-                    })
-                  })
-                } else if (programsList.programs) {
-                  programsList.projects.forEach(project => {
-                    if (project._id == this.project._id) {
-                      project.category = this.project.category;
-                      project.title = this.project.title;
-                      project.goal = this.project.goal;
-                      project.endDate = this.project.endDate;
-                      project.startDate = this.project.startDate;
-                      this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {
-                        this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
-                          this.toastService.successToast('message.project_is_created');
-                          // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
-                        })
-                      })
-                    }
-                  });
-                }
-                // });
-              }
-              //  else {
-              //   this.project._id = programsList.projects.length + 1;
-              // }
-            }
-          });
-          this.storage.get(LocalKeys.allProjects).then(data => {
-          })
-        } else {
-          // if there is no basic structure is in local
-          mapped = true;
-          this.project._id = 1;
-          let pro1 = [
-            {
-              programs: {
-                name: 'My Projects',
-                _id: programId
-              },
-              projects: []
-            }
-          ]
-          pro1[0].projects.push(this.project);
-          projectsList = pro1;
-          this.storage.set(LocalKeys.allProjects, projectsList).then(myProjects => {
-            this.storage.set(LocalKeys.newcreatedproject, this.project).then(cmp => {
-              this.toastService.successToast('message.project_is_created');
-              // this.router.navigate(['/project-view/create-task', this.project._id, "cp"]);
-            })
-          })
-        }
-        this.popupshow = true;
-        this.projectCreatePopUp = {
-          type: 'newProject',
-          title: '',
-          text: 'Your project has been saved, click below to view your project.',
-          showCloseButton: false,
-          titleCss: {
-          },
-          textCss: {
-            fontSize: '16px',
-            color: '#b23e33;'
-          },
-          buttons: [
-            {
-              title: 'View Project',
-              color: 'primary',
-              isActionable: '/project-view/project-detail/form',
-            }]
-        }
-        this.storage.set(LocalKeys.projectToBeView, this.project).then(project => {
-        })
+      this.projectForm.value.categories = this.selectedCategories;
+      this.parameters ? this.update(this.projectForm.value) : this.saveData(this.projectForm.value);
+    } else {
+      this.translate.get(['MESSAGES.REQUIRED_FIELDS']).subscribe(data => {
+        this.toast.showMessage(data['MESSAGES.REQUIRED_FIELDS'], 'danger');
       })
     }
   }
-  categorySelected(event) {
-    this.selectedOther = !this.selectedOther;
-    if (!this.selectedOther) {
-      this.otherCategory = '';
+  openInput(event) {
+    this.enableInput = true;
+  }
+  saveTask(taskData) {
+    if (taskData.value) {
+      let newTask = JSON.parse(JSON.stringify(this.utilsService.getMetaData('task')));
+      newTask.name = taskData.value;
+      console.log(newTask, "newTask");
+      this.tasks.push(newTask);
+      this.enableInput = false;
+      taskData.value = '';
     }
   }
-
-  selectedCategory(key) {
-    if (!this.checkedCategories.includes(key)) {
-      this.checkedCategories.push(key);
+  discardTask() {
+    this.enableInput = false;
+  }
+  public saveData(data) {
+    if (!this.projectId) {
+      data.isNew = true;
+      data.tasks = this.tasks;
+      data.isEdit = true;
+      const modifiedData = this.utilsService.setStatusForProject(data);
+      this.db.createPouchDB(environment.db.projects);
+      this.db.create(modifiedData).then(success => {
+        this.projectId = success.id;
+        console.log('in else ', this.button);
+        this.router.navigate(['menu/project-operation', success.id], { queryParams: { createdType: 'bySelf' }, replaceUrl: true });
+      }).catch(error => {
+      })
     } else {
-      const index: number = this.checkedCategories.indexOf(key);
-      if (index !== -1) {
-        this.checkedCategories.splice(index, 1);
-      }
+      this.button == 'LABELS.SAVE_EDITS' ? this.router.navigate(['menu/project-operation', this.projectId], { queryParams: { createdType: 'bySelf' }, replaceUrl: true }) : this.location.back();
     }
+  }
+  update(data) {
+    this.project.title = data.title;
+    this.project.description = data.description;
+    this.project.categories = data.categories;
+    this.db.update(this.project).then(success => {
+      this.location.back();
+    }).catch(error => {
+    })
   }
 }

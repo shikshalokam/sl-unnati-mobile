@@ -1,58 +1,66 @@
-<ion-content class="ion-padding" *ngIf="show">
-  <ion-slides pager="true" style="min-height: 100%;" (ionSlidePrevEnd)="slideDidChangePrev($event)"
-    (ionSlideNextEnd)="slideDidChangeNext($event)">
+<ion-content class="ion-padding">
+  <!-- On boarding screens -->
+  <ion-slides pager="true" [options]="slideOpts" style="min-height: 100%;"
+    (ionSlidePrevEnd)="slideDidChangePrev($event)" (ionSlideNextEnd)="slideDidChangeNext($event)">
     <ion-slide>
-      <div class="mainContainer">
-        <div class="container">
-          <img src="../../assets/images/onboarding1.png" class="maxSize" />
-        </div>
-        <div class="_flex-box _justify-content-center conatiner">
-          <h4 class="blackText"> Planning Improvement Projects</h4>
-          <ion-text class="alignLeft content ion-text-wrap">
-            Create and track projects towards improving
-            school and school
-            support system.
-          </ion-text>
-        </div>
-      </div>
-    </ion-slide>
-    <ion-slide>
-      <div class="mainContainer">
-        <div class="container">
-          <img src="../../assets/images/onboarding2.png" class="maxSize" />
-        </div>
-        <div class="_flex-box _justify-content-center conatiner">
-          <h4 class="blackText"> Assign Tasks and Subtasks</h4>
-          <ion-text class="alignLeft content ion-text-wrap">
-            Divide your plans into tasks and sub-tasks
-            and assign it to other
-            users.
-          </ion-text>
-        </div>
-      </div>
-    </ion-slide>
-    <ion-slide>
-      <div class="mainContainer" style="margin-top: 50%;">
-        <div class="container">
-          <ion-icon name="ios-key" style="font-size: 6em;color: #777;"></ion-icon>
-        </div>
-        <a (click)="loginClick()">
-          <div>
-            <h1>
-              LOGIN
-              <span>
-                <ion-icon name="ios-log-in" style="vertical-align: middle;">
-                </ion-icon>
-              </span>
-            </h1>
+      <ion-grid>
+        <ion-row>
+          <div class="img-container">
+            <img src="../../assets/images/onboarding1.png" />
           </div>
-        </a>
-      </div>
+        </ion-row>
+        <div>
+          <div class="onboard-header">
+            Planning Improvement Projects
+          </div>
+          <p>
+            Create and track projects towards improving school and school
+            support system.
+          </p>
+        </div>
+      </ion-grid>
+    </ion-slide>
+    <ion-slide>
+      <ion-grid>
+        <ion-row>
+          <div class="img-container">
+            <img src="../../assets/images/onboarding2.png" />
+          </div>
+        </ion-row>
+        <div>
+          <div class="onboard-header">
+            Assign Tasks and Subtasks
+          </div>
+          <p>
+            Divide your plans into tasks and sub-tasks and assign it to other
+            users.
+          </p>
+        </div>
+      </ion-grid>
+    </ion-slide>
+    <ion-slide>
+      <ion-grid style="margin-top: 50%;">
+        <ion-col>
+          <ion-icon name="key-outline" style="font-size: 140px;color: #777;"></ion-icon>
+        </ion-col>
+        <ion-col>
+          <a (click)="loginClick()">
+            <div>
+              <h1>
+                {{'LABELS.LOGIN' | translate }}
+                <span>
+                  <ion-icon name="log-in-outline" style="vertical-align: middle;"></ion-icon>
+                </span>
+              </h1>
+            </div>
+          </a>
+        </ion-col>
+      </ion-grid>
     </ion-slide>
   </ion-slides>
 
 </ion-content>
-<ion-footer class="ion-footer-custom">
+<ion-footer class="ion-footer-custom" *ngIf="show && veryFirstTime">
   <ion-button *ngIf="buttonTitle == 'Skip'" expand="block" (click)="loginClick()">
     {{ buttonTitle }}
   </ion-button>

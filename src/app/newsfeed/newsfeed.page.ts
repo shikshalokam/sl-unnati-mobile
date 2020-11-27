@@ -1,38 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ModalController } from '@ionic/angular';
+import { HomeSearchModalComponent } from '../home/home-search-modal/home-search-modal.component';
 @Component({
   selector: 'app-newsfeed',
   templateUrl: './newsfeed.page.html',
   styleUrls: ['./newsfeed.page.scss'],
 })
 export class NewsfeedPage implements OnInit {
-  back = 'project-view/home';
-  post: any = {};
-  file;
-  imageUrl;
-  constructor() { }
+
+  constructor(
+    private modalCtrl: ModalController,
+  ) { }
+
   ngOnInit() {
   }
 
-  selectedFile(imageInput: any, type) {
-    let value;
-    const file: File = imageInput.files[0];
-    this.file = file;
-    const reader = new FileReader();
-    reader.onload = (event: any) => {
-      value = event.target.result.split(',');
-      if (type == 'image') {
-        this.post.imageUrl = value[1];
-      } else {
-        this.post.file = {
-          url: event.target.result,
-          name: this.file.name
-        }
-        // this.toastService.successToast('message.file_uploaded');
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-  public postNews() {
+  async onSearcBtnClick() {
+    const modal = await this.modalCtrl.create({
+      component: HomeSearchModalComponent,
+      // cssClass: 'my-custom-class'
+    });
+    return await modal.present();
   }
 }

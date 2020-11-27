@@ -1,63 +1,21 @@
-.create-project{
-    ion-col{
-        padding:0px;
+@import'../../theme/colors.scss';
+.project-form{
+    .label-hint{
+        color:$dark-grey-color;
     }
-    .custom-label
-    {
-        font-size: 20px !important;
-    }
-    .no-rght-brdr-rds
-    {
-        border-top-right-radius: 0px;
-        border-bottom-right-radius: 0px;
-    }
-    .right-icon
-    {
-    margin: auto;
-    background: #f3f3f3;
-    border: 1px solid;
-    border-left: none;
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
-    height: 2em;
-    width: 1.5em;
+    .item-native{
+    padding-left:0px !important;
+    margin-left: -15px !important;
     }
 }
-.category-label
-{
-    text-transform: uppercase;
-    /* padding: 15px; */
-    font-size: 16px !important;
-    font-weight: 900;
-}
-.text-wrap-overflow{
-    // font-size: 14px;
-    white-space: normal !important;
-    max-width: none !important;
-    width: 100%;
-}
-.custom-radio
-{
-    --background-checked: #b23e33;
-    --border-color-checked: #b23e33;
-    --checkmark-color: #b23e33;
-    --border-radius: 20px;
-    padding: 2px;
-    height: 20px;
-    width:20px;
-    border: 2px solid #b23e33;
-    margin-inline-end: 8px;
-    border-radius: 20px;
-    --border-color: transparent;
-}
-
-.project-date{
-    padding: 0px;
-    font-weight: 600;
-    border: 1px solid #86888f;
-    width: 100%;
-    min-height: 2.1em;
-    margin: auto;
-    padding-left: 10px;
-    padding-top: 15px;
+.data-list{
+    padding: 10px; 
+    margin: 10px 0px;
+    ion-item{
+        --padding-start: 0px;
+    }
+    .remove-icon{
+        margin-top: -20px;
+        margin-right: -15px;
+    }
 }

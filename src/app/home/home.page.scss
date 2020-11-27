@@ -1,135 +1,96 @@
-.welcome-card ion-img {
-  max-height: 35vh;
-  overflow: hidden;
-}
-.custom-card
-{
-  margin-top:10px !important;
-  margin-bottom: 10px !important;
-  .inner-card
-  {
-    padding:0px;
-  }
-}
-.inner-card
-  {
-    margin: 5px 0px;
-    color: #000;
-    border-radius: 0px;
-    .arrow-mark{
-      margin: auto;
-      font-size:22px;
-      text-align: end;
+@import'../../theme/colors.scss';
+
+.tiles-container {
+  padding: 0px 20px;
+  margin: 10px 0;
+
+  .tiles {
+    ion-card {
+      // border-radius: 15px;
+      background: $light-grey-color;
+      // margin: 4px;
+      margin: 7px 10px;
+      padding: 0px 2px 5px 0;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      border-radius: 0px;
+      img {
+        width: 40%;
+        padding: 20px 0px;
+      }
+    }
+
+    p {
+      text-align: center;
+      font-family: 'Roboto-Bold';
+      // text-transform: uppercase;
+      // font-size: 1em;
+      font-size: 1.2em;
+      padding: 0px;
+      margin: 0px 0px 10px 0px;
+      font-weight: bold;
+      color: $black-color;
+      // height: 1.5em;
     }
   }
-  .arrow-mark{
-    margin: auto !important;
-    font-size:22px !important;
-    text-align: end !important;
-  }
-.card-custom-content
-{
-  border-bottom: 1px solid #f5f5f5;
-  padding:0px !important;
-  padding-bottom:15px;
-}
-.search-results{
-  margin-top: 10px !important;
-  margin-bottom: 10px !important;
-  border-radius: 0px;;
-  color: #000;
-  background: #f5f5f5;
 }
 
-// New Ui CSS
-.tiles-container
-{
-padding: 0px 20px;
-margin-bottom: 5px;
-.tiles{
-    max-height: 100%;
-    min-height: 100%;
-    margin-bottom: 10px;
-  ion-card
-  {
-    border-radius: 15px;
-    background: #f2efef;
-    max-height: 100%;
-    min-height: 100%;
-    margin: 4px;
-    padding: 0px 2px;
-    img{
-      margin: auto;
-      width: 40%;
-      padding: 20px 0px;
-    }
-  }
-  p{
-    text-align: center;
-    font-family: 'SourceSansPro-Bold';
-    text-transform: uppercase;
-    font-size: 1em;
-    padding: 0px;
-    margin: 0px 0px 5px 0px;
-    font-weight: bold;
-    color: #000;
-    height: 1.5em;
-  }
+.activeproject-btn {
+  margin-top: -10px !important;
+  margin: auto;
+  display: table;
+  text-transform: none;
 }
-}
-.activeprojects-container{
-  font-family: 'SourceSansPro-Bold';
-  margin-bottom:10px;
+
+.activeprojects-container {
+  font-family: 'Roboto-Bold';
+  margin-bottom: 40px;
+
   h4 {
-    text-transform: uppercase;
     padding: 10px 35px;
     margin: 0px 0px 0px 0px;
-    color: #000;
+    color: $black-color;
     font-weight: 600;
     font-size: 18px;
   }
-  ion-card{
-    border-radius: 15px;
-    background: #f2efef;
+
+  ion-card {
+    padding: 10px 0px;
+    background: $light-grey-color;
     border-top-left-radius: 0px;
-    .collection-label{
-      background: #442c2e;
-      color: #fff;
+    .collection-label {
+      background: $dark-brown-color;
+      color: $white-color;
       padding: 5px 5px 5px 25px;
       font-size: 14px;
       min-width: auto;
       width: auto;
       font-weight: 600;
     }
-    .date-col{
+
+    .date-col {
       max-width: 15%;
       text-align: right;
-      color: #b23e33;
+      color: var(--ion-color-primary);
       padding: 0px 0px;
       margin-right: 10px;
-      h3{
+
+      h3 {
         font-size: 22px;
         text-transform: uppercase;
         font-weight: 600;
       }
     }
-    .title-col
-    {
+
+    .title-col {
       padding: 0px 0px;
       margin: auto;
       font-size: 17px;
       font-weight: 900;
       margin-top: 5px;
-      color: #000;
+      color: $black-color;
     }
-  }
-  .activeproject-btn
-  {
-    padding: 0px 40px;
-    --border-radius: 15px;
-    margin-top: -10px;
-    font-weight: 500;
-    font-size: 18px;
-    min-height: 40px;
   }
 }

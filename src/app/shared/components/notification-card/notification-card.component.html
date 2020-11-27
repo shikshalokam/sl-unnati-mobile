@@ -1,0 +1,14 @@
+<ion-item lines="none" class="listItem" [color]="notification?.is_read ? 'light' :'primary'">
+  <ion-label class="ion-text-wrap">
+    <ion-row>
+      <ion-text class="heading">{{notification?.title}} </ion-text>
+      <ion-text class="time">
+        <ion-row class="ion-align-items-center">
+          <ion-icon name="time-outline" class="time-icon"></ion-icon>
+          <ion-text>{{notification?.created_at | amTimeAgo }}</ion-text> 
+        </ion-row>
+      </ion-text>
+    </ion-row>
+    <p class="listItem" *ngIf="notification?.text">{{notification?.text}}</p>
+  </ion-label>
+</ion-item>

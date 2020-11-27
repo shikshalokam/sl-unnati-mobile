@@ -1,27 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
+
 import { IonicModule } from '@ionic/angular';
+
+import { MyProjectsPageRoutingModule } from './my-projects-routing.module';
+
 import { MyProjectsPage } from './my-projects.page';
-import {TranslateModule} from '@ngx-translate/core';
-import {SharedModule} from '../shared-module/shared-module';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: MyProjectsPage
-  }
-];
-
+import { CoreModule } from '../core/core.module';
+import { SharedModule } from '../shared/shared.module';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    CoreModule,
     SharedModule,
-    RouterModule.forChild(routes),
-    TranslateModule.forChild()
+    MyProjectsPageRoutingModule
   ],
   declarations: [MyProjectsPage]
 })

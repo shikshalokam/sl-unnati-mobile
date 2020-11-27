@@ -1,71 +1,152 @@
-<ion-header>
-  <app-header
-    [title]="'reports.title' | translate"
-    [showMenu]="false"
-    [noBorder]="false"
-    [showBack]="true"
-    [noBorder]="false"
-    [isGoBack]="back"
-  >
-  </app-header>
+<ion-header [translucent]="true">
+  <app-header title="LABELS.REPORTS" [showMenu]="true"></app-header>
 </ion-header>
+
 <ion-content>
-  <div *ngIf="showSkeleton">
-    <ion-card>
-      <ion-card-content class="skeleton-card-content">
-        <ion-card *ngFor="let skeleton of skeletons">
-          <ion-card-content class="skeleton-card-content">
-            <p><ion-skeleton-text animated></ion-skeleton-text></p>
-            <p>
-              <ion-skeleton-text animated></ion-skeleton-text>
-              <ion-skeleton-text animated></ion-skeleton-text>
-              <ion-skeleton-text animated></ion-skeleton-text>
-            </p>
-          </ion-card-content>
-        </ion-card>
-      </ion-card-content>
-    </ion-card>
+  <div class="ion-margin">
+    <div class="filter-container" (click)="showFilter=!showFilter">
+      <div class="filter-icon">
+        <ion-icon item-start name="funnel-outline" color="primary" class="icon"></ion-icon>
+      </div>
+      <div>{{'LABELS.FILTERS'|translate}}</div>
+      <div class="filter-icon">
+        <ion-icon name="chevron-forward-outline" color="primary" *ngIf="!showFilter"></ion-icon>
+        <ion-icon name="chevron-down-outline" color="primary" *ngIf="showFilter"></ion-icon>
+      </div>
+    </div>
+    <div *ngIf="showFilter">
+      <ion-item>
+        <div (click)="openFilterModal('entity')">
+          <p>{{filter?.entity?.name||'Select Entity'}}</p>
+        </div>
+      </ion-item>
+      <ion-item>
+        <div (click)="openFilterModal('program')">
+          <p>{{filter?.program?.name||'Select Program'}}</p>
+        </div>
+      </ion-item>
+    </div>
+    <!-- Project overview section -->
+    <section *ngIf="reportData?.projects">
+      <div class="overview-container">
+        <div class="overview-heading">
+          <div>
+            <h4>{{'LABELS.PROJECT_OVERVIEW'|translate}}</h4>
+          </div>
+
+          <div *ngIf="filterType">
+            <ion-select placeholder="Select One" [(ngModel)]="filter.type">
+              <ion-select-option [value]="t.value" *ngFor="let t of filterType">{{t.label}}</ion-select-option>
+            </ion-select>
+          </div>
+          <downlaod-share
+            [name]="fileName()"
+            [extension]="'.pdf'"
+            [downloadUrl]="downloadUrl()"
+            [interface]="'simple'"
+          ></downlaod-share>
+        </div>
+
+        <div class="project-overview-body">
+          <div class="card" *ngFor="let p of projectsArr">
+            <div class="card-image">
+              <img src="{{p?.img}}" alt="" />
+            </div>
+            <div class="card-content">
+              <div class="content-heading">{{p?.name}}</div>
+              <div class="count">{{ reportData?.projects[p?.key]}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="overview-footer">
+          <div class="view-option">
+            <ion-button (click)="viewFullReport()" expand="full" fill="outline"
+              >{{'LABELS.VIEW_FULL_REPORT'|translate}}</ion-button
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- task overview section -->
+
+    <section *ngIf="reportData?.tasks">
+      <div class="overview-container">
+        <div class="overview-heading">
+          <div>
+            <h4>{{'LABELS.TASK_OVERVIEW'|translate}}</h4>
+          </div>
+
+          <div *ngIf="filterType">
+            <ion-select placeholder="Select One" [(ngModel)]="filter.type" (ionChange)="reportTypeChange()">
+              <ion-select-option [value]="t.value" *ngFor="let t of filterType">{{t.label}}</ion-select-option>
+            </ion-select>
+          </div>
+          <downlaod-share
+            [name]="fileName()"
+            [extension]="'.pdf'"
+            [downloadUrl]="downloadUrl()"
+            [interface]="'simple'"
+          ></downlaod-share>
+        </div>
+
+        <div class="task-overview-body">
+          <div>
+            <graph-cirlce [data]="reportData?.tasks"></graph-cirlce>
+          </div>
+        </div>
+
+        <div class="overview-footer">
+          <div class="view-option">
+            <ion-button (click)="viewFullReport()" expand="full" fill="outline"
+              >{{'LABELS.VIEW_FULL_REPORT'|translate}}</ion-button
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- category` overview section -->
+
+    <section *ngIf="reportData?.categories">
+      <div class="overview-container">
+        <div class="overview-heading">
+          <div>
+            <h4>{{'LABELS.CATEGORY_OVERVIEW'|translate}}</h4>
+          </div>
+
+          <div *ngIf="filterType">
+            <ion-select placeholder="Select One" [(ngModel)]="filter.type">
+              <ion-select-option [value]="t.value" *ngFor="let t of filterType">{{t.label}}</ion-select-option>
+            </ion-select>
+          </div>
+          <downlaod-share
+            [name]="fileName()"
+            [extension]="'.pdf'"
+            [downloadUrl]="downloadUrl()"
+            [interface]="'simple'"
+          ></downlaod-share>
+        </div>
+
+        <div class="task-overview-body">
+          <div>
+            <graph-cirlce [data]="reportData?.categories"></graph-cirlce>
+          </div>
+        </div>
+
+        <div class="overview-footer">
+          <div class="view-option">
+            <ion-button (click)="viewFullReport()" expand="full" fill="outline"
+              >{{'LABELS.VIEW_FULL_REPORT'|translate}}</ion-button
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <app-no-data *ngIf="!reportData?.categories && !reportData?.tasks && !reportData?.projects"></app-no-data>
+    </section>
   </div>
-  <div *ngIf="reports && !showSkeleton">
-    <ion-card *ngIf="reports.length == 0" padding>
-      No Reports available.
-    </ion-card>
-    <ion-card *ngIf="noSchools" class="noschools"  padding>
-      No Reports available.
-    </ion-card>
-    <ion-card
-      class="report-card"
-      *ngFor="let report of reports"
-      (click)="
-        getReportFile(report.observationSubmissionId, report.observationName)
-      "
-    >
-      <ion-card-content style="padding-inline-start: 10px;">
-        <ion-grid>
-          <ion-row>
-            <ion-col style="min-width:90%;">
-              <ion-row>
-                <ion-col>
-                  <label>{{ "reports.name" | translate }} : </label
-                  ><b> {{ report.entityName }} </b> <br />
-                  <label>{{ "reports.obsr_name" | translate }} : </label>
-                  <b> {{ report.observationName }}</b> <br />
-                  <label>{{ "reports.date" | translate }} : </label>
-                  <b>{{ report.date }}</b
-                  ><br />
-                </ion-col> </ion-row
-            ></ion-col>
-            <ion-col> <ion-icon name="ios-arrow-forward"> </ion-icon></ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </ion-card>
-  </div>
-  <ion-infinite-scroll threshold="50px" (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content
-      loadingSpinner="bubbles"
-      loadingText="Loading more data..."
-    >
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
 </ion-content>

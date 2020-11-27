@@ -1,29 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
-import {SharedModule} from '../shared-module/shared-module';
 import { IonicModule } from '@ionic/angular';
+import { ProjectsPageRoutingModule } from './projects-routing.module';
 import { ProjectsPage } from './projects.page';
-import {FilterPipe} from './search-filter';
-const routes: Routes = [
-  {
-    path: '',
-    component: ProjectsPage
-  }
-];
+import { CoreModule } from '../core/core.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    SharedModule,
     IonicModule,
-    RouterModule.forChild(routes),
-    TranslateModule.forChild({
-  })
+    ProjectsPageRoutingModule,
+    CoreModule,
+    SharedModule
   ],
-  declarations: [ProjectsPage,FilterPipe]
+  declarations: [ProjectsPage]
 })
 export class ProjectsPageModule {}

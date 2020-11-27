@@ -1,0 +1,18 @@
+<ion-header>
+  <app-search-header (onSearch)="search($event)">
+    <ion-back-button></ion-back-button>
+  </app-search-header>
+</ion-header>
+<ion-content>
+  <ion-list *ngIf="templates?.length">
+    <ion-list-header color="light">
+      <ion-label>{{'LABELS.TEMPLATES' | translate}}</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let template of templates" (click)="goToTemplateDetails(template?._id)">
+      <ion-label class="ion-text-capitalize">
+        {{template?.title}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <app-no-data *ngIf="!templates.length" [message]="'MESSAGES.NO_TEMPLATES_FOUND'"></app-no-data>
+</ion-content>
