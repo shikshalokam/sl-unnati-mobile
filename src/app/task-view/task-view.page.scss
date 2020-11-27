@@ -1,47 +1,53 @@
-.subtasksBtn
-{
-    padding: 2px;
-    height: 20px;
-    width: 20px;
-    color: #fff;
-    background: #af4038;
-    border-radius: 15px;
-    margin-right: 5px;
+@import '../../theme/colors.scss';
+.status-label{
+    margin: auto;
+    font-size: 20px;
+    font-weight: 500;
 }
-.label-divider{
-    font-size:16px;
-    ion-label{
-        font-size:16px;
-        color: #000000;
-        img {
-            width: 22px;
-            float: left;
-            margin-right: 10px;
-        }
+.subtask-form{
+    margin: 0px;
+    padding: 5px;
+    .arrow-image{
+        width: 35%; 
+        margin-top: 5px;
+    }
+    ion-button{
+        text-transform: none;
     }
 }
-.ion-color-light {
-    --ion-color-base: #ffffff !important;
-    --ion-color-base-rgb: var(--ion-color-light-rgb, 244,245,248) !important;
-    --ion-color-contrast: var(--ion-color-light-contrast, #000) !important;
-    --ion-color-contrast-rgb: var(--ion-color-light-contrast-rgb, 0,0,0) !important;
-    --ion-color-shade: #ffffff !important;
-    --ion-color-tint: #ffffff !important;
-    --box-shadow: none;
-    text-transform: none;
+.subtask-box{
+    margin: 15px 0px;
+    ion-icon{
+        color:$dark-brown-color;
+    }
+    .subtask-title{
+    font-family: 'SourceSansPro-Bold' !important;
+    font-weight: 600;
+    }
+    ion-row, ion-col{
+        margin: 0px;
+        padding: 0px;
+    }
 }
-.ion-color-dark {
-    --ion-color-base: #5b514f !important;
-    --ion-color-base-rgb: var(--ion-color-dark-rgb, 34,36,40) !important;
-    --ion-color-contrast: var(--ion-color-dark-contrast, #fff) !important;
-    --ion-color-contrast-rgb: var(--ion-color-dark-contrast-rgb, 255,255,255) !important;
-    --ion-color-shade: #5b514f !important;
-    --ion-color-tint: #5b514f !important;
-}
-.action-list
+
+.custom-popup
 {
-    list-style:none; 
-    display:inline-flex;
-    padding-inline-start: 0px;
+    position: fixed;
+    z-index: 9999;
     width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: $trasperant-gray-color;
+    display: flex;
+.border-radius{
+    border-radius: 1em;
+}
+.pop-container
+{
+    margin: auto;
+    width: 80%;
+    box-shadow: 0px 1px 4px 1px $dark-grey-color;
+    background: $white-color;
+    padding: 10px;
+}
 }

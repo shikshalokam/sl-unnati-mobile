@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <app-header title="LABELS.REPORTS" [showMenu]="false">
+    <ion-back-button></ion-back-button>
+  </app-header>
+</ion-header>
+
+<ion-content>
+  <ion-segment (ionChange)="segmentChanged($event)" value="{{tabs[0].value}}">
+    <ion-segment-button value="{{tab.value}}" *ngFor="let tab of tabs">
+      <ion-label>{{tab.name | translate}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <!-- <div [ngSwitch]="type" class="ion-padding">
+    <div *ngIf="chartOptions">
+      <div *ngSwitchCase="'lastmonth'">
+        <app-projects-report [type]=type [chartData]="chartOptions" [mappedSchool]="mappedSchool?.name"></app-projects-report>
+      </div>
+      <div *ngSwitchCase="'lastquarter'">
+        <app-projects-report [type]=type [chartData]="chartOptions" [mappedSchool]="mappedSchool?.name"></app-projects-report>
+      </div>
+    </div>
+  </div> -->
+
+
+
+  <div [ngSwitch]="type" class="ion-padding">
+    <div *ngSwitchCase="'lastmonth'">
+      <app-projects-report [type]=type [chartData]="chartOptions"></app-projects-report>
+    </div>
+    <div *ngSwitchCase="'lastquarter'">
+      <app-projects-report [type]=type [chartData]="chartOptions"></app-projects-report>
+    </div>
+  </div>
+
+</ion-content>

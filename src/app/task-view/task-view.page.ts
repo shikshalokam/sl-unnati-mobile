@@ -1,278 +1,220 @@
 import { Component, OnInit } from '@angular/core';
-import { NetworkService } from '../network.service';
-import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { DbService, statuses, ToastMessageService, AttachementService } from '../core';
+import { environment } from 'src/environments/environment';
+import * as _ from 'underscore';
+import { UtilsService } from '../core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Storage } from '@ionic/storage';
+import { AlertController } from '@ionic/angular';
 import { Location } from '@angular/common';
-import { TasksService } from '../tasks/tasks.service';
-import { ApiProvider } from '../api/api';
 @Component({
   selector: 'app-task-view',
   templateUrl: './task-view.page.html',
   styleUrls: ['./task-view.page.scss'],
 })
 export class TaskViewPage implements OnInit {
-  public connected;
-  public task;
-  public back;
-  public loaded: boolean = false;
-  public language: string = this.translate.currentLang;
-  constructor(public storage: Storage, 
-    public taskService: TasksService, 
-    public apiProvider: ApiProvider, 
-    public location: Location, 
-    public alertController: AlertController, 
-    public translate: TranslateService, 
-    public route: ActivatedRoute, 
-    public router: Router, 
-    public networkService: NetworkService, 
-    public modalController: ModalController, 
-    public actionSheetController: ActionSheetController, ) {
-    // Triggering network change status
-    this.networkService.emit.subscribe(value => {
-      this.connected = value;
-      localStorage.setItem("networkStatus", this.connected);
-    });
-    this.route.params.subscribe(params => {
-      if (params.projectId && params.taskId) {
-        this.back = 'notifications';
-        localStorage.setItem('goBackis', 'notifications');
-        this.getTaskById(params)
-      } else {
-        this.back = localStorage.getItem('goBackis');
-        this.getTask();
-      }
+  parameters;
+  editField;
+  task;
+  project;
+  copyOfTaskDetails;
+  attachments = [];
+  showAttachments: boolean = false;
+  enableMarkButton: boolean = false;
+  subTaskCount: number = 0;
+  newSubtask: any = {};
+  currentYear = new Date().getFullYear();
+  statuses = statuses;
+  projectCopy;
+  constructor(
+    private router: Router,
+    private params: ActivatedRoute,
+    private db: DbService,
+    private utils: UtilsService,
+    private toast: ToastMessageService,
+    private translate: TranslateService,
+    private alert: AlertController,
+    private attachmentService: AttachementService,
+    private location: Location
+  ) {
+    this.saveChanges = _.debounce(this.saveChanges, 800)
+    this.db.createPouchDB(environment.db.projects);
+    params.params.subscribe(parameters => {
+      this.parameters = parameters;
+      this.getTask();
+      this.prepareSubTaskMeta();
     })
   }
+
   ngOnInit() {
-    this.connected = localStorage.getItem("networkStatus");
   }
-  ionViewDidEnter() {
-    this.back = localStorage.getItem('goBackis');
-    if (!this.back) {
-      this.back = 'project-view/detail'
+  prepareSubTaskMeta() {
+    this.newSubtask = JSON.parse(JSON.stringify(this.utils.getMetaData('subTask')));
+  }
+
+  getTask() {
+    this.db.query({ _id: this.parameters.projectId }).then(success => {
+      this.project = success.docs.length ? success.docs[0] : success.docs;
+      this.projectCopy = JSON.parse(JSON.stringify(this.project));
+      // this.copyOfProject = { ...this.project };
+      let task = _.findIndex(success.docs[0].tasks, (item) => {
+        return item._id == this.parameters.taskId;
+      })
+      task > -1 ? this.task = this.project.tasks[task] : this.toast.showMessage('MESSAGES.NO_TASK_FOUND', 'danger');
+      this.copyOfTaskDetails = JSON.stringify(this.task);
+      this.attachments = [];
+      this.getSubtasksCount(this.task).then((data: number) => {
+        this.subTaskCount = data;
+      })
+    }, error => { })
+  }
+  selectedStatus(event) {
+    this.enableTaskMarkButton();
+  }
+  selectedTaskStatus(event) {
+    // this.task.status == 'completed' ? this.enableMarkButton = true : this.enableMarkButton = false;
+    // if (this.task.status == 'completed' && this.task.children && this.task.children.length) {
+    //   this.task.children.forEach(element => {
+    //     element.status = 'completed';
+    //   });
+    // }
+    this.update();
+  }
+
+  setDate() {
+    this.update();
+  }
+  public addSubtask() {
+    if (this.newSubtask.name) {
+      !this.task.children ? this.task.children = [] : '';
+      this.task.children.push(this.newSubtask);
+      this.enableTaskMarkButton();
     }
   }
-  //get Task
-  public getTask() {
-    this.storage.get('currentTask').then(task => {
-      this.storage.get('userDetails').then((data: any) => {
-        task.assignedTo = [{ name: data.name, id: data.sub }];
-        this.task = task;
-      })
-    }, error=>{
+  toEdit(type) {
+    this.editField = type;
+  }
+
+  saveChanges() {
+    this.editField = '';
+    this.update();
+  }
+
+
+  update(goBack?) {
+    if (!this.task.isEdit) {
+      this.task.isEdit = (this.copyOfTaskDetails === JSON.stringify(this.task)) ? false : true;
+      this.project.isEdit = this.task.isEdit ? true : this.project.isEdit;
+    }
+    const isProjectEdit = _.filter(this.project.tasks, (eachTask) => {
+      return eachTask.isEdit
+    })
+    this.project.isEdit = isProjectEdit.length ? true : this.project.isEdit;
+    this.project = this.utils.setStatusForProject(this.project);
+    this.db.update(this.project).then(success => {
+      this.project._rev = success.rev;
+      this.prepareSubTaskMeta();
+      this.attachments = [];
+      // this.toast.showMessage('MESSAGES.YOUR_CHANGES_ARE_SAVED', 'success');
+      goBack ? this.location.back() : '';
+    }).catch(error => {
     })
   }
 
-  // sync confirm popup
-  async syncConfirm() {
-    let syncConfirm;
-    this.translate.get('sync_confirm_subtask').subscribe((text: string) => { syncConfirm = text });
-    const alert = await this.alertController.create({
-      header: 'Sync Confirm!',
-      message: syncConfirm,
+  delete(data) {
+    data.isDeleted = true;
+    this.enableTaskMarkButton();
+  }
+
+  // task and project delete permission.
+  async askPermissionToDelete(subtask, type) {
+    let data;
+    this.translate.get(['MESSAGES.DELETE_CONFIRMATION', 'LABELS.CANCEL', 'LABELS.SUBMIT']).subscribe(text => {
+      data = text;
+    })
+    const alert = await this.alert.create({
+      message: data['MESSAGES.DELETE_CONFIRMATION'] + type + '?',
       buttons: [
         {
-          text: '✕',
+          text: data['LABELS.CANCEL'],
           role: 'cancel',
           cssClass: 'secondary',
           handler: (blah) => {
           }
         }, {
-          text: '✓',
-          cssClass: 'secondary',
+          text: data['LABELS.SUBMIT'],
           handler: () => {
-            this.sync();
+            this.delete(subtask);
           }
         }
-      ],
+      ]
     });
-
     await alert.present();
   }
-  //Sync operation
-  public sync() {
-    this.storage.get('userTokens').then(data => {
-      this.apiProvider.refershToken(data.refresh_token).subscribe((refreshToken: any) => {
-        let parsedData = JSON.parse(refreshToken._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
-            this.taskService.syncTask(this.task, usertoken.access_token).subscribe((sync: any) => {
-              this.storage.get('latestProjects').then((projects) => {
-                if (typeof projects == 'string') {
-                  projects = JSON.parse(projects);
-                }
-                this.storage.set('currentProject',sync.data).then(data =>{
-                })
-                projects.data.forEach(project => {
-                  project.projects.forEach(pro => {
-                    if (pro._id == sync.data._id) {
-                      // project = sync;
-                      pro.tasks = sync.data.tasks;
-                      this.storage.set('latestProjects', projects).then(projectsUpdated => {
-                        this.taskService.loadProject();
-                        this.router.navigate(['/project-view/detail']);
-                      })
-                    }else {
-                     this.router.navigate(['/project-view/detail']);
-                    }
-                  });
-                });
-              })
-            });
-          })
-        }
-      }, error => {
-      })
-    })
-  }
 
-  //Sub Task View
-  async showSubTasks(id) {
-    // const modal = await this.modalController.create({
-    //   component: EditTaskPage,
-    //   componentProps: {}
-    // });
-    // return await modal.present();
-  }
-
-  // navigate To subtask
-  navigateToSubtasks() {
-    this.router.navigate(['project-view/subtasks'])
-  }
-
-  //edit Task
-  async editTask() {
-    // const modal = await this.modalController.create({
-    //   component: EditTaskPage,
-    //   componentProps: {
-    //     editTask: this.task,
-    //     back: this.back,
-    //     title: "Edit Task",
-    //   }
-    // });
-    // modal.onDidDismiss()
-    //   .then((data) => {
-    //     if (data.data != undefined && data.data.name != null) {
-    //       this.storage.get('currentProject').then(data => {
-    //         this.taskService.loadProject();
-    //       })
-    //     }
-    //   });
-    // this.taskService.modalActive('true');
-    // return await modal.present();
-  }
-  //  create task
-  async create(id) {
-    // const modal = await this.modalController.create({
-    //   component: EditTaskPage,
-    //   componentProps: {
-    //     editTask: this.task,
-    //     title: "Create Task",
-    //   }
-    // });
-    // modal.onDidDismiss()
-    //   .then((data) => {
-    //     if (data.data != undefined && data.data.name != null) {
-    //       // code
-    //     }
-    //   });
-    // return await modal.present();
-  }
-  // open delete confirm alert
-  async openDelete() {
-    const alert = await this.alertController.create({
-      header: 'Delete!',
-      message: 'Delete the task?',
-      buttons: [
-        {
-          text: '✕',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
+  getSubtasksCount(task) {
+    return new Promise(function (resolve) {
+      let count = 0;
+      if (task.children && task.children.length) {
+        task.children.forEach(subtask => {
+          if (!subtask.isDeleted) {
+            count = count + 1;
           }
-        }, {
-          text: '✓',
-          cssClass: 'secondary',
-          handler: () => {
-            this.delete();
-          }
-        }
-      ],
-    });
-
-    await alert.present();
-  }
-  // delete task
-  public delete() {
-    this.storage.get('currentProject').then(data => {
-      for (var i = 0; i < data.tasks.length; i++) {
-        if (data.tasks[i]._id === this.task._id) {
-          data.tasks[i].isDeleted = true;
-          //   data.tasks.splice(i,1);
-          this.storage.set('currentProject', data).then(data => {
-            this.storage.get('latestProjects').then(schema => {
-              if (typeof schema == "string") {
-                schema = JSON.parse(schema);
-              }
-              schema.data.forEach(projects => {
-                projects.projects.forEach(project => {
-                  if (project._id == data._id) {
-                    project.tasks.forEach(task => {
-                      if (task._id == this.task._id) {
-                        task.isDeleted = true;
-                        this.storage.set('latestProjects', schema).then(data => {
-                          this.taskService.loadProject();
-                          this.location.back();
-                        })
-                      }
-                    });
-                  }
-                });
-              });
-            })
-          });
-        }
+        });
+        resolve(count);
+      } else {
+        resolve()
       }
     })
   }
-  public goBack() {
-    this.back = 'project-view/detail';
-    this.router.navigateByUrl('project-view/detail');
-  }
-  // get Task from server
-  public getTaskById(parameters) {
-    this.storage.get('userTokens').then(data => {
-      this.apiProvider.refershToken(data.refresh_token).subscribe((refreshToken: any) => {
-        let parsedData = JSON.parse(refreshToken._body);
-        if (parsedData && parsedData.access_token) {
-          let userTokens = {
-            access_token: parsedData.access_token,
-            refresh_token: parsedData.refresh_token,
-          };
-          this.storage.set('userTokens', userTokens).then(usertoken => {
 
-            this.taskService.getTaskById(usertoken.access_token, parameters).subscribe((data: any) => {
-              // this.task = data.data;
-              this.storage.set('currentTask', data.data).then(data => {
-                this.getTask();
-              })
-            }, error => {
-              this.loaded = false;
-            })
-          })
+
+  enableTaskMarkButton() {
+    this.getSubtasksCount(this.task).then((count: number) => {
+      if (count) {
+        this.subTaskCount = count;
+        let inProgress = 0;
+        let completed = 0;
+        if (this.task.children.length) {
+          this.task.children.forEach(child => {
+            if (!child.isDeleted) {
+              if (child.status == 'inProgress') {
+                inProgress = inProgress + 1;
+              } else if (child.status == 'completed') {
+                completed = completed + 1;
+              }
+            }
+          });
         }
-      }, error => {
-      })
+        if (count === completed) {
+          this.task.status = 'completed'
+        } else if (inProgress > 0) {
+          this.task.status = 'inProgress';
+        }
+        this.task.status == 'completed' ? this.enableMarkButton = true : this.enableMarkButton = false;
+      } else {
+        this.task.status == 'completed' ? this.enableMarkButton = true : this.enableMarkButton = false;
+      }
+      this.update();
     })
   }
-  ngOnDestroy() {
-    localStorage.setItem('goBackis', '');
+
+  markTaskAsCompleted() {
+    this.showAttachments = true;
+  }
+  insertAttachment() {
+    this.showAttachments = false;
+    !this.task.attachments ? this.task.attachments = [] : '';
+    if (this.attachments && this.attachments.length) {
+      this.attachments.forEach(element => {
+        this.task.attachments.push(element);
+      });
+    }
+    this.update('goBack');
+  }
+  openAction() {
+    this.attachmentService.selectImage().then(data => {
+      data.data ? this.attachments.push(data.data) : ''
+    })
   }
 }

@@ -1,0 +1,20 @@
+<ion-header>
+  <app-header title="LABELS.TUTORIAL_VIDEO" [showMenu]="false">
+    <ion-back-button></ion-back-button>
+  </app-header>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngFor="let video of videos" class="video-card">
+    <ion-grid>
+      <ion-row (click)="open(video)">
+        <ion-col class="video-title">
+          {{video.title}}
+        </ion-col>
+        <ion-col class="arrow-mark">
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+</ion-content>

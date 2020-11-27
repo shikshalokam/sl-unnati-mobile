@@ -1,0 +1,60 @@
+<ion-header>
+  <app-search-header (onSearch)="onSearch($event)">
+    <ion-back-button></ion-back-button>
+  </app-search-header>
+</ion-header>
+<ion-content>
+  <ion-list *ngIf="projects?.length">
+    <ion-list-header color="light">
+      <ion-label>{{'LABELS.PROJECTS' | translate}}</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let project of projects">
+      <ion-label class="ion-text-capitalize">
+        {{project?.title}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="filterContainer">
+    <ion-chip *ngFor="let filter of filters" [ngClass]="{'selectedFilter': selectedFilter.key === filter.key }"
+      (click)="onFilterChange( filter)">
+      <ion-icon name="{{filter.icon}}"></ion-icon>
+      <ion-label>{{filter?.name | translate}}</ion-label>
+    </ion-chip>
+  </div>
+
+  <ion-list *ngIf="tasks?.length">
+    <ion-list-header color="light">
+      <ion-label>{{'LABELS.TASKS' | translate}}</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let task of tasks">
+      <ion-label class="ion-text-capitalize">
+        {{task?.title}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="selectedFilter.key !== 'tasks'">
+    <ion-item *ngFor="let result of searchResults" (click)="navigateTo('/menu/project-detail/'+result?._id )">
+      <ion-label>
+        <h3 class="capitalize">{{ selectedFilter.key === 'program' ? (result?.programInformation?.name || "My program") : result?.title}}</h3>
+        <ion-note class="capitalize">{{ selectedFilter.key === 'program' ?  result?.title : (result?.programInformation?.name || "My program")}}</ion-note>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="selectedFilter.key === 'tasks'">
+    <ng-container >
+      <ion-item *ngFor="let result of searchResults" (click)="navigateTo('/menu/task-view/'+result?.projectId + '/'+result?.taskId)">
+        <ion-label>
+          <h3 class="capitalize">{{result?.taskName}}</h3>
+          <ion-note class="capitalize">{{result?.projectName }}</ion-note>
+        </ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+  <app-no-data  *ngIf="!searchResults?.length"></app-no-data>
+
+
+</ion-content>

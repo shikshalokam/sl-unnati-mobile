@@ -1,0 +1,5 @@
+<ion-item class="search-bar-custom">
+  <ion-icon name="search" item-left color="dark"></ion-icon>
+  <ion-input type="text" placeholder="{{'LABELS.SEARCH' | translate }}" (ionFocus)="onSearcBtnClick()" [debounce]="500"
+    (ionChange)="searchHandler()" [(ngModel)]="search" ></ion-input>
+</ion-item>

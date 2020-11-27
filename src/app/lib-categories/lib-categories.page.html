@@ -1,0 +1,29 @@
+<ion-header>
+  <app-header title="LABELS.LIBRARY" [showMenu]="true" [bottomBorder]="true" [showReload]="true"
+    (onAction)="action($event)">
+    <ion-back-button></ion-back-button>
+  </app-header>
+</ion-header>
+
+<ion-content>
+  <app-search-bar (onFocus)="openSearchModal()">
+  </app-search-bar>
+  <ion-grid class="library-tiles-container">
+    <!-- <h5 style="padding: 15px;
+      text-transform: uppercase;"> {{'LABELS.IMP_LIBRARIES' | translate}}</h5> -->
+    <ion-row *ngIf="categories && categories.length">
+      <ion-col class="tiles" size="6" style="margin: 5px 0px;">
+        <ion-card (click)="openMyprojects()">
+          <img src="{{defaultCategory.localUrl}}">
+          <p>{{defaultCategory.name}}</p>
+        </ion-card>
+      </ion-col>
+      <ion-col *ngFor="let tile of categories" class="tiles" size="6" style="    margin: 5px 0px;">
+        <ion-card (click)="categoryView(tile.type,tile.name)">
+          <img [src]="getImgContent(tile?.localUrl)" />
+          <p>{{tile.name}}</p>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

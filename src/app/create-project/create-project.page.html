@@ -1,113 +1,81 @@
-<ion-header>
-  <app-header [title]="'create_project.create_new_project' | translate" [showMenu]="false" [showBack]="true"
-    [isGoBack]="back" [noBorder]="false">
-  </app-header>
-</ion-header>
-<ion-content class="ion-padding">
-  <!-- Error message, if fileds are not filled -->
-  <h5 class="required-field" *ngIf="markLabelsAsInvalid" style="padding-left:15px;">
-    {{'create_project.fileds_mandatory' | translate}}</h5>
-  <!-- Error message ends here-->
-  <!-- Project creation form starts here -->
-  <form [formGroup]="createProject" class="create-project" *ngIf="createProject">
-    <!-- Project title start here -->
-    <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating"
-        [ngClass]="{'required-field':markLabelsAsInvalid && !project.title}">
-        {{'create_project.title_of_project' | translate}} </ion-label>
-      <ion-input type="text" [(ngModel)]="project.title" name="title" formControlName="title"
-        placeholder="{{'create_project.placeholder_project_title'| translate}}" maxlength="280"></ion-input>
-    </ion-item>
-    <!-- Project title ends here -->
-    <!-- project goal starts here -->
-    <ion-item class="custom-ion-item">
-      <ion-label class="custom-label" position="floating"
-        [ngClass]="{'required-field':markLabelsAsInvalid && !project.goal}">
-        {{'create_project.goal' | translate}}</ion-label>
-      <ion-textarea type="text" [(ngModel)]="project.goal" name="goal" formControlName="goal"
-        placeholder="{{'create_project.placeholder_goal'| translate}}" maxlength="1000"></ion-textarea>
-    </ion-item>
-    <!-- project goal end here -->
-    <!-- Project start and end date start here -->
-    <ion-row style="margin: 10px 0px;">
-      <ion-col size="6">
-        <ion-label class="custom-label " position="floating" style=" margin-left: 15px; font-size: 18px !important;">
-          {{'create_project.start_date' | translate}}</ion-label>
-        <ion-item class="custom-ion-item">
-          <!-- <ion-input type="text" [(ngModel)]="startDate" name="title" formControlName="startDate"
-            placeholder="{{today}}" class="no-rght-brdr-rds"></ion-input> -->
+<ion-toolbar>
+  <ion-title></ion-title>
+  <ion-buttons (click)="confirmToClose()" slot="start" class="padding">
+    <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+  </ion-buttons>
+</ion-toolbar>
 
-          <ion-datetime (ionChange)="setDate($event,'sd')" min="2000" max="2100" class="no-rght-brdr-rds"
-            display-timezone="utc" formControlName="startDate" value={{today}} [(ngModel)]="startDate"
-            class="project-date" placeholder={{today}}>
-          </ion-datetime>
-          <ion-icon ios="ios-arrow-dropdown" md="md-arrow-dropdown" slot="end" class="right-icon"></ion-icon>
-        </ion-item>
-      </ion-col>
-      <ion-col size="6">
-        <ion-label position="floating" style=" margin-left: 15px; font-size: 18px !important;"
-          [ngClass]="{'required-field':markLabelsAsInvalid && !isValidDate}">
-          {{'create_project.end_date' | translate}}</ion-label>
-        <ion-item class="custom-ion-item">
-          <!-- <ion-input type="text" [(ngModel)]="endDate" name="title" formControlName="endDate" placeholder="{{today}}"
-            class="no-rght-brdr-rds"></ion-input> -->
-          <ion-datetime (ionChange)="setDate($event,'ed')" min="2000" max="2100" class="no-rght-brdr-rds"
-            display-timezone="utc" formControlName="endDate" value={{today}} class="project-date" placeholder={{today}}>
-          </ion-datetime>
-          <ion-icon ios="ios-arrow-dropdown" md="md-arrow-dropdown" slot="end" class="right-icon"></ion-icon>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <!-- Project start and end date end here -->
-    <!-- Project improvement areas starts here -->
-    <!-- <ion-item class="custom-ion-item" style="margin-bottom:50px;">
-      <ion-label class="custom-label text-wrap-overflow" position="floating"
-        [ngClass]="{'required-field':markLabelsAsInvalid && !project.category}">
-        {{'create_project.areas' | translate}}</ion-label>
-      <ion-textarea type="text" [(ngModel)]="project.category" name="category" formControlName="category"
-        placeholder="{{'create_project.placeholder_areas'| translate}}" maxlength="90"></ion-textarea>
-    </ion-item> -->
-    <ion-label style="margin-left: 15px;
-    font-size: 18px !important;" [ngClass]="{'required-field':markLabelsAsInvalid && project.category.length == 0}">
-      {{'create_project.category'| translate}}</ion-label>
-    <ion-row style="margin-bottom: 1.2em;">
-      <ion-col *ngFor="let option of categories" size="6">
-        <ion-item-group>
-          <ion-item (click)="selectedCategory(option.key)" style=" --border-color: transparent;">
-            <ion-checkbox name="category" [checked]="checkedCategories.includes(option.key)"
-              style="margin-right: 10px;">
-            </ion-checkbox>
-            <ion-label> {{ option.key}}</ion-label>
+<ion-content class="ion-padding">
+  <div *ngIf="projectForm " class="project-form">
+    <form [formGroup]="projectForm">
+      <div *ngFor="let data of projectFormData">
+        <div *ngIf="!data.taskData">
+          <ion-item *ngIf="data.input != 'select'">
+            <ion-label class="font-bold"> {{data.label}} <sup *ngIf="data.validation.required" data>*</sup> </ion-label>
+            <ion-label position="floating" class="label-hint"> {{data.hint}} </ion-label>
+            <ion-input type="text" required="{{data.validation.required}}" *ngIf="data.input == 'text'"
+              [formControlName]="data.field" name="{{data.field}}"> </ion-input>
+            <ion-textarea type="text" required="{{data.validation.required}}" *ngIf="data.input == 'textarea'"
+              name="{{data.field}}" [formControlName]="data.field">
+            </ion-textarea>
           </ion-item>
-        </ion-item-group>
-      </ion-col>
-      <ion-col size="6">
-        <ion-item-group>
-          <ion-item style=" --border-color: transparent;">
-            <ion-checkbox (ionChange)="categorySelected($event)" [checked]="true" *ngIf="selectedOther"
-              style="margin-right: 10px;">
-            </ion-checkbox>
-            <ion-checkbox (ionChange)="categorySelected($event)" [checked]="false" *ngIf="!selectedOther"
-              style="margin-right: 10px;">
-            </ion-checkbox>
-            <ion-label>Other</ion-label>
+          <div *ngIf="data.input == 'select'" style="margin: 15px 10px;">
+            <ion-label class="font-bold"> {{data.label}} <sup>*</sup> </ion-label>
+            <p class="label-hint"> {{data.hint}} </p>
+            <ion-item (click)="openCatgoryList(data)" *ngIf="!selectedCategories.length">
+              <ion-icon name="pricetag-outline" slot="start" style="margin: 0px 15px 0 -15px;"></ion-icon>
+              <div> {{'LABELS.SELECT_CATEGORIES' | translate}} </div>
+            </ion-item>
+            <div *ngIf="selectedCategories.length">
+              <ion-chip (click)="openCatgoryList(data)" color="primary">
+                <ion-icon name="add-circle-outline"></ion-icon>
+                <ion-label>{{'LABELS.SELECT_CATEGORIES' | translate}}</ion-label>
+              </ion-chip>
+              <ion-chip *ngFor="let category of selectedCategories">
+                <ion-label *ngIf="category.label != 'Others'">{{category?.label}}</ion-label>
+                <ion-label *ngIf="category.label == 'Others'">{{category.value}}</ion-label>
+                <ion-icon name="close-circle" (click)="confirmToDelete(category,'category')"></ion-icon>
+              </ion-chip>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="data.taskData && showTask">
+          <div *ngFor="let task of data.taskData">
+            <ion-item *ngIf="task.input == 'text' && !enableInput">
+              <ion-label position="fixed" class="label-hint"> {{'LABELS.ADD_TASK' | translate}} </ion-label>
+              <ion-input type="text" (ionFocus)="openInput($event)" name="{{task.field}}">
+              </ion-input>
+              <ion-icon name="add-outline" slot="end"></ion-icon>
+            </ion-item>
+            <div *ngIf="enableInput && task.input == 'text'">
+              <ion-item>
+                <ion-input type="text" *ngIf="task.input == 'text'" [formControlName]="task.field"
+                  [(ngModel)]="task.value" name="{{task.field}}" (keyup.enter)="saveTask(task)">
+                </ion-input>
+                <ion-icon name="add-outline" slot="end" (click)="saveTask(task)"></ion-icon>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="tasks.length && showTask">
+        <ion-card *ngFor="let task of tasks" class="data-list">
+          <ion-item lines="none">
+            {{task.name}}
+            <ion-icon name="close-outline" slot="end" class="remove-icon" (click)="confirmToDelete(task,'task')">
+            </ion-icon>
           </ion-item>
-        </ion-item-group>
-      </ion-col>
-    </ion-row>
-    <ion-item style="margin-bottom: 1em; border: 1px solid;
-    padding: 5px; --border-color: transparent;" [hidden]="!selectedOther">
-      <ion-input type="text" [(ngModel)]="otherCategory" name="othercategory" formControlName="Othercategory"
-        placeholder="{{'create_project.placeholder_other_cat'| translate}}"></ion-input>
-    </ion-item>
-    <!-- Project improvement areas end here -->
-    <ion-button (click)="create()" color="secondary" class="round-corner-btn" expand="block">
-      {{'button.save_create_task' | translate}}
-    </ion-button>
-  </form>
-  <!-- Project creation form starts here -->
-  <div *ngIf="popupshow">
-    <app-custom-popup [content]="projectCreatePopUp" [showPopup]="true" [showAlert]="false">
-    </app-custom-popup>
+        </ion-card>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="showCategories">
+    <app-category-select [categories]="categories" [selectedCategories]="selectedCategories"
+      (onSubmit)="selectCategories($event)">
+    </app-category-select>
   </div>
 </ion-content>
+<ion-footer>
+  <ion-button (click)="next()" expand="block">{{button | translate}}
+  </ion-button>
+</ion-footer>

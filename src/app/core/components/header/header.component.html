@@ -1,0 +1,29 @@
+<ion-toolbar [ngStyle]="{'border-bottom': bottomBorder ? '2px solid #b23e33' : 'none' }">
+  <ion-buttons slot="start">
+    <ng-content></ng-content>
+    <ion-menu-button slot="start" *ngIf="showMenu" color="primary">
+      <ion-icon slot="icon-only" name="person-circle"></ion-icon>
+    </ion-menu-button>
+  </ion-buttons>
+  <ion-title *ngIf="title">
+    {{title | translate}}
+  </ion-title>
+  <ion-buttons [routerLink]="['/menu/notification']" routerDirection="forward" slot="end" class="padding"
+    *ngIf="!hideNotification">
+    <ion-icon slot="icon-only" name="notifications" class="header-icons"></ion-icon>
+    <span class="newDot" *ngIf="notificationData"></span>
+  </ion-buttons>
+  <ion-buttons (click)="actions('reload')" slot="end" class="padding" *ngIf="showReload">
+    <ion-icon slot="icon-only" name="refresh" class="header-icons"></ion-icon>
+  </ion-buttons>
+  <ion-buttons (click)="synced ? showToast() :actions('sync')" slot="end" class="padding" *ngIf="showSync">
+    <ion-icon slot="icon-only" name="cloud-done" class="header-icons" style="color: green;" *ngIf="synced"></ion-icon>
+    <ion-icon slot="icon-only" name="cloud-offline-outline" class="header-icons" *ngIf="!synced"></ion-icon>
+  </ion-buttons>
+  <ion-buttons (click)="popover($event)" slot="end" class="padding" *ngIf="showMore">
+    <ion-icon slot="icon-only" name="ellipsis-vertical" class="header-icons"></ion-icon>
+  </ion-buttons>
+  <ion-buttons (click)="actions('skip')" slot="end" class="padding" *ngIf="showSkip">
+    <ion-icon slot="icon-only" name="play-skip-forward" class="header-icons" color="primary"></ion-icon>
+  </ion-buttons>
+</ion-toolbar>

@@ -4,25 +4,29 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { SharedModule } from '../shared-module/shared-module';
-import { TutorialVideosPage } from './tutorial-videos.page';
+import { SharedModule } from '../shared';
+import { TutorialVideosComponent } from './tutorial-videos.component';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { CoreModule } from '../core/core.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: TutorialVideosPage
+    component: TutorialVideosComponent
   }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
+    CoreModule,
     FormsModule,
     IonicModule,
     SharedModule,
     RouterModule.forChild(routes),
-    TranslateModule.forChild()
+    TranslateModule
   ],
-  declarations: [TutorialVideosPage]
+  declarations: [TutorialVideosComponent],
+  providers:[ScreenOrientation]
 })
 export class TutorialVideosPageModule { }

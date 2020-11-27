@@ -1,0 +1,14 @@
+<ion-header>
+  <app-header title="LABELS.NOTIFICATION" hideNotification="true">
+    <ion-back-button></ion-back-button>
+  </app-header>
+</ion-header>
+
+<ion-content>
+  <app-no-data></app-no-data>
+  <ion-list class="container" *ngIf="notifications?.length">
+    <app-notification-card [notification]="notification" *ngFor="let notification of notifications">
+    </app-notification-card>
+  </ion-list>
+  <ion-button expand="full" *ngIf="enableLoadMore" (click)="loadMore()">{{'LABELS.LOAD_MORE' |translate}}</ion-button>
+</ion-content>

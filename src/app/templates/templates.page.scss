@@ -1,0 +1,16 @@
+@import'../../theme/colors.scss';
+
+.sort-box{
+    margin:30px 20px;
+}
+.sort-options{
+    padding: 2px 14px;
+    border: 1px solid var(--ion-color-primary);
+    border-radius: 16px;
+    margin: 2px;
+    color: var(--ion-color-primary);
+}
+.selected-option{
+    background: var(--ion-color-primary); 
+    color:$white-color;
+}

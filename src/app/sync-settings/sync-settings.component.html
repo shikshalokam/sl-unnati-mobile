@@ -1,0 +1,25 @@
+<ion-header>
+  <app-header title="LABELS.SYNC_DATA">
+    <ion-back-button></ion-back-button>
+  </app-header>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <h5> {{'LABELS.AUTOMATIC_SYNC' | translate }}</h5>
+  </ion-list>
+ 
+  <ion-list>
+    <ion-radio-group [(ngModel)]="syncData">
+      <ion-item *ngFor="let data of syncList">
+        <ion-label>{{data.label | translate}}</ion-label>
+        <ion-radio slot="start" value="{{data.value}}" (click)="selectSyncOption(data)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+ 
+ 
+  <ion-button expand="block" color="primary" (click)="doSync()">
+    {{ "LABELS.SYNC_NOW" | translate }}
+  </ion-button>
+</ion-content>
