@@ -170,7 +170,8 @@
         "KANNADA": "Kannada",
         "VIEW_RESOURCES":"View Resources",
         "START":"Start",
-        "STATE": "State"
+        "STATE": "State",
+        "ENTITY": "Entity"
     },
     "MESSAGES": {
         "DEAR": "Dear user,",
