@@ -362,6 +362,9 @@ export class ProjectDetailPage implements OnInit {
   }
 
   getProjectTaskStatus() {
+    if (!this.project.tasks && !this.project.tasks.length) {
+      return
+    }
     const config = {
       url: urlConstants.API_URLS.PROJCET_TASK_STATUS + `${this.project._id}`,
       payload: {

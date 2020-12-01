@@ -97,6 +97,22 @@
     "cordova.plugins.diagnostic": {
       "ANDROIDX_VERSION": "1.+",
       "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-app-launcher": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "com-badrit-base64": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-market": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-add-swift-support": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-android-support-gradle-release": {
+      "ANDROID_SUPPORT_VERSION": "27.+",
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
     }
   },
   "dependent_plugins": {
