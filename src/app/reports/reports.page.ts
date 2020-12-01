@@ -13,6 +13,7 @@ import { FilterModalComponent } from "../shared/components/filter-modal/filter-m
 })
 export class ReportsPage {
   reportData: any;
+  showFilter : boolean = false;
   filterType: { label: string; value: number }[];
   filter = { type: 1, entity: undefined, program: undefined };
   @ViewChild("mySelect") selectRef: IonSelect;

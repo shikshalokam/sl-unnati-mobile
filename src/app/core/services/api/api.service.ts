@@ -42,7 +42,6 @@ export class ApiService {
   // }
 
   private handleError(result) {
-    debugger
     switch (result.status) {
       case 401:
         this.auth.sessionExpired();
