@@ -7,6 +7,12 @@
     "files": {}
   },
   "installed_plugins": {
+    "com-sarriaroman-photoviewer": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-android-permissions": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
     "cordova-plugin-androidx-adapter": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
@@ -33,6 +39,9 @@
     "cordova-plugin-device": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
+    "cordova-plugin-document-viewer": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
     "cordova-plugin-fcm-with-dependecy-updated": {
       "ANDROID_DEFAULT_NOTIFICATION_ICON": "@mipmap/ic_launcher",
       "ANDROID_FCM_VERSION": "19.0.0",
@@ -42,6 +51,10 @@
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
     "cordova-plugin-file": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
+    "cordova-plugin-file-opener2": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
     "cordova-plugin-file-transfer": {
@@ -87,6 +100,9 @@
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
+    "cordova-plugin-x-socialsharing": {
+      "PACKAGE_NAME": "org.shikshalokam.unnati"
+    },
     "cordova.plugins.diagnostic": {
       "ANDROIDX_VERSION": "1.+",
       "PACKAGE_NAME": "org.shikshalokam.unnati"
@@ -108,22 +124,6 @@
       "DEEPLINK_4_HOST": " ",
       "DEEPLINK_5_SCHEME": " ",
       "DEEPLINK_5_HOST": " ",
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
-    "cordova-plugin-android-permissions": {
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
-    "cordova-plugin-x-socialsharing": {
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
-    "cordova-plugin-file-opener2": {
-      "ANDROID_SUPPORT_V4_VERSION": "27.+",
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
-    "com-sarriaroman-photoviewer": {
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
-    "cordova-plugin-document-viewer": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     }
   },
