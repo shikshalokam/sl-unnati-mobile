@@ -322,5 +322,24 @@
     },
     "is_top_level": true,
     "variables": {}
+  },
+  "cordova-plugin-customtabs": {
+    "source": {
+      "type": "registry",
+      "id": "https://github.com/souvikmondal/cordova-plugin-customtabs.git"
+    },
+    "is_top_level": true,
+    "variables": {
+      "URL_SCHEME": "in.gov.diksha.projects.app",
+      "URL_HOST": "mobile"
+    }
+  },
+  "cordova-plugin-advanced-http": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-advanced-http"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

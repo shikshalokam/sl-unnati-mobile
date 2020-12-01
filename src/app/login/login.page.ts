@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService, LoaderService, NotificationService, FcmProvider, KendraApiService, urlConstants, LocalStorageService, localStorageConstants } from '../core';
-
-
+import { AuthService, LoaderService, NotificationService, 
+  FcmProvider, KendraApiService, urlConstants, LocalStorageService, 
+  localStorageConstants, DikshaLoginService } from '../core';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +23,8 @@ export class LoginPage implements OnInit {
     private notificationServ: NotificationService,
     private fcm: FcmProvider,
     private kendraApiService: KendraApiService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    private dikshaLoginServ : DikshaLoginService
   ) { }
   slideOpts = {
     initialSlide: 0,
@@ -38,6 +39,10 @@ export class LoginPage implements OnInit {
   }
   ngOnInit() {
    
+  }
+
+  onLoginClick() {
+    this.dikshaLoginServ.getFormApi();
   }
 
   // Login call
