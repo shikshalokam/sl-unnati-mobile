@@ -42,7 +42,8 @@ export class TaskViewPage implements OnInit {
     private networkService: NetworkService,
     private openResourceSrvc: OpenResourcesService
   ) {
-    this.saveChanges = _.debounce(this.saveChanges, 800)
+    this.saveChanges = _.debounce(this.saveChanges, 800);
+    this.saveSubTaskChanges = _.debounce(this.saveSubTaskChanges, 800);
     this.db.createPouchDB(environment.db.projects);
     params.params.subscribe(parameters => {
       this.parameters = parameters;
@@ -106,6 +107,15 @@ export class TaskViewPage implements OnInit {
   saveChanges() {
     if (this.task.name) {
       // this.editField = ''; // removed as it closing the edit field as one letter is entered
+      this.update();
+    } else {
+      this.toast.showMessage('MESSAGES.REQUIRED_FIELDS', 'danger');
+    }
+  }
+
+  saveSubTaskChanges(subtask) {
+    if (subtask.name) {
+      this.editField = '';
       this.update();
     } else {
       this.toast.showMessage('MESSAGES.REQUIRED_FIELDS', 'danger');

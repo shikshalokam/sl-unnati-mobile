@@ -72,7 +72,7 @@
         </ion-col>
         <ion-col>
           <ion-input type="text" [(ngModel)]="subtask.name" *ngIf="editField == 'subtaskName'"
-            (ionInput)="saveChanges()">
+            (ionInput)="saveSubTaskChanges(subtask)">
           </ion-input>
         </ion-col>
         <ion-col size="1" style="margin: auto;
@@ -107,8 +107,7 @@
 
   <ion-row *ngIf="task?.learningResources?.length">
     <ion-col size="5">
-      <ion-button class="roundedButton"  expand="block" shape="round"
-        (click)="openResources(task)">
+      <ion-button class="roundedButton" expand="block" shape="round" (click)="openResources(task)">
         {{'LABELS.VIEW_RESOURCES' | translate}}
       </ion-button>
     </ion-col>

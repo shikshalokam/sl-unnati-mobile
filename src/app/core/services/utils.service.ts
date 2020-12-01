@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import * as uuid from "uuid";
+import { v4 as uuidv4 } from 'uuid'
 import { statuses, statusType } from "../constants";
 import * as moment from "moment";
 import * as _ from "underscore";
@@ -48,7 +48,7 @@ export class UtilsService {
 
   getMetaData(type) {
     const obj = {
-      _id: uuid(),
+      _id:uuidv4(),
       status: statusType.notStarted,
       name: "",
       endDate: "",

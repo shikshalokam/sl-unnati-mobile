@@ -13,7 +13,7 @@ export class GraphCirlceComponent implements OnInit {
   highcharts = Highcharts;
   chartConstructor = "chart"; // optional string, defaults to 'chart'
   runOutsideAngular = false;
-
+  
   chartOption;
   constructor() {}
   ngOnInit() {
