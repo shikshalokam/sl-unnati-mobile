@@ -41,17 +41,6 @@
     "cordova-plugin-document-viewer": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
-    "cordova-plugin-fcm-with-dependecy-updated": {
-      "ANDROID_DEFAULT_NOTIFICATION_ICON": "@mipmap/ic_launcher",
-      "ANDROID_FCM_VERSION": "19.0.0",
-      "ANDROID_FIREBASE_BOM_VERSION": "26.0.0",
-      "ANDROID_GOOGLE_SERVICES_VERSION": "4.3.3",
-      "ANDROID_GRADLE_TOOLS_VERSION": "3.5.3",
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
-    "cordova-plugin-file": {
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
     "cordova-plugin-file-opener2": {
       "ANDROID_SUPPORT_V4_VERSION": "27.+",
       "PACKAGE_NAME": "org.shikshalokam.unnati"
@@ -62,7 +51,8 @@
     "cordova-plugin-filepath": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
-    "cordova-plugin-network-information": {
+    "cordova-plugin-x-socialsharing": {
+      "ANDROID_SUPPORT_V4_VERSION": "24.1.1+",
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
     "ionic-plugin-deeplinks": {
@@ -104,9 +94,6 @@
     "cordova-plugin-chooser": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
-    "cordova-plugin-x-socialsharing": {
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
     "cordova.plugins.diagnostic": {
       "ANDROIDX_VERSION": "1.+",
       "PACKAGE_NAME": "org.shikshalokam.unnati"
@@ -120,9 +107,6 @@
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     },
     "cordova-plugin-nativestorage": {
-      "PACKAGE_NAME": "org.shikshalokam.unnati"
-    },
-    "es6-promise-plugin": {
       "PACKAGE_NAME": "org.shikshalokam.unnati"
     }
   }

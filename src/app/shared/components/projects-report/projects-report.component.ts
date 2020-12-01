@@ -14,7 +14,6 @@ export class ProjectsReportComponent implements OnInit {
   ngOnInit() {
     this.type = this.type == 'lastmonth' ? 'Last Month' : 'Last Quarter';
   }
-  viewFullReport() {
-
-  }
+  viewFullReport() {}
+  getReport(type){}
 }
