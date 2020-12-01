@@ -1,6 +1,6 @@
 <!-- simple UI with vertical 3 dots,pass interface=simple -->
 <div *ngIf="interface == 'simple'">
-  <ion-icon name="ellipsis-vertical-outline" (click)="openPopupMenu($event)" *ngIf="!showOptions"></ion-icon>
+  <ion-icon name="ellipsis-vertical" color="primary" (click)="openPopupMenu($event)" *ngIf="!showOptions" style="font-size: 20px;"></ion-icon>
 
   <ion-list *ngIf="showOptions">
     <ion-item button (click)="download(true)"> {{ "LABELS.SHARE" | translate }}</ion-item>
@@ -8,7 +8,7 @@
   </ion-list>
 </div>
 
-<!-- Fab button round UI ,pass interface= fab-->
+<!-- Fab button round UI ,pass interface= fab--> 
 <div *ngIf="interface == 'fab'">
   <ion-fab vertical="top" horizontal="end">
     <ion-fab-button size="small"> <ion-icon name="ellipsis-vertical-outline"></ion-icon> </ion-fab-button>

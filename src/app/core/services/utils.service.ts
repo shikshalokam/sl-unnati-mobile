@@ -157,12 +157,14 @@ export class UtilsService {
     const projectData = [...projects]
     for (const project of projects) {
       const categories = [];
-      for (const category of project.categories) {
-        const obj = {
-          value: category._id,
-          label: category.name
+      if (project.categories && project.categories.length) {
+        for (const category of project.categories) {
+          const obj = {
+            value: category._id,
+            label: category.name
+          }
+          categories.push(obj);
         }
-        categories.push(obj);
       }
       project.categories = categories;
     }

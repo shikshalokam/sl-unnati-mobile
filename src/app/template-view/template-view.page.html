@@ -17,7 +17,7 @@
       </div>
       <div class="custom-filed" *ngIf="template?.duration">
         <ion-label position="fixed"> {{'LABELS.DURATION' | translate}} : </ion-label>
-        {{template?.duration}}
+        {{template?.duration?.label || template?.duration }}
       </div>
     </ion-card-content>
   </ion-card>

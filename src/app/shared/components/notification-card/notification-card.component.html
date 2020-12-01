@@ -1,5 +1,5 @@
 <ion-item lines="none" class="listItem" [color]="notification?.is_read ? 'light' :'primary'">
-  <ion-label class="ion-text-wrap">
+  <ion-label class="ion-text-wrap" (click) = "notificationClick(notification)">
     <ion-row>
       <ion-text class="heading">{{notification?.title}} </ion-text>
       <ion-text class="time">

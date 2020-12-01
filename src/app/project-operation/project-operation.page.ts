@@ -80,7 +80,7 @@ export class ProjectOperationPage implements OnInit {
           _id: this.template.entityId ? this.template.entityId : '',
         }
       }
-      this.selectedResources = this.template.learningResources && this.template.learningResources.length ? this.template.learningResources : '';
+      this.selectedResources = this.template.learningResources && this.template.learningResources.length ? this.template.learningResources : [];
       if (this.template.programName) {
         this.selectedProgram = {
           _id: this.template.programId ? this.template.programId : '',
@@ -201,7 +201,7 @@ export class ProjectOperationPage implements OnInit {
     if (!this.template.showProgramAndEntity) {
       this.selectedEntity = '';
       this.selectedProgram = '';
-      this.selectedResources = '';
+      this.selectedResources = [];
       delete this.payload.rating;
       this.createdType == "bySelf" ? this.createProject() : this.importProject();
     } else {
@@ -235,6 +235,11 @@ export class ProjectOperationPage implements OnInit {
   }
   importProject() {
     if (this.networkService.isNetworkAvailable) {
+      const isProgramPresent = (this.selectedProgram && this.selectedProgram.name) || (this.selectedProgram && this.selectedProgram._id);
+      const isEntityAdded = (this.selectedEntity && this.selectedEntity._id)
+      if (!this.isMandatoryFieldsFilled()) {
+        return
+      }
       this.loader.startLoader();
       if (this.selectedEntity) {
         this.payload.entityId = this.selectedEntity._id;
@@ -250,13 +255,17 @@ export class ProjectOperationPage implements OnInit {
       }
       this.unnatiService.post(config).subscribe(data => {
         this.loader.stopLoader();
-        const projectData = this.utils.processProjectsData([data.result]);
-        this.restoreData(projectData[0]);
+        if (data.result) {
+          const projectData = this.utils.processProjectsData([data.result]);
+          this.restoreData(projectData[0]);
+        } else {
+          this.toast.showMessage(data.message, 'danger');
+        }
       }, error => {
         this.loader.stopLoader();
       })
     } else {
-      this.toast.showMessage('MESSAGEs.OFFLINE', 'danger');
+      this.toast.showMessage('MESSAGES.OFFLINE', 'danger');
     }
   }
   createProject() {
@@ -303,8 +312,23 @@ export class ProjectOperationPage implements OnInit {
     }).catch(error => {
     })
   }
+
+  isMandatoryFieldsFilled() {
+    const isProgramPresent = (this.selectedProgram && this.selectedProgram.name) || (this.selectedProgram && this.selectedProgram._id);
+    const isEntityAdded = (this.selectedEntity && this.selectedEntity._id)
+    if (this.template.showProgramAndEntity && (!isEntityAdded || !isProgramPresent)) {
+      this.toast.showMessage('MESSAGES.REQUIRED_FIELDS', 'danger');
+      return false
+    }
+    return true
+  }
+  
   update(data) {
+    if (!this.isMandatoryFieldsFilled()) {
+      return
+    }
     this.db.createPouchDB(environment.db.projects);
+    data.isEdit = true;
     this.db.update(data).then(success => {
       this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
     }).catch(error => {

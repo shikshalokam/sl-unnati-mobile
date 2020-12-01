@@ -35,4 +35,8 @@ export class CreateTaskComponent implements OnInit {
   addTask() {
     this.newTask.name ? this.modalCtrl.dismiss(this.newTask) : this.toast.showMessage('MESSAGES.REQUIRED_FIELDS', 'danger')
   }
+
+  share() {
+    this.toast.showMessage('MESSAGES.COMING_SOON', 'danger');
+  }
 }

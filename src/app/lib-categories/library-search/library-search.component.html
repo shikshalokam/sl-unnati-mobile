@@ -8,14 +8,16 @@
     <ion-list-header color="light">
       <ion-label>{{'LABELS.MY_PROJECTS' | translate}}</ion-label>
     </ion-list-header>
-    <ion-item *ngFor="let project of projects" (click)="getProject(project?._id)">
-      <ion-label class="ion-text-capitalize">
-        <h3> {{project?.title}} </h3>
-        <ion-note class="capitalize" *ngFor="let category of project.categories">
-          {{category?.label}}
-        </ion-note>
-      </ion-label>
-    </ion-item>
+    <div *ngFor="let project of projects">
+      <ion-item (click)="getProject(project?._id)" *ngIf="!project.isDeleted">
+        <ion-label class="ion-text-capitalize">
+          <h3> {{project?.title}} </h3>
+          <ion-note class="capitalize" *ngFor="let category of project.categories">
+            {{category?.label}}
+          </ion-note>
+        </ion-label>
+      </ion-item>
+    </div>
     <ion-item *ngFor="let template of templates" (click)="getTemplate(template?._id)">
       <ion-label class="ion-text-capitalize">
         <h3> {{template?.title}} </h3>

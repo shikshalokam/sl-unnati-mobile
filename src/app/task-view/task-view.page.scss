@@ -1,37 +1,45 @@
 @import '../../theme/colors.scss';
-.status-label{
+
+.status-label {
     margin: auto;
     font-size: 20px;
     font-weight: 500;
 }
-.subtask-form{
+
+.subtask-form {
     margin: 0px;
     padding: 5px;
-    .arrow-image{
-        width: 35%; 
+
+    .arrow-image {
+        width: 35%;
         margin-top: 5px;
     }
-    ion-button{
+
+    ion-button {
         text-transform: none;
     }
 }
-.subtask-box{
+
+.subtask-box {
     margin: 15px 0px;
-    ion-icon{
-        color:$dark-brown-color;
+
+    ion-icon {
+        color: $dark-brown-color;
     }
-    .subtask-title{
-    font-family: 'SourceSansPro-Bold' !important;
-    font-weight: 600;
+
+    .subtask-title {
+        font-family: 'SourceSansPro-Bold' !important;
+        font-weight: 600;
     }
-    ion-row, ion-col{
+
+    ion-row,
+    ion-col {
         margin: 0px;
         padding: 0px;
     }
 }
 
-.custom-popup
-{
+.custom-popup {
     position: fixed;
     z-index: 9999;
     width: 100%;
@@ -39,15 +47,24 @@
     overflow: auto;
     background: $trasperant-gray-color;
     display: flex;
-.border-radius{
-    border-radius: 1em;
+
+    .border-radius {
+        border-radius: 1em;
+    }
+
+    .pop-container {
+        margin: auto;
+        width: 80%;
+        box-shadow: 0px 1px 4px 1px $dark-grey-color;
+        background: $white-color;
+        padding: 10px;
+    }
 }
-.pop-container
-{
-    margin: auto;
-    width: 80%;
-    box-shadow: 0px 1px 4px 1px $dark-grey-color;
-    background: $white-color;
-    padding: 10px;
+
+.roundedButton {
+    font-size: 12px;
 }
+.subtask-date-picker{
+    max-width: 25px;  
+    margin-right: 5px;
 }

@@ -17,16 +17,16 @@
     <ion-input type="text" (ionInput)="saveChanges()" [(ngModel)]="task.assignee"
       [readonly]="editField != 'assignName'">
     </ion-input>
-    <ion-icon name="pencil-outline" slot="end" (click)="toEdit('assignName')" *ngIf="editField != 'assignName'">
+    <ion-icon name="create" color="primary" slot="end" (click)="toEdit('assignName')" *ngIf="editField != 'assignName'">
     </ion-icon>
   </ion-item>
   <ion-row>
     <ion-col size="3">
-      <img src="assets/images/timetable.png">
+      <img src="assets/images/timetable.png" (click)="setTaskEndDate()">
     </ion-col>
     <ion-col size="9">
-      <ion-datetime (ionChange)="setDate()" value={{task?.endDate}} display-timezone="utc" min="{{currentYear - 2}}"
-        max="{{currentYear + 5}}" display-timezone="utc" [(ngModel)]="task.endDate">
+      <ion-datetime (ionChange)="setDate()" #dateTime value={{task?.endDate}} display-timezone="utc"
+        min="{{currentYear - 2}}" max="{{currentYear + 5}}" display-timezone="utc" [(ngModel)]="task.endDate">
       </ion-datetime>
     </ion-col>
   </ion-row>
@@ -57,12 +57,6 @@
         </ion-item>
         <ion-button (click)="addSubtask()"> {{'LABELS.ADD_SUBTASK' | translate}}
         </ion-button>
-        <ion-item class="ion-date-time" style="float: right;" lines="none">
-          <ion-datetime min="{{currentYear - 2}}" max="{{currentYear + 5}}" value=null display-timezone="utc"
-            style="max-width: 0px;" [(ngModel)]="newSubtask.endDate">
-          </ion-datetime>
-          <img src="assets/images/timetable.png" style="width: 40px;">
-        </ion-item>
       </ion-col>
     </ion-row>
   </div>
@@ -90,7 +84,7 @@
         <ion-col size="1"> </ion-col>
         <ion-col size="5">
           <ion-item class="ion-date-time" lines="none">
-            <img src="assets/images/timetable.png" style="max-width: 25px;">
+            <img src="assets/images/timetable.png" class="subtask-date-picker">
             <ion-datetime value={{subtask?.endDate}} [(ngModel)]="subtask.endDate" displayFormat="DD/MM/YYYY"
               min="{{currentYear - 2}}" max="{{currentYear + 5}}" display-timezone="utc"></ion-datetime>
           </ion-item>
@@ -106,9 +100,26 @@
     </div>
   </div>
 
-  <ion-button [disabled]="!enableMarkButton" expand="block" shape="round" (click)="markTaskAsCompleted()">
+  <ion-button [disabled]="!enableMarkButton" expand="block" shape="round" (click)="markTaskAsCompleted()"
+    *ngIf="!task?.learningResources?.length">
     {{'LABELS.MARK_TASK_COMPLETE' | translate}}
   </ion-button>
+
+  <ion-row *ngIf="task?.learningResources?.length">
+    <ion-col size="5">
+      <ion-button class="roundedButton"  expand="block" shape="round"
+        (click)="openResources(task)">
+        {{'LABELS.VIEW_RESOURCES' | translate}}
+      </ion-button>
+    </ion-col>
+    <ion-col size="7">
+      <ion-button class="roundedButton" [disabled]="!enableMarkButton" expand="block" shape="round"
+        (click)="markTaskAsCompleted()">
+        {{'LABELS.MARK_TASK_COMPLETE' | translate}}
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
 
 
 </ion-content>

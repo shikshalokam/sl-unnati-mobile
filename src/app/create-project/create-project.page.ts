@@ -207,7 +207,7 @@ export class CreateProjectPage implements OnInit {
           category.value = '';
           delete category._id;
         } else {
-          category.value = category._id;
+          category.value = category._id ? category._id :category.value;
           delete category._id;
         }
       });
@@ -256,6 +256,7 @@ export class CreateProjectPage implements OnInit {
     this.project.title = data.title;
     this.project.description = data.description;
     this.project.categories = data.categories;
+    this.project.isEdit = true;
     this.db.update(this.project).then(success => {
       this.location.back();
     }).catch(error => {

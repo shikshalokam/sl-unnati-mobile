@@ -38,11 +38,13 @@
       </div>
     </ion-card-content>
   </ion-card>
-  <div class="project-box ion-padding">
-    <div class="custom-filed" style="height: 20px;" (click)="edit('others')">
-      <ion-icon name="create" color="primary"></ion-icon>
-    </div>
-    <div>
+  <ion-card class="project-box">
+    <ion-card-header class="custom-filed" (click)="edit('others')">
+      <div style="height: 20px;">
+        <ion-icon name="create" color="primary"></ion-icon>
+      </div>
+    </ion-card-header>
+    <ion-card-content>
       <div class="custom-filed">
         <ion-label> {{'LABELS.PROGRAM_NAME' | translate}} : </ion-label>
         {{project?.programName}}
@@ -66,7 +68,7 @@
             {{resources?.name}}
           </ion-card-content>
         </ion-card>
-      </div> 
-    </div>
-  </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

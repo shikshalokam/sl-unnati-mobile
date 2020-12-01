@@ -19,7 +19,7 @@ export const urlConstants = {
     PRIVATE_PROGRAMS: "v1/users/privatePrograms",
     GET_PROFILE: "v2/user-extension/getProfile",
     GET_STATES: "v2/entities/listByEntityType/state",
-    GET_SUBENTITIES: "v1/entities/childHierarchyPath/",
+    GET_SUBENTITIES: "v1/entities/subEntityTypeList/",
     GET_ENTITY_LIST: "v1/entities/subEntityList/",
     IMPORT_TEMPLATE: "v1/userProjects/importFromLibrary/",
     GET_REPORT: "v1/reports/entity/",
@@ -37,10 +37,13 @@ export const urlConstants = {
     SYNC_PROJECT: 'v1/userProjects/sync/',
     CREATE_PROJECT_DOC: "v1/userProjects/create",
     GET_IMAGE_UPLOAD_URLS: "v1/userProjects/getFileUploadUrl",
+    START_ASSESSMENT: 'v1/userProjects/solutionDetails/',
+    PROJCET_TASK_STATUS:"v1/userProjects/tasksStatus/",
     LIBRARY_SEARCH: "v1/library/categories/projects?search=",
     STATE_LIST: "v1/entities/listByEntityType/state",
     STATE_ROLES:"v1/entities/subEntitiesRoles/",
     ENTITY_MAPPING_FORM: "v1/users/entitiesMappingForm/",
-    PROFILE_UPDATE: "v1/user-extension/updateProfileRoles"
+    PROFILE_UPDATE: "v1/user-extension/updateProfileRoles",
+    MARK_AS_READ: "v1/notifications/in-app/markAsRead/",
   },
 };

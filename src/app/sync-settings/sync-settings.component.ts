@@ -14,12 +14,12 @@ export class SyncSettingsComponent implements OnInit {
   syncData: any;
   syncList = [
     {
-      label: 'LABELS.OFF',
-      value: 'OFF'
-    },
-    {
       label: 'LABELS.ALWAYS_ON',
       value: 'ON'
+    },
+    {
+      label: 'LABELS.OFF',
+      value: 'OFF'
     }
   ]
   constructor(private storage: LocalStorageService,

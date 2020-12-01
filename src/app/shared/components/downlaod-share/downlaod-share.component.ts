@@ -7,6 +7,7 @@ import { UtilsService } from "src/app/core/services/utils.service";
 import { LoaderService, ToastMessageService, UnnatiDataService, urlConstants } from "src/app/core";
 import { FilePath } from "@ionic-native/file-path/ngx";
 import { TranslateService } from "@ngx-translate/core";
+import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
 
 @Component({
   selector: "downlaod-share",
@@ -32,7 +33,8 @@ export class DownlaodShareComponent {
     public loader: LoaderService,
     public filePath: FilePath,
     public unnatiSrvc: UnnatiDataService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private androidPermissions: AndroidPermissions
   ) {
     this.translate.get(["MESSAGES.ERROR_WHILE_DOWNLOADING", "MESSAGES.SUCCESSFULLY DOWNLOADED"]).subscribe((data) => {
       this.texts = data;
@@ -80,12 +82,22 @@ export class DownlaodShareComponent {
         (err) => {
           console.log(err);
           this.toast.showMessage(this.texts["MESSAGES.ERROR_WHILE_DOWNLOADING"], "danger");
+          this.requestPermission();
         }
       )
       .finally(() => {
         this.interface == "simple" ? this.popoverController.dismiss() : null; // close the overlay for Simple UI
         this.loader.stopLoader();
       });
+  }
+
+  requestPermission() {
+    if (this.platform.is("android")) {
+      this.androidPermissions.requestPermissions([
+        this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE,
+        this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE,
+      ]);
+    }
   }
 
   share(path) {

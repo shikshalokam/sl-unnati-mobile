@@ -42,10 +42,14 @@ export class ApiService {
   // }
 
   private handleError(result) {
+    debugger
     switch (result.status) {
       case 401:
         this.auth.sessionExpired();
         break
+      default:
+        this.toast.showMessage(result.error ? result.error.message : 'MESSAGES.SOMETHING_WENT_WRONG' , 'danger')
+
     }
     return (error: any): Observable<any> => {
       // TODO: send the error to remote logging infrastructure
@@ -55,11 +59,11 @@ export class ApiService {
       // this.log(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
-      if (error.status === 401) {
-        this.auth.sessionExpired();
-      } else {
-        this.toast.showMessage('MESSAGES.SOMETHING_WENT_WRONG', 'danger')
-      }
+      // if (error.status === 401) {
+      //   this.auth.sessionExpired();
+      // } else {
+      //   this.toast.showMessage('MESSAGES.SOMETHING_WENT_WRONG', 'danger')
+      // }
       return of(result);
     };
   }

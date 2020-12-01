@@ -55,7 +55,7 @@ export class LoginPage implements OnInit {
         // this.fcm.initializeFCM();
         this.getProfile();
           this.router.navigateByUrl('/permissions');
-        this.localStorage.setLocalStorage(localStorageConstants.SYNC_VARIABLE, 'OFF').then(sucess => {
+        this.localStorage.setLocalStorage(localStorageConstants.SYNC_VARIABLE, 'ON').then(sucess => {
         }).catch(error => {
         })
        

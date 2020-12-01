@@ -7,7 +7,7 @@
 
 <ion-content *ngIf="project">
   <ion-segment (ionChange)="segmentChanged($event)" value="{{tabs[0].value}}">
-    <ion-segment-button value="{{tab.value}}" *ngFor="let tab of tabs">
+    <ion-segment-button value="{{tab.value}}" *ngFor="let tab of tabs" class="no-text-transform">
       <ion-label>{{tab.name | translate}}</ion-label>
     </ion-segment-button>
   </ion-segment>

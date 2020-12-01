@@ -1,17 +1,17 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PopoverController, AlertController, ModalController } from '@ionic/angular';
+import { PopoverController, AlertController, ModalController, Platform } from '@ionic/angular';
 import { PopoverComponent, CreateTaskComponent, OpenResourcesService } from '../shared';
 import { menuConstants } from '../core/constants/menuConstants';
-import { DbService, LoaderService, SyncService, ToastMessageService,NetworkService, statuses } from '../core';
+import { DbService, LoaderService, SyncService, ToastMessageService, NetworkService, statuses, UnnatiDataService, urlConstants } from '../core';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
 import * as _ from 'underscore';
 import { UtilsService } from '../core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+
 @Component({
   selector: "app-project-detail",
   templateUrl: "./project-detail.page.html",
@@ -51,27 +51,41 @@ export class ProjectDetailPage implements OnInit {
     private translate: TranslateService,
     private networkService: NetworkService,
     private openResourceSrvc: OpenResourcesService,
-    private modal: ModalController
+    private modal: ModalController,
+    private unnatiService: UnnatiDataService,
+    private iab: InAppBrowser,
+    private platform: Platform
   ) {
     this.db.createPouchDB(environment.db.projects);
     params.params.subscribe((parameters) => {
       this.projectId = parameters.id;
     });
-    this.translate.get(["MESSAGES.SOMETHING_WENT_WRONG"]).subscribe((texts) => {
-      this.allStrings = texts;
+    this.translate
+      .get(["MESSAGES.SOMETHING_WENT_WRONG", "MESSAGES.NO_ENTITY_MAPPED", ".MESSAGES.CANNOT_GET_PROJECT_DETAILS"])
+      .subscribe((texts) => {
+        this.allStrings = texts;
+      });
+
+    this.platform.resume.subscribe((result) => {
+      console.log("Platform Resume Event");
+      this.getProjectTaskStatus()
+
     });
   }
 
   getProject() {
-    this.db.query({ _id: this.projectId }).then(success => {
-      this.project = success.docs.length ? success.docs[0] : {};
-      this.isSynced = this.project ? (this.project.isNew || this.project.isEdit) : true;
-      this.project.categories.forEach(category => {
-        category.label ? this.categories.push(category.label) : this.categories.push(category.name)
-      });
-      this.project.tasks && this.project.tasks.length ? this.sortTasks() : ''
-    }, error => {
-    })
+    this.db.query({ _id: this.projectId }).then(
+      (success) => {
+        this.project = success.docs.length ? success.docs[0] : {};
+        this.isSynced = this.project ? this.project.isNew || this.project.isEdit : true;
+        this.project.categories.forEach((category) => {
+          category.label ? this.categories.push(category.label) : this.categories.push(category.name);
+        });
+        this.project.tasks && this.project.tasks.length ? this.sortTasks() : "";
+        this.getProjectTaskStatus();
+      },
+      (error) => {}
+    );
   }
 
   ngOnInit() {}
@@ -157,7 +171,7 @@ export class ProjectDetailPage implements OnInit {
         break;
       }
       case "editTask": {
-        this.router.navigate(['/menu/task-view', this.project._id, taskId]);
+        this.router.navigate(["/menu/task-view", this.project._id, taskId]);
         break;
       }
       case "deleteTask": {
@@ -165,7 +179,7 @@ export class ProjectDetailPage implements OnInit {
         break;
       }
       case "editProject": {
-        this.router.navigate(['/menu/project-edit', this.project._id]);
+        this.router.navigate(["/menu/project-edit", this.project._id]);
         break;
       }
       case "deleteProject": {
@@ -193,10 +207,10 @@ export class ProjectDetailPage implements OnInit {
         {
           text: data["LABELS.SUBMIT"],
           handler: () => {
-            type == 'task' ? this.deleteTask(id) : this.deleteProject()
-          }
-        }
-      ]
+            type == "task" ? this.deleteTask(id) : this.deleteProject();
+          },
+        },
+      ],
     });
     await alert.present();
   }
@@ -206,13 +220,12 @@ export class ProjectDetailPage implements OnInit {
       return item._id == id;
     });
     this.project.tasks[index].isDeleted = true;
-    this.update('taskDelete');
+    this.update("taskDelete");
   }
   deleteProject() {
     // actions
     this.project.isDeleted = true;
-    this.update('ProjectDelete');
-
+    this.update("ProjectDelete");
   }
   openResources(task = null) {
     if (task && task.learningResources && task.learningResources.length === 1) {
@@ -239,20 +252,22 @@ export class ProjectDetailPage implements OnInit {
     this.project.isEdit = true;
     this.db.createPouchDB(environment.db.projects);
     this.project = this.utils.setStatusForProject(this.project);
-    this.db.update(this.project).then(success => {
-      this.project._rev = success.rev;
-      this.isSynced = this.project ? (this.project.isNew || this.project.isEdit) : true;
-      if (type == 'newTask') {
-        this.toast.showMessage('MESSAGES.NEW_TASK_ADDED_SUCCESSFUL', 'success');
-      } else if (type == 'ProjectDelete') {
-        this.toast.showMessage('MESSAGES.PROJECT_DELETED_SUCCESSFUL', 'success');
-        this.location.back();
-      } else if ('taskDelete') {
-        this.toast.showMessage('MESSAGES.TASK_DELETED_SUCCESSFUL', 'success')
-      }
-      this.sortTasks();
-    }).catch(error => {
-    })
+    this.db
+      .update(this.project)
+      .then((success) => {
+        this.project._rev = success.rev;
+        this.isSynced = this.project ? this.project.isNew || this.project.isEdit : true;
+        if (type == "newTask") {
+          this.toast.showMessage("MESSAGES.NEW_TASK_ADDED_SUCCESSFUL", "success");
+        } else if (type == "ProjectDelete") {
+          this.toast.showMessage("MESSAGES.PROJECT_DELETED_SUCCESSFUL", "success");
+          this.location.back();
+        } else if ("taskDelete") {
+          this.toast.showMessage("MESSAGES.TASK_DELETED_SUCCESSFUL", "success");
+        }
+        this.sortTasks();
+      })
+      .catch((error) => {});
   }
   createNewProject() {
     this.loader.startLoader();
@@ -303,19 +318,118 @@ export class ProjectDetailPage implements OnInit {
   async addTask() {
     const modal = await this.modal.create({
       component: CreateTaskComponent,
-      cssClass: 'create-task-modal'
+      cssClass: "create-task-modal",
     });
-    modal.onDidDismiss().then(data => {
+    modal.onDidDismiss().then((data) => {
       if (data.data) {
-        !this.project.tasks ? this.project.tasks = [] : '';
+        !this.project.tasks ? (this.project.tasks = []) : "";
         this.project.tasks.push(data.data);
-        this.update('newTask');
+        this.update("newTask");
       }
-    })
+    });
     return await modal.present();
   }
+
   openAttachments() {
-    console.log('openAttachments');
-    this.router.navigate(['menu/attachment-list', this.project._id], { replaceUrl: true })
+    console.log("openAttachments");
+    this.router.navigate(["menu/attachment-list", this.project._id], { replaceUrl: true });
+  }
+
+  startAssessment(task) {
+    if (this.project.entityId) {
+      const config = {
+        url: urlConstants.API_URLS.START_ASSESSMENT + `${this.project._id}?taskId=${task._id}`,
+      };
+      this.unnatiService.get(config).subscribe(
+        (success) => {
+          if (!success.result) {
+            this.toast.showMessage(this.allStrings["MESSAGES.CANNOT_GET_PROJECT_DETAILS"], "danger");
+            return;
+          }
+          let data = success.result;
+          
+          let params = `${data.programId}-${data.solutionId}-${data.entityId}`;
+          let link = `${environment.deepLinkAppsUrl}/${task.type}/${params}`;
+          this.iab.create(link, "_system");
+        },
+        (error) => {
+          this.toast.showMessage(this.allStrings["MESSAGES.CANNOT_GET_PROJECT_DETAILS"], "danger");
+          console.log(error);
+        }
+      );
+    } else {
+      this.toast.showMessage(this.allStrings["MESSAGES.NO_ENTITY_MAPPED"], "danger");
+    }
+  }
+
+  getProjectTaskStatus() {
+    const config = {
+      url: urlConstants.API_URLS.PROJCET_TASK_STATUS + `${this.project._id}`,
+      payload: {
+        taskIds: this.getAssessmentTypeTaskId(),
+      },
+    };
+    this.unnatiService.post(config).subscribe(
+      (success) => {
+        console.log(success);
+        if (!success.result) {
+          return;
+        }
+        this.updateAssessmentStatus(success.result);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  updateAssessmentStatus(data) {
+    // if task type is assessment or observation then check if it is submitted and change the status and update in db
+    let isChnaged=false
+    this.project.tasks.map((t) => {
+      data.map((d) => {
+        if (d._id == t._id && d.status != t.status) {
+          t.status = d.status;
+          isChnaged=true
+        }
+      });
+    });
+    isChnaged?this.update('taskStatusUpdated'):null// if any assessment/observatiom task status is changed then only update 
+    console.log(this.project);
+  }
+
+  getAssessmentTypeTaskId() {
+    const assessmentTypeTaskIds = [];
+    for (const task of this.project.tasks) {
+      task.type === "assessment" || task.type === "observation" ? assessmentTypeTaskIds.push(task._id) : null;
+    }
+    return assessmentTypeTaskIds;
+  }
+
+  checkReport(task) {
+    if (this.project.entityId) {
+      const config = {
+        url: urlConstants.API_URLS.START_ASSESSMENT + `${this.project._id}?taskId=${task._id}`,
+      };
+      this.unnatiService.get(config).subscribe(
+        (success) => {
+          if (!success.result) {
+            this.toast.showMessage(this.allStrings["MESSAGES.CANNOT_GET_PROJECT_DETAILS"], "danger");
+            return;
+          }
+          let data = success.result;
+          let entityType = data.entityType || "school"; // remove afterwards when entitYtype come in api
+          let params = `${data.programId}-${data.solutionId}-${data.entityId}-${entityType}`;
+          let link = `${environment.deepLinkAppsUrl}/${task.type}/reports/${params}`;
+          this.iab.create(link, "_system");
+        },
+        (error) => {
+          this.toast.showMessage(this.allStrings["MESSAGES.CANNOT_GET_PROJECT_DETAILS"], "danger");
+          console.log(error);
+        }
+      );
+    } else {
+      this.toast.showMessage(this.allStrings["MESSAGES.NO_ENTITY_MAPPED"], "danger");
+    }
   }
 }
