@@ -105,7 +105,7 @@ export class TaskViewPage implements OnInit {
 
   saveChanges() {
     if (this.task.name) {
-      this.editField = '';
+      // this.editField = ''; // removed as it closing the edit field as one letter is entered
       this.update();
     } else {
       this.toast.showMessage('MESSAGES.REQUIRED_FIELDS', 'danger');
