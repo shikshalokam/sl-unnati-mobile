@@ -164,12 +164,12 @@
         "ATTACHMENTS": "Attachments",
         "IMAGES": "Images",
         "FILES": "Files",
-        "SAVE_EDITS":"Save Edits",
+        "SAVE_EDITS": "Save Edits",
         "TELUGU": "Telugu",
         "ENGLISH": "English",
         "KANNADA": "Kannada",
-        "VIEW_RESOURCES":"View Resources",
-        "START":"Start",
+        "VIEW_RESOURCES": "View Resources",
+        "START": "Start",
         "STATE": "State",
         "ENTITY": "Entity"
     },
@@ -213,11 +213,10 @@
         "ERROR_WHILE_DOWNLOADING": "Error while downloading ",
         "SUCCESSFULLY DOWNLOADED": "Successfully Downloaded",
         "PROJECT_DELETED_SUCCESSFUL": "Project Deleted successfully",
-        "NO_ENTITY_MAPPED":" No entity mapped to the Project",
+        "NO_ENTITY_MAPPED": " No entity mapped to the Project",
         "PROFILE_UPDATE_AGREE": "I agree to share the information with Unnati",
         "UPDATE_PROFILE_CONFIRMATION": "Please update your profile to continue",
-        "CANNOT_GET_PROJECT_DETAILS":"Cannot get project details",
-        "COMING_SOON":"Coming soon"
-
+        "CANNOT_GET_PROJECT_DETAILS": "Cannot get project details",
+        "COMING_SOON": "Coming soon"
     }
 }
