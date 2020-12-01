@@ -105,7 +105,7 @@
     {{'LABELS.MARK_TASK_COMPLETE' | translate}}
   </ion-button>
 
-  <ion-row *ngIf="task?.learningResources.length">
+  <ion-row *ngIf="task?.learningResources?.length">
     <ion-col size="5">
       <ion-button class="roundedButton"  expand="block" shape="round"
         (click)="openResources(task)">
