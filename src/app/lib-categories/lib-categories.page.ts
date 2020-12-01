@@ -137,7 +137,7 @@ export class LibCategoriesPage implements OnInit {
     this.router.navigate(['/menu/templates', type])
   }
 
-  public openMyprojects(type) {
+  public openMyprojects() {
     this.router.navigate(['/menu/my-projects']);
   }
   getDownloadedCategories() {

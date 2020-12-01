@@ -29,8 +29,8 @@ export class AuthService {
     private modalController: ModalController,
     private db: DbService
   ) {
-    
-   }
+
+  }
 
   doOAuthStepOne(): Promise<any> {
     this.auth_url = this.base_url + "/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=" + environment.keycloakConfig.clientId + "&redirect_uri=" +
@@ -78,26 +78,22 @@ export class AuthService {
             refresh_token: data.refresh_token,
             accountDeactivate: false
           }
+          this.loader.stopLoader();
           this.checkLocalData(sessionData).then(success => {
             if (success) {
               this.currentUser.setUser(sessionData).then(success => {
-                this.loader.stopLoader();
                 resolve(sessionData);
               }).catch(error => {
-                this.loader.stopLoader();
                 resolve(error);
               })
             } else {
               this.currentUser.setUser(sessionData).then(success => {
-                this.loader.stopLoader();
                 resolve(sessionData);
               }).catch(error => {
-                this.loader.stopLoader();
                 resolve(error);
               })
             }
           }).catch(error => {
-            this.loader.stopLoader();
             resolve(error);
           })
           // this.fcm.initializeFCM();
@@ -167,7 +163,7 @@ export class AuthService {
   }
 
   doLogout(): Promise<any> {
-    return new Promise( (resolve) => {
+    return new Promise((resolve) => {
       let logout_redirect_url = environment.keycloakConfig.redirectUrl;
       let logout_url = environment.appUrl + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
       let closeCallback = function (event) {

@@ -57,7 +57,7 @@ export class OnboardingEntityListingModalPage {
     })
   }
 
-  close(data) {
+  close(data?) {
     this.viewCntrl.dismiss(data);
   }
 

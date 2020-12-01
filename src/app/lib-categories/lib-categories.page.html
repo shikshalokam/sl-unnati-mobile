@@ -19,7 +19,7 @@
         </ion-card>
       </ion-col>
       <ion-col *ngFor="let tile of categories" class="tiles" size="6" style="    margin: 5px 0px;">
-        <ion-card (click)="categoryView(tile.type,tile.name)">
+        <ion-card (click)="categoryView(tile.type)">
           <img [src]="getImgContent(tile?.localUrl)" />
           <p>{{tile.name}}</p>
         </ion-card>
