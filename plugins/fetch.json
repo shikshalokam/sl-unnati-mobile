@@ -15,16 +15,6 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova.plugins.diagnostic": {
-    "source": {
-      "type": "registry",
-      "id": "cordova.plugins.diagnostic@^6.0.2"
-    },
-    "is_top_level": true,
-    "variables": {
-      "ANDROIDX_VERSION": "1.+"
-    }
-  },
   "cordova-plugin-file-opener2": {
     "source": {
       "type": "registry",
@@ -335,18 +325,20 @@
   "cordova-plugin-android-permissions": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-android-permissions@^1.1.2"
+      "id": "cordova-plugin-android-permissions@^1.1.0"
     },
     "is_top_level": true,
     "variables": {}
   },
-  "cordova-plugin-market": {
+  "cordova.plugins.diagnostic": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-market@^1.2.0"
+      "id": "cordova.plugins.diagnostic@^6.0.2"
     },
     "is_top_level": true,
-    "variables": {}
+    "variables": {
+      "ANDROIDX_VERSION": "1.+"
+    }
   },
   "cordova-plugin-add-swift-support": {
     "source": {

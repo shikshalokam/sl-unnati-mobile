@@ -69,7 +69,6 @@ export class ProjectDetailPage implements OnInit {
     this.platform.resume.subscribe((result) => {
       console.log("Platform Resume Event");
       this.getProjectTaskStatus()
-
     });
   }
 
@@ -262,7 +261,7 @@ export class ProjectDetailPage implements OnInit {
         } else if (type == "ProjectDelete") {
           this.toast.showMessage("MESSAGES.PROJECT_DELETED_SUCCESSFUL", "success");
           this.location.back();
-        } else if ("taskDelete") {
+        } else if (type=="taskDelete") {
           this.toast.showMessage("MESSAGES.TASK_DELETED_SUCCESSFUL", "success");
         }
         this.sortTasks();
@@ -418,7 +417,7 @@ export class ProjectDetailPage implements OnInit {
             return;
           }
           let data = success.result;
-          let entityType = data.entityType || "school"; // remove afterwards when entitYtype come in api
+          let entityType = data.entityType 
           let params = `${data.programId}-${data.solutionId}-${data.entityId}-${entityType}`;
           let link = `${environment.deepLinkAppsUrl}/${task.type}/reports/${params}`;
           this.iab.create(link, "_system");
