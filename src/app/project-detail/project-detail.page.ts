@@ -365,10 +365,15 @@ export class ProjectDetailPage implements OnInit {
     if (!this.project.tasks && !this.project.tasks.length) {
       return
     }
+    let taskIdArr = this.getAssessmentTypeTaskId()
+
+    if (!taskIdArr.length) {
+      return
+    }
     const config = {
       url: urlConstants.API_URLS.PROJCET_TASK_STATUS + `${this.project._id}`,
       payload: {
-        taskIds: this.getAssessmentTypeTaskId(),
+        taskIds: taskIdArr,
       },
     };
     this.unnatiService.post(config).subscribe(
