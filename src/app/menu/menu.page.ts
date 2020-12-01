@@ -16,7 +16,7 @@ export class MenuPage implements OnInit {
     {
       title: "LABELS.HOME",
       url: "/menu/tabs/home",
-      icon: "home",
+      icon: "home-outline",
       key: '',
     },
     // {
@@ -27,21 +27,9 @@ export class MenuPage implements OnInit {
     // },
     {
       title: 'LABELS.TUTORIAL_VIDEO',
-      icon: 'play',
+      icon: 'play-outline',
       url: '/menu/tutorial-videos',
       key: '',
-    },
-    {
-      title: "LABELS.FAQ",
-      url: '',
-      icon: 'help',
-      key: 'faq',
-    },
-    {
-      title: "LABELS.PRIVACY",
-      url: '',
-      icon: 'person',
-      key: 'policy',
     },
     {
       title: "LABELS.SYNC",
@@ -50,10 +38,10 @@ export class MenuPage implements OnInit {
       key: '',
     },
     {
-      title: "LABELS.ABOUT",
-      url: "/menu/about",
-      icon: "information-circle-outline",
-      key: '',
+      title: "LABELS.FAQ",
+      url: '',
+      icon: 'help',
+      key: 'faq',
     },
     {
       title: "LABELS.SETTINGS",
@@ -67,6 +55,19 @@ export class MenuPage implements OnInit {
       icon: 'person-add-outline',
       key: '',
     },
+    {
+      title: "LABELS.ABOUT",
+      url: "/menu/about",
+      icon: "information-circle-outline",
+      key: '',
+    },
+    {
+      title: "LABELS.PRIVACY",
+      url: '',
+      icon: 'person-outline',
+      key: 'policy',
+    },
+   
   ];
   selectedPath: string;
   appName: string

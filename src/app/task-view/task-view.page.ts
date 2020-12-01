@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DbService, statuses, ToastMessageService, AttachementService } from '../core';
+import { DbService, statuses, ToastMessageService, AttachementService, NetworkService } from '../core';
 import { environment } from 'src/environments/environment';
 import * as _ from 'underscore';
 import { UtilsService } from '../core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertController } from '@ionic/angular';
 import { Location } from '@angular/common';
+import { OpenResourcesService } from '../shared';
+
 @Component({
   selector: 'app-task-view',
   templateUrl: './task-view.page.html',
@@ -14,6 +16,7 @@ import { Location } from '@angular/common';
 })
 export class TaskViewPage implements OnInit {
   parameters;
+  @ViewChild('dateTime') sTime;
   editField;
   task;
   project;
@@ -35,7 +38,9 @@ export class TaskViewPage implements OnInit {
     private translate: TranslateService,
     private alert: AlertController,
     private attachmentService: AttachementService,
-    private location: Location
+    private location: Location,
+    private networkService: NetworkService,
+    private openResourceSrvc: OpenResourcesService
   ) {
     this.saveChanges = _.debounce(this.saveChanges, 800)
     this.db.createPouchDB(environment.db.projects);
@@ -78,11 +83,14 @@ export class TaskViewPage implements OnInit {
     //     element.status = 'completed';
     //   });
     // }
-    this.update();
+    this.enableTaskMarkButton();
   }
 
   setDate() {
     this.update();
+  }
+  setTaskEndDate() {
+    this.sTime.open();
   }
   public addSubtask() {
     if (this.newSubtask.name) {
@@ -96,29 +104,57 @@ export class TaskViewPage implements OnInit {
   }
 
   saveChanges() {
-    this.editField = '';
-    this.update();
+    if (this.task.name) {
+      this.editField = '';
+      this.update();
+    } else {
+      this.toast.showMessage('MESSAGES.REQUIRED_FIELDS', 'danger');
+    }
   }
 
 
   update(goBack?) {
-    if (!this.task.isEdit) {
-      this.task.isEdit = (this.copyOfTaskDetails === JSON.stringify(this.task)) ? false : true;
-      this.project.isEdit = this.task.isEdit ? true : this.project.isEdit;
+    if (this.task.name) {
+      if (!this.task.isEdit) {
+        this.task.isEdit = (this.copyOfTaskDetails === JSON.stringify(this.task)) ? false : true;
+        this.project.isEdit = this.task.isEdit ? true : this.project.isEdit;
+      }
+      const isProjectEdit = _.filter(this.project.tasks, (eachTask) => {
+        return eachTask.isEdit
+      })
+      this.project.isEdit = isProjectEdit.length ? true : this.project.isEdit;
+      this.project = this.utils.setStatusForProject(this.project);
+      this.db.update(this.project).then(success => {
+        this.project._rev = success.rev;
+        this.prepareSubTaskMeta();
+        this.attachments = [];
+        // this.toast.showMessage('MESSAGES.YOUR_CHANGES_ARE_SAVED', 'success');
+        goBack ? this.location.back() : '';
+      }).catch(error => {
+      })
+    } else {
+      this.toast.showMessage('MESSAGES.REQUIRED_FIELDS', 'danger');
     }
-    const isProjectEdit = _.filter(this.project.tasks, (eachTask) => {
-      return eachTask.isEdit
-    })
-    this.project.isEdit = isProjectEdit.length ? true : this.project.isEdit;
-    this.project = this.utils.setStatusForProject(this.project);
-    this.db.update(this.project).then(success => {
-      this.project._rev = success.rev;
-      this.prepareSubTaskMeta();
-      this.attachments = [];
-      // this.toast.showMessage('MESSAGES.YOUR_CHANGES_ARE_SAVED', 'success');
-      goBack ? this.location.back() : '';
-    }).catch(error => {
-    })
+  }
+
+  openResources(task) {
+    // if (task && task.learningResources && task.learningResources.length === 1) {
+    //   let link = task.learningResources[0].link;
+    //   this.openBodh(link);
+    //   return;
+    // }
+    if (task) {
+      this.router.navigate(["/menu/learning-resources", this.project._id, task._id]);
+    } else {
+      this.router.navigate(["/menu/learning-resources", this.project._id]);
+    }
+  }
+
+  openBodh(link) {
+    console.log(link, "link");
+    this.networkService.isNetworkAvailable
+      ? this.openResourceSrvc.openBodh(link)
+      : this.toast.showMessage("MESSAGES.OFFLINE", "danger");
   }
 
   delete(data) {
@@ -171,8 +207,8 @@ export class TaskViewPage implements OnInit {
 
   enableTaskMarkButton() {
     this.getSubtasksCount(this.task).then((count: number) => {
+      this.subTaskCount = count;
       if (count) {
-        this.subTaskCount = count;
         let inProgress = 0;
         let completed = 0;
         if (this.task.children.length) {

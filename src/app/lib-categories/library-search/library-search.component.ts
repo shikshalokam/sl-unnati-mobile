@@ -55,20 +55,13 @@ export class LibrarySearchComponent implements OnInit {
         ]
       }
     }
-    // query['selector']['$and'].push({
-    //   isDeleted: {
-    //     $ne: true
-    //   }
-    // })
     this.getDocs(query);
   }
 
   getDocs(query) {
     this.db.customQuery(query).then(success => {
       let projects = success['docs'].length ? success['docs'] : [];
-      console.log(projects, "projects");
       this.projects = this.utils.processProjectsData(projects);
-      console.log(this.projects, " projects 60");
     }).catch(error => {
       this.projects = [];
     })
@@ -77,7 +70,6 @@ export class LibrarySearchComponent implements OnInit {
   onFilterChange() {
     this.createQuery();
   }
-
   public categoryTemplates() {
     const config = {
       url: urlConstants.API_URLS.LIBRARY_SEARCH + this.searchString

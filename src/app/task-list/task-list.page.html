@@ -4,14 +4,12 @@
 </ion-header>
 <ion-content>
   <ion-segment (ionChange)="tabChanged($event)" value="{{taskTabs[0].value}}">
-    <ion-segment-button value="{{tab.value}}" *ngFor="let tab of taskTabs">
+    <ion-segment-button value="{{tab.value}}" *ngFor="let tab of taskTabs" class="no-text-transform">
       <ion-label>{{tab.name | translate}}</ion-label>
     </ion-segment-button>
   </ion-segment>
-  <ion-item class="search-bar-custom">
-    <ion-icon name="search" item-left color="dark"></ion-icon>
-    <ion-input type="text" placeholder="{{'LABELS.SEARCH' | translate }}" [(ngModel)]="searchInput" (ionChange)="taskListSearch($event)"></ion-input>
-  </ion-item>
+  <app-search-bar (onSearch)="taskListSearch($event)">
+  </app-search-bar>
   <div [ngSwitch]="type">
     <div *ngSwitchCase="'ongoing'">
       <div *ngIf="(ongoing | filter:searchInput)?.length === 0">

@@ -169,8 +169,7 @@
         "ENGLISH": "English",
         "KANNADA": "Kannada",
         "VIEW_RESOURCES":"View Resources",
-        "START":"Start",
-        "STATE": "State"
+        "START":"Start"
     },
     "MESSAGES": {
         "DEAR": "Dear user,",
@@ -211,12 +210,6 @@
         "TASK_DELETED_SUCCESSFUL": "Task Deleted successfully",
         "ERROR_WHILE_DOWNLOADING": "Error while downloading ",
         "SUCCESSFULLY DOWNLOADED": "Successfully Downloaded",
-        "PROJECT_DELETED_SUCCESSFUL": "Project Deleted successfully",
-        "NO_ENTITY_MAPPED":" No entity mapped to the Project",
-        "PROFILE_UPDATE_AGREE": "I agree to share the information with Unnati",
-        "UPDATE_PROFILE_CONFIRMATION": "Please update your profile to continue",
-        "CANNOT_GET_PROJECT_DETAILS":"Cannot get project details",
-        "COMING_SOON":"Coming soon"
-
+        "PROJECT_DELETED_SUCCESSFUL": "Project Deleted successfully"
     }
 }

@@ -91,6 +91,7 @@ export class HomePage implements OnInit {
     //   this.getCreateProjectForm();
     //   this.getTaskForm();
     // this.getProjectsFromLocal();
+    this.activeProjects = [];
     this.syncServ.checkForSync();
   }
 
@@ -227,13 +228,11 @@ export class HomePage implements OnInit {
 
 
   getProfileUpdataData() {
-    this.loader.startLoader();
     const config = {
       url: `${urlConstants.API_URLS.GET_PROFILE}`
     }
     // this.showLoader = true;
     this.kendraService.get(config).subscribe(data => {
-      this.loader.stopLoader();
       if (data.result.roles && data.result.roles.length) {
       } else {
         if(environment.isProfileUpdateMandatory) {
@@ -241,7 +240,6 @@ export class HomePage implements OnInit {
        }
     }
     }, error => {
-      this.loader.stopLoader();
     })
   }
 

@@ -1,23 +1,14 @@
 <ion-header>
-  <app-header
-    title="LABELS.PROJECT_VIEW"
-    [bottomBorder]="true"
-    [showMenu]="false"
-    [showReload]="false"
-    [showSync]="true"
-    (onAction)="action($event)"
-    [showMore]="true"
-    (onMore)="openPopover($event)"
-    [hideNotification]="true"
-    [synced]="!isSynced"
-  >
+  <app-header title="LABELS.PROJECT_VIEW" [bottomBorder]="true" [showMenu]="false" [showReload]="false"
+    [showSync]="true" (onAction)="action($event)" [showMore]="true" (onMore)="openPopover($event)"
+    [hideNotification]="true" [synced]="!isSynced">
     <ion-back-button></ion-back-button>
   </app-header>
 </ion-header>
 
 <ion-content *ngIf="project">
   <ion-card class="project-box" *ngIf="showDetails">
-    <ion-card-header class="custom-filed" *ngIf="project?.programInformation?.name">
+    <ion-card-header class="custom-filed" >
       <ion-icon name="caret-down" color="primary" (click)="toggle()"></ion-icon>
       <ion-label>{{'LABELS.PROGRAM_NAME' | translate}} :
       </ion-label>{{project?.programName}}
@@ -33,7 +24,7 @@
       </div>
       <div class="custom-filed" *ngIf="project?.duration">
         <ion-label position="fixed"> {{'LABELS.DURATION' | translate}} : </ion-label>
-        {{project?.duration}}
+        {{project?.duration?.label || project?.duration }}
       </div>
       <div class="custom-filed" *ngIf="project?.startDate">
         <ion-label position="fixed"> {{'LABELS.START_DATE' | translate}} : </ion-label>
@@ -62,7 +53,7 @@
     </ion-card-content>
   </ion-card>
   <ion-card class="project-box" *ngIf="!showDetails">
-    <ion-card-header class="custom-filed" *ngIf="project?.programInformation?.name">
+    <ion-card-header class="custom-filed">
       <ion-icon name="caret-forward-outline" color="primary" (click)="toggle()"></ion-icon>
       <ion-label> {{'LABELS.PROJECT_TITLE' | translate}} : </ion-label>
       {{project?.title}}
@@ -101,28 +92,40 @@
               <div class="date_button-container">
 
                 <h5 class="task-endDate">
-                  {{'LABELS.END_DATE' | translate}} : {{task.endDate | date : 'dd/MM/yyyy'}}
-                  
+                  {{'LABELS.END_DATE' | translate}} : {{(task?.endDate) ? (task.endDate | date : 'dd/MM/yyyy') : "__"}}
+
                 </h5>
-                <ion-button color="primary" size="small" *ngIf="task?.type=='content'&&task?.learningResources?.length" (click)="$event.stopPropagation();openResources(task)">View Resource</ion-button>
               </div>
             </ion-col>
             <ion-col size="1">
               <ion-icon name="ellipsis-vertical" color="primary" (click)="openPopover($event,task._id)"></ion-icon>
             </ion-col>
           </ion-row>
+          <div class="viewBtn">
+            <ion-button color="primary" size="small" *ngIf="task?.type=='content'&&task?.learningResources?.length"
+              (click)="$event.stopPropagation();openResources(task)">
+              {{'LABELS.VIEW_RESOURCES' | translate}}
+            </ion-button>
+            <ion-button color="primary" size="small" *ngIf="(task?.type=='assessment' || task?.type=='observation')&&task?.status!='completed' "
+              (click)="$event.stopPropagation();startAssessment(task)">
+              {{'LABELS.START' | translate}} {{task?.type}}
+            </ion-button>
+            <ion-button color="primary" size="small" *ngIf="(task?.type=='assessment' || task?.type=='observation')&&task?.status=='completed' "
+              (click)="$event.stopPropagation();checkReport(task)">
+              {{'LABELS.REPORTS' | translate}} 
+            </ion-button>
+          </div>
         </ion-card>
       </div>
     </div>
   </div>
-  <ion-fab horizontal="center" class="add-task-btn" *ngIf="taskCount < 3">
+  <ion-fab horizontal="center" class="add-task-btn" *ngIf="taskCount < 2">
     <ion-fab-button (click)="addTask()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
     {{'LABELS.NEW_TASK' | translate}}
   </ion-fab>
-
-  <ion-fab vertical="bottom" horizontal="end" class="add-task-btn" *ngIf="taskCount > 2" slot="fixed">
+  <ion-fab vertical="bottom" horizontal="end" class="add-task-btn" *ngIf="taskCount > 1" slot="fixed">
     <ion-fab-button (click)="addTask()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

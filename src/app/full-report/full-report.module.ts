@@ -9,6 +9,7 @@ import { FullReportComponent } from "./full-report.component";
 import { CoreModule } from '../core/core.module';
 import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { SocialSharing } from "@ionic-native/social-sharing/ngx";
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 
 
@@ -23,6 +24,6 @@ import { SocialSharing } from "@ionic-native/social-sharing/ngx";
     SharedModule,
     IonicModule,
   ],
-  providers: [ScreenOrientation,SocialSharing],
+  providers: [ScreenOrientation, SocialSharing, AndroidPermissions],
 })
 export class FullReportModule {}

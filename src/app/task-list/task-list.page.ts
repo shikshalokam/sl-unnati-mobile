@@ -39,7 +39,8 @@ export class TaskListPage implements OnInit {
     this.createQuery();
   }
 
-  taskListSearch() {
+  taskListSearch(data) {
+    this.searchInput = data;
     this.createQuery();
   }
 

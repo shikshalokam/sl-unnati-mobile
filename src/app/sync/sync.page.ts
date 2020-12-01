@@ -172,9 +172,9 @@ export class SyncPage implements OnInit, OnDestroy {
     const paylod = this.createSyncPayload();
     this.syncServ.syncApiRequest(paylod).then(success => {
       this.allProjects[this.syncIndex] = this.syncServ.removeKeys(this.allProjects[this.syncIndex], ['isNew', 'isEdit']);
+      (success.result && success.result.programId) ? this.allProjects[this.syncIndex]['programId'] = success.result.programId : null;
       this.updateSyncedDataToDb();
     }).catch(error => {
-      this.toast.showMessage(error.statusText ? error.statusText : this.allStrings['MESSAGES.SYNC_FAILED'], 'danger');
       this.location.back();
     })
   }
@@ -196,6 +196,8 @@ export class SyncPage implements OnInit, OnDestroy {
     const filteredTasks = _.filter(payload.tasks, (task) => {
       return task.isNew || task.isEdit
     })
+    delete payload.createdAt;
+    delete payload.updatedAt;
     payload.tasks = filteredTasks;
     return this.syncServ.removeKeys(payload, ['isNew', 'isEdit'])
   }

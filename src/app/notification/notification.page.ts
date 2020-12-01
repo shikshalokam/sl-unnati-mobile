@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { urlConstants, KendraApiService, LoaderService } from '../core';
+import { urlConstants, KendraApiService, LoaderService, ToastMessageService, NetworkService } from '../core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-notification',
@@ -16,11 +18,42 @@ export class NotificationPage implements OnInit {
 
   constructor(
     private kendraApi: KendraApiService,
-    private loader: LoaderService
+    private loader: LoaderService,
+    private router: Router,
+    private toast:ToastMessageService,
+    private networkService: NetworkService
   ) { }
 
   ngOnInit() {
-    this.getNotifications();
+    this.networkService.isNetworkAvailable ? this.getNotifications() : this.toast.showMessage('MESSAGES.YOU_ARE_WORKING_OFFLINE_TRY_AGAIN')
+    
+  }
+
+  ionViewWillEnter() {
+    this.networkService.isNetworkAvailable ? this.getNotifications() : this.toast.showMessage('MESSAGES.YOU_ARE_WORKING_OFFLINE_TRY_AGAIN')
+
+  }
+
+  notificationClick(data) {
+    switch (data.action) {
+      case "profile_update": {
+        this.markAsRead(data.id)
+        this.router.navigate(['menu/profile-update']);
+        break
+      }
+    }
+  }
+
+
+  markAsRead(id) {
+    const config = {
+      url: urlConstants.API_URLS.MARK_AS_READ + id
+    }
+    this.kendraApi.get(config).subscribe(data => {
+
+    }, error => {
+
+    })
   }
 
   getNotifications() {

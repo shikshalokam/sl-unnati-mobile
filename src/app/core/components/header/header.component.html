@@ -11,7 +11,7 @@
   <ion-buttons [routerLink]="['/menu/notification']" routerDirection="forward" slot="end" class="padding"
     *ngIf="!hideNotification">
     <ion-icon slot="icon-only" name="notifications" class="header-icons"></ion-icon>
-    <span class="newDot" *ngIf="notificationData"></span>
+    <span class="newDot" *ngIf="newNotificationPresent"></span>
   </ion-buttons>
   <ion-buttons (click)="actions('reload')" slot="end" class="padding" *ngIf="showReload">
     <ion-icon slot="icon-only" name="refresh" class="header-icons"></ion-icon>

@@ -10,18 +10,25 @@ import { Platform } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { AuthService } from '../../core/services/auth/auth.service';
+import { ToastMessageService } from '../services';
+
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
     constructor(
         private platform: Platform,
         private appDetails: AppVersion,
-        private auth: AuthService
+        private auth: AuthService,
+        private toast: ToastMessageService
     ) {
     }
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return from(this.handle(request, next))
+        if (!window.navigator.onLine) {
+            this.showToast('MESSAGES.OFFLINE', 'danger');
+        } else {
+            return from(this.handle(request, next))
+        }
+      
     }
-
     async handle(req: HttpRequest<any>, next: HttpHandler) {
         let authReq;
         const appVersion: string = await this.appDetails.getVersionNumber();
@@ -33,7 +40,7 @@ export class ApiInterceptor implements HttpInterceptor {
                 setHeaders: {
                     'x-auth-token': token ? token.access_token : "",
                     'x-authenticated-user-token': token ? token.access_token : "",
-                    'gpsLocation': '0,0',
+                    'gpsLocation': '',
                     'appVersion': appVersion,
                     'appName': appName,
                     'appType': environment.appType,
@@ -47,4 +54,8 @@ export class ApiInterceptor implements HttpInterceptor {
         }
         return next.handle(authReq).toPromise()
     }
+
+    showToast(msg, color) {
+        this.toast.showMessage(msg, color);
+      }
 }
