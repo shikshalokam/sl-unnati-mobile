@@ -58,12 +58,32 @@ export class ProfileUpdatePage implements OnInit {
 
 
   getProfileData() {
+    let state;
     this.toast.startLoader();
     const config = {
       url: `${urlConstants.API_URLS.GET_PROFILE}`
     }
     this.showLoader = true;
     this.kendraService.get(config).subscribe(data => {
+      if (data.result.roles && data.result.roles.length) {
+        data.result.roles.forEach(role => {
+          if (role.entities && role.entities.length) {
+            role.entities.forEach(entity => {
+              if (entity.relatedEntities && entity.relatedEntities.length && !state) {
+                entity.relatedEntities.forEach(re => {
+                  if (re.entityType == "state") {
+                    state = re;
+                    data.result.selectedState = state;
+                    this.storage.setLocalStorage(localStorageConstants.PROFILE_DATA, data.result).then(data => {
+                    })
+                  }
+                });
+              } else {
+              }
+            });
+          }
+        });
+      }
       this.toast.stopLoader();
       if (data.result.roles && data.result.roles.length) {
         this.showPreview = true;

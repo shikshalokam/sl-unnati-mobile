@@ -46,7 +46,7 @@
           {{project.status | camelToTitle}}
         </ion-col>
       </ion-row>
-      <div class="custom-filed" *ngIf="project?.learningResources">
+      <div class="custom-filed" *ngIf="project?.learningResources.length">
         <ion-label position="fixed"> {{'LABELS.LEARNING_RESOURCES' | translate}} : </ion-label>
         <a (click)="openResources()"> {{'LABELS.CLICK_HERE_TO_VIEW_LIBRARY' | translate}}</a>
       </div>

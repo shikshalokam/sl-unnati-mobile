@@ -43,7 +43,7 @@ export class ProjectDetailPage implements OnInit {
       value: "thisMonth"
     },
     {
-      title: "LABELS.UPCOMMING",
+      title: "LABELS.UPCOMING",
       value: "upcoming"
     },
   ];
