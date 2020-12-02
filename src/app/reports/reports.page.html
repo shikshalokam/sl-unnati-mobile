@@ -33,18 +33,19 @@
           <div>
             <h5>{{'LABELS.PROJECT_OVERVIEW'|translate}}</h5>
           </div>
-
-          <div *ngIf="filterType">
-            <ion-select placeholder="Select One" [(ngModel)]="filter.type">
-              <ion-select-option [value]="t.value" *ngFor="let t of filterType">{{t.label}}</ion-select-option>
-            </ion-select>
+          <div class="filter-download-container">
+            <div *ngIf="filterType">
+              <ion-select placeholder="Select One" [(ngModel)]="filter.type">
+                <ion-select-option [value]="t.value" *ngFor="let t of filterType">{{t.label}}</ion-select-option>
+              </ion-select>
+            </div>
+            <downlaod-share
+              [name]="fileName()"
+              [extension]="'.pdf'"
+              [downloadUrl]="downloadUrl()"
+              [interface]="'simple'"
+            ></downlaod-share>
           </div>
-          <downlaod-share
-            [name]="fileName()"
-            [extension]="'.pdf'"
-            [downloadUrl]="downloadUrl()"
-            [interface]="'simple'"
-          ></downlaod-share>
         </div>
 
         <div class="project-overview-body">
@@ -77,18 +78,19 @@
           <div>
             <h5>{{'LABELS.TASK_OVERVIEW'|translate}}</h5>
           </div>
-
-          <div *ngIf="filterType">
-            <ion-select placeholder="Select One" [(ngModel)]="filter.type" (ionChange)="reportTypeChange()">
-              <ion-select-option [value]="t.value" *ngFor="let t of filterType">{{t.label}}</ion-select-option>
-            </ion-select>
+          <div class="filter-download-container">
+            <div *ngIf="filterType">
+              <ion-select placeholder="Select One" [(ngModel)]="filter.type" (ionChange)="reportTypeChange()">
+                <ion-select-option [value]="t.value" *ngFor="let t of filterType">{{t.label}}</ion-select-option>
+              </ion-select>
+            </div>
+            <downlaod-share
+              [name]="fileName()"
+              [extension]="'.pdf'"
+              [downloadUrl]="downloadUrl()"
+              [interface]="'simple'"
+            ></downlaod-share>
           </div>
-          <downlaod-share
-            [name]="fileName()"
-            [extension]="'.pdf'"
-            [downloadUrl]="downloadUrl()"
-            [interface]="'simple'"
-          ></downlaod-share>
         </div>
 
         <div class="task-overview-body">
@@ -113,22 +115,23 @@
       <div class="overview-container">
         <div class="overview-heading">
           <div>
-            <h5>{{'LABELS.CATEGORY_OVERVIEW'|translate}}</h5 >
+            <h5>{{'LABELS.CATEGORY_OVERVIEW'|translate}}</h5>
           </div>
 
-          <div *ngIf="filterType">
-            <ion-select placeholder="Select One" [(ngModel)]="filter.type">
-              <ion-select-option [value]="t.value" *ngFor="let t of filterType">{{t.label}}</ion-select-option>
-            </ion-select>
+          <div class="filter-download-container">
+            <div *ngIf="filterType">
+              <ion-select placeholder="Select One" [(ngModel)]="filter.type">
+                <ion-select-option [value]="t.value" *ngFor="let t of filterType">{{t.label}}</ion-select-option>
+              </ion-select>
+            </div>
+            <downlaod-share
+              [name]="fileName()"
+              [extension]="'.pdf'"
+              [downloadUrl]="downloadUrl()"
+              [interface]="'simple'"
+            ></downlaod-share>
           </div>
-          <downlaod-share
-            [name]="fileName()"
-            [extension]="'.pdf'"
-            [downloadUrl]="downloadUrl()"
-            [interface]="'simple'"
-          ></downlaod-share>
         </div>
-
         <div class="task-overview-body">
           <div>
             <graph-cirlce [data]="reportData?.categories"></graph-cirlce>

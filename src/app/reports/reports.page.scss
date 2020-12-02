@@ -13,6 +13,11 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    .filter-download-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
   }
 }
 
@@ -57,9 +62,9 @@
   .view-option {
     display: flex;
     justify-content: center;
-    ion-button{
-      --border-color:white;
-      color:blue
+    ion-button {
+      --border-color: white;
+      color: blue;
     }
   }
 }
