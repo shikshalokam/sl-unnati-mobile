@@ -26,11 +26,26 @@ export class ProjectDetailPage implements OnInit {
   taskCount: number = 0;
   filters: any = {};
   schedules = [
-    { title: "past" },
-    { title: "today" },
-    { title: "thisWeek" },
-    { title: "thisMonth" },
-    { title: "upcoming" },
+    {
+      title: "LABELS.PAST",
+      value: "past"
+    },
+    {
+      title: "LABELS.TODAY",
+      value: "today"
+    },
+    {
+      title: "LABELS.THIS_WEEK",
+      value: "thisWeek"
+    },
+    {
+      title: "LABELS.THIS_MONTH",
+      value: "thisMonth"
+    },
+    {
+      title: "LABELS.UPCOMMING",
+      value: "upcoming"
+    },
   ];
   sortedTasks;
 
@@ -83,11 +98,11 @@ export class ProjectDetailPage implements OnInit {
         this.project.tasks && this.project.tasks.length ? this.sortTasks() : "";
         this.getProjectTaskStatus();
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
   ionViewDidEnter() {
     this.getProject();
     this.getDateFilters();
@@ -141,7 +156,7 @@ export class ProjectDetailPage implements OnInit {
     //   this.project.status = this.statuses[0].title;
     // }
   }
-  syn() {}
+  syn() { }
 
   toggle() {
     this.showDetails = !this.showDetails;
@@ -201,7 +216,7 @@ export class ProjectDetailPage implements OnInit {
           text: data["LABELS.CANCEL"],
           role: "cancel",
           cssClass: "secondary",
-          handler: (blah) => {},
+          handler: (blah) => { },
         },
         {
           text: data["LABELS.SUBMIT"],
@@ -261,12 +276,12 @@ export class ProjectDetailPage implements OnInit {
         } else if (type == "ProjectDelete") {
           this.toast.showMessage("MESSAGES.PROJECT_DELETED_SUCCESSFUL", "success");
           this.location.back();
-        } else if (type=="taskDelete") {
+        } else if (type == "taskDelete") {
           this.toast.showMessage("MESSAGES.TASK_DELETED_SUCCESSFUL", "success");
         }
         this.sortTasks();
       })
-      .catch((error) => {});
+      .catch((error) => { });
   }
   createNewProject() {
     this.loader.startLoader();
@@ -346,7 +361,7 @@ export class ProjectDetailPage implements OnInit {
             return;
           }
           let data = success.result;
-          
+
           let params = `${data.programId}-${data.solutionId}-${data.entityId}`;
           let link = `${environment.deepLinkAppsUrl}/${task.type}/${params}`;
           this.iab.create(link, "_system");
@@ -392,16 +407,16 @@ export class ProjectDetailPage implements OnInit {
 
   updateAssessmentStatus(data) {
     // if task type is assessment or observation then check if it is submitted and change the status and update in db
-    let isChnaged=false
+    let isChnaged = false
     this.project.tasks.map((t) => {
       data.map((d) => {
         if (d._id == t._id && d.status != t.status) {
           t.status = d.status;
-          isChnaged=true
+          isChnaged = true
         }
       });
     });
-    isChnaged?this.update('taskStatusUpdated'):null// if any assessment/observatiom task status is changed then only update 
+    isChnaged ? this.update('taskStatusUpdated') : null// if any assessment/observatiom task status is changed then only update 
     console.log(this.project);
   }
 
@@ -425,7 +440,7 @@ export class ProjectDetailPage implements OnInit {
             return;
           }
           let data = success.result;
-          let entityType = data.entityType 
+          let entityType = data.entityType
           let params = `${data.programId}-${data.solutionId}-${data.entityId}-${entityType}`;
           let link = `${environment.deepLinkAppsUrl}/${task.type}/reports/${params}`;
           this.iab.create(link, "_system");
