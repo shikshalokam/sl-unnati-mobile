@@ -314,7 +314,12 @@ export class ProjectOperationPage implements OnInit {
   public restoreData(data) {
     this.db.createPouchDB(environment.db.projects);
     this.db.create(data).then(success => {
-      this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
+      if (this.createdType == "bySelf") { 
+
+        this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
+      } else {
+        this.createProjectModal(data, "MESSAGES.PROJECT_IMPORT_SUCCESS", "LABELS.VIEW_PROJECT");
+      }
     }).catch(error => {
     })
   }
