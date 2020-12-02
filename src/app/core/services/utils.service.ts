@@ -48,7 +48,7 @@ export class UtilsService {
 
   getMetaData(type) {
     const obj = {
-      _id:uuidv4(),
+      _id: uuidv4(),
       status: statusType.notStarted,
       name: "",
       endDate: "",
@@ -59,13 +59,15 @@ export class UtilsService {
       isNew: true,
       isEdit: true,
       children: [],
-      isDeleted: false
+      isDeleted: false,
+      isDeletable: true
     };
     switch (type) {
       case "task":
         return obj;
       case "subTask":
         delete obj.children;
+        delete obj.isDeletable;
         return obj;
     }
   }

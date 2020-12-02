@@ -28,6 +28,7 @@ export class ProjectOperationPage implements OnInit {
   today: any = new Date();
   button = 'LABELS.IMPORT_PROJECT'
   showLearningResources: boolean = false;
+  viewProjectAlert;
   constructor(
     private routerparam: ActivatedRoute,
     private unnatiService: UnnatiDataService,
@@ -147,6 +148,7 @@ export class ProjectOperationPage implements OnInit {
       cssClass: 'my-custom-class',
       header: texts[header],
       message: texts[body],
+      backdropDismiss: false,
       buttons: [
         {
           text: texts[btnCancel],
@@ -167,6 +169,10 @@ export class ProjectOperationPage implements OnInit {
       ]
     });
     await alert.present();
+  }
+
+  ionViewWillLeave() {
+    this.viewProjectAlert ? this.viewProjectAlert.dismiss() : null
   }
 
   async openAddEntityModal() {
@@ -288,7 +294,7 @@ export class ProjectOperationPage implements OnInit {
       texts = data;
     })
     let programName = data.programInformation ? data.programInformation.name : ''
-    const alert = await this.alertController.create({
+    this.viewProjectAlert = await this.alertController.create({
       cssClass: 'my-custom-class',
       subHeader: texts[header],
       backdropDismiss: false,
@@ -302,12 +308,17 @@ export class ProjectOperationPage implements OnInit {
         }
       ]
     });
-    await alert.present();
+    await this.viewProjectAlert.present();
   }
   public restoreData(data) {
     this.db.createPouchDB(environment.db.projects);
     this.db.create(data).then(success => {
-      this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
+      if (this.createdType == "bySelf") { 
+
+        this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
+      } else {
+        this.createProjectModal(data, "MESSAGES.PROJECT_IMPORT_SUCCESS", "LABELS.VIEW_PROJECT");
+      }
     }).catch(error => {
     })
   }
@@ -321,7 +332,7 @@ export class ProjectOperationPage implements OnInit {
     }
     return true
   }
-  
+
   update(data) {
     if (!this.isMandatoryFieldsFilled()) {
       return

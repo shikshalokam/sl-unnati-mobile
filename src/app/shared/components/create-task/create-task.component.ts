@@ -8,7 +8,6 @@ import { UtilsService, AttachementService, ToastMessageService } from '../../../
 })
 export class CreateTaskComponent implements OnInit {
   newTask;
-  today: any = new Date();
   currentYear = new Date().getFullYear();
   constructor(
     private modalCtrl: ModalController,

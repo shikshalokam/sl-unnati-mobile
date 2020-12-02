@@ -60,9 +60,10 @@
       <div *ngIf="selectedSortOption === 'program'">
         <ion-list>
           <ng-container *ngFor="let program of programsList;let i = index">
-            <ion-list-header lines="inset" class="listHeader" (click)="onProgramSelect(i)">
+            <ion-list-header lines="inset" class="listHeader" (click)="(currentProgramFilterIndex === i)? closeProgram() :onProgramSelect(i)">
               <ion-label class="_capitalize">{{program?.programName || "My Program" }} </ion-label>
-              <ion-icon name="caret-down-outline" class="expand"></ion-icon>
+              <ion-icon name="caret-down-outline" class="expand" *ngIf="currentProgramFilterIndex !== i"></ion-icon>
+              <ion-icon name="caret-up-outline" class="expand" *ngIf="currentProgramFilterIndex === i"></ion-icon>
             </ion-list-header>
             <ng-container *ngIf="currentProgramFilterIndex === i">
               <ion-item lines="none" class="bgList" *ngFor="let project of projectsForSelectedProgram">

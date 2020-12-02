@@ -43,6 +43,10 @@ export class ProjectDetailPage implements OnInit {
       value: "thisMonth"
     },
     {
+      title: "LABELS.THIS_QUARTER",
+      value: "thisQuarter"
+    },
+    {
       title: "LABELS.UPCOMING",
       value: "upcoming"
     },
@@ -82,7 +86,6 @@ export class ProjectDetailPage implements OnInit {
       });
 
     this.platform.resume.subscribe((result) => {
-      console.log("Platform Resume Event");
       this.getProjectTaskStatus()
     });
   }
@@ -109,10 +112,13 @@ export class ProjectDetailPage implements OnInit {
   }
   getDateFilters() {
     let currentDate = moment();
-    this.filters.today = moment().format("YYYY-MM-DD");
+    this.filters.today = moment();
     this.filters.thisWeek = currentDate.endOf("week").format("YYYY-MM-DD");
     this.filters.thisMonth = currentDate.endOf("month").format("YYYY-MM-DD");
-    this.filters.thisQuarter = currentDate.endOf("quarter").format("YYYY-MM-DD");
+    const quarter = Math.floor((new Date().getMonth() / 3));
+    let startFullQuarter: any = new Date(new Date().getFullYear(), quarter * 3, 1);
+    let endFullQuarter: any = new Date(startFullQuarter.getFullYear(), startFullQuarter.getMonth() + 3, 0);
+    this.filters.thisQuarter = moment(endFullQuarter).format("YYYY-MM-DD");
   }
   sortTasks() {
     this.taskCount = 0;
@@ -120,6 +126,7 @@ export class ProjectDetailPage implements OnInit {
     let inProgress = 0;
     this.sortedTasks = JSON.parse(JSON.stringify(this.utils.getTaskSortMeta()));
     this.project.tasks.forEach((task) => {
+
       if (!task.isDeleted && task.endDate) {
         this.taskCount = this.taskCount + 1;
         let ed = JSON.parse(JSON.stringify(task.endDate));
@@ -132,7 +139,10 @@ export class ProjectDetailPage implements OnInit {
           this.sortedTasks["thisWeek"].tasks.push(task);
         } else if (ed > this.filters.thisWeek && ed <= this.filters.thisMonth) {
           this.sortedTasks["thisMonth"].tasks.push(task);
-        } else {
+        } else if (ed > this.filters.thisMonth && ed <= this.filters.thisQuarter) {
+          this.sortedTasks["thisQuarter"].tasks.push(task);
+        }
+        else {
           this.sortedTasks["upcoming"].tasks.push(task);
         }
       } else if (!task.isDeleted && !task.endDate) {
@@ -161,10 +171,24 @@ export class ProjectDetailPage implements OnInit {
   toggle() {
     this.showDetails = !this.showDetails;
   }
-  async openPopover(ev: any, taskId?) {
+  async openPopover(ev: any, taskId?, isDelete?) {
+    let menu;
+    if (taskId) {
+      menu = JSON.parse(JSON.stringify(menuConstants.TASK));
+      if (isDelete) {
+        let deleteOption = {
+          TITLE: 'LABELS.DELETE',
+          VALUE: 'deleteTask',
+          ICON: 'trash'
+        }
+        menu.push(deleteOption);
+      }
+    } else {
+      menu = menuConstants.PROJECT;
+    }
     const popover = await this.popoverController.create({
       component: PopoverComponent,
-      componentProps: { menus: taskId ? menuConstants.TASK : menuConstants.PROJECT },
+      componentProps: { menus: menu },
       event: ev,
       translucent: true,
     });
@@ -255,7 +279,6 @@ export class ProjectDetailPage implements OnInit {
   }
   //open openBodh
   openBodh(link) {
-    console.log(link, "link");
     this.networkService.isNetworkAvailable
       ? this.openResourceSrvc.openBodh(link)
       : this.toast.showMessage("MESSAGES.OFFLINE", "danger");
@@ -345,7 +368,6 @@ export class ProjectDetailPage implements OnInit {
   }
 
   openAttachments() {
-    console.log("openAttachments");
     this.router.navigate(["menu/attachment-list", this.project._id], { replaceUrl: true });
   }
 
@@ -417,7 +439,6 @@ export class ProjectDetailPage implements OnInit {
       });
     });
     isChnaged ? this.update('taskStatusUpdated') : null// if any assessment/observatiom task status is changed then only update 
-    console.log(this.project);
   }
 
   getAssessmentTypeTaskId() {

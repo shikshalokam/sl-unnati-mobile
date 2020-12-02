@@ -75,6 +75,10 @@ export class ProjectsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
+    this.completeProjectData = [];
+    this.programsList = [];
+    this.projectsForSelectedProgram = [];
+    this.currentProgramFilterIndex = -1;
     this.getProjects();
   }
 
@@ -169,6 +173,11 @@ export class ProjectsPage implements OnInit, OnDestroy {
     this.programsList = newProgram;
   }
 
+  closeProgram() {
+    this.projectsForSelectedProgram = [];
+    this.currentProgramFilterIndex = -1;
+  }
+
   onProgramSelect(index) {
     this.projectsForSelectedProgram = [];
     const query = {
@@ -217,6 +226,10 @@ export class ProjectsPage implements OnInit, OnDestroy {
         }
       };
       query.selector.$and.push(filter);
+    }
+    if (this.currentProgramFilterIndex == index) {
+      this.currentProgramFilterIndex = null
+      return
     }
     this.currentProgramFilterIndex = index;
     this.db.customQuery(query).then(success => {
