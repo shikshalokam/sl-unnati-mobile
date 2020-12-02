@@ -16,12 +16,10 @@ export class LoaderService {
       spinner: 'circular',
       message: message ? message : 'Please wait while loading ...',
       translucent: true,
-      backdropDismiss: true
+      backdropDismiss: false
     });
-
     await this.loaderRef.present()
   }
-
   stopLoader() {
     this.loaderRef ? this.loaderRef.dismiss() : null;
   }
