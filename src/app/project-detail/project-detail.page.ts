@@ -86,7 +86,6 @@ export class ProjectDetailPage implements OnInit {
       });
 
     this.platform.resume.subscribe((result) => {
-      console.log("Platform Resume Event");
       this.getProjectTaskStatus()
     });
   }
@@ -280,7 +279,6 @@ export class ProjectDetailPage implements OnInit {
   }
   //open openBodh
   openBodh(link) {
-    console.log(link, "link");
     this.networkService.isNetworkAvailable
       ? this.openResourceSrvc.openBodh(link)
       : this.toast.showMessage("MESSAGES.OFFLINE", "danger");
@@ -370,7 +368,6 @@ export class ProjectDetailPage implements OnInit {
   }
 
   openAttachments() {
-    console.log("openAttachments");
     this.router.navigate(["menu/attachment-list", this.project._id], { replaceUrl: true });
   }
 
@@ -442,7 +439,6 @@ export class ProjectDetailPage implements OnInit {
       });
     });
     isChnaged ? this.update('taskStatusUpdated') : null// if any assessment/observatiom task status is changed then only update 
-    console.log(this.project);
   }
 
   getAssessmentTypeTaskId() {

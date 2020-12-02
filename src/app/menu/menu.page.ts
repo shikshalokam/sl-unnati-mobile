@@ -41,7 +41,7 @@ export class MenuPage implements OnInit {
       title: "LABELS.FAQ",
       url: '',
       icon: 'help',
-      key: 'faq',
+      key: 'faqs',
     },
     {
       title: "LABELS.SETTINGS",
@@ -65,7 +65,7 @@ export class MenuPage implements OnInit {
       title: "LABELS.PRIVACY",
       url: '',
       icon: 'person-outline',
-      key: 'policy',
+      key: 'privacy-policy',
     },
    
   ];

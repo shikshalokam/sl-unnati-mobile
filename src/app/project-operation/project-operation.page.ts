@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DbService, UnnatiDataService, urlConstants, NetworkService, LoaderService, ToastMessageService, UtilsService } from '../core';
+import { DbService, UnnatiDataService, urlConstants, NetworkService, LoaderService, ToastMessageService, UtilsService, LocalStorageService, localStorageConstants } from '../core';
 import { ModalController } from '@ionic/angular';
 import { SingleSelectionSearchComponent, AddEntityComponent, MultiSelectionComponent } from '../shared';
-import { Storage } from '@ionic/storage';
 import { environment } from 'src/environments/environment.prod';
 import { Platform, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -37,13 +36,13 @@ export class ProjectOperationPage implements OnInit {
     private loader: LoaderService,
     private toast: ToastMessageService,
     private modalController: ModalController,
-    private storage: Storage,
     private db: DbService,
     private alertController: AlertController,
     private translate: TranslateService,
     private router: Router,
     private datePicker: DatePicker,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private localStorage: LocalStorageService
   ) {
     routerparam.params.subscribe(param => {
       this.projectId = param.id;
@@ -63,7 +62,7 @@ export class ProjectOperationPage implements OnInit {
   }
 
   ngOnInit() {
-    this.storage.get('profileData').then(data => {
+    this.localStorage.getLocalStorage(localStorageConstants.PROFILE_DATA).then(data => {
       this.profileData = data;
     })
   }

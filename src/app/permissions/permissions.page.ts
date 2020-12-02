@@ -135,8 +135,8 @@ export class PermissionsPage implements OnInit {
   public openTermsAndPolicy() {
     this.storage.getLocalStorage(localStorageConstants.DYNAMIC_LINKS).then(success => {
       this.dynamicLinks = success;
-      if (this.dynamicLinks && this.dynamicLinks['Terms-of-Use']) {
-        this.inAppBrowser(this.dynamicLinks['Terms-of-Use']['link']);
+      if (this.dynamicLinks && this.dynamicLinks['terms-of-use']) {
+        this.inAppBrowser(this.dynamicLinks['terms-of-use']['link']);
       }
     }).catch(error => {
       console.log('openTermsAndPolicy-error', error);

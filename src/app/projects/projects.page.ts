@@ -91,7 +91,6 @@ export class ProjectsPage implements OnInit, OnDestroy {
 
   getProjects() {
     const query = this.createQuery();
-    debugger
     this.db.customQuery(query).then(success => {
       this.completeProjectData = success['docs'];
       this.porecessOnBasisOfSortBy();
