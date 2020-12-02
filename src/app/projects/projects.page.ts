@@ -219,6 +219,10 @@ export class ProjectsPage implements OnInit, OnDestroy {
       };
       query.selector.$and.push(filter);
     }
+    if (this.currentProgramFilterIndex == index) {
+      this.currentProgramFilterIndex = null
+      return
+    }
     this.currentProgramFilterIndex = index;
     this.db.customQuery(query).then(success => {
       this.projectsForSelectedProgram = success['docs'];
