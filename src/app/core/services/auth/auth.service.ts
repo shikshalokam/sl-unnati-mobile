@@ -168,6 +168,8 @@ export class AuthService {
       let logout_url = environment.appUrl + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
       let closeCallback = function (event) {
       };
+      this.db.createPouchDB(environment.db.projects);
+      this.db.dropDb();
       let browserRef = (<any>window).cordova.InAppBrowser.open(logout_url, "_blank", "zoom=no");
       browserRef.addEventListener('loadstart', function (event) {
         if (event.url && ((event.url).indexOf(logout_redirect_url) === 0)) {
