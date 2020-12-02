@@ -74,9 +74,9 @@
     <ion-col size="6" class="text-left">
       {{'LABELS.TOTAL_TASKS' | translate}} : {{taskCount}}
     </ion-col>
-    <ion-col size="6" class="text-right">
+    <!-- <ion-col size="6" class="text-right">
       {{categories}}
-    </ion-col>
+    </ion-col> -->
   </ion-row>
   <div *ngIf="sortedTasks" class="task-list">
     <div *ngFor="let schedule of schedules">
@@ -98,7 +98,8 @@
               </div>
             </ion-col>
             <ion-col size="1">
-              <ion-icon name="ellipsis-vertical" color="primary" (click)="openPopover($event,task._id)"></ion-icon>
+              <ion-icon name="ellipsis-vertical" color="primary"
+                (click)="openPopover($event,task._id,task.isDeletable)"></ion-icon>
             </ion-col>
           </ion-row>
           <div class="viewBtn">

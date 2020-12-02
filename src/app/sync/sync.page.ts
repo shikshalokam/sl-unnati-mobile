@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { DbService, LoaderService, ToastMessageService, SyncService, EventService, NetworkService } from '../core';
+import { DbService, ToastMessageService, SyncService, NetworkService } from '../core';
 import * as _ from 'underscore';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -28,7 +28,6 @@ export class SyncPage implements OnInit, OnDestroy {
     private toast: ToastMessageService,
     private location: Location,
     private syncServ: SyncService,
-    private loader: LoaderService,
     private translate: TranslateService,
     private network: NetworkService) {
     this.db.createPouchDB(environment.db.projects);
@@ -138,6 +137,7 @@ export class SyncPage implements OnInit, OnDestroy {
       this.updateProjectDoc(success.result);
     }).catch(error => {
       this.toast.showMessage(this.allStrings['MESSAGES.SOMETHING_WENT_WRONG'], 'danger');
+      this.location.back();
     })
   }
 
@@ -159,11 +159,12 @@ export class SyncPage implements OnInit, OnDestroy {
         this.attachments.length ? this.getImageUploadUrls() : this.doSyncCall();
       }).catch(deletError => {
         this.toast.showMessage(this.allStrings['MESSAGES.SOMETHING_WENT_WRONG'], 'danger');
-        this.loader.stopLoader();
+        this.location.back();
       })
     }).catch(error => {
       this.toast.showMessage(this.allStrings['MESSAGES.SOMETHING_WENT_WRONG'], 'danger');
-      this.loader.stopLoader();
+      this.location.back();
+
     })
   }
 
