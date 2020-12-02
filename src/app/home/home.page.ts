@@ -5,7 +5,7 @@ import PouchDBFind from 'pouchdb-find';
 import {
   DbService, UnnatiDataService,
   urlConstants, NetworkService,
-  LoggerService, LocalStorageService, localStorageConstants, SunbirdService, 
+  LoggerService, LocalStorageService, localStorageConstants, SunbirdService,
   ToastMessageService, LoaderService, UtilsService, KendraApiService,
 } from '../core';
 import { environment } from 'src/environments/environment';
@@ -93,15 +93,15 @@ export class HomePage implements OnInit {
     // this.getProjectsFromLocal();
     this.activeProjects = [];
     this.syncServ.checkForSync();
+    this.profileInformation();
+    this.getProfileUpdataData();
   }
 
   ionViewWillEnter() {
+    this.activeProjects = [];
     this.db.createPouchDB(environment.db.projects);
     this.getCreateProjectForm();
-    this.getTaskForm();
     this.getProjectsFromLocal();
-    this.profileInformation();
-    this.getProfileUpdataData();
   }
 
   getCreateProjectForm() {
@@ -111,12 +111,14 @@ export class HomePage implements OnInit {
         url: urlConstants.API_URLS.CREATE_PROJECT_FORM
       }
       this.unnatiService.get(config).subscribe(data => {
+        this.getTaskForm();
         if (data.result && data.result.length) {
           this.storage.setLocalStorage(localStorageConstants.PROJECT_META_FORM, data.result).then(resp => {
           }, error => {
           })
         }
       }, error => {
+        this.getTaskForm();
       })
     })
   }
@@ -235,10 +237,10 @@ export class HomePage implements OnInit {
     this.kendraService.get(config).subscribe(data => {
       if (data.result.roles && data.result.roles.length) {
       } else {
-        if(environment.isProfileUpdateMandatory) {
-        this.confirmData('LABELS.WARNING', 'MESSAGES.UPDATE_PROFILE_CONFIRMATION', 'LABELS.PROFILE_UPDATE');
-       }
-    }
+        if (environment.isProfileUpdateMandatory) {
+          this.confirmData('LABELS.WARNING', 'MESSAGES.UPDATE_PROFILE_CONFIRMATION', 'LABELS.PROFILE_UPDATE');
+        }
+      }
     }, error => {
     })
   }
@@ -259,7 +261,7 @@ export class HomePage implements OnInit {
           role: "role",
           cssClass: 'secondary',
           handler: (data) => {
-          this.router.navigate(['menu/profile-update'])
+            this.router.navigate(['menu/profile-update'])
           },
         },
       ],

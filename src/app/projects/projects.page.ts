@@ -75,6 +75,10 @@ export class ProjectsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
+    this.completeProjectData = [];
+    this.programsList = [];
+    this.projectsForSelectedProgram = [];
+    this.currentProgramFilterIndex = -1;
     this.getProjects();
   }
 
@@ -168,6 +172,11 @@ export class ProjectsPage implements OnInit, OnDestroy {
       newProgram.push(JSON.parse(program));
     }
     this.programsList = newProgram;
+  }
+
+  closeProgram() {
+    this.projectsForSelectedProgram = [];
+    this.currentProgramFilterIndex = -1;
   }
 
   onProgramSelect(index) {

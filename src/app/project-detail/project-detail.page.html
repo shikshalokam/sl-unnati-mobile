@@ -74,9 +74,9 @@
     <ion-col size="6" class="text-left">
       {{'LABELS.TOTAL_TASKS' | translate}} : {{taskCount}}
     </ion-col>
-    <ion-col size="6" class="text-right">
+    <!-- <ion-col size="6" class="text-right">
       {{categories}}
-    </ion-col>
+    </ion-col> -->
   </ion-row>
   <div *ngIf="sortedTasks" class="task-list">
     <div *ngFor="let schedule of schedules">
