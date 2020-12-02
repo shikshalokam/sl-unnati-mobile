@@ -1,5 +1,6 @@
 <ion-header [translucent]="true">
-  <app-header title="LABELS.PROJECTS" [showMenu]="true" [showReload]="true" (onAction)="action($event)"></app-header>
+  <!-- [showReload]="true"  -->
+  <app-header title="LABELS.PROJECTS" [showMenu]="true" (onAction)="action($event)"></app-header>
 </ion-header>
 <ion-content>
   <ion-segment (ionChange)="segmentChanged($event)" [value]="selectedTab">

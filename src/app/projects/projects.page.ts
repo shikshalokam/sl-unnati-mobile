@@ -241,4 +241,33 @@ export class ProjectsPage implements OnInit, OnDestroy {
   openProject(id) {
     this.router.navigate(['/menu/project-detail', id]);
   }
+
+  action(event) {
+    if (event == 'reload') {
+      this.getLatesProjects();
+    }
+  }
+
+  getLatesProjects() {
+    const config = {
+      url: urlConstants.API_URLS.PROJECTS_LIST
+    }
+    this.loader.startLoader();
+    this.unnatiService.get(config).subscribe(data => {
+      if (data.result && data.result.length) {
+        const projectData = this.utils.processProjectsData(data.result);
+        this.db.bulkCreate(projectData).then(success => {
+          this.loader.stopLoader();
+          this.getProjects();
+        }).catch(error => {
+          this.loader.stopLoader();
+        })
+      } else {
+        this.loader.stopLoader();
+      }
+    }, error => {
+      this.loader.stopLoader();
+    })
+  }
+
 }
