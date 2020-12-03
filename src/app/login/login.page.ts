@@ -30,31 +30,31 @@ export class LoginPage implements OnInit {
     speed: 400,
     zoom: false
   };
-  ionViewWillEnter(){
-   
+  ionViewWillEnter() {
+    this.localStorage.setLocalStorage(localStorageConstants.SYNC_VARIABLE, 'ON').then(sucess => {
+    }).catch(error => {
+    })
+
   }
   ionViewDidEnter() {
-   
+
   }
   ngOnInit() {
-   
+
   }
 
   // Login call
-  loginClick() { 
+  loginClick() {
     this.authService.doOAuthStepOne().then(success => {
       // this.loader.startLoader();
       this.authService.doOAuthStepTwo(success).then(success1 => {
         // this.loader.stopLoader();
         this.notificationServ.startNotificationPooling();
-        // this.fcm.initializeFCM();
         this.fcm.initializeFCM();
         this.getProfile();
-          this.router.navigateByUrl('/permissions');
-        this.localStorage.setLocalStorage(localStorageConstants.SYNC_VARIABLE, 'ON').then(sucess => {
-        }).catch(error => {
-        })
-       
+        this.router.navigateByUrl('/permissions');
+
+
       }).catch(error1 => {
         this.loader.stopLoader();
       })

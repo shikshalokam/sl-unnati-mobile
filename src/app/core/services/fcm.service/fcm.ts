@@ -36,7 +36,7 @@ export class FcmProvider {
         }
     }
 
-    async initializeFirebaseAndroid() {
+    initializeFirebaseAndroid() {
         this.subscribeToPushNotifications();
         this.localNotificationClickHandler();
         this.localStorage.get('deviceId').then(token => {
