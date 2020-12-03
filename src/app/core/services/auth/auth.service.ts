@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { ToastMessageService } from '../toast-messages/toast-message.service';
 import { LoaderService } from '../loader/loader.service';
 import { DbService } from '../db/db.service';
-
+import { urlConstants } from '../../constants';
 @Injectable({
   providedIn: 'root'
 })
@@ -28,9 +28,7 @@ export class AuthService {
     private loader: LoaderService,
     private modalController: ModalController,
     private db: DbService
-  ) {
-
-  }
+  ) {}
 
   doOAuthStepOne(): Promise<any> {
     this.auth_url = this.base_url + "/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=" + environment.keycloakConfig.clientId + "&redirect_uri=" +
@@ -113,7 +111,7 @@ export class AuthService {
           if (userDetails.sub.split(":").pop() == previousUser.sub.split(":").pop()) {
             resolve(userDetails);
           } else {
-            this.confirmPreviousUserName(previousUser.preferred_username, newUser);
+            this.confirmPreviousUserName(previousUser.sub.split(":").pop(), newUser);
           }
         } else {
           resolve(false);
@@ -176,16 +174,16 @@ export class AuthService {
           browserRef.removeEventListener("exit", closeCallback);
           browserRef.close();
           resolve()
-        }
+        }  
       });
     });
   }
-
+  
   sessionExpired() {
     this.modalController.dismiss();
     this.currentUser.getUser().then(userdetails => {
       if (!userdetails.accountDeactivate) {
-        this.showSessionExpired();
+      this.showSessionExpired();
       }
     })
   }
@@ -220,7 +218,7 @@ export class AuthService {
     await alert.present();
   }
 
-  async confirmPreviousUserName(previousUserEmail, tokens) {
+  async confirmPreviousUserName(id, tokens) {
     const alert = await this.alertController.create({
       header: "Please enter previous user id.",
       inputs: [
@@ -242,17 +240,18 @@ export class AuthService {
           text: "Send",
           role: "role",
           handler: (data) => {
-            if (
-              data.userName &&
-              previousUserEmail.toLowerCase() === data.userName.toLowerCase()
-            ) {
-              this.confirmDataClear(tokens);
-            } else {
-              this.doLogout();
-              this.message.showMessage(
-                "toastMessage.userNameMisMatch", 'danger'
-              );
-            }
+            this.getUserData(data.userName.toLowerCase()).subscribe((data: any) => {
+              if (data.result &&
+                id === data.result.identifier
+              ) {
+                this.confirmDataClear(tokens);
+              } else {
+                this.doLogout();
+                this.message.showMessage(
+                  "toastMessage.userNameMisMatch", 'danger'
+                );
+              }
+            })
           },
         },
       ],
@@ -288,5 +287,10 @@ export class AuthService {
       ],
     });
     await alert.present();
+  }
+
+  getUserData(userName) {
+    let url = environment.apiBaseUrl + 'kendra/api/' + urlConstants.API_URLS.GET_PREVIOUS_PROFILE + userName;
+    return this.http.get(url);
   }
 }
