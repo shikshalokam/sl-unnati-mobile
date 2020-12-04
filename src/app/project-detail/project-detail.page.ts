@@ -462,7 +462,7 @@ export class ProjectDetailPage implements OnInit {
           }
           let data = success.result;
           let entityType = data.entityType
-          let params = `${data.programId}-${data.solutionId}-${data.entityId}-${entityType}`;
+          let params = `${data.programId}-${data.solutionId}-${data.entityId}-${entityType}-${data.observationId}`;
           let link = `${environment.deepLinkAppsUrl}/${task.type}/reports/${params}`;
           this.iab.create(link, "_system");
         },
