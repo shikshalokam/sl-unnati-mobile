@@ -27,7 +27,7 @@ export class ApiInterceptor implements HttpInterceptor {
         } else {
             return from(this.handle(request, next))
         }
-      
+
     }
     async handle(req: HttpRequest<any>, next: HttpHandler) {
         let authReq;
@@ -35,19 +35,36 @@ export class ApiInterceptor implements HttpInterceptor {
         const appName: string = await this.appDetails.getAppName();
         // send skip param as true in header to disable headers
         if (!req.headers.get("skip") || req.headers.get("skip") === 'false') {
-            const token: any = await this.auth.tokenValidation();
-            authReq = req.clone({
-                setHeaders: {
-                    'x-auth-token': token ? token.access_token : "",
-                    'x-authenticated-user-token': token ? token.access_token : "",
-                    'gpsLocation': '',
-                    'appVersion': appVersion,
-                    'appName': appName,
-                    'appType': environment.appType,
-                    'os': this.platform.is('ios') ? 'ios' : 'android'
-                }
-            })
+            if (req.url == "https://dev.api.shikshalokam.org/improvement-project/api/v1/library/categories/list") {
+                const token: any = await this.auth.tokenValidation();
+                authReq = req.clone({
+                    setHeaders: {
+                        'x-auth-token': token ? token.access_token + 'oo' : "",
+                        'x-authenticated-user-token': token ? token.access_token + 'oo' : "",
+                        'gpsLocation': '',
+                        'appVersion': appVersion,
+                        'appName': appName,
+                        'appType': environment.appType,
+                        'os': this.platform.is('ios') ? 'ios' : 'android'
+                    }
+                })
+            } else {
+                const token: any = await this.auth.tokenValidation();
+                authReq = req.clone({
+                    setHeaders: {
+                        'x-auth-token': token ? token.access_token : "",
+                        'x-authenticated-user-token': token ? token.access_token : "",
+                        'gpsLocation': '',
+                        'appVersion': appVersion,
+                        'appName': appName,
+                        'appType': environment.appType,
+                        'os': this.platform.is('ios') ? 'ios' : 'android'
+                    }
+                })
+            }
+
         } else {
+
             authReq = req.clone({
                 headers: req.headers.delete('skip')
             })
@@ -57,5 +74,5 @@ export class ApiInterceptor implements HttpInterceptor {
 
     showToast(msg, color) {
         this.toast.showMessage(msg, color);
-      }
+    }
 }

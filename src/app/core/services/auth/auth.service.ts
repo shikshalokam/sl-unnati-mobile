@@ -10,6 +10,10 @@ import { ToastMessageService } from '../toast-messages/toast-message.service';
 import { LoaderService } from '../loader/loader.service';
 import { DbService } from '../db/db.service';
 import { urlConstants } from '../../constants';
+import { AppVersion } from '@ionic-native/app-version/ngx';
+import { Platform } from '@ionic/angular';
+import { promise } from 'protractor';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,8 +31,10 @@ export class AuthService {
     private message: ToastMessageService,
     private loader: LoaderService,
     private modalController: ModalController,
-    private db: DbService
-  ) {}
+    private db: DbService,
+    private appDetails: AppVersion,
+    private platform: Platform
+  ) { }
 
   doOAuthStepOne(): Promise<any> {
     this.auth_url = this.base_url + "/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=" + environment.keycloakConfig.clientId + "&redirect_uri=" +
@@ -57,7 +63,7 @@ export class AuthService {
 
   doOAuthStepTwo(token: string): Promise<any> {
     return new Promise(resolve => {
-      this.loader.startLoader();
+      // this.loader.startLoader();
       const body = new URLSearchParams();
       const params = 'grant_type=authorization_code&client_id=' + environment.keycloakConfig.clientId + '&code=' + token + '&redirect_uri=' + environment.keycloakConfig.redirectUrl + '&scope=offline_access'
       body.set('grant_type', "authorization_code");
@@ -76,7 +82,7 @@ export class AuthService {
             refresh_token: data.refresh_token,
             accountDeactivate: false
           }
-          this.loader.stopLoader();
+          // this.loader.stopLoader();
           this.checkLocalData(sessionData).then(success => {
             if (success) {
               this.currentUser.setUser(sessionData).then(success => {
@@ -111,7 +117,7 @@ export class AuthService {
           if (userDetails.sub.split(":").pop() == previousUser.sub.split(":").pop()) {
             resolve(userDetails);
           } else {
-            this.confirmPreviousUserName(previousUser.sub.split(":").pop(), newUser);
+          this.confirmPreviousUserName(previousUser.sub.split(":").pop(), newUser);
           }
         } else {
           resolve(false);
@@ -166,19 +172,17 @@ export class AuthService {
       let logout_url = environment.appUrl + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
       let closeCallback = function (event) {
       };
-      this.db.createPouchDB(environment.db.projects);
-      this.db.dropDb();
       let browserRef = (<any>window).cordova.InAppBrowser.open(logout_url, "_blank", "zoom=no");
       browserRef.addEventListener('loadstart', function (event) {
         if (event.url && ((event.url).indexOf(logout_redirect_url) === 0)) {
           browserRef.removeEventListener("exit", closeCallback);
           browserRef.close();
           resolve()
-        }  
+        }
       });
     });
   }
-  
+
   sessionExpired() {
     this.modalController.dismiss();
     this.currentUser.getUser().then(userdetails => {
@@ -240,15 +244,20 @@ export class AuthService {
           text: "Send",
           role: "role",
           handler: (data) => {
-            this.getUserData(data.userName.toLowerCase()).subscribe((data: any) => {
-              if (data.result &&
-                id === data.result.identifier
+            this.getUserData(data.userName.toLowerCase(), tokens).then((data: any) => {
+              if (data &&
+                id == data.identifier
               ) {
                 this.confirmDataClear(tokens);
               } else {
                 this.doLogout();
+                this.db.createPouchDB(environment.db.projects);
+                this.db.dropDb();
+                this.storage.deleteAllStorage();
+                this.currentUser.deleteUser().then(user => {
+                })
                 this.message.showMessage(
-                  "toastMessage.userNameMisMatch", 'danger'
+                  "MESSAGES.USER_NOT_MATCHED", 'danger'
                 );
               }
             })
@@ -288,9 +297,18 @@ export class AuthService {
     });
     await alert.present();
   }
-
-  getUserData(userName) {
-    let url = environment.apiBaseUrl + 'kendra/api/' + urlConstants.API_URLS.GET_PREVIOUS_PROFILE + userName;
-    return this.http.get(url);
+  getUserData(userName, token): Promise<any> {
+    return new Promise(resolve => {
+      // const appVersion = this.appDetails.getVersionNumber();
+      // const appName = this.appDetails.getAppName();
+      let url = environment.apiBaseUrl + 'kendra/api/' + urlConstants.API_URLS.GET_PREVIOUS_PROFILE + userName;
+      let options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('skip', 'true').set('x-auth-token', token.access_token).set('x-authenticated-user-token', token.access_token)
+          .set('appType', environment.appType).set('os', this.platform.is('ios') ? 'ios' : 'android')
+      };
+      this.http.get(url, options).subscribe((data: any) => {
+        resolve(data.result);
+      })
+    })
   }
 }
