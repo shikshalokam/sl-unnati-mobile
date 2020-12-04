@@ -218,6 +218,7 @@
         "PROFILE_UPDATE_AGREE": "I agree to share the information with Unnati",
         "UPDATE_PROFILE_CONFIRMATION": "Please update your profile to continue",
         "CANNOT_GET_PROJECT_DETAILS": "Cannot get project details",
-        "COMING_SOON": "Coming soon"
+        "COMING_SOON": "Coming soon",
+        "NETWORK_ERROR": "Network Error"
     }
 }

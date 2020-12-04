@@ -6,7 +6,7 @@ import {
   DbService, UnnatiDataService,
   urlConstants, NetworkService,
   LoggerService, LocalStorageService, localStorageConstants, SunbirdService,
-  ToastMessageService, LoaderService, UtilsService, KendraApiService,
+  ToastMessageService, LoaderService, UtilsService, KendraApiService, ProfileService,
 } from '../core';
 import { environment } from 'src/environments/environment';
 import { HomeSearchModalComponent } from './home-search-modal/home-search-modal.component';
@@ -49,6 +49,7 @@ export class HomePage implements OnInit {
     private alertController: AlertController,
     private translate: TranslateService,
     private kendraService: KendraApiService,
+    private profile: ProfileService
     // private fcm: FcmProvider
   ) {
     networkService.$networkStatus.subscribe(status => {
@@ -92,9 +93,6 @@ export class HomePage implements OnInit {
     //   this.getTaskForm();
     // this.getProjectsFromLocal();
     this.activeProjects = [];
-    this.syncServ.checkForSync();
-    this.profileInformation();
-    this.getProfileUpdataData();
   }
 
   ionViewWillEnter() {
@@ -102,6 +100,7 @@ export class HomePage implements OnInit {
     this.db.createPouchDB(environment.db.projects);
     this.getCreateProjectForm();
     this.getProjectsFromLocal();
+    this.getProfileRoles();
   }
 
   getCreateProjectForm() {
@@ -215,57 +214,19 @@ export class HomePage implements OnInit {
     this.toast.showMessage(msg, color);
   }
 
-  profileInformation() {
-    const config = {
-      url: urlConstants.API_URLS.PROFILE_INFO
-    }
-    this.sunbird.get(config).subscribe(data => {
-      this.profileInfo = data['result'] ? data['result']['response'] : {};
-      this.storage.setLocalStorage(localStorageConstants.USER_DETAILS, this.profileInfo).then(data => {
-      })
-    }, error => {
 
+
+
+  getProfileRoles() {
+    this.profile.getProfileRoles().then(profileData => {
+      (profileData.roles && profileData.roles.length) ? null :
+        (environment.isProfileUpdateMandatory ? this.profile.updateAlert('LABELS.WARNING', 'MESSAGES.UPDATE_PROFILE_CONFIRMATION', 'LABELS.PROFILE_UPDATE') : null)
+    }).catch(error => {
+      console.log(error)
     })
+
+
   }
 
 
-  getProfileUpdataData() {
-    const config = {
-      url: `${urlConstants.API_URLS.GET_PROFILE}`
-    }
-    // this.showLoader = true;
-    this.kendraService.get(config).subscribe(data => {
-      if (data.result.roles && data.result.roles.length) {
-      } else {
-        if (environment.isProfileUpdateMandatory) {
-          this.confirmData('LABELS.WARNING', 'MESSAGES.UPDATE_PROFILE_CONFIRMATION', 'LABELS.PROFILE_UPDATE');
-        }
-      }
-    }, error => {
-    })
-  }
-
-  async confirmData(title, body, update) {
-    let texts;
-    this.translate.get([title, body, update]).subscribe(data => {
-      texts = data;
-    })
-    const alert = await this.alertController.create({
-      cssClass: 'c-permission',
-      header: texts[title],
-      message: texts[body],
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: texts[update],
-          role: "role",
-          cssClass: 'secondary',
-          handler: (data) => {
-            this.router.navigate(['menu/profile-update'])
-          },
-        },
-      ],
-    });
-    await alert.present();
-  }
 }

@@ -4,11 +4,10 @@ import { Router } from '@angular/router';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import {
   LoggerService, CurrentUserService, DbService, LocalStorageService,
-  urlConstants, SunbirdService, localStorageConstants, NotificationService
+  urlConstants, SunbirdService, localStorageConstants, NotificationService, ProfileService
 } from '../core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-
 
 @Component({
   selector: 'app-about',
@@ -31,15 +30,16 @@ export class AboutPage implements OnInit {
     private translate: TranslateService,
     public db: DbService,
     private sunbird: SunbirdService,
-    private notificationServ: NotificationService
+    private notificationServ: NotificationService,
+    private profile: ProfileService
   ) { }
 
   ngOnInit() {
     this.getAppDetails();
-    this.storage.getLocalStorage(localStorageConstants.USER_DETAILS).then(data => {
-      this.profileInfo = data;
+    this.profile.getProfile().then(success => {
+      this.profileInfo = success;
     }).catch(error => {
-      
+      this.profileInfo = {};
     })
 
   }
