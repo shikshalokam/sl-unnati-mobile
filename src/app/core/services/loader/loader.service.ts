@@ -20,7 +20,7 @@ export class LoaderService {
     });
     await this.loaderRef.present()
   }
-  stopLoader() {
-    this.loaderRef ? this.loaderRef.dismiss() : null;
+  async stopLoader() {
+     this.loaderRef ?  await this.loaderRef.dismiss() : null;
   }
 }

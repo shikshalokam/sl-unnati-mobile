@@ -77,9 +77,9 @@ export class AddEntityComponent implements OnInit {
   checkUserMapping() {
     this.storage.get('profileData').then(data => {
       this.profileData = data;
-      this.stateId = this.profileData.selectedState._id;
-      this.title = this.profileData.selectedState.metaInformation.name;
-      this.getSubEntities(this.profileData.selectedState._id);
+      this.stateId = this.profileData.state._id;
+      this.title = this.profileData.state.name;
+      this.getSubEntities(this.profileData.state._id);
     })
   }
 

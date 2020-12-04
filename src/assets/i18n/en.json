@@ -219,6 +219,7 @@
         "UPDATE_PROFILE_CONFIRMATION": "Please update your profile to continue",
         "CANNOT_GET_PROJECT_DETAILS": "Cannot get project details",
         "COMING_SOON": "Coming soon",
-        "USER_NOT_MATCHED": "User not matched, please try again."
+        "USER_NOT_MATCHED": "User not matched, please try again.",
+        "NETWORK_ERROR": "Network Error"
     }
 }

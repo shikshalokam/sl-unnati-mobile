@@ -17,5 +17,6 @@ export * from './event/event.service';
 export * from './config/config.service';
 export * from './sync/sync.service';
 export * from './attachment/attachement.service';
-export * from './utils.service'
+export * from './utils.service';
+export * from './profile/profile.service';
 

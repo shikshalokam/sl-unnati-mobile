@@ -30,31 +30,30 @@ export class LoginPage implements OnInit {
     speed: 400,
     zoom: false
   };
-  ionViewWillEnter(){
-   
+  ionViewWillEnter() {
+    this.localStorage.setLocalStorage(localStorageConstants.SYNC_VARIABLE, 'ON').then(sucess => {
+    }).catch(error => {
+    })
+
   }
   ionViewDidEnter() {
-   
+
   }
   ngOnInit() {
-   
+
   }
 
   // Login call
-  loginClick() { 
+  loginClick() {
     this.authService.doOAuthStepOne().then(success => {
       // this.loader.startLoader();
       this.authService.doOAuthStepTwo(success).then(success1 => {
         // this.loader.stopLoader();
         this.notificationServ.startNotificationPooling();
-        // this.fcm.initializeFCM();
         this.fcm.initializeFCM();
-        this.getProfile();
-          this.router.navigateByUrl('/permissions');
-        this.localStorage.setLocalStorage(localStorageConstants.SYNC_VARIABLE, 'ON').then(sucess => {
-        }).catch(error => {
-        })
-       
+        this.router.navigateByUrl('/permissions');
+
+
       }).catch(error1 => {
         this.loader.stopLoader();
       })
@@ -68,33 +67,5 @@ export class LoginPage implements OnInit {
   }
   slideDidChangeNext(event) {
     this.buttonTitle = "Get started";
-  }
-  getProfile() {
-    let state;
-    const config = {
-      url: urlConstants.API_URLS.GET_PROFILE
-    }
-    this.kendraApiService.get(config).subscribe(data => {
-      if (data.result.roles && data.result.roles.length) {
-        data.result.roles.forEach(role => {
-          if (role.entities && role.entities.length) {
-            role.entities.forEach(entity => {
-              if (entity.relatedEntities && entity.relatedEntities.length && !state) {
-                entity.relatedEntities.forEach(re => {
-                  if (re.entityType == "state") {
-                    state = re;
-                    data.result.selectedState = state;
-                    this.localStorage.setLocalStorage(localStorageConstants.PROFILE_DATA, data.result).then(data => {
-                    })
-                  }
-                });
-              } else {
-              }
-            });
-          }
-        });
-      }
-    }, error => {
-    })
   }
 }
