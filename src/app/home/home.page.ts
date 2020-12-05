@@ -58,7 +58,7 @@ export class HomePage implements OnInit {
 
   getProjects() {
     const config = {
-      url: urlConstants.API_URLS.PROJECTS_LIST
+      url: urlConstants.API_URLS.PROJECTS_LIST+`?updateLastDownloadedAt=true`
     }
     this.loader.startLoader();
     this.unnatiService.get(config).subscribe(data => {

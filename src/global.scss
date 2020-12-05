@@ -201,3 +201,9 @@
 .no-text-transform{
   text-transform: none;
 }
+
+.transparentModal {
+  .modal-wrapper {
+      --background: transparent !important;
+    }
+}

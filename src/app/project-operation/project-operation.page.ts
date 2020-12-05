@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment.prod';
 import { Platform, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-project-operation',
@@ -42,7 +43,8 @@ export class ProjectOperationPage implements OnInit {
     private router: Router,
     private datePicker: DatePicker,
     private utils: UtilsService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    private location : Location
   ) {
     routerparam.params.subscribe(param => {
       this.projectId = param.id;
@@ -67,11 +69,11 @@ export class ProjectOperationPage implements OnInit {
     })
   }
   getProjectFromLocal(projectId) {
-    this.loader.startLoader();
+    // this.loader.startLoader();
     this.db.createPouchDB(environment.db.projects);
     this.db.query({ _id: projectId }).then(success => {
       // this.db.getById(id).then(success => {
-      this.loader.stopLoader();
+      // this.loader.stopLoader();
       this.template = success.docs[0];
       console.log(this.template, "this.template");
       if (this.template.entityName) {
@@ -88,7 +90,7 @@ export class ProjectOperationPage implements OnInit {
         }
       }
     }, error => {
-      this.loader.stopLoader();
+      // this.loader.stopLoader();
     })
   }
   getTemplate(id) {
@@ -97,12 +99,11 @@ export class ProjectOperationPage implements OnInit {
       url: urlConstants.API_URLS.TEMPLATE_DATA + id
     }
     this.unnatiService.get(config).subscribe(data => {
+      this.loader.stopLoader();
       if (data.result) {
         this.template = data.result;
-        this.loader.stopLoader();
       } else {
         this.noTemplates = true;
-        this.loader.stopLoader();
       }
     }, error => {
       this.loader.stopLoader();
@@ -343,5 +344,36 @@ export class ProjectOperationPage implements OnInit {
       this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
     }).catch(error => {
     })
+  }
+
+  async confirmToClose() {
+    debugger
+    let text;
+    this.translate.get(['LABELS.DISCARD_PROJECT', 'MESSAGES.DISCARD_PROJECT', 'LABELS.DISCARD', 'LABELS.CONTINUE']).subscribe(data => {
+      text = data;
+    });
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: text['LABELS.DISCARD_PROJECT'],
+      message: text['MESSAGES.DISCARD_PROJECT'],
+      buttons: [
+        {
+          text: text['LABELS.DISCARD'],
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            if(this.button ==='LABELS.CREATE_PROJECT'){
+              this.db.delete(this.projectId,this.template._rev)
+            }
+            this.location.back();
+          }
+        }, {
+          text: text['LABELS.CONTINUE'],
+          handler: () => {
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

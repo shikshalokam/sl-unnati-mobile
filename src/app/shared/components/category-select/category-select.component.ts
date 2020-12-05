@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { ModalController } from '@ionic/angular';
 import { ToastMessageService } from 'src/app/core';
 import * as _ from 'underscore';
+
 @Component({
   selector: 'app-category-select',
   templateUrl: './category-select.component.html',
@@ -14,10 +16,11 @@ export class CategorySelectComponent implements OnInit {
   catgeoryForm: FormGroup;
   categoryData = [];
   otherCategoryValue;
-  otherCategory = { input: 'text', field: 'otherCategories', value: '', show: false, validation: { required: true } }
+  otherCategory = { input: 'text', field: 'otherCategories', value: '', show: false, validation: { required: true } };
   constructor(
     public fb: FormBuilder,
-    public toast: ToastMessageService
+    public toast: ToastMessageService,
+    private modal: ModalController
   ) { }
   ngOnInit() {
     this.categoryData.push(this.categories);
@@ -104,9 +107,10 @@ export class CategorySelectComponent implements OnInit {
         });
       }
     });
-    valid ? this.onSubmit.emit(this.selectedCategories) : this.toast.showMessage('MESSAGES.PLEASE_ADD_OTHERCATEGORIES', 'danger')
+    valid ? this.modal.dismiss(this.selectedCategories) : this.toast.showMessage('MESSAGES.PLEASE_ADD_OTHERCATEGORIES', 'danger')
   }
   close() {
-    this.onSubmit.emit(this.selectedCategories);
+    // this.onSubmit.emit();
+    this.modal.dismiss()
   }
 }
