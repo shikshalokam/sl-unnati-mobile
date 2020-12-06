@@ -131,7 +131,7 @@ export class ProjectOperationPage implements OnInit {
     return await modal.present();
   }
   addEntity() {
-    if (!this.selectedEntity && this.profileData && this.profileData.state && this.profileData.state._id) {
+    if (this.profileData && this.profileData.state && this.profileData.state._id) {
       this.networkService.isNetworkAvailable ? this.openAddEntityModal() : this.showPopupForNoNet('LABELS.UNABLE_TO_ADD_ENTITY', 'MESSAGES.YOU_ARE_WORKING_OFFLINE_TRY_AGAIN', 'LABELS.CANCEL', 'LABELS.TRYAGAIN');
     } else {
       this.toast.showMessage('MESSAGES.DISABLED_ADD_ENTITY', 'danger');
@@ -241,6 +241,8 @@ export class ProjectOperationPage implements OnInit {
   }
   importProject() {
     if (this.networkService.isNetworkAvailable) {
+      this.payload.startDate = this.template.startDate;
+      this.payload.endDate = this.template.endDate;
       const isProgramPresent = (this.selectedProgram && this.selectedProgram.name) || (this.selectedProgram && this.selectedProgram._id);
       const isEntityAdded = (this.selectedEntity && this.selectedEntity._id)
       if (!this.isMandatoryFieldsFilled()) {

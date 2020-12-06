@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DbService, UnnatiDataService, urlConstants, LoaderService, ToastMessageService, NetworkService } from '../core';
-import { environment } from 'src/environments/environment';
+import { UnnatiDataService, urlConstants, LoaderService, ToastMessageService, NetworkService, LocalStorageService, localStorageConstants } from '../core';
 import { ModalController } from '@ionic/angular';
 import { TemplatesSearchModalComponent } from './templates-search-modal/templates-search-modal.component';
+
 @Component({
   selector: 'app-templates',
   templateUrl: './templates.page.html',
@@ -36,13 +36,13 @@ export class TemplatesPage implements OnInit {
   defaultValue = 'currentlyAdded';
   constructor(public routerParam: ActivatedRoute,
     private unnatiService: UnnatiDataService,
-    private db: DbService,
     private loader: LoaderService,
     private router: Router,
     private networkService: NetworkService,
     private toast: ToastMessageService,
-    private modalCtrl: ModalController) {
-    this.db.createPouchDB(environment.db.categories);
+    private modalCtrl: ModalController,
+    private localStorage: LocalStorageService
+  ) {
     routerParam.params.subscribe(params => {
       this.categoryType = params.type;
       this.getCategoryTitle();
@@ -80,17 +80,18 @@ export class TemplatesPage implements OnInit {
     this.router.navigate(['/menu/template-view', id]);
   }
   getCategoryTitle() {
-    this.db.read().then(data => {
+    this.localStorage.getLocalStorage(localStorageConstants.LIBRARY_CATEGORIES).then(data => {
       data.forEach(element => {
         if (element.type == this.categoryType) {
           this.categoryTitle = element.name;
         }
       });
-    }, error => {
+    }).catch(error => {
+
     })
   }
   selectSort(value) {
-    this.templates =[];
+    this.templates = [];
     this.page = 1;
     this.sortOptions.forEach(element => {
       element.isSelected = false;

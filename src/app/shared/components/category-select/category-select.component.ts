@@ -57,18 +57,30 @@ export class CategorySelectComponent implements OnInit {
     );
   }
   validateOptions() {
-    this.categoryData.forEach(cd => {
+
+    // this.categoryData.forEach(cd => {
+    //   if (cd.input == 'select') {
+    //     cd.options.forEach(element => {
+    //       let index = _.findIndex(this.selectedCategories, (item) => {
+    //         return item.label == element.label;
+    //       });
+    //       if (index > -1) {
+    //         cd.options[index].isChecked = true;
+    //       }
+    //     });
+    //   }
+    // });
+
+    for (const cd of this.categoryData) {
       if (cd.input == 'select') {
-        cd.options.forEach(element => {
-          let index = _.findIndex(this.selectedCategories, (item) => {
-            return item.label == element.label;
-          });
+        for (const category of this.selectedCategories) {
+          let index = _.findIndex(cd.options, { value: category.value });
           if (index > -1) {
             cd.options[index].isChecked = true;
           }
-        });
+        }
       }
-    });
+    }
     this.selectedCategories.forEach(option => {
       if (option.label == "Others") {
         this.otherCategory.show = true;

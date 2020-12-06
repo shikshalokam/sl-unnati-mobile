@@ -368,7 +368,7 @@ export class ProjectDetailPage implements OnInit {
   }
 
   openAttachments() {
-    this.router.navigate(["menu/attachment-list", this.project._id], { replaceUrl: true });
+    this.router.navigate(["menu/attachment-list", this.project._id]);
   }
 
   startAssessment(task) {

@@ -105,7 +105,6 @@ export class UtilsService {
     const projectData = { ...project };
     for (const task of projectData.tasks) {
       task.status = (task.children.length) ? this.calculateStatus(task.children) : task.status;
-      console.log(task.status)
     }
     projectData.status = this.calculateStatus(projectData.tasks);
     return projectData
@@ -115,22 +114,25 @@ export class UtilsService {
     let status;
     const items = [...childArray];
     const completedList = _.filter(items, function (el) {
-      return el.status === statusType.completed;
+      return !el.isDeleted && el.status === statusType.completed;
     });
     const inProgressList = _.filter(items, function (el) {
-      return el.status === statusType.inProgress;
+      return !el.isDeleted && el.status === statusType.inProgress;
     });
     const notStartedList = _.filter(items, function (el) {
       return el.status === statusType.notStarted;
     });
-    if (completedList.length === childArray.length) {
+    const validchildArray =  _.filter(items, function (el) {
+      return !el.isDeleted;
+    });
+    if (completedList.length === validchildArray.length) {
       status = statusType.completed;
     } else if (inProgressList.length || completedList.length) {
       status = statusType.inProgress;
     } else {
       status = statusType.notStarted;
     }
-    return childArray.length ? status : statusType.notStarted
+    return validchildArray.length ? status : statusType.notStarted
   }
 
   checkForTaskCompletion(task) {

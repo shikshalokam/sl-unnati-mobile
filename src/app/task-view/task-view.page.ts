@@ -29,6 +29,7 @@ export class TaskViewPage implements OnInit {
   currentYear = new Date().getFullYear();
   statuses = statuses;
   projectCopy;
+  copyOfSelectEditField;
   constructor(
     private router: Router,
     private params: ActivatedRoute,
@@ -100,24 +101,29 @@ export class TaskViewPage implements OnInit {
       this.enableTaskMarkButton();
     }
   }
-  toEdit(type) {
+  toEdit(type, copyOfString) {
     this.editField = type;
+    this.copyOfSelectEditField = copyOfString;
   }
 
   saveChanges() {
+    debugger
     if (this.task.name) {
-      this.editField = ''; 
+      // this.editField = ''; 
       this.update();
     } else {
+      this.task.name = this.copyOfSelectEditField;
       this.toast.showMessage('MESSAGES.REQUIRED_FIELDS', 'danger');
     }
   }
 
-  saveSubTaskChanges(subtask) {
+  saveSubTaskChanges(subtask, index) {
+    debugger
     if (subtask.name) {
       // this.editField = '';// removed as it closing the edit field as one letter is entered
       this.update();
     } else {
+      this.task.children[index].name = this.copyOfSelectEditField;
       this.toast.showMessage('MESSAGES.REQUIRED_FIELDS', 'danger');
     }
   }
