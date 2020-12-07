@@ -107,7 +107,6 @@ export class TaskViewPage implements OnInit {
   }
 
   saveChanges() {
-    debugger
     if (this.task.name) {
       // this.editField = ''; 
       this.update();
