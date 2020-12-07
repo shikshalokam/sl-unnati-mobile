@@ -1,6 +1,5 @@
 <ion-header [translucent]="true">
-  <!-- [showReload]="true"  -->
-  <app-header title="LABELS.PROJECTS" [showMenu]="true" (onAction)="action($event)"></app-header>
+  <app-header title="LABELS.PROJECTS" [showMenu]="true" (onAction)="action($event)" [showReload]="true"></app-header>
 </ion-header>
 <ion-content>
   <ion-segment (ionChange)="segmentChanged($event)" [value]="selectedTab">
@@ -61,13 +60,15 @@
       <div *ngIf="selectedSortOption === 'program'">
         <ion-list>
           <ng-container *ngFor="let program of programsList;let i = index">
-            <ion-list-header lines="inset" class="listHeader" (click)="(currentProgramFilterIndex === i)? closeProgram() :onProgramSelect(i)">
+            <ion-list-header lines="inset" class="listHeader"
+              (click)="(currentProgramFilterIndex === i)? closeProgram() :onProgramSelect(i)">
               <ion-label class="_capitalize">{{program?.programName || "My Program" }} </ion-label>
               <ion-icon name="caret-down-outline" class="expand" *ngIf="currentProgramFilterIndex !== i"></ion-icon>
               <ion-icon name="caret-up-outline" class="expand" *ngIf="currentProgramFilterIndex === i"></ion-icon>
             </ion-list-header>
             <ng-container *ngIf="currentProgramFilterIndex === i">
-              <ion-item lines="none" class="bgList" *ngFor="let project of projectsForSelectedProgram" (click)="openProject(project._id)">
+              <ion-item lines="none" class="bgList" *ngFor="let project of projectsForSelectedProgram"
+                (click)="openProject(project._id)">
                 <ion-label class="_capitalize">
                   {{project?.title}}
                 </ion-label>
