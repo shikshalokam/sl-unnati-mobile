@@ -8,6 +8,7 @@ import { Platform, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { Location } from '@angular/common';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-project-operation',
@@ -27,6 +28,9 @@ export class ProjectOperationPage implements OnInit {
   payload: any = {};
   projectId;
   today: any = new Date();
+  currentYear = new Date().getFullYear();
+  endDateMin: any = this.currentYear - 2;
+
   button = 'LABELS.IMPORT_PROJECT'
   showLearningResources: boolean = false;
   viewProjectAlert;
@@ -44,7 +48,7 @@ export class ProjectOperationPage implements OnInit {
     private datePicker: DatePicker,
     private utils: UtilsService,
     private localStorage: LocalStorageService,
-    private location : Location
+    private location: Location
   ) {
     routerparam.params.subscribe(param => {
       this.projectId = param.id;
@@ -233,12 +237,18 @@ export class ProjectOperationPage implements OnInit {
     }
   }
   action() {
-
     this.createdType == "bySelf" ? this.createProject() : this.importProject();
   }
   rating(event) {
     this.payload.rating = event;
   }
+  resetEndDate(event) {
+    if (event.detail && event.detail.value) {
+      this.endDateMin = moment(event.detail.value).format("YYYY-MM-DD");
+      this.template.endDate = this.template.endDate ? '' : '';
+    }
+  }
+
   importProject() {
     if (this.networkService.isNetworkAvailable) {
       this.payload.startDate = this.template.startDate;
@@ -257,6 +267,7 @@ export class ProjectOperationPage implements OnInit {
         !this.selectedProgram.created ? this.payload.programId = this.selectedProgram._id : delete this.payload.programId
         this.payload.programName = this.selectedProgram.name;
       }
+      console.log(this.payload, "this.payload");
       const config = {
         url: urlConstants.API_URLS.IMPORT_TEMPLATE + this.template._id,
         payload: this.payload
@@ -316,7 +327,7 @@ export class ProjectOperationPage implements OnInit {
   public restoreData(data) {
     this.db.createPouchDB(environment.db.projects);
     this.db.create(data).then(success => {
-      if (this.createdType == "bySelf") { 
+      if (this.createdType == "bySelf") {
 
         this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
       } else {
@@ -365,8 +376,8 @@ export class ProjectOperationPage implements OnInit {
           role: 'cancel',
           cssClass: 'secondary',
           handler: (blah) => {
-            if(this.button ==='LABELS.CREATE_PROJECT'){
-              this.db.delete(this.projectId,this.template._rev)
+            if (this.button === 'LABELS.CREATE_PROJECT') {
+              this.db.delete(this.projectId, this.template._rev)
             }
             this.location.back();
           }
