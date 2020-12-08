@@ -39,7 +39,7 @@ export class AppComponent {
   ) {
 
     this.initializeApp();
-    this.translate.setDefaultLang('en')
+    // this.translate.setDefaultLang('en')
   }
 
   initializeApp() {

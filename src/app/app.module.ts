@@ -86,12 +86,4 @@ export function HttpLoaderFactory(http: HttpClient) {
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(
-    private translate: TranslateService) {
-    this.setDefaultLanguage();
-  }
-
-  private setDefaultLanguage() {
-    this.translate.setDefaultLang('en');
-  }
 }

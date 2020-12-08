@@ -44,7 +44,7 @@ import { CamelToTitlePipe } from './pipes/camelToTitle/camel-to-title.pipe';
 
   imports: [
     CommonModule,
-    TranslateModule.forChild(),
+    TranslateModule,
     MomentModule,
     FormsModule,
     IonicModule,
