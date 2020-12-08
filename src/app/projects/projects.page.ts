@@ -12,13 +12,8 @@ import * as _ from "underscore";
   styleUrls: ['./projects.page.scss'],
 })
 export class ProjectsPage implements OnInit, OnDestroy {
-  type = 'activePojects';
-  projects;
-  searchText: string;
-  programs = [];
-  currentProgramFilterIndex = 0;
-  selectedFilter = "";
-  tabFilter;
+
+  searchText: string = '';
   tabs = [
     {
       name: "LABELS.ACTIVE_PROJECTS",
@@ -44,6 +39,22 @@ export class ProjectsPage implements OnInit, OnDestroy {
       filter: {}
     }
   ];
+  sortOptions = [
+    {
+      label: "Projects",
+      value: "project"
+    },
+    {
+      label: "Programs",
+      value: "program"
+    }
+  ]
+  selectedTab = "activePojects";
+  selectedSortOption = "project";
+  completeProjectData = [];
+  programsList = [];
+  projectsForSelectedProgram = [];
+  currentProgramFilterIndex = -1;
   constructor(
     private db: DbService,
     private modalCtrl: ModalController,
@@ -55,10 +66,182 @@ export class ProjectsPage implements OnInit, OnDestroy {
     this.db.createPouchDB(environment.db.projects);
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+
+  }
 
   ngOnDestroy() {
+
   }
+
+  ionViewWillEnter() {
+    this.completeProjectData = [];
+    this.programsList = [];
+    this.projectsForSelectedProgram = [];
+    this.currentProgramFilterIndex = -1;
+    this.getProjects();
+  }
+
+  segmentChanged(event) {
+    this.currentProgramFilterIndex = -1;
+    this.selectedTab = event.detail.value;
+    this.projectsForSelectedProgram = [];
+    this.getProjects();
+  }
+
+  getProjects() {
+    const query = this.createQuery();
+    this.db.customQuery(query).then(success => {
+      this.completeProjectData = success['docs'];
+      this.porecessOnBasisOfSortBy();
+    }, error => {
+    })
+  }
+
+  porecessOnBasisOfSortBy() {
+    if (this.selectedSortOption === 'program') {
+      this.createProgramsList();
+    } else {
+    }
+  }
+
+  createQuery() {
+    const query = {
+      selector: {
+        $and: [
+          {
+            isDeleted: {
+              $ne: true
+            }
+          }
+        ],
+      },
+      fields: ['title', '_id', 'programName', 'programId', 'status', 'isDeleted'],
+    };
+    //filter data according to segment
+    if (this.selectedTab === 'activePojects') {
+      const filter: any = {
+        status: {
+          $ne: statusType.notStarted
+        }
+      };
+      query.selector.$and.push(filter)
+    }
+    if (this.selectedSortOption === 'project') {
+      //For sort by Project we need to search for project name
+      const searchFilter: any = {
+        title: {
+          $regex: RegExp(this.searchText, 'i')
+        }
+      };
+      query.selector.$and.push(searchFilter)
+    } else {
+      //For sort by Program we need to search for program name
+      if (this.searchText) {
+        const searchFilter: any = {
+          programName: {
+            $regex: RegExp(this.searchText, 'i')
+          }
+        };
+        query.selector.$and.push(searchFilter)
+      }
+
+    }
+    return query
+  }
+
+  onSearch(e) {
+    this.searchText = e;
+    this.getProjects();
+  }
+  createProgramsList() {
+    const projects = [...this.completeProjectData];
+    const programs = [];
+    let index = 0;
+    for (const project of projects) {
+      const obj = {
+        programName: project.programName ? project.programName : "",
+        programId: project.programId ? project.programId : ""
+      }
+      !programs.includes(JSON.stringify(obj)) ? programs.push(JSON.stringify(obj)) : null
+      index++
+    }
+    const newProgram = [];
+    for (let program of programs) {
+      newProgram.push(JSON.parse(program));
+    }
+    this.programsList = newProgram;
+  }
+
+  closeProgram() {
+    this.projectsForSelectedProgram = [];
+    this.currentProgramFilterIndex = -1;
+  }
+
+  onProgramSelect(index) {
+    this.projectsForSelectedProgram = [];
+    const query = {
+      selector: {
+        $and: [
+          {
+            isDeleted: {
+              $ne: true
+            }
+          },
+          {
+            programName: {
+              $exists: this.programsList[index].programName ? true : false
+            }
+          },
+          {
+            programId: {
+              $exists: this.programsList[index].programId ? true : false
+            }
+          }
+        ],
+      },
+
+      fields: ['title', '_id', 'programName', 'programId', 'status', 'isDeleted'],
+    };
+    if (this.programsList[index].programName) {
+      const filter: any = {
+        programName: {
+          $regex: RegExp(this.programsList[index].programName)
+        }
+      };
+      query.selector.$and.push(filter)
+    }
+    if (this.programsList[index].programId) {
+      const filter: any = {
+        programId: {
+          $regex: RegExp(this.programsList[index].programId)
+        }
+      };
+      query.selector.$and.push(filter)
+    }
+    if (this.selectedTab === 'activePojects') {
+      const filter: any = {
+        status: {
+          $ne: statusType.notStarted
+        }
+      };
+      query.selector.$and.push(filter);
+    }
+    if (this.currentProgramFilterIndex == index) {
+      this.currentProgramFilterIndex = null
+      return
+    }
+    this.currentProgramFilterIndex = index;
+    this.db.customQuery(query).then(success => {
+      this.projectsForSelectedProgram = success['docs'];
+    }).catch(error => {
+    })
+  }
+
+  openProject(id) {
+    this.router.navigate(['/menu/project-detail', id]);
+  }
+
   action(event) {
     if (event == 'reload') {
       this.getLatesProjects();
@@ -87,115 +270,4 @@ export class ProjectsPage implements OnInit, OnDestroy {
     })
   }
 
-
-
-  ionViewWillEnter() {
-    this.getProjects();
-
-  }
-  segmentChanged(event) {
-    this.type = event.detail.value;
-    this.getProjects();
-  }
-
-  getProjects() {
-    this.tabFilter = (this.type === 'allProjects') ? {} :
-      {
-        status: {
-          $ne: statusType.notStarted
-        }
-      };
-    let programQuery = [];
-    if (this.currentProgramFilterIndex > 0) {
-      programQuery = [
-        {
-          programName: {
-            $eq: this.programs[this.currentProgramFilterIndex].programName
-          }
-        },
-      ]
-    }
-    const query = {
-      selector: {
-        $and: [
-          ...programQuery,
-          {
-            title: {
-              $regex: RegExp(this.searchText, 'i')
-            }
-          },
-          {
-            isDeleted: {
-              $ne: true
-            }
-          }
-        ],
-      },
-      // sort: [{updatedAt: 'desc'}]
-      // sort: ['title']
-      fields: ['title', '_id', 'programName', 'programId', 'status', 'isDeleted'],
-    };
-    query.selector.$and.push(this.tabFilter);
-    this.db.customQuery(query).then(success => {
-      this.projects = success['docs'];
-      (this.programs && !this.programs.length) ? this.createProgramsList([...this.projects]) : null;
-    }, error => {
-    })
-  }
-
-  onFilterChange(e) {
-    let index = 0
-    for (const program of this.programs) {
-      if (program.programId === this.selectedFilter) {
-        break
-      }
-      index++
-    }
-    this.currentProgramFilterIndex = index;
-    this.getProjects();
-  }
-
-  createProgramsList(projects) {
-    const programs = [];
-    let index = 0;
-    for (const project of projects) {
-      if (project.programName) {
-        const obj = {
-          programName: project.programName,
-          programId: project.programId ? project.programId : project.programName + index
-        }
-        !programs.includes(JSON.stringify(obj)) ? programs.push(JSON.stringify(obj)) : null
-      }
-      index++
-    }
-    const newProgram = [
-      {
-        programName: 'All',
-        programId: ""
-      }
-    ];
-    for (let program of programs) {
-      newProgram.push(JSON.parse(program));
-    }
-    this.programs = newProgram;
-  }
-
-  onSearch(e) {
-    this.searchText = e;
-    this.getProjects();
-  }
-
-  async onSearcBtnClick() {
-    const modal = await this.modalCtrl.create({
-      component: HomeSearchModalComponent,
-    });
-    return await modal.present();
-  }
-
-  openProject(id) {
-    // this.navCtrl.navigateRoot(['/menu/project-detail', id])
-    // this.navCtrl.navigateForward(['/menu/project-detail', id]);
-    // this.navCtrl.
-    this.router.navigate(['/menu/project-detail', id]);
-  }
 }

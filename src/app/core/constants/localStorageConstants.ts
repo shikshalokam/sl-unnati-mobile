@@ -6,5 +6,6 @@ export const localStorageConstants = {
     SYNC_VARIABLE: "syncSettings",
     FIRST_TIME: "FirstTime",
     USER_DETAILS:"usersInfo",
-    SELECTED_LANGUAGE: "selectedLanguage"
+    SELECTED_LANGUAGE: "selectedLanguage",
+    LIBRARY_CATEGORIES:"libraryCategories"
 };

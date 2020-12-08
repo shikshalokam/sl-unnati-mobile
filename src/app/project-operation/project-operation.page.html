@@ -1,9 +1,19 @@
-<ion-header>
+<!-- <ion-header>
   <app-header title="" [showMenu]="false" [showReload]="false" [showSearch]="false"
     [showSkip]="!template?.showProgramAndEntity" (onAction)="skip($event)" [hideNotification]="true">
     <ion-back-button></ion-back-button>
   </app-header>
-</ion-header>
+</ion-header> -->
+
+<ion-toolbar >
+  <ion-title></ion-title>
+  <ion-buttons (click)="confirmToClose()" slot="start" class="padding">
+    <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+  </ion-buttons>
+  <ion-buttons (click)="skip($event)" slot="end" class="padding">
+    <ion-icon slot="icon-only" name="play-skip-forward" class="header-icons" color="primary"></ion-icon>
+  </ion-buttons>
+</ion-toolbar>
 
 <!-- <ion-toolbar class="custom-padding">
   <ion-buttons slot="start" class="padding" (click)="close()">
@@ -11,7 +21,7 @@
   </ion-buttons>
  
 </ion-toolbar> -->
-<p class="skip-button" *ngIf="template && !template?.showProgramAndEntity">skip</p>
+<p class="skip-button padding" *ngIf="template && !template?.showProgramAndEntity">skip</p>
 <ion-content *ngIf="template" class="ion-padding">
   <div class="project-title">
     <ion-label position="floating" class="font-bold">
@@ -29,8 +39,9 @@
           <ion-label position="stacked">
             {{'LABELS.FROM' | translate }}
           </ion-label>
-          <ion-datetime min="2000" max="2100" class="no-rght-brdr-rds" display-timezone="utc" value={{today}}
-            [(ngModel)]="template.startDate" class="project-date" placeholder={{today}}>
+          <ion-datetime min="{{currentYear-2}}" max="{{currentYear + 5}}" class="no-rght-brdr-rds"
+            display-timezone="utc" value={{today}} [(ngModel)]="template.startDate" class="project-date"
+            placeholder={{today}} (ionChange)="resetEndDate($event)">
           </ion-datetime>
           <ion-icon name="caret-down-outline" slot="end"></ion-icon>
         </ion-item>
@@ -40,8 +51,8 @@
           <ion-label position="stacked">
             {{'LABELS.TO' | translate}}
           </ion-label>
-          <ion-datetime min="2000" max="2100" class="no-rght-brdr-rds" display-timezone="utc" value={{today}}
-            [(ngModel)]="template.endDate" class="project-date" placeholder={{today}}>
+          <ion-datetime min="{{endDateMin}}" max="{{currentYear + 5}}" class="no-rght-brdr-rds" display-timezone="utc"
+            value={{today}} [(ngModel)]="template.endDate" class="project-date" placeholder={{today}}>
           </ion-datetime>
           <ion-icon name="caret-down-outline" slot="end"></ion-icon>
         </ion-item>

@@ -151,7 +151,7 @@
         "ONGOING": "Ongoing",
         "SUB_TASKS": "No of sub-tasks",
         "ADD_REMARKS": "Add Remarks",
-        "MARK_TASK_COMPLETE": "Mark task completed",
+        "ADD_ATTACHMENTS": "Add Attachments",
         "ADD_NEW_TASK": "Add New Task",
         "ASSIGNED_TO": "Assigned to",
         "TASK_DESCRIPTION": "Task Description",
@@ -164,13 +164,14 @@
         "ATTACHMENTS": "Attachments",
         "IMAGES": "Images",
         "FILES": "Files",
-        "SAVE_EDITS":"Save Edits",
+        "SAVE_EDITS": "Save Edits",
         "TELUGU": "Telugu",
         "ENGLISH": "English",
         "KANNADA": "Kannada",
-        "VIEW_RESOURCES":"View Resources",
-        "START":"Start",
-        "STATE": "State"
+        "VIEW_RESOURCES": "View Resources",
+        "START": "Start",
+        "STATE": "State",
+        "ENTITY": "Entity"
     },
     "MESSAGES": {
         "DEAR": "Dear user,",
@@ -181,13 +182,14 @@
         "NO_TEMPLATES_FOUND": "No templates found.",
         "IMPORT_CREATED_SUCCESS": "Your Project has been successfully create under the",
         "PROJECT_CREATED_SUCCESS": "Your Project has been created successfully",
+        "PROJECT_IMPORT_SUCCESS": "You have successfully imported this project ",
         "YOU_ARE_WORKING_OFFLINE": "You are working offline",
         "YOU_ARE_WORKING_OFFLINE_TRY_AGAIN": "You are working offline, please check your network connection and try again",
         "PLEASE_NETWORK": "Please check your network connection and try again",
         "NEW_PROJECTS_ADDED": "New projects have been added under",
         "PROJECTS_REFRESH_NO_PROJECTS_FOUND": "Page has been refreshed, no new projects found",
         "RATING_LABEL_MESSAGE": "Help us improve the content by rating the project",
-        "DISABLED_ADD_ENTITY": "You are not mapped with States, you are not able to add entity.",
+        "DISABLED_ADD_ENTITY": "No Entities are mapped for this user ",
         "REQUIRED_FIELDS": "Please enter all required fields.",
         "DISCARD_PROJECT": "Would you like to discard your project?",
         "PLEASE_ADD_OTHERCATEGORIES": "Please add other categories.",
@@ -212,11 +214,12 @@
         "ERROR_WHILE_DOWNLOADING": "Error while downloading ",
         "SUCCESSFULLY DOWNLOADED": "Successfully Downloaded",
         "PROJECT_DELETED_SUCCESSFUL": "Project Deleted successfully",
-        "NO_ENTITY_MAPPED":" No entity mapped to the Project",
+        "NO_ENTITY_MAPPED": " No entity mapped to the Project",
         "PROFILE_UPDATE_AGREE": "I agree to share the information with Unnati",
         "UPDATE_PROFILE_CONFIRMATION": "Please update your profile to continue",
-        "CANNOT_GET_PROJECT_DETAILS":"Cannot get project details",
-        "COMING_SOON":"Coming soon"
-
+        "CANNOT_GET_PROJECT_DETAILS": "Cannot get project details",
+        "COMING_SOON": "Coming soon",
+        "USER_NOT_MATCHED": "User not matched, please try again.",
+        "NETWORK_ERROR": "Network Error"
     }
 }

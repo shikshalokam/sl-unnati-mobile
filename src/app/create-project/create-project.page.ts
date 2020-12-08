@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { DbService, UnnatiDataService, ToastMessageService, LocalStorageService, localStorageConstants, LoaderService, UtilsService } from '../core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
+import { CategorySelectComponent } from '../shared';
 
 @Component({
   selector: 'app-create-project',
@@ -37,7 +38,9 @@ export class CreateProjectPage implements OnInit {
     private toast: ToastMessageService,
     private location: Location,
     private utilsService: UtilsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modal: ModalController,
+    private ngZone: NgZone
   ) {
     route.queryParams.subscribe(parameters => {
       if (parameters.projectId) {
@@ -81,7 +84,7 @@ export class CreateProjectPage implements OnInit {
     })
   }
   close() {
-    this.location.back();
+    // this.location.back();
   }
   async confirmToClose() {
     let text;
@@ -98,7 +101,7 @@ export class CreateProjectPage implements OnInit {
           role: 'cancel',
           cssClass: 'secondary',
           handler: (blah) => {
-            this.close();
+            this.location.back();
           }
         }, {
           text: text['LABELS.CONTINUE'],
@@ -207,7 +210,7 @@ export class CreateProjectPage implements OnInit {
           category.value = '';
           delete category._id;
         } else {
-          category.value = category._id ? category._id :category.value;
+          category.value = category._id ? category._id : category.value;
           delete category._id;
         }
       });
@@ -240,12 +243,12 @@ export class CreateProjectPage implements OnInit {
       data.isNew = true;
       data.tasks = this.tasks;
       data.isEdit = true;
+      data.isDeleted = true;
       const modifiedData = this.utilsService.setStatusForProject(data);
       this.db.createPouchDB(environment.db.projects);
       this.db.create(modifiedData).then(success => {
         this.projectId = success.id;
-        console.log('in else ', this.button);
-        this.router.navigate(['menu/project-operation', success.id], { queryParams: { createdType: 'bySelf' }, replaceUrl: true });
+        this.ngZone.run(()=>this.router.navigate(['menu/project-operation', success.id], { queryParams: { createdType: 'bySelf' }, replaceUrl: true }));
       }).catch(error => {
       })
     } else {
@@ -261,5 +264,23 @@ export class CreateProjectPage implements OnInit {
       this.location.back();
     }).catch(error => {
     })
+  }
+
+  async openCategoryModal(categories) {
+    const modal = await this.modal.create({
+      component: CategorySelectComponent,
+      cssClass: 'transparentModal',
+      componentProps: {
+        'categories': JSON.parse(JSON.stringify(categories)),
+        'selectedCategories': JSON.parse(JSON.stringify(this.selectedCategories)),
+      },
+    });
+    modal.onWillDismiss().then(({ data }) => {
+      console.log(data)
+      data ? this.selectCategories(data) : null;
+
+    })
+    return await modal.present();
+
   }
 }

@@ -142,6 +142,10 @@
     "cordova-plugin-nativestorage": {
       "PACKAGE_NAME": "in.gov.diksha.projects.app"
     },
+    "cordova-android-support-gradle-release": {
+      "ANDROID_SUPPORT_VERSION": "27.+",
+      "PACKAGE_NAME": "in.gov.diksha.projects.app"
+    },
     "cordova-plugin-badge": {
       "PACKAGE_NAME": "in.gov.diksha.projects.app"
     },

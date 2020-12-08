@@ -37,8 +37,8 @@
   <ion-list *ngIf="selectedFilter.key !== 'tasks'">
     <ion-item *ngFor="let result of searchResults" (click)="navigateTo('/menu/project-detail/'+result?._id )">
       <ion-label>
-        <h3 class="capitalize">{{ selectedFilter.key === 'program' ? (result?.programInformation?.name || "My program") : result?.title}}</h3>
-        <ion-note class="capitalize">{{ selectedFilter.key === 'program' ?  result?.title : (result?.programInformation?.name || "My program")}}</ion-note>
+        <h3 class="capitalize">{{ selectedFilter.key === 'program' ? (result?.programName || "My program") : result?.title}}</h3>
+        <ion-note class="capitalize">{{ selectedFilter.key === 'program' ?  result?.title : (result?.programName || "My program")}}</ion-note>
       </ion-label>
     </ion-item>
   </ion-list>

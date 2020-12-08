@@ -26,11 +26,30 @@ export class ProjectDetailPage implements OnInit {
   taskCount: number = 0;
   filters: any = {};
   schedules = [
-    { title: "past" },
-    { title: "today" },
-    { title: "thisWeek" },
-    { title: "thisMonth" },
-    { title: "upcoming" },
+    {
+      title: "LABELS.PAST",
+      value: "past"
+    },
+    {
+      title: "LABELS.TODAY",
+      value: "today"
+    },
+    {
+      title: "LABELS.THIS_WEEK",
+      value: "thisWeek"
+    },
+    {
+      title: "LABELS.THIS_MONTH",
+      value: "thisMonth"
+    },
+    {
+      title: "LABELS.THIS_QUARTER",
+      value: "thisQuarter"
+    },
+    {
+      title: "LABELS.UPCOMING",
+      value: "upcoming"
+    },
   ];
   sortedTasks;
 
@@ -67,9 +86,7 @@ export class ProjectDetailPage implements OnInit {
       });
 
     this.platform.resume.subscribe((result) => {
-      console.log("Platform Resume Event");
       this.getProjectTaskStatus()
-
     });
   }
 
@@ -84,11 +101,11 @@ export class ProjectDetailPage implements OnInit {
         this.project.tasks && this.project.tasks.length ? this.sortTasks() : "";
         this.getProjectTaskStatus();
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
   ionViewDidEnter() {
     this.getProject();
     this.getDateFilters();
@@ -98,7 +115,10 @@ export class ProjectDetailPage implements OnInit {
     this.filters.today = moment().format("YYYY-MM-DD");
     this.filters.thisWeek = currentDate.endOf("week").format("YYYY-MM-DD");
     this.filters.thisMonth = currentDate.endOf("month").format("YYYY-MM-DD");
-    this.filters.thisQuarter = currentDate.endOf("quarter").format("YYYY-MM-DD");
+    const quarter = Math.floor((new Date().getMonth() / 3));
+    let startFullQuarter: any = new Date(new Date().getFullYear(), quarter * 3, 1);
+    let endFullQuarter: any = new Date(startFullQuarter.getFullYear(), startFullQuarter.getMonth() + 3, 0);
+    this.filters.thisQuarter = moment(endFullQuarter).format("YYYY-MM-DD");
   }
   sortTasks() {
     this.taskCount = 0;
@@ -106,6 +126,7 @@ export class ProjectDetailPage implements OnInit {
     let inProgress = 0;
     this.sortedTasks = JSON.parse(JSON.stringify(this.utils.getTaskSortMeta()));
     this.project.tasks.forEach((task) => {
+
       if (!task.isDeleted && task.endDate) {
         this.taskCount = this.taskCount + 1;
         let ed = JSON.parse(JSON.stringify(task.endDate));
@@ -118,7 +139,10 @@ export class ProjectDetailPage implements OnInit {
           this.sortedTasks["thisWeek"].tasks.push(task);
         } else if (ed > this.filters.thisWeek && ed <= this.filters.thisMonth) {
           this.sortedTasks["thisMonth"].tasks.push(task);
-        } else {
+        } else if (ed > this.filters.thisMonth && ed <= this.filters.thisQuarter) {
+          this.sortedTasks["thisQuarter"].tasks.push(task);
+        }
+        else {
           this.sortedTasks["upcoming"].tasks.push(task);
         }
       } else if (!task.isDeleted && !task.endDate) {
@@ -134,23 +158,30 @@ export class ProjectDetailPage implements OnInit {
       }
     });
     this.project = this.utils.setStatusForProject(this.project);
-    // if (inProgress > 0 || completed != this.taskCount) {
-    //   this.project.status = this.statuses[1].title;
-    // } else if (this.taskCount && this.taskCount == completed) {
-    //   this.project.status = this.statuses[2].title;
-    // } else {
-    //   this.project.status = this.statuses[0].title;
-    // }
   }
-  syn() {}
+  syn() { }
 
   toggle() {
     this.showDetails = !this.showDetails;
   }
-  async openPopover(ev: any, taskId?) {
+  async openPopover(ev: any, taskId?, isDelete?) {
+    let menu;
+    if (taskId) {
+      menu = JSON.parse(JSON.stringify(menuConstants.TASK));
+      if (isDelete) {
+        let deleteOption = {
+          TITLE: 'LABELS.DELETE',
+          VALUE: 'deleteTask',
+          ICON: 'trash'
+        }
+        menu.push(deleteOption);
+      }
+    } else {
+      menu = menuConstants.PROJECT;
+    }
     const popover = await this.popoverController.create({
       component: PopoverComponent,
-      componentProps: { menus: taskId ? menuConstants.TASK : menuConstants.PROJECT },
+      componentProps: { menus: menu },
       event: ev,
       translucent: true,
     });
@@ -202,7 +233,7 @@ export class ProjectDetailPage implements OnInit {
           text: data["LABELS.CANCEL"],
           role: "cancel",
           cssClass: "secondary",
-          handler: (blah) => {},
+          handler: (blah) => { },
         },
         {
           text: data["LABELS.SUBMIT"],
@@ -241,7 +272,6 @@ export class ProjectDetailPage implements OnInit {
   }
   //open openBodh
   openBodh(link) {
-    console.log(link, "link");
     this.networkService.isNetworkAvailable
       ? this.openResourceSrvc.openBodh(link)
       : this.toast.showMessage("MESSAGES.OFFLINE", "danger");
@@ -262,12 +292,12 @@ export class ProjectDetailPage implements OnInit {
         } else if (type == "ProjectDelete") {
           this.toast.showMessage("MESSAGES.PROJECT_DELETED_SUCCESSFUL", "success");
           this.location.back();
-        } else if ("taskDelete") {
+        } else if (type == "taskDelete") {
           this.toast.showMessage("MESSAGES.TASK_DELETED_SUCCESSFUL", "success");
         }
         this.sortTasks();
       })
-      .catch((error) => {});
+      .catch((error) => { });
   }
   createNewProject() {
     this.loader.startLoader();
@@ -331,8 +361,7 @@ export class ProjectDetailPage implements OnInit {
   }
 
   openAttachments() {
-    console.log("openAttachments");
-    this.router.navigate(["menu/attachment-list", this.project._id], { replaceUrl: true });
+    this.router.navigate(["menu/attachment-list", this.project._id]);
   }
 
   startAssessment(task) {
@@ -347,7 +376,7 @@ export class ProjectDetailPage implements OnInit {
             return;
           }
           let data = success.result;
-          
+
           let params = `${data.programId}-${data.solutionId}-${data.entityId}`;
           let link = `${environment.deepLinkAppsUrl}/${task.type}/${params}`;
           this.iab.create(link, "_system");
@@ -363,10 +392,18 @@ export class ProjectDetailPage implements OnInit {
   }
 
   getProjectTaskStatus() {
+    if (!this.project.tasks && !this.project.tasks.length) {
+      return
+    }
+    let taskIdArr = this.getAssessmentTypeTaskId()
+
+    if (!taskIdArr.length) {
+      return
+    }
     const config = {
       url: urlConstants.API_URLS.PROJCET_TASK_STATUS + `${this.project._id}`,
       payload: {
-        taskIds: this.getAssessmentTypeTaskId(),
+        taskIds: taskIdArr,
       },
     };
     this.unnatiService.post(config).subscribe(
@@ -385,17 +422,16 @@ export class ProjectDetailPage implements OnInit {
 
   updateAssessmentStatus(data) {
     // if task type is assessment or observation then check if it is submitted and change the status and update in db
-    let isChnaged=false
+    let isChnaged = false
     this.project.tasks.map((t) => {
       data.map((d) => {
         if (d._id == t._id && d.status != t.status) {
           t.status = d.status;
-          isChnaged=true
+          isChnaged = true
         }
       });
     });
-    isChnaged?this.update('taskStatusUpdated'):null// if any assessment/observatiom task status is changed then only update 
-    console.log(this.project);
+    isChnaged ? this.update('taskStatusUpdated') : null// if any assessment/observatiom task status is changed then only update 
   }
 
   getAssessmentTypeTaskId() {
@@ -418,8 +454,8 @@ export class ProjectDetailPage implements OnInit {
             return;
           }
           let data = success.result;
-          let entityType = data.entityType || "school"; // remove afterwards when entitYtype come in api
-          let params = `${data.programId}-${data.solutionId}-${data.entityId}-${entityType}`;
+          let entityType = data.entityType
+          let params = `${data.programId}-${data.solutionId}-${data.entityId}-${entityType}-${data.observationId}`;
           let link = `${environment.deepLinkAppsUrl}/${task.type}/reports/${params}`;
           this.iab.create(link, "_system");
         },

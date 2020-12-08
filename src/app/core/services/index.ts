@@ -19,5 +19,6 @@ export * from './sync/sync.service';
 export * from './attachment/attachement.service';
 export * from './utils.service';
 export * from './web-runner/web-runner.service';
-export * from './diksha-login/diksha-login.service'
+export * from './diksha-login/diksha-login.service';
+export * from './profile/profile.service';
 

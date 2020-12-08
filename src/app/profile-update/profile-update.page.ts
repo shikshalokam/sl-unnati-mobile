@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { KendraApiService, LoaderService, localStorageConstants, LocalStorageService, ToastMessageService, urlConstants } from '../core';
+import { KendraApiService, LoaderService, localStorageConstants, LocalStorageService, ProfileService, ToastMessageService, urlConstants } from '../core';
 import { ModalController } from '@ionic/angular';
 import { OnboardingEntityListingModalPage } from './onboarding-entity-listing-modal/onboarding-entity-listing-modal';
 
@@ -37,13 +37,14 @@ export class ProfileUpdatePage implements OnInit {
     private modal: ModalController,
     public fb: FormBuilder,
     private storage: LocalStorageService,
+    private profile: ProfileService,
     private router: Router) { }
 
   ngOnInit() {
-    this.storage.getLocalStorage(localStorageConstants.USER_DETAILS).then(data =>{
+    this.profile.getProfile().then(data => {
       this.userName = data.userName;
-    }).catch(error =>{
-
+    }).catch(error => {
+      this.userName = "";
     })
   }
 
@@ -57,24 +58,20 @@ export class ProfileUpdatePage implements OnInit {
   }
 
 
-  getProfileData() {
-    this.toast.startLoader();
-    const config = {
-      url: `${urlConstants.API_URLS.GET_PROFILE}`
-    }
+  async getProfileData() {
+    await this.toast.startLoader()
     this.showLoader = true;
-    this.kendraService.get(config).subscribe(data => {
+    this.profile.getProfileRoles().then(data => {
       this.toast.stopLoader();
-      if (data.result.roles && data.result.roles.length) {
+      if (data.roles && data.roles.length) {
         this.showPreview = true;
-        this.profileRoles = data.result.roles;
+        this.profileRoles = data.roles;
         this.getStatesValue();
         this.isParam = 'profileUpdated';
       } else {
         this.getStates()
       }
-      this.showLoader = false;
-    }, error => {
+    }).catch(error => {
       this.toast.stopLoader();
     })
   }
@@ -199,7 +196,7 @@ export class ProfileUpdatePage implements OnInit {
 
   getSubEntitiesForm() {
     const config = {
-      url : urlConstants.API_URLS.ENTITY_MAPPING_FORM + `${this.formGroup.get('state').value}?roleId=${this.formGroup.get('role').value}`
+      url: urlConstants.API_URLS.ENTITY_MAPPING_FORM + `${this.formGroup.get('state').value}?roleId=${this.formGroup.get('role').value}`
     }
     this.toast.startLoader();
     this.kendraService.get(config).subscribe(data => {
@@ -211,7 +208,7 @@ export class ProfileUpdatePage implements OnInit {
         this.formGroup.addControl(element.field, validation)
       }
       this.dynamicForm = this.dynamicForm.concat(this.entityTypeForm)
-    }, error =>{
+    }, error => {
       this.toast.stopLoader();
       this.showLoader = false;
     })
@@ -291,11 +288,13 @@ export class ProfileUpdatePage implements OnInit {
     }
     this.toast.startLoader();
     this.kendraService.post(config).subscribe((data: any) => {
-      this.toast.stopLoader();
-      // this.showLoader = false;
-      this.getProfileData();
-      // this.sidemenuProvider.getUserRolesApi();
-    }, error =>{
+      this.storage.setLocalStorage(localStorageConstants.PROFILE_DATA, data.result).then(success => {
+        this.toast.stopLoader();
+        this.getProfileData();
+      }).catch(error => {
+        this.toast.stopLoader();
+      })
+    }, error => {
 
     });
   }

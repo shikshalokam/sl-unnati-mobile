@@ -7,7 +7,7 @@
   <div>
     <app-search-bar (onSearch)="onSearch($event)">
     </app-search-bar>
-    <app-project-card [data]="projects" [showpopover]= "false" (onGetActions)="openPopover($event)" (onGetTemplate)="openProject($event)"></app-project-card>
+    <app-project-card [data]="projects" [showpopover]= "true" (onGetTemplate)="openProject($event)"></app-project-card>
   </div>
   <app-no-data *ngIf="!projects?.length"></app-no-data>
 </ion-content>

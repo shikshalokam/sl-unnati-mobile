@@ -18,7 +18,7 @@ export class PrivateGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return new Promise((resolve, reject) => {
       this.userService.getUser().then(success => {
-        if (success) {
+        if (!success.accountDeactivate) {
           resolve(true)
         } else {
           // this.router.navigateByUrl('login');

@@ -33,7 +33,7 @@
         <ion-button color="light" expand="block" (click)="close()">{{'LABELS.CANCEL' | translate}}</ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button color="primary" expand="block" [disabled]="!selection?._id" (click)="close(selection)">{{'LABELS.SAVE' | translate}}
+        <ion-button color="primary" expand="block" [disabled]="!selection" (click)="close(selection)">{{'LABELS.SAVE' | translate}}
         </ion-button>
       </ion-col>
     </ion-row>

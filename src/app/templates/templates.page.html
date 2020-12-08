@@ -20,7 +20,7 @@
         [ngClass]="{'selected-option':opt.isSelected == true}"> {{opt.title | translate}} </span>
     </div> -->
     <app-project-card [data]="templates" (onGetTemplate)="getTemplate($event)"></app-project-card>
-    <div class="loadmore-btn" *ngIf="templates.length && templatesCount > templates.length">
+    <div class="loadmore-btn" *ngIf="templates?.length && templatesCount > templates?.length">
       <ion-button (click)="loadMoreTemplates()">
         {{'LABELS.LOAD_MORE' | translate}}</ion-button>
     </div>

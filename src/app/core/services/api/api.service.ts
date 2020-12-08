@@ -42,8 +42,10 @@ export class ApiService {
   // }
 
   private handleError(result) {
-    debugger
     switch (result.status) {
+      case 0:
+        this.toast.showMessage('MESSAGES.NETWORK_ERROR' , 'danger')
+        break
       case 401:
         this.auth.sessionExpired();
         break

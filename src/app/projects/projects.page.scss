@@ -57,3 +57,17 @@
 .capitalize {
   text-transform: capitalize;
 }
+
+.expand {
+  font-size: 20px;
+  padding-right: 20px;
+  color: var(--ion-color-primary);
+}
+
+.bgList {
+  background-color: $light-grey-color;
+}
+
+.listHeader {
+  --background:  #f2efef
+}

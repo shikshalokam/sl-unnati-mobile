@@ -22,3 +22,11 @@
 .category-input{
     border-bottom: 1px solid $dark-grey-color;
 }
+
+.bottom-buttons{
+    color:var(--ion-color-primary) ;
+    ion-buttons{
+        justify-content: space-around;
+    }
+
+}

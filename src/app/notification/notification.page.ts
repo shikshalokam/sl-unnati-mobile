@@ -25,8 +25,6 @@ export class NotificationPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.networkService.isNetworkAvailable ? this.getNotifications() : this.toast.showMessage('MESSAGES.YOU_ARE_WORKING_OFFLINE_TRY_AGAIN')
-    
   }
 
   ionViewWillEnter() {

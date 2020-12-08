@@ -7,10 +7,6 @@ export const menuConstants = {
         TITLE: 'LABELS.EDIT',
         VALUE: 'editTask',
         ICON: 'create'
-    },{
-        TITLE: 'LABELS.DELETE',
-        VALUE: 'deleteTask',
-        ICON: 'trash'
     }],
     PROJECT: [{
         TITLE: 'LABELS.SHARE_PROJECT',

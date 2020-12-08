@@ -38,12 +38,13 @@ export const urlConstants = {
     CREATE_PROJECT_DOC: "v1/userProjects/create",
     GET_IMAGE_UPLOAD_URLS: "v1/userProjects/getFileUploadUrl",
     START_ASSESSMENT: 'v1/userProjects/solutionDetails/',
-    PROJCET_TASK_STATUS:"v1/userProjects/tasksStatus/",
+    PROJCET_TASK_STATUS: "v1/userProjects/tasksStatus/",
     LIBRARY_SEARCH: "v1/library/categories/projects?search=",
     STATE_LIST: "v1/entities/listByEntityType/state",
-    STATE_ROLES:"v1/entities/subEntitiesRoles/",
+    STATE_ROLES: "v1/entities/subEntitiesRoles/",
     ENTITY_MAPPING_FORM: "v1/users/entitiesMappingForm/",
     PROFILE_UPDATE: "v1/user-extension/updateProfileRoles",
     MARK_AS_READ: "v1/notifications/in-app/markAsRead/",
+    GET_PREVIOUS_PROFILE: "v1/users/search?search="
   },
 };

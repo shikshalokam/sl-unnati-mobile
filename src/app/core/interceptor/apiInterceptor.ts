@@ -22,11 +22,12 @@ export class ApiInterceptor implements HttpInterceptor {
     ) {
     }
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (!window.navigator.onLine) {
-            this.showToast('MESSAGES.OFFLINE', 'danger');
-        } else {
-            return from(this.handle(request, next))
-        }
+        // if (!window.navigator.onLine) {
+        //     this.showToast('MESSAGES.OFFLINE', 'danger');
+        // } else {
+        //     return from(this.handle(request, next))
+        // }
+        return from(this.handle(request, next))
       
     }
     async handle(req: HttpRequest<any>, next: HttpHandler) {
@@ -35,18 +36,18 @@ export class ApiInterceptor implements HttpInterceptor {
         const appName: string = await this.appDetails.getAppName();
         // send skip param as true in header to disable headers
         if (!req.headers.get("skip") || req.headers.get("skip") === 'false') {
-            const token: any = await this.auth.tokenValidation();
-            authReq = req.clone({
-                setHeaders: {
-                    'x-auth-token': token ? token.access_token : "",
-                    'x-authenticated-user-token': token ? token.access_token : "",
-                    'gpsLocation': '',
-                    'appVersion': appVersion,
-                    'appName': appName,
-                    'appType': environment.appType,
-                    'os': this.platform.is('ios') ? 'ios' : 'android'
-                }
-            })
+                const token: any = await this.auth.tokenValidation();
+                authReq = req.clone({
+                    setHeaders: {
+                        'x-auth-token': token ? token.access_token : "",
+                        'x-authenticated-user-token': token ? token.access_token: "",
+                        'gpsLocation': '',
+                        'appVersion': appVersion,
+                        'appName': appName,
+                        'appType': environment.appType,
+                        'os': this.platform.is('ios') ? 'ios' : 'android'
+                    }
+                })
         } else {
             authReq = req.clone({
                 headers: req.headers.delete('skip')
@@ -57,5 +58,5 @@ export class ApiInterceptor implements HttpInterceptor {
 
     showToast(msg, color) {
         this.toast.showMessage(msg, color);
-      }
+    }
 }

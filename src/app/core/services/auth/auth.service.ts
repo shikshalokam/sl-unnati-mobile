@@ -9,6 +9,10 @@ import { Router } from '@angular/router';
 import { ToastMessageService } from '../toast-messages/toast-message.service';
 import { LoaderService } from '../loader/loader.service';
 import { DbService } from '../db/db.service';
+import { urlConstants } from '../../constants';
+import { AppVersion } from '@ionic-native/app-version/ngx';
+import { Platform } from '@ionic/angular';
+import { promise } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +31,10 @@ export class AuthService {
     private message: ToastMessageService,
     private loader: LoaderService,
     private modalController: ModalController,
-    private db: DbService
-  ) {
-    
-   }
+    private db: DbService,
+    private appDetails: AppVersion,
+    private platform: Platform
+  ) { }
 
   doOAuthStepOne(): Promise<any> {
     this.auth_url = this.base_url + "/auth/realms/sunbird/protocol/openid-connect/auth?response_type=code&scope=offline_access&client_id=" + environment.keycloakConfig.clientId + "&redirect_uri=" +
@@ -59,7 +63,7 @@ export class AuthService {
 
   doOAuthStepTwo(token: string): Promise<any> {
     return new Promise(resolve => {
-      this.loader.startLoader();
+      // this.loader.startLoader();
       const body = new URLSearchParams();
       const params = 'grant_type=authorization_code&client_id=' + environment.keycloakConfig.clientId + '&code=' + token + '&redirect_uri=' + environment.keycloakConfig.redirectUrl + '&scope=offline_access'
       body.set('grant_type', "authorization_code");
@@ -78,29 +82,24 @@ export class AuthService {
             refresh_token: data.refresh_token,
             accountDeactivate: false
           }
+          // this.loader.stopLoader();
           this.checkLocalData(sessionData).then(success => {
             if (success) {
               this.currentUser.setUser(sessionData).then(success => {
-                this.loader.stopLoader();
                 resolve(sessionData);
               }).catch(error => {
-                this.loader.stopLoader();
                 resolve(error);
               })
             } else {
               this.currentUser.setUser(sessionData).then(success => {
-                this.loader.stopLoader();
                 resolve(sessionData);
               }).catch(error => {
-                this.loader.stopLoader();
                 resolve(error);
               })
             }
           }).catch(error => {
-            this.loader.stopLoader();
             resolve(error);
           })
-          // this.fcm.initializeFCM();
         }, error => {
           this.loader.stopLoader();
           resolve(error);
@@ -117,7 +116,7 @@ export class AuthService {
           if (userDetails.sub.split(":").pop() == previousUser.sub.split(":").pop()) {
             resolve(userDetails);
           } else {
-            this.confirmPreviousUserName(previousUser.preferred_username, newUser);
+            this.confirmPreviousUserName(previousUser.sub.split(":").pop(), newUser);
           }
         } else {
           resolve(false);
@@ -167,13 +166,11 @@ export class AuthService {
   }
 
   doLogout(): Promise<any> {
-    return new Promise( (resolve) => {
+    return new Promise((resolve) => {
       let logout_redirect_url = environment.keycloakConfig.redirectUrl;
       let logout_url = environment.appUrl + "/auth/realms/sunbird/protocol/openid-connect/logout?redirect_uri=" + logout_redirect_url;
       let closeCallback = function (event) {
       };
-      this.db.createPouchDB(environment.db.projects);
-      this.db.dropDb();
       let browserRef = (<any>window).cordova.InAppBrowser.open(logout_url, "_blank", "zoom=no");
       browserRef.addEventListener('loadstart', function (event) {
         if (event.url && ((event.url).indexOf(logout_redirect_url) === 0)) {
@@ -189,7 +186,23 @@ export class AuthService {
     this.modalController.dismiss();
     this.currentUser.getUser().then(userdetails => {
       if (!userdetails.accountDeactivate) {
-        this.showSessionExpired();
+        this.doLogout().then(data => {
+          this.currentUser.getUser().then(userdetails => {
+            if (userdetails) {
+              const sessionData = {
+                access_token: userdetails.access_token,
+                refresh_token: userdetails.refresh_token,
+                accountDeactivate: true
+              }
+              this.currentUser.setUser(sessionData).then(success => {
+                this.router.navigateByUrl(`/login`);
+                this.showSessionExpired();
+              }).catch(error => {
+              })
+            }
+          })
+        }, error => {
+        })
       }
     })
   }
@@ -201,22 +214,6 @@ export class AuthService {
           text: "Login",
           role: "role",
           handler: (data) => {
-            this.doLogout().then(data => {
-              this.currentUser.getUser().then(userdetails => {
-                if (userdetails) {
-                  const sessionData = {
-                    access_token: userdetails.access_token,
-                    refresh_token: userdetails.refresh_token,
-                    accountDeactivate: true
-                  }
-                  this.currentUser.setUser(sessionData).then(success => {
-                    this.router.navigateByUrl(`/login`);
-                  }).catch(error => {
-                  })
-                }
-              })
-            }, error => {
-            })
           },
         },
       ],
@@ -224,7 +221,7 @@ export class AuthService {
     await alert.present();
   }
 
-  async confirmPreviousUserName(previousUserEmail, tokens) {
+  async confirmPreviousUserName(id, tokens) {
     const alert = await this.alertController.create({
       header: "Please enter previous user id.",
       inputs: [
@@ -246,17 +243,17 @@ export class AuthService {
           text: "Send",
           role: "role",
           handler: (data) => {
-            if (
-              data.userName &&
-              previousUserEmail.toLowerCase() === data.userName.toLowerCase()
-            ) {
-              this.confirmDataClear(tokens);
-            } else {
-              this.doLogout();
-              this.message.showMessage(
-                "toastMessage.userNameMisMatch", 'danger'
-              );
-            }
+            this.getUserData(data.userName.toLowerCase(), tokens).then((data: any) => {
+              if (data &&
+                id == data.identifier
+              ) {
+                this.confirmDataClear(tokens);
+              } else {
+                this.message.showMessage(
+                  "MESSAGES.USER_NOT_MATCHED", 'danger'
+                );
+              }
+            })
           },
         },
       ],
@@ -266,7 +263,7 @@ export class AuthService {
 
   async confirmDataClear(tokens) {
     const alert = await this.alertController.create({
-      header: "All your datas will be lost. Do you want to continue?",
+      header: "All your data will be lost. Do you want to continue?",
       buttons: [
         {
           text: "No",
@@ -274,15 +271,16 @@ export class AuthService {
           handler: (data) => {
             this.doLogout();
             this.router.navigate(['/login']);
-            this.message.showMessage(
-              "toastMessage.loginAgain", 'danger'
-            );
           },
         },
         {
           text: "Yes",
           role: "role",
           handler: (data) => {
+            this.doLogout();
+            this.db.createPouchDB(environment.db.projects);
+            this.db.dropDb();
+            this.storage.deleteAllStorage();
             this.currentUser.setUser(tokens).then(success => {
               this.router.navigate(['/menu/tabs/home', {}]);
             }).catch(error => {
@@ -292,5 +290,19 @@ export class AuthService {
       ],
     });
     await alert.present();
+  }
+  getUserData(userName, token): Promise<any> {
+    return new Promise(resolve => {
+      // const appVersion:any = this.appDetails.getVersionNumber();
+      // const appName:any = this.appDetails.getAppName();
+      let url = environment.apiBaseUrl + 'kendra/api/' + urlConstants.API_URLS.GET_PREVIOUS_PROFILE + userName;
+      let options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('skip', 'true').set('x-auth-token', token.access_token).set('x-authenticated-user-token', token.access_token)
+          .set('appType', environment.appType).set('os', this.platform.is('ios') ? 'ios' : 'android')
+      };
+      this.http.get(url, options).subscribe((data: any) => {
+        resolve(data.result);
+      })
+    })
   }
 }

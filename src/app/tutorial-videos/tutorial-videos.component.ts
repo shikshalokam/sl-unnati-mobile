@@ -21,7 +21,7 @@ export class TutorialVideosComponent implements OnInit {
 
    ngOnInit() {
     this.storage.getLocalStorage(localStorageConstants.DYNAMIC_LINKS).then(success =>{
-      this.videos = success['Tutorial-video']['metaInformation']['videos'];
+      this.videos = success['tutorial-videos']['metaInformation']['videos'];
     }).catch(error =>{
     })
   }
