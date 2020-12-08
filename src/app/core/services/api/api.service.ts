@@ -18,8 +18,14 @@ export class ApiService {
     public modalController: ModalController
   ) { }
 
+
+  getBaseUrl(serviceUrl) {
+    return serviceUrl.includes('kendra') ? environment.kendraBaseUrl : environment.apiBaseUrl
+  }
+
   get(requestParam: RequestParams): Observable<any> {
-    return this.http.get(environment.apiBaseUrl + this.baseUrl + requestParam.url).pipe(
+    const apiBaseUrl = this.getBaseUrl(this.baseUrl);
+    return this.http.get(apiBaseUrl + this.baseUrl + requestParam.url).pipe(
       tap(data => {
         return data
       }, error => {
@@ -29,7 +35,8 @@ export class ApiService {
   }
 
   post(requestParam: RequestParams): Observable<any> {
-    return this.http.post(environment.apiBaseUrl + this.baseUrl + requestParam.url, requestParam.payload).pipe(
+    const apiBaseUrl = this.getBaseUrl(this.baseUrl);
+    return this.http.post(apiBaseUrl + this.baseUrl + requestParam.url, requestParam.payload).pipe(
       tap(data => {
         return data
       }, error => {
@@ -44,13 +51,13 @@ export class ApiService {
   private handleError(result) {
     switch (result.status) {
       case 0:
-        this.toast.showMessage('MESSAGES.NETWORK_ERROR' , 'danger')
+        this.toast.showMessage('MESSAGES.NETWORK_ERROR', 'danger')
         break
       case 401:
         this.auth.sessionExpired();
         break
       default:
-        this.toast.showMessage(result.error ? result.error.message : 'MESSAGES.SOMETHING_WENT_WRONG' , 'danger')
+        this.toast.showMessage(result.error ? result.error.message : 'MESSAGES.SOMETHING_WENT_WRONG', 'danger')
 
     }
     return (error: any): Observable<any> => {

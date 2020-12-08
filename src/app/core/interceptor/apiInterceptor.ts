@@ -43,7 +43,7 @@ export class ApiInterceptor implements HttpInterceptor {
                         'x-authenticated-user-token': token ? token.access_token: "",
                         'gpsLocation': '',
                         'appVersion': appVersion,
-                        'appName': appName,
+                        'appName':  environment.appName ? environment.appName: appName,
                         'appType': environment.appType,
                         'os': this.platform.is('ios') ? 'ios' : 'android'
                     }
