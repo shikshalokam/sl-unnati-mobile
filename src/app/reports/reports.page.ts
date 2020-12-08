@@ -6,6 +6,8 @@ import { UnnatiDataService, urlConstants } from "../core";
 import { ReportsService } from "../core/services/reports.service";
 import { UtilsService } from "../core/services/utils.service";
 import { FilterModalComponent } from "../shared/components/filter-modal/filter-modal.component";
+import * as _ from "underscore";
+
 @Component({
   selector: "app-reports",
   templateUrl: "./reports.page.html",
@@ -155,7 +157,7 @@ export class ReportsPage {
       }
       let x = {};
       x["name"] = this.utils.cameltoNormalCase(key);
-      x["value"] = ((obj[key] / obj.total) * 100).toFixed() + "%";
+      x["value"] = ((obj[key] / obj.total) * 100).toFixed(1) + "%";
       x["y"] = obj[key];
       x["z"] = 0;
       if (key == "completed") {
