@@ -75,6 +75,7 @@ export class CategorySelectComponent implements OnInit {
       if (cd.input == 'select') {
         for (const category of this.selectedCategories) {
           let index = _.findIndex(cd.options, { value: category.value });
+          index = index <= -1 ? _.findIndex(cd.options, { _id: category.value }) : index
           if (index > -1) {
             cd.options[index].isChecked = true;
           }
