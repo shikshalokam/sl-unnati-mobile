@@ -273,7 +273,7 @@ export class TaskViewPage implements OnInit {
 
   async edit(what, placeholder = "", subtask?, subTaskIndex?) {
     let name;
-    what == "task" ? (name = "Edit Task") : (name = "Edit Subtask");
+    what == "task" || what == "assignName" ? (name = "Edit Task") : (name = "Edit Subtask");
     const alert = await this.alert.create({
       cssClass: "my-custom-class",
       header: name,
