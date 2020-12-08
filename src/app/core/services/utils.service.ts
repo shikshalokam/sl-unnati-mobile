@@ -8,7 +8,7 @@ import * as _ from "underscore";
   providedIn: "root",
 })
 export class UtilsService {
-  constructor() { }
+  constructor() {}
 
   generateFileName(name: string[] = []) {
     const d = new Date();
@@ -32,7 +32,7 @@ export class UtilsService {
     }
     query = this.encodeQuery(query);
     url = `${url}?${query}`;
-    return url
+    return url;
   }
 
   // returns the query string
@@ -53,14 +53,14 @@ export class UtilsService {
       name: "",
       endDate: "",
       assignee: "",
-      type: 'simple',
+      type: "simple",
       attachments: [],
       startDate: "",
       isNew: true,
       isEdit: true,
       children: [],
       isDeleted: false,
-      isDeletable: true
+      isDeletable: true,
     };
     switch (type) {
       case "task":
@@ -104,10 +104,32 @@ export class UtilsService {
   setStatusForProject(project) {
     const projectData = { ...project };
     for (const task of projectData.tasks) {
-      task.status = (task.children.length) ? this.calculateStatus(task.children) : task.status;
+      task.status = task.children.length ? this.calculateStatus(task.children) : task.status;
+
+      // added for assessment or observation submission statuses
+      if (task.type == "assessment" || task.type == "observation") {
+        if (task.submissionDetails && task.submissionDetails.status !== statusType.completed) {
+          if (task.status == statusType.completed) {
+            task.status = statusType.inProgress;
+          }
+        }
+
+        if (task.submissionDetails && task.submissionDetails.status == statusType.completed && !task.children.length) {
+          task.status = statusType.completed;
+        }
+        if (!task.submissionDetails  && !task.children.length) {
+          task.status = statusType.notStarted;
+        }
+        if (!task.submissionDetails  && task.children.length) {
+          task.status = statusType.inProgress;
+        }
+      }
+
+      console.log(task.status);
     }
     projectData.status = this.calculateStatus(projectData.tasks);
-    return projectData
+
+    return projectData;
   }
 
   calculateStatus(childArray) {
@@ -140,10 +162,10 @@ export class UtilsService {
     for (const subTask of task.children) {
       if (subTask.status !== statusType.completed) {
         status = false;
-        break
+        break;
       }
     }
-    return status
+    return status;
   }
 
   checkForProjectCompletion(project) {
@@ -151,27 +173,27 @@ export class UtilsService {
     for (const task of project.tasks) {
       if (task.status !== statusType.completed) {
         completed = false;
-        break
+        break;
       }
     }
-    return completed
+    return completed;
   }
 
   processProjectsData(projects) {
-    const projectData = [...projects]
+    const projectData = [...projects];
     for (const project of projects) {
       const categories = [];
       if (project.categories && project.categories.length) {
         for (const category of project.categories) {
           const obj = {
             value: category._id,
-            label: category.name
-          }
+            label: category.name,
+          };
           categories.push(obj);
         }
       }
       project.categories = categories;
     }
-    return projectData
+    return projectData;
   }
 }

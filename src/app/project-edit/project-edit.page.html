@@ -1,13 +1,19 @@
 <ion-header>
-  <app-header title="LABELS.PROJECT_VIEW" [bottomBorder]="true" [showMenu]="false" [showReload]="false"
-    [showSync]="false" [hideNotification]="true">
+  <app-header
+    title="LABELS.PROJECT_VIEW"
+    [bottomBorder]="true"
+    [showMenu]="false"
+    [showReload]="false"
+    [showSync]="false"
+    [hideNotification]="true"
+  >
     <ion-back-button></ion-back-button>
   </app-header>
 </ion-header>
 <ion-content *ngIf="project">
   <ion-card class="project-box">
     <ion-card-header class="custom-filed" (click)="edit('metaData')">
-      <div style="height: 20px;">
+      <div style="height: 20px">
         <ion-icon name="create" color="primary"></ion-icon>
       </div>
     </ion-card-header>
@@ -35,15 +41,13 @@
       <div class="custom-filed _capitalize">
         <ion-label position="fixed"> {{'LABELS.CATEGORIES' | translate}} : </ion-label>
         <!-- {{categories}} -->
-        <span *ngFor="let category of project?.categories">
-            {{category?.label}} ,
-        </span>
+        <span *ngFor="let category of project?.categories"> {{category?.label}} , </span>
       </div>
     </ion-card-content>
   </ion-card>
   <ion-card class="project-box">
-    <ion-card-header class="custom-filed _capitalize" (click)="edit('others')">
-      <div style="height: 20px;">
+    <ion-card-header class="custom-filed _capitalize" (click)="edit('others')" *ngIf="!isAssessmentType()">
+      <div style="height: 20px">
         <ion-icon name="create" color="primary"></ion-icon>
       </div>
     </ion-card-header>
@@ -59,17 +63,13 @@
       <div class="custom-filed _capitalize" *ngIf="project?.entityId">
         <ion-label position="fixed"> {{'LABELS.ENTITIES' | translate}} </ion-label>
         <ion-card>
-          <ion-card-content>
-            {{project?.entityName}}
-          </ion-card-content>
+          <ion-card-content> {{project?.entityName}} </ion-card-content>
         </ion-card>
       </div>
       <div class="custom-filed _capitalize" *ngIf="project.learningResources && project.learningResources.length">
         <ion-label position="fixed"> {{'LABELS.LEARNING_RESOURCES' | translate}} : </ion-label>
         <ion-card *ngFor="let resources  of project.learningResources">
-          <ion-card-content>
-            {{resources?.name}}
-          </ion-card-content>
+          <ion-card-content> {{resources?.name}} </ion-card-content>
         </ion-card>
       </div>
     </ion-card-content>
