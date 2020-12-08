@@ -15,8 +15,8 @@
     <div [ngSwitch]="type">
       <div *ngSwitchCase="'images'">
         <div *ngFor="let task of attachments">
-          <ion-card class="attachments-card" *ngIf="task.attachments">
-            <ion-card-header class="project-card">
+          <ion-card class="attachments-card" *ngIf="task?.attachments?.length">
+            <ion-card-header class="project-card _capitalize">
               {{task.taskName}}
             </ion-card-header>
             <ion-card-content>
@@ -37,8 +37,8 @@
       </div>
       <div *ngSwitchCase="'files'">
         <div *ngFor="let task of attachments">
-          <ion-card class="attachments-card" *ngIf="task.attachments">
-            <ion-card-header class="project-card">
+          <ion-card class="attachments-card" *ngIf="task?.attachments?.length">
+            <ion-card-header class="project-card _capitalize">
               {{task.taskName}}
             </ion-card-header>
             <ion-card-content>
@@ -51,7 +51,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!attachments.length">
+  <div *ngIf="!attachments?.length">
     <app-no-data></app-no-data>
   </div>
 </ion-content>
