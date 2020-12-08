@@ -7,6 +7,8 @@ import { environment } from 'src/environments/environment.prod';
 import { Platform, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
+import { Location } from '@angular/common';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-project-operation',
@@ -26,6 +28,9 @@ export class ProjectOperationPage implements OnInit {
   payload: any = {};
   projectId;
   today: any = new Date();
+  currentYear = new Date().getFullYear();
+  endDateMin: any = this.currentYear - 2;
+
   button = 'LABELS.IMPORT_PROJECT'
   showLearningResources: boolean = false;
   viewProjectAlert;
@@ -42,7 +47,8 @@ export class ProjectOperationPage implements OnInit {
     private router: Router,
     private datePicker: DatePicker,
     private utils: UtilsService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    private location: Location
   ) {
     routerparam.params.subscribe(param => {
       this.projectId = param.id;
@@ -67,11 +73,11 @@ export class ProjectOperationPage implements OnInit {
     })
   }
   getProjectFromLocal(projectId) {
-    this.loader.startLoader();
+    // this.loader.startLoader();
     this.db.createPouchDB(environment.db.projects);
     this.db.query({ _id: projectId }).then(success => {
       // this.db.getById(id).then(success => {
-      this.loader.stopLoader();
+      // this.loader.stopLoader();
       this.template = success.docs[0];
       console.log(this.template, "this.template");
       if (this.template.entityName) {
@@ -88,7 +94,7 @@ export class ProjectOperationPage implements OnInit {
         }
       }
     }, error => {
-      this.loader.stopLoader();
+      // this.loader.stopLoader();
     })
   }
   getTemplate(id) {
@@ -97,12 +103,11 @@ export class ProjectOperationPage implements OnInit {
       url: urlConstants.API_URLS.TEMPLATE_DATA + id
     }
     this.unnatiService.get(config).subscribe(data => {
+      this.loader.stopLoader();
       if (data.result) {
         this.template = data.result;
-        this.loader.stopLoader();
       } else {
         this.noTemplates = true;
-        this.loader.stopLoader();
       }
     }, error => {
       this.loader.stopLoader();
@@ -130,7 +135,7 @@ export class ProjectOperationPage implements OnInit {
     return await modal.present();
   }
   addEntity() {
-    if (!this.selectedEntity && this.profileData && this.profileData.state && this.profileData.state._id) {
+    if (this.profileData && this.profileData.state && this.profileData.state._id) {
       this.networkService.isNetworkAvailable ? this.openAddEntityModal() : this.showPopupForNoNet('LABELS.UNABLE_TO_ADD_ENTITY', 'MESSAGES.YOU_ARE_WORKING_OFFLINE_TRY_AGAIN', 'LABELS.CANCEL', 'LABELS.TRYAGAIN');
     } else {
       this.toast.showMessage('MESSAGES.DISABLED_ADD_ENTITY', 'danger');
@@ -232,14 +237,22 @@ export class ProjectOperationPage implements OnInit {
     }
   }
   action() {
-
     this.createdType == "bySelf" ? this.createProject() : this.importProject();
   }
   rating(event) {
     this.payload.rating = event;
   }
+  resetEndDate(event) {
+    if (event.detail && event.detail.value) {
+      this.endDateMin = moment(event.detail.value).format("YYYY-MM-DD");
+      this.template.endDate = this.template.endDate ? '' : '';
+    }
+  }
+
   importProject() {
     if (this.networkService.isNetworkAvailable) {
+      this.payload.startDate = this.template.startDate;
+      this.payload.endDate = this.template.endDate;
       const isProgramPresent = (this.selectedProgram && this.selectedProgram.name) || (this.selectedProgram && this.selectedProgram._id);
       const isEntityAdded = (this.selectedEntity && this.selectedEntity._id)
       if (!this.isMandatoryFieldsFilled()) {
@@ -254,6 +267,7 @@ export class ProjectOperationPage implements OnInit {
         !this.selectedProgram.created ? this.payload.programId = this.selectedProgram._id : delete this.payload.programId
         this.payload.programName = this.selectedProgram.name;
       }
+      console.log(this.payload, "this.payload");
       const config = {
         url: urlConstants.API_URLS.IMPORT_TEMPLATE + this.template._id,
         payload: this.payload
@@ -313,7 +327,7 @@ export class ProjectOperationPage implements OnInit {
   public restoreData(data) {
     this.db.createPouchDB(environment.db.projects);
     this.db.create(data).then(success => {
-      if (this.createdType == "bySelf") { 
+      if (this.createdType == "bySelf") {
 
         this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
       } else {
@@ -339,9 +353,41 @@ export class ProjectOperationPage implements OnInit {
     }
     this.db.createPouchDB(environment.db.projects);
     data.isEdit = true;
+    data.isDeleted = false;
     this.db.update(data).then(success => {
       this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
     }).catch(error => {
     })
+  }
+
+  async confirmToClose() {
+    debugger
+    let text;
+    this.translate.get(['LABELS.DISCARD_PROJECT', 'MESSAGES.DISCARD_PROJECT', 'LABELS.DISCARD', 'LABELS.CONTINUE']).subscribe(data => {
+      text = data;
+    });
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: text['LABELS.DISCARD_PROJECT'],
+      message: text['MESSAGES.DISCARD_PROJECT'],
+      buttons: [
+        {
+          text: text['LABELS.DISCARD'],
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            if (this.button === 'LABELS.CREATE_PROJECT') {
+              this.db.delete(this.projectId, this.template._rev)
+            }
+            this.location.back();
+          }
+        }, {
+          text: text['LABELS.CONTINUE'],
+          handler: () => {
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

@@ -29,6 +29,7 @@ export class TaskViewPage implements OnInit {
   currentYear = new Date().getFullYear();
   statuses = statuses;
   projectCopy;
+  copyOfSelectEditField;
   constructor(
     private router: Router,
     private params: ActivatedRoute,
@@ -102,8 +103,9 @@ export class TaskViewPage implements OnInit {
       this.enableTaskMarkButton();
     }
   }
-  toEdit(type) {
+  toEdit(type, copyOfString) {
     this.editField = type;
+    this.copyOfSelectEditField = copyOfString;
   }
 
   saveChanges() {
@@ -111,15 +113,18 @@ export class TaskViewPage implements OnInit {
       this.editField = "";
       this.update();
     } else {
+      this.task.name = this.copyOfSelectEditField;
       this.toast.showMessage("MESSAGES.REQUIRED_FIELDS", "danger");
     }
   }
 
-  saveSubTaskChanges(subtask) {
+  saveSubTaskChanges(subtask, index) {
+    debugger;
     if (subtask.name) {
       this.editField = ""; // removed as it closing the edit field as one letter is entered
       this.update();
     } else {
+      this.task.children[index].name = this.copyOfSelectEditField;
       this.toast.showMessage("MESSAGES.REQUIRED_FIELDS", "danger");
     }
   }
@@ -266,9 +271,9 @@ export class TaskViewPage implements OnInit {
     });
   }
 
-  async edit(what, placeholder = "", subtask?) {
-    let name
-    what=='task'?name='Edit Task':'Edit Subtask'
+  async edit(what, placeholder = "", subtask?, subTaskIndex?) {
+    let name;
+    what == "task" ? (name = "Edit Task") : (name = "Edit Subtask");
     const alert = await this.alert.create({
       cssClass: "my-custom-class",
       header: name,
@@ -285,9 +290,7 @@ export class TaskViewPage implements OnInit {
           text: "Cancel",
           role: "cancel",
           cssClass: "secondary",
-          handler: (blah) => {
-            
-          },
+          handler: (blah) => {},
         },
         {
           text: "Save",
@@ -295,12 +298,12 @@ export class TaskViewPage implements OnInit {
             console.log(data);
             if (data.field == "") {
               // this.toast.showMessage("MESSAGES.REQUIRED_FIELDS", "danger");
-              return
+              return;
             }
 
             if (what == "subtask") {
               subtask.name = data.field;
-              this.saveSubTaskChanges(subtask);
+              this.saveSubTaskChanges(subtask, subTaskIndex);
             } else {
               this.task.name = data.field;
               this.update();

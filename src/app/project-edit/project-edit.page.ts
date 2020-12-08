@@ -19,27 +19,23 @@ export class ProjectEditPage implements OnInit {
     private router: Router,
     private toast: ToastMessageService
   ) {
-    this.db.createPouchDB(environment.db.projects);
-    params.params.subscribe((parameters) => {
+    params.params.subscribe(parameters => {
       this.projectId = parameters.projectId;
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
+
   ionViewDidEnter() {
     this.getProject();
   }
 
   getProject() {
-    this.db.query({ _id: this.projectId }).then(
-      (success) => {
-        this.project = success.docs.length ? success.docs[0] : {};
-        this.project.categories.forEach((category) => {
-          this.categories.push(category.label);
-        });
-      },
-      (error) => {}
-    );
+    this.db.createPouchDB(environment.db.projects);
+    this.db.query({ _id: this.projectId }).then(success => {
+      this.project = success.docs.length ? success.docs[0] : {};
+    }, error => {
+    })
   }
   edit(type) {
     type == "metaData"

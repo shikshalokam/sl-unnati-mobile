@@ -112,7 +112,7 @@ export class ProjectDetailPage implements OnInit {
   }
   getDateFilters() {
     let currentDate = moment();
-    this.filters.today = moment();
+    this.filters.today = moment().format("YYYY-MM-DD");
     this.filters.thisWeek = currentDate.endOf("week").format("YYYY-MM-DD");
     this.filters.thisMonth = currentDate.endOf("month").format("YYYY-MM-DD");
     const quarter = Math.floor((new Date().getMonth() / 3));
@@ -158,13 +158,6 @@ export class ProjectDetailPage implements OnInit {
       }
     });
     this.project = this.utils.setStatusForProject(this.project);
-    // if (inProgress > 0 || completed != this.taskCount) {
-    //   this.project.status = this.statuses[1].title;
-    // } else if (this.taskCount && this.taskCount == completed) {
-    //   this.project.status = this.statuses[2].title;
-    // } else {
-    //   this.project.status = this.statuses[0].title;
-    // }
   }
   syn() { }
 
@@ -368,7 +361,7 @@ export class ProjectDetailPage implements OnInit {
   }
 
   openAttachments() {
-    this.router.navigate(["menu/attachment-list", this.project._id], { replaceUrl: true });
+    this.router.navigate(["menu/attachment-list", this.project._id]);
   }
 
   startAssessment(task) {

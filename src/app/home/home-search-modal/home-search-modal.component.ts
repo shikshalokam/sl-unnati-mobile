@@ -75,7 +75,9 @@ export class HomeSearchModalComponent implements OnInit {
 
   createQuery() {
     const query = {
-      selector: {},
+      selector: {
+        $and: []
+      },
       fields: this.selectedFilter.fieldsToReturn,
     };
     if (this.searchString) {

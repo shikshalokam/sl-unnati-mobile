@@ -21,7 +21,7 @@ import { SharedModule } from '../shared';
     SharedModule,
     CoreModule,
     SettingsPageRoutingModule,
-    TranslateModule
+    TranslateModule.forChild()
   ],
   declarations: [SettingsPage]
 })

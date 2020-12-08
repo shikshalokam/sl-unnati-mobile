@@ -12,6 +12,7 @@ import { SharedModule } from '../shared/shared.module';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -20,7 +21,9 @@ import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
     SharedModule,
     CoreModule,
     IonicModule,
-    AttachmentListPageRoutingModule
+    AttachmentListPageRoutingModule,
+    TranslateModule.forChild()
+
   ],
   providers: [FileOpener,PhotoViewer,DocumentViewer],
   declarations: [AttachmentListPage]

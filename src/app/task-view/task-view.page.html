@@ -17,11 +17,14 @@
     <ion-icon name="create" color="primary"> </ion-icon>
   </div>
 
-  <!-- <h4 (click)="toEdit('name')" *ngIf="editField != 'name'">{{task?.name}} </h4> -->
-  <!-- <ion-item *ngIf="editField == 'name'">
+  <!-- 
+<ion-content *ngIf="task" class="ion-padding _capitalize">
+  <h4 (click)="toEdit('name', task?.name)" *ngIf="editField != 'name'">{{task?.name}} </h4>
+  <ion-item *ngIf="editField == 'name'">
     <ion-input type="text" [(ngModel)]="task.name" (ionInput)="saveChanges()">
     </ion-input>
-  </ion-item> -->
+  </ion-item> 
+-->
   <ion-item style="margin-bottom: 15px">
     <ion-label position="fixed" style="font-weight: 500"> {{'LABELS.ASSIGN_TASK' | translate}} </ion-label>
     <ion-input
@@ -31,7 +34,7 @@
       [readonly]="editField != 'assignName'"
     >
     </ion-input>
-    <ion-icon name="create" color="primary" slot="end" (click)="toEdit('assignName')" *ngIf="editField != 'assignName'">
+    <ion-icon name="create" color="primary" slot="end" (click)="toEdit('assignName',task.assignee ? task.assignee : ' ')" *ngIf="editField != 'assignName'">
     </ion-icon>
   </ion-item>
   <ion-row>
@@ -91,7 +94,7 @@
     </ion-row>
   </div>
 
-  <div class="subtask-box" *ngFor="let subtask of task?.children">
+  <div class="subtask-box" *ngFor="let subtask of task?.children; let subTaskIndex = index">
     <div *ngIf="!subtask.isDeleted">
       <ion-row>
         <ion-col size="1">
@@ -100,7 +103,7 @@
         <ion-col
           size="10"
           class="subtask-title"
-          (click)="edit('subtask',subtask.name,subtask)"
+          (click)="edit('subtask',subtask.name,subtask,subTaskIndex)"
           *ngIf="editField != 'subtaskName'"
         >
           {{subtask.name}}
@@ -110,7 +113,7 @@
         </ion-col> -->
         <!-- <ion-col>
           <ion-input type="text" [(ngModel)]="subtask.name" *ngIf="editField == 'subtaskName'"
-            (ionInput)="saveSubTaskChanges(subtask)">
+            (ionInput)="saveSubTaskChanges(subtask, subTaskIndex)">
           </ion-input>
         </ion-col> -->
         <ion-col size="1" style="margin: auto; text-align: center">
@@ -151,14 +154,9 @@
     </div>
   </div>
 
-  <ion-button
-    [disabled]="!enableMarkButton"
-    expand="block"
-    shape="round"
-    (click)="markTaskAsCompleted()"
-    *ngIf="!task?.learningResources?.length"
-  >
-    {{'LABELS.MARK_TASK_COMPLETE' | translate}}
+  <ion-button [disabled]="!enableMarkButton" expand="block" shape="round" (click)="markTaskAsCompleted()"
+    *ngIf="!task?.learningResources?.length">
+    {{'LABELS.ADD_ATTACHMENTS' | translate}}
   </ion-button>
 
   <ion-row *ngIf="task?.learningResources?.length">
@@ -168,14 +166,9 @@
       </ion-button>
     </ion-col>
     <ion-col size="7">
-      <ion-button
-        class="roundedButton"
-        [disabled]="!enableMarkButton"
-        expand="block"
-        shape="round"
-        (click)="markTaskAsCompleted()"
-      >
-        {{'LABELS.MARK_TASK_COMPLETE' | translate}}
+      <ion-button class="roundedButton" [disabled]="!enableMarkButton" expand="block" shape="round"
+        (click)="markTaskAsCompleted()">
+        {{'LABELS.ADD_ATTACHMENTS' | translate}}
       </ion-button>
     </ion-col>
   </ion-row>

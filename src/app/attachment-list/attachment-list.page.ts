@@ -18,19 +18,23 @@ import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-vi
 export class AttachmentListPage implements OnInit {
   private win: any = window;
   attachments = [];
+  projectId;
   path;
   type = "images";
   tabs = [
     {
       name: "LABELS.IMAGES",
       value: "images",
+      type: 'image/jpeg'
     },
     {
       name: "LABELS.FILES",
       value: "files",
+      type: "application/pdf"
     }
   ];
   project;
+  projectcopy;
   constructor(
     private route: ActivatedRoute,
     private db: DbService,
@@ -46,7 +50,7 @@ export class AttachmentListPage implements OnInit {
     private document: DocumentViewer
   ) {
     route.params.subscribe(params => {
-      this.getAttachments(params.projectId);
+      this.projectId = params.projectId;
     })
   }
 
@@ -54,25 +58,40 @@ export class AttachmentListPage implements OnInit {
     this.path = this.platform.is("ios") ? this.file.documentsDirectory : this.file.externalDataDirectory;
   }
 
+  ionViewWillEnter() {
+    this.getAttachments(this.tabs[0]);
+  }
+
   segmentChanged(event) {
     this.type = event.detail.value;
+    this.getAttachments(this.type === 'images' ? this.tabs[0] : this.tabs[1])
   }
-  getAttachments(projectId) {
-    this.db.query({ _id: projectId }).then(success => {
+  getAttachments(tab) {
+    this.attachments = [];
+    this.db.createPouchDB(environment.db.projects)
+    this.db.query({ _id: this.projectId }).then(success => {
       this.project = success.docs.length ? success.docs[0] : {};
+      this.projectcopy = { ...this.project }
       if (this.project.tasks && this.project.tasks.length) {
-        this.project.tasks.forEach(task => {
+        for (const task of this.project.tasks) {
+          const attachments = []
           if (task.attachments && task.attachments.length) {
-            task.attachments.forEach(element => {
-              element.localUrl = this.win.Ionic.WebView.convertFileSrc(this.platform.is("ios") ? this.file.documentsDirectory : this.file.externalDataDirectory + element.name);
-            });
-            let attachment = {
-              taskName: task.name,
-              attachments: task.attachments
+            for (const element of task.attachments) {
+              if (element.type === tab.type) {
+                element.localUrl = this.win.Ionic.WebView.convertFileSrc(this.platform.is("ios") ? this.file.documentsDirectory : this.file.externalDataDirectory + element.name);
+                attachments.push(element)
+              }
             }
-            this.attachments.push(attachment);
+            if (attachments.length) {
+              let attachmentObj = {
+                taskName: task.name,
+                attachments: attachments
+              }
+              this.attachments.push({ ...attachmentObj });
+            }
+
           }
-        });
+        };
       }
     }, error => {
     })
@@ -84,7 +103,7 @@ export class AttachmentListPage implements OnInit {
 
 
   viewDocument(attachment) {
-    if (!attachment.url) {
+    if (attachment.url) {
       if (this.network.isNetworkAvailable) {
         this.downloadFile(attachment);
       } else {

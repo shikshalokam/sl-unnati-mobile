@@ -85,8 +85,8 @@ export class ProjectsPage implements OnInit, OnDestroy {
   segmentChanged(event) {
     this.currentProgramFilterIndex = -1;
     this.selectedTab = event.detail.value;
-    this.getProjects();
     this.projectsForSelectedProgram = [];
+    this.getProjects();
   }
 
   getProjects() {

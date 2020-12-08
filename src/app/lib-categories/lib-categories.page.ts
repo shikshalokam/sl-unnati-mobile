@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DbService, UnnatiDataService, urlConstants, NetworkService, LoaderService, ToastMessageService, LoggerService } from '../core';
+import { DbService, UnnatiDataService, urlConstants, NetworkService, LoaderService, ToastMessageService, LoggerService, LocalStorageService, localStorageConstants } from '../core';
 import { environment } from 'src/environments/environment';
 import { Platform, AlertController, ModalController } from '@ionic/angular';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
@@ -30,7 +30,7 @@ export class LibCategoriesPage implements OnInit {
   private win: any = window;
   constructor(
     private unnatiService: UnnatiDataService,
-    private db: DbService,
+    // private db: DbService,
     private networkService: NetworkService,
     private platform: Platform,
     private fileTransfer: FileTransfer,
@@ -41,9 +41,10 @@ export class LibCategoriesPage implements OnInit {
     private translate: TranslateService,
     public alertController: AlertController,
     private sanitizer: DomSanitizer,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private localStorage: LocalStorageService
   ) {
-    this.db.createPouchDB(environment.db.categories);
+    // this.db.createPouchDB(environment.db.categories);
     this.isIos = this.platform.is('ios') ? true : false;
     this.appFolderPath = this.isIos ? cordova.file.documentsDirectory + 'libCategories/' : cordova.file.externalDataDirectory + 'libCategories/';
   }
@@ -104,12 +105,18 @@ export class LibCategoriesPage implements OnInit {
   }
 
   public restoreData() {
-    this.db.dropDb().then(data => {
-      this.db.createPouchDB(environment.db.categories);
-      this.db.bulkCreate(this.categories).then(success => {
-      }).catch(error => {
-        this.log.log(error, "bulkcreate categories");
-      })
+    // this.db.dropDb().then(data => {
+    //   this.db.createPouchDB(environment.db.categories);
+    //   this.db.bulkCreate(this.categories).then(success => {
+    //   }).catch(error => {
+    //     this.log.log(error, "bulkcreate categories");
+    //   })
+    // })
+
+    this.localStorage.setLocalStorage(localStorageConstants.LIBRARY_CATEGORIES, this.categories).then(success => {
+
+    }).catch(error => {
+
     })
   }
   public showToast() {
@@ -141,7 +148,20 @@ export class LibCategoriesPage implements OnInit {
     this.router.navigate(['/menu/my-projects']);
   }
   getDownloadedCategories() {
-    this.db.read().then(categories => {
+    // this.db.read().then(categories => {
+    // if (categories && !categories.length) {
+    //   this.networkService.isNetworkAvailable ? this.getCategories() : this.showToast();
+    // } else {
+    //   categories.forEach(category => {
+    //     category.localUrl = this.win.Ionic.WebView.convertFileSrc(this.appFolderPath + category.name + ".png");
+    //   });
+    //   this.categories = categories;
+    // }
+    // }, error => {
+    //   this.log.log(error, "get Category from local DB");
+    // })
+
+    this.localStorage.getLocalStorage(localStorageConstants.LIBRARY_CATEGORIES).then(categories => {
       if (categories && !categories.length) {
         this.networkService.isNetworkAvailable ? this.getCategories() : this.showToast();
       } else {
@@ -150,8 +170,8 @@ export class LibCategoriesPage implements OnInit {
         });
         this.categories = categories;
       }
-    }, error => {
-      this.log.log(error, "get Category from local DB");
+    }).catch(error => {
+      this.getCategories()
     })
   }
   getImgContent(file) {
