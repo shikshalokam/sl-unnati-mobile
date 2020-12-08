@@ -102,7 +102,7 @@
 
   <ion-button [disabled]="!enableMarkButton" expand="block" shape="round" (click)="markTaskAsCompleted()"
     *ngIf="!task?.learningResources?.length">
-    {{'LABELS.MARK_TASK_COMPLETE' | translate}}
+    {{'LABELS.ADD_ATTACHMENTS' | translate}}
   </ion-button>
 
   <ion-row *ngIf="task?.learningResources?.length">
@@ -114,7 +114,7 @@
     <ion-col size="7">
       <ion-button class="roundedButton" [disabled]="!enableMarkButton" expand="block" shape="round"
         (click)="markTaskAsCompleted()">
-        {{'LABELS.MARK_TASK_COMPLETE' | translate}}
+        {{'LABELS.ADD_ATTACHMENTS' | translate}}
       </ion-button>
     </ion-col>
   </ion-row>

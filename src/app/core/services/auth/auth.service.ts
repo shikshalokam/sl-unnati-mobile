@@ -100,7 +100,6 @@ export class AuthService {
           }).catch(error => {
             resolve(error);
           })
-          // this.fcm.initializeFCM();
         }, error => {
           this.loader.stopLoader();
           resolve(error);
@@ -117,7 +116,7 @@ export class AuthService {
           if (userDetails.sub.split(":").pop() == previousUser.sub.split(":").pop()) {
             resolve(userDetails);
           } else {
-          this.confirmPreviousUserName(previousUser.sub.split(":").pop(), newUser);
+            this.confirmPreviousUserName(previousUser.sub.split(":").pop(), newUser);
           }
         } else {
           resolve(false);
@@ -187,7 +186,23 @@ export class AuthService {
     this.modalController.dismiss();
     this.currentUser.getUser().then(userdetails => {
       if (!userdetails.accountDeactivate) {
-      this.showSessionExpired();
+        this.doLogout().then(data => {
+          this.currentUser.getUser().then(userdetails => {
+            if (userdetails) {
+              const sessionData = {
+                access_token: userdetails.access_token,
+                refresh_token: userdetails.refresh_token,
+                accountDeactivate: true
+              }
+              this.currentUser.setUser(sessionData).then(success => {
+                this.router.navigateByUrl(`/login`);
+                this.showSessionExpired();
+              }).catch(error => {
+              })
+            }
+          })
+        }, error => {
+        })
       }
     })
   }
@@ -199,22 +214,6 @@ export class AuthService {
           text: "Login",
           role: "role",
           handler: (data) => {
-            this.doLogout().then(data => {
-              this.currentUser.getUser().then(userdetails => {
-                if (userdetails) {
-                  const sessionData = {
-                    access_token: userdetails.access_token,
-                    refresh_token: userdetails.refresh_token,
-                    accountDeactivate: true
-                  }
-                  this.currentUser.setUser(sessionData).then(success => {
-                    this.router.navigateByUrl(`/login`);
-                  }).catch(error => {
-                  })
-                }
-              })
-            }, error => {
-            })
           },
         },
       ],
@@ -250,12 +249,6 @@ export class AuthService {
               ) {
                 this.confirmDataClear(tokens);
               } else {
-                this.doLogout();
-                this.db.createPouchDB(environment.db.projects);
-                this.db.dropDb();
-                this.storage.deleteAllStorage();
-                this.currentUser.deleteUser().then(user => {
-                })
                 this.message.showMessage(
                   "MESSAGES.USER_NOT_MATCHED", 'danger'
                 );
@@ -270,7 +263,7 @@ export class AuthService {
 
   async confirmDataClear(tokens) {
     const alert = await this.alertController.create({
-      header: "All your datas will be lost. Do you want to continue?",
+      header: "All your data will be lost. Do you want to continue?",
       buttons: [
         {
           text: "No",
@@ -278,15 +271,16 @@ export class AuthService {
           handler: (data) => {
             this.doLogout();
             this.router.navigate(['/login']);
-            this.message.showMessage(
-              "toastMessage.loginAgain", 'danger'
-            );
           },
         },
         {
           text: "Yes",
           role: "role",
           handler: (data) => {
+            this.doLogout();
+            this.db.createPouchDB(environment.db.projects);
+            this.db.dropDb();
+            this.storage.deleteAllStorage();
             this.currentUser.setUser(tokens).then(success => {
               this.router.navigate(['/menu/tabs/home', {}]);
             }).catch(error => {
