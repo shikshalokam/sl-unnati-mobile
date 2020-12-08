@@ -1,62 +1,92 @@
 <ion-header>
-  <app-header title="" [bottomBorder]="true" [showMenu]="false" [showReload]="false" [showSync]="false"
-    [showMore]="false" [hideNotification]="true">
+  <app-header
+    title=""
+    [bottomBorder]="true"
+    [showMenu]="false"
+    [showReload]="false"
+    [showSync]="false"
+    [showMore]="false"
+    [hideNotification]="true"
+  >
     <ion-back-button></ion-back-button>
   </app-header>
 </ion-header>
 <ion-content *ngIf="task" class="ion-padding">
-  <h4 (click)="toEdit('name')" *ngIf="editField != 'name'">{{task?.name}} </h4>
-  <ion-item *ngIf="editField == 'name'">
+  <div class="heading-name" (click)="edit('task',task?.name)">
+    <h4  *ngIf="editField != 'name'">{{task?.name}}</h4>
+    <ion-icon name="create" color="primary"> </ion-icon>
+  </div>
+
+  <!-- <h4 (click)="toEdit('name')" *ngIf="editField != 'name'">{{task?.name}} </h4> -->
+  <!-- <ion-item *ngIf="editField == 'name'">
     <ion-input type="text" [(ngModel)]="task.name" (ionInput)="saveChanges()">
     </ion-input>
-  </ion-item>
-  <ion-item style="margin-bottom: 15px;">
-    <ion-label position="fixed" style="font-weight: 500;">
-      {{'LABELS.ASSIGN_TASK' | translate}}
-    </ion-label>
-    <ion-input type="text" (ionInput)="saveChanges()" [(ngModel)]="task.assignee"
-      [readonly]="editField != 'assignName'">
+  </ion-item> -->
+  <ion-item style="margin-bottom: 15px">
+    <ion-label position="fixed" style="font-weight: 500"> {{'LABELS.ASSIGN_TASK' | translate}} </ion-label>
+    <ion-input
+      type="text"
+      (ionInput)="saveChanges()"
+      [(ngModel)]="task.assignee"
+      [readonly]="editField != 'assignName'"
+    >
     </ion-input>
     <ion-icon name="create" color="primary" slot="end" (click)="toEdit('assignName')" *ngIf="editField != 'assignName'">
     </ion-icon>
   </ion-item>
   <ion-row>
     <ion-col size="3">
-      <img src="assets/images/timetable.png" (click)="setTaskEndDate()">
+      <img src="assets/images/timetable.png" (click)="setTaskEndDate()" />
     </ion-col>
     <ion-col size="9">
-      <ion-datetime (ionChange)="setDate()" #dateTime value={{task?.endDate}} display-timezone="utc"
-        min="{{currentYear - 2}}" max="{{currentYear + 5}}" display-timezone="utc" [(ngModel)]="task.endDate">
+      <ion-datetime
+        (ionChange)="setDate()"
+        #dateTime
+        value="{{task?.endDate}}"
+        display-timezone="utc"
+        min="{{currentYear - 2}}"
+        max="{{currentYear + 5}}"
+        display-timezone="utc"
+        [(ngModel)]="task.endDate"
+      >
       </ion-datetime>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col size="4" class="status-label">
-      <ion-label position="fixed">
-        {{'LABELS.STATUS' | translate}}
-      </ion-label>
+      <ion-label position="fixed"> {{'LABELS.STATUS' | translate}} </ion-label>
     </ion-col>
     <ion-col size="8">
-      <ion-select [(ngModel)]="task.status" class="custom-select" [disabled]="subTaskCount > 0"
-        placeholder="{{'LABELS.SELECT_STATUS_PLACEHOLDER' | translate}}" (ionChange)="selectedTaskStatus($event)">
-        <ion-select-option  *ngFor="let status of statuses"  value="{{status.title}}"
-          selected="status.title === task.status">{{status.title | camelToTitle}}</ion-select-option>
+      <ion-select
+        [(ngModel)]="task.status"
+        class="custom-select"
+        [disabled]="subTaskCount > 0"
+        placeholder="{{'LABELS.SELECT_STATUS_PLACEHOLDER' | translate}}"
+        (ionChange)="selectedTaskStatus($event)"
+      >
+        <ion-select-option
+          *ngFor="let status of statuses"
+          value="{{status.title}}"
+          selected="status.title === task.status"
+          >{{status.title | camelToTitle}}</ion-select-option
+        >
       </ion-select>
     </ion-col>
   </ion-row>
   <div class="subtask-form">
-    <h4>{{'LABELS.SUBTASKS' | translate}} </h4>
+    <h4>{{'LABELS.SUBTASKS' | translate}}</h4>
     <ion-row>
-      <ion-col size="3">
-        <img src="assets/images/subdirectory_arrow.png" class="arrow-image"> </ion-col>
+      <ion-col size="3"> <img src="assets/images/subdirectory_arrow.png" class="arrow-image" /> </ion-col>
       <ion-col size="9">
         <ion-item>
-          <ion-input type="text" placeholder="{{'LABELS.ADD_SUBTASK_PALCEHOLDER' | translate}}"
-            [(ngModel)]="newSubtask.name">
+          <ion-input
+            type="text"
+            placeholder="{{'LABELS.ADD_SUBTASK_PALCEHOLDER' | translate}}"
+            [(ngModel)]="newSubtask.name"
+          >
           </ion-input>
         </ion-item>
-        <ion-button (click)="addSubtask()"> {{'LABELS.ADD_SUBTASK' | translate}}
-        </ion-button>
+        <ion-button (click)="addSubtask()"> {{'LABELS.ADD_SUBTASK' | translate}} </ion-button>
       </ion-col>
     </ion-row>
   </div>
@@ -67,41 +97,67 @@
         <ion-col size="1">
           <ion-icon name="radio-button-off-outline" color="primary"></ion-icon>
         </ion-col>
-        <ion-col size="10" class="subtask-title" (click)="toEdit('subtaskName')" *ngIf="editField != 'subtaskName'">
+        <ion-col
+          size="10"
+          class="subtask-title"
+          (click)="edit('subtask',subtask.name,subtask)"
+          *ngIf="editField != 'subtaskName'"
+        >
           {{subtask.name}}
         </ion-col>
-        <ion-col>
+        <!-- <ion-col size="10" class="subtask-title" (click)="toEdit('subtaskName')" *ngIf="editField != 'subtaskName'">
+          {{subtask.name}}
+        </ion-col> -->
+        <!-- <ion-col>
           <ion-input type="text" [(ngModel)]="subtask.name" *ngIf="editField == 'subtaskName'"
             (ionInput)="saveSubTaskChanges(subtask)">
           </ion-input>
-        </ion-col>
-        <ion-col size="1" style="margin: auto;
-            text-align: center;">
-          <img src="assets/images/delete.png" style="width: 30px;" (click)="askPermissionToDelete(subtask,'subtask')">
+        </ion-col> -->
+        <ion-col size="1" style="margin: auto; text-align: center">
+          <img src="assets/images/delete.png" style="width: 30px" (click)="askPermissionToDelete(subtask,'subtask')" />
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="1"> </ion-col>
         <ion-col size="5">
           <ion-item class="ion-date-time" lines="none">
-            <img src="assets/images/timetable.png" class="subtask-date-picker">
-            <ion-datetime value={{subtask?.endDate}} [(ngModel)]="subtask.endDate" displayFormat="DD/MM/YYYY"
-              min="{{currentYear - 2}}" max="{{currentYear + 5}}" display-timezone="utc"></ion-datetime>
+            <img src="assets/images/timetable.png" class="subtask-date-picker" />
+            <ion-datetime
+              value="{{subtask?.endDate}}"
+              [(ngModel)]="subtask.endDate"
+              displayFormat="DD/MM/YYYY"
+              min="{{currentYear - 2}}"
+              max="{{currentYear + 5}}"
+              display-timezone="utc"
+            ></ion-datetime>
           </ion-item>
         </ion-col>
         <ion-col size="6">
-          <ion-select [(ngModel)]="subtask.status" class="custom-select"
-            placeholder="{{'LABELS.SELECT_STATUS_PLACEHOLDER' | translate}}" (ionChange)="selectedStatus($event)">
-            <ion-select-option  *ngFor="let status of statuses"  value="{{status.title}}"
-              selected="status.title === subtask.status">{{status.title | camelToTitle}}</ion-select-option>
+          <ion-select
+            [(ngModel)]="subtask.status"
+            class="custom-select"
+            placeholder="{{'LABELS.SELECT_STATUS_PLACEHOLDER' | translate}}"
+            (ionChange)="selectedStatus($event)"
+          >
+            <ion-select-option
+              *ngFor="let status of statuses"
+              value="{{status.title}}"
+              selected="status.title === subtask.status"
+              >{{status.title | camelToTitle}}</ion-select-option
+            >
           </ion-select>
         </ion-col>
       </ion-row>
     </div>
   </div>
 
-  <ion-button [disabled]="!enableMarkButton" expand="block" shape="round" (click)="markTaskAsCompleted()"
-    *ngIf="!task?.learningResources?.length">
+  <ion-button
+    [disabled]="!enableMarkButton"
+    expand="block"
+    shape="round"
+    (click)="markTaskAsCompleted()"
+    *ngIf="!task?.learningResources?.length"
+  >
     {{'LABELS.MARK_TASK_COMPLETE' | translate}}
   </ion-button>
 
@@ -112,22 +168,23 @@
       </ion-button>
     </ion-col>
     <ion-col size="7">
-      <ion-button class="roundedButton" [disabled]="!enableMarkButton" expand="block" shape="round"
-        (click)="markTaskAsCompleted()">
+      <ion-button
+        class="roundedButton"
+        [disabled]="!enableMarkButton"
+        expand="block"
+        shape="round"
+        (click)="markTaskAsCompleted()"
+      >
         {{'LABELS.MARK_TASK_COMPLETE' | translate}}
       </ion-button>
     </ion-col>
   </ion-row>
-
-
-
 </ion-content>
 <div *ngIf="showAttachments" class="custom-popup">
   <div class="pop-container">
     <div class="pop-msg">
       <ion-item>
-        <ion-textarea placeholder="{{'LABELS.ADD_REMARKS' | translate}}" [(ngModel)]="task.remarks">
-        </ion-textarea>
+        <ion-textarea placeholder="{{'LABELS.ADD_REMARKS' | translate}}" [(ngModel)]="task.remarks"> </ion-textarea>
       </ion-item>
       <ion-item>
         <ion-icon name="attach" slot="end" (click)="openAction()"></ion-icon>

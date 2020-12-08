@@ -1,5 +1,9 @@
 @import '../../theme/colors.scss';
-
+.heading-name{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .status-label {
     margin: auto;
     font-size: 20px;
