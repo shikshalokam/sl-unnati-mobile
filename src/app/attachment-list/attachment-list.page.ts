@@ -85,6 +85,7 @@ export class AttachmentListPage implements OnInit {
             if (attachments.length) {
               let attachmentObj = {
                 taskName: task.name,
+                remarks: task.remarks,
                 attachments: attachments
               }
               this.attachments.push({ ...attachmentObj });
