@@ -84,7 +84,7 @@ export class AttachmentListPage implements OnInit {
 
 
   viewDocument(attachment) {
-    if (!attachment.url) {
+    if (attachment.url) {
       if (this.network.isNetworkAvailable) {
         this.downloadFile(attachment);
       } else {

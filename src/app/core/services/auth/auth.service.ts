@@ -293,8 +293,8 @@ export class AuthService {
   }
   getUserData(userName, token): Promise<any> {
     return new Promise(resolve => {
-      // const appVersion = this.appDetails.getVersionNumber();
-      // const appName = this.appDetails.getAppName();
+      // const appVersion:any = this.appDetails.getVersionNumber();
+      // const appName:any = this.appDetails.getAppName();
       let url = environment.apiBaseUrl + 'kendra/api/' + urlConstants.API_URLS.GET_PREVIOUS_PROFILE + userName;
       let options = {
         headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('skip', 'true').set('x-auth-token', token.access_token).set('x-authenticated-user-token', token.access_token)
