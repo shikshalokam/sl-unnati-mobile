@@ -22,12 +22,12 @@
           <div *ngIf="data.input == 'select'" style="margin: 15px 10px;">
             <ion-label class="font-bold"> {{data.label}} <sup>*</sup> </ion-label>
             <p class="label-hint"> {{data.hint}} </p>
-            <ion-item (click)="openCatgoryList(data)" *ngIf="!selectedCategories.length">
+            <ion-item (click)="openCategoryModal(data)" *ngIf="!selectedCategories?.length">
               <ion-icon name="pricetag-outline" slot="start" style="margin: 0px 15px 0 -15px;"></ion-icon>
               <div> {{'LABELS.SELECT_CATEGORIES' | translate}} </div>
             </ion-item>
-            <div *ngIf="selectedCategories.length">
-              <ion-chip (click)="openCatgoryList(data)" color="primary">
+            <div *ngIf="selectedCategories?.length">
+              <ion-chip (click)="openCategoryModal(data)" color="primary">
                 <ion-icon name="add-circle-outline"></ion-icon>
                 <ion-label>{{'LABELS.SELECT_CATEGORIES' | translate}}</ion-label>
               </ion-chip>
@@ -58,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="tasks.length && showTask">
+      <div *ngIf="tasks?.length && showTask">
         <ion-card *ngFor="let task of tasks" class="data-list">
           <ion-item lines="none">
             {{task.name}}
@@ -69,11 +69,11 @@
       </div>
     </form>
   </div>
-  <div *ngIf="showCategories">
+  <!-- <div *ngIf="showCategories">
     <app-category-select [categories]="categories" [selectedCategories]="selectedCategories"
       (onSubmit)="selectCategories($event)">
     </app-category-select>
-  </div>
+  </div> -->
 </ion-content>
 <ion-footer>
   <ion-button (click)="next()" expand="block">{{button | translate}}

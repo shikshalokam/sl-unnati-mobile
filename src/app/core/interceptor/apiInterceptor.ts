@@ -22,12 +22,13 @@ export class ApiInterceptor implements HttpInterceptor {
     ) {
     }
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (!window.navigator.onLine) {
-            this.showToast('MESSAGES.OFFLINE', 'danger');
-        } else {
-            return from(this.handle(request, next))
-        }
-
+        // if (!window.navigator.onLine) {
+        //     this.showToast('MESSAGES.OFFLINE', 'danger');
+        // } else {
+        //     return from(this.handle(request, next))
+        // }
+        return from(this.handle(request, next))
+      
     }
     async handle(req: HttpRequest<any>, next: HttpHandler) {
         let authReq;

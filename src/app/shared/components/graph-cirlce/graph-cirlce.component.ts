@@ -34,8 +34,8 @@ export class GraphCirlceComponent implements OnInit {
         x: 50,
         y: 0,
         useHTML: true,
-        width: this.data.series[0].data.length > 1 ? 400 : 100,
-        itemWidth: this.data.series[0].data.length > 1 ? 200 : 100,
+        width: this.data.series[0].data.length > 1 ? 400 : 200,
+        itemWidth: this.data.series[0].data.length > 1 ? 200 : 200,
         labelFormatter: function () {
           return '<div style="width:100%;margin-bottom:10px">' + this.name + "</div>";
         },
