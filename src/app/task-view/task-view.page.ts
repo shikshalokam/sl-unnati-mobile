@@ -296,7 +296,7 @@ export class TaskViewPage implements OnInit {
           text: "Save",
           handler: (data) => {
             console.log(data);
-            if (data.field == "") {
+            if (data.field == "" && what != "assignName") {
               // this.toast.showMessage("MESSAGES.REQUIRED_FIELDS", "danger");
               return;
             }
@@ -304,6 +304,9 @@ export class TaskViewPage implements OnInit {
             if (what == "subtask") {
               subtask.name = data.field;
               this.saveSubTaskChanges(subtask, subTaskIndex);
+            } else if (what == "assignName") {
+              this.task.assignee = data.field;
+              this.saveChanges()
             } else {
               this.task.name = data.field;
               this.update();
@@ -314,5 +317,18 @@ export class TaskViewPage implements OnInit {
     });
 
     await alert.present();
+    alert.present().then(() => {
+      const firstInput: any = document.querySelector("ion-alert input");
+      firstInput.focus();
+      return;
+    });
+  }
+
+  checkDisabled() {
+    if (this.task.type == "assessment" || this.task.type == "observation") {
+      return this.subTaskCount == 0 || this.subTaskCount == undefined || this.subTaskCount > 0; // disabled all the time 
+    } else {
+      return this.subTaskCount > 0;
+    }
   }
 }

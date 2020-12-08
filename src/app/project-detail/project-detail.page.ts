@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverController, AlertController, ModalController, Platform } from '@ionic/angular';
 import { PopoverComponent, CreateTaskComponent, OpenResourcesService } from '../shared';
@@ -73,7 +73,8 @@ export class ProjectDetailPage implements OnInit {
     private modal: ModalController,
     private unnatiService: UnnatiDataService,
     private iab: InAppBrowser,
-    private platform: Platform
+    private platform: Platform,
+    private ref: ChangeDetectorRef
   ) {
     this.db.createPouchDB(environment.db.projects);
     params.params.subscribe((parameters) => {
@@ -442,6 +443,7 @@ export class ProjectDetailPage implements OnInit {
       });
     });
     isChnaged ? this.update('taskStatusUpdated') : null// if any assessment/observatiom task status is changed then only update 
+      this.ref.detectChanges();
   }
 
   getAssessmentTypeTaskId() {
