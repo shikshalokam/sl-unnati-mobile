@@ -7,6 +7,7 @@ import { MenuPage } from './menu.page';
 import { SharedModule } from '../shared';
 import { SyncSettingsComponent } from '../sync-settings/sync-settings.component';
 import { CoreModule } from '../core/core.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { CoreModule } from '../core/core.module';
     IonicModule,
     SharedModule,
     CoreModule,
-    MenuPageRoutingModule
+    MenuPageRoutingModule,
+    TranslateModule.forChild()
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   declarations: [MenuPage, SyncSettingsComponent]

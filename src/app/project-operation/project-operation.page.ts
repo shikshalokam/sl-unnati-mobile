@@ -342,6 +342,7 @@ export class ProjectOperationPage implements OnInit {
     }
     this.db.createPouchDB(environment.db.projects);
     data.isEdit = true;
+    data.isDeleted = false;
     this.db.update(data).then(success => {
       this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
     }).catch(error => {

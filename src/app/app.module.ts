@@ -13,7 +13,7 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from "@angular/common
 import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
 import { HttpModule } from "@angular/http";
 import { IonicStorageModule } from "@ionic/storage";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { ApiInterceptor } from "./core";
 import { AppVersion } from "@ionic-native/app-version/ngx";
@@ -42,7 +42,13 @@ export function HttpLoaderFactory(http: HttpClient) {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,
-
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (HttpLoaderFactory),
+        deps: [HttpClient],
+      },
+    }),
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
@@ -50,14 +56,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     ReactiveFormsModule,
     FormsModule,
     IonicStorageModule.forRoot(),
-    TranslateModule.forRoot({
-      // defaultLanguage: "en",
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
     MomentModule,
   ],
   providers: [
@@ -87,4 +85,13 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(
+    private translate: TranslateService) {
+    this.setDefaultLanguage();
+  }
+
+  private setDefaultLanguage() {
+    this.translate.setDefaultLang('en');
+  }
+}

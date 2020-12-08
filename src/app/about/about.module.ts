@@ -9,6 +9,8 @@ import { AboutPageRoutingModule } from './about-routing.module';
 import { AboutPage } from './about.page';
 import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -16,7 +18,8 @@ import { SharedModule } from '../shared/shared.module';
     IonicModule,
     CoreModule,
     SharedModule,
-    AboutPageRoutingModule
+    AboutPageRoutingModule,
+    TranslateModule.forChild()
   ],
   declarations: [AboutPage]
 })

@@ -17,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
     HomePageRoutingModule,
     CoreModule,
     SharedModule,
-    TranslateModule
+    TranslateModule.forChild()
   ],
   declarations: [
     HomePage,
