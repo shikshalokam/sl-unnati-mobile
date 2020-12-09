@@ -53,7 +53,7 @@ export class TaskViewPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
   prepareSubTaskMeta() {
     this.newSubtask = JSON.parse(JSON.stringify(this.utils.getMetaData("subTask")));
   }
@@ -68,13 +68,14 @@ export class TaskViewPage implements OnInit {
           return item._id == this.parameters.taskId;
         });
         task > -1 ? (this.task = this.project.tasks[task]) : this.toast.showMessage("MESSAGES.NO_TASK_FOUND", "danger");
+        this.enableMarkButton = this.task.status === 'completed' ? true : false;
         this.copyOfTaskDetails = JSON.stringify(this.task);
         this.attachments = [];
         this.getSubtasksCount(this.task).then((data: number) => {
           this.subTaskCount = data;
         });
       },
-      (error) => {}
+      (error) => { }
     );
   }
   selectedStatus(event) {
@@ -149,7 +150,7 @@ export class TaskViewPage implements OnInit {
           // this.toast.showMessage('MESSAGES.YOUR_CHANGES_ARE_SAVED', 'success');
           goBack ? this.location.back() : "";
         })
-        .catch((error) => {});
+        .catch((error) => { });
     } else {
       this.toast.showMessage("MESSAGES.REQUIRED_FIELDS", "danger");
     }
@@ -193,7 +194,7 @@ export class TaskViewPage implements OnInit {
           text: data["LABELS.CANCEL"],
           role: "cancel",
           cssClass: "secondary",
-          handler: (blah) => {},
+          handler: (blah) => { },
         },
         {
           text: data["LABELS.SUBMIT"],
@@ -273,7 +274,17 @@ export class TaskViewPage implements OnInit {
 
   async edit(what, placeholder = "", subtask?, subTaskIndex?) {
     let name;
-    what == "task" || what == "assignName" ? (name = "Edit Task") : (name = "Edit Subtask");
+    // what == "task" || what == "assignName" ? (name = "Edit Task") : (name = "Edit Subtask");
+    switch (what) {
+      case 'task':
+        name = "Edit Task"
+        break
+      case 'assignName':
+        name = " Edit Assignee’s Name"
+        break
+      default:
+        name = "Edit Subtask"
+    }
     const alert = await this.alert.create({
       cssClass: "my-custom-class",
       header: name,
@@ -282,7 +293,7 @@ export class TaskViewPage implements OnInit {
         {
           name: "field",
           type: "text",
-          value: placeholder,
+          value: placeholder
         },
       ],
       buttons: [
@@ -290,7 +301,7 @@ export class TaskViewPage implements OnInit {
           text: "Cancel",
           role: "cancel",
           cssClass: "secondary",
-          handler: (blah) => {},
+          handler: (blah) => { },
         },
         {
           text: "Save",

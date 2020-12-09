@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { Platform, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { CurrentUserService, NotificationService, NetworkService, FcmProvider, UnnatiDataService,
-    LoaderService, ToastMessageService, LocalStorageService, localStorageConstants } from './core';
+import {
+  CurrentUserService, NotificationService, NetworkService, FcmProvider, UnnatiDataService,
+  LoaderService, ToastMessageService, LocalStorageService, localStorageConstants
+} from './core';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { TemplateViewPage } from './template-view/template-view.page';
 import { Router } from '@angular/router';
@@ -46,7 +48,8 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.languageSetting();
       this.networkService.netWorkCheck();
-      this.statusBar.styleDefault();
+      // this.statusBar.styleDefault();
+      this.statusBar.show();
       this.splashScreen.hide();
       this.currentUser.getUser().then(success => {
         if (success) {
@@ -54,18 +57,18 @@ export class AppComponent {
           this.deeplinkNav();
           this.notificationServ.startNotificationPooling();
         }
-      }).catch(error => { 
+      }).catch(error => {
       })
     });
   }
 
-  languageSetting(){
+  languageSetting() {
     this.localStorage.getLocalStorage(localStorageConstants.SELECTED_LANGUAGE)
-    .then(data =>{
-      this.translate.use(data);
-    }).catch(error =>{
-      this.translate.use('en');
-    })
+      .then(data => {
+        this.translate.use(data);
+      }).catch(error => {
+        this.translate.use('en');
+      })
   }
 
   public deeplinkNav() {
@@ -76,7 +79,7 @@ export class AppComponent {
       })
       .subscribe(
         (match) => {
-          let route=`/menu${match.$link.path}`
+          let route = `/menu${match.$link.path}`
           this.router.navigate([route], { queryParams: { programId: match.$link.queryString } });
         },
         (nomatch) => {

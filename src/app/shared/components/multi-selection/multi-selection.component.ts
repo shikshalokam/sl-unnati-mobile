@@ -78,7 +78,7 @@ export class MultiSelectionComponent implements OnInit {
         mimeType: this.selectedFilter.value
       }
       const config = {
-        url: this.url + '&search=' + searchText + '&page=' + this.page + "&limit=" + this.limit,
+        url: this.url + 'search=' + searchText + '&page=' + this.page + "&limit=" + this.limit,
         payload: type
       }
       this.kendraApiService.post(config).subscribe(data => {

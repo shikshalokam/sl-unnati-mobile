@@ -28,7 +28,7 @@ export class NetworkService {
       this.isNetworkAvailable = false;
       this.$networkStatus.next(this.isNetworkAvailable);
       this.translate.get('MESSAGES.YOU_ARE_WORKING_OFFLINE').subscribe(data => {
-        this.toast.showMessage(data, 'danger');
+        !this.isNetworkAvailable ? this.toast.showMessage(data, 'danger', 'construct-outline') : ''
       })
     });
     this.connectSubscription = this.network.onConnect().subscribe(() => {

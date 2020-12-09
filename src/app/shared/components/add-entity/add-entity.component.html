@@ -16,7 +16,7 @@
             <ion-item>
               <ion-label>{{'LABELS.ENTITY' | translate}}</ion-label>
               <ion-select interface="popover" value={{childEntity}} (ionChange)="selectSubEntity($event)">
-                <ion-select-option style="text-transform: capitalize;" *ngFor="let subEntity of subEntities" value="{{subEntity.value}}">{{subEntity.name}}</ion-select-option>
+                <ion-select-option style="text-transform: capitalize !important;" *ngFor="let subEntity of subEntities" value="{{subEntity.value}}">{{subEntity.name}}</ion-select-option>
                 
               </ion-select>
             </ion-item>
