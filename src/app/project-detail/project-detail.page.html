@@ -109,12 +109,12 @@
               {{'LABELS.VIEW_RESOURCES' | translate}}
             </ion-button>
             <ion-button color="primary" size="small"
-              *ngIf="(task?.type=='assessment' || task?.type=='observation')&&task?.status!='completed' "
+              *ngIf="(task?.type=='assessment' || task?.type=='observation')&&task?.submissionDetails?.status!='completed' "
               (click)="$event.stopPropagation();startAssessment(task)">
               {{'LABELS.START' | translate}} {{task?.type}}
             </ion-button>
             <ion-button color="primary" size="small"
-              *ngIf="(task?.type=='assessment' || task?.type=='observation')&&task?.status=='completed' "
+              *ngIf="(task?.type=='assessment' || task?.type=='observation')&&task?.submissionDetails?.status=='completed' "
               (click)="$event.stopPropagation();checkReport(task)">
               {{'LABELS.REPORTS' | translate}}
             </ion-button>

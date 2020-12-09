@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverController, AlertController, ModalController, Platform } from '@ionic/angular';
 import { PopoverComponent, CreateTaskComponent, OpenResourcesService } from '../shared';
@@ -73,7 +73,8 @@ export class ProjectDetailPage implements OnInit {
     private modal: ModalController,
     private unnatiService: UnnatiDataService,
     private iab: InAppBrowser,
-    private platform: Platform
+    private platform: Platform,
+    private ref: ChangeDetectorRef
   ) {
     this.db.createPouchDB(environment.db.projects);
     params.params.subscribe((parameters) => {
@@ -425,13 +426,24 @@ export class ProjectDetailPage implements OnInit {
     let isChnaged = false
     this.project.tasks.map((t) => {
       data.map((d) => {
-        if (d._id == t._id && d.status != t.status) {
-          t.status = d.status;
-          isChnaged = true
+        if (d.type == 'assessment' || d.type == 'observation') {//check if type is observation or assessment 
+          if (d._id == t._id && d.submissionDetails.status) {
+            // check id matches and task details has submissionDetails
+            if (!t.submissionDetails || t.submissionDetails.status != d.submissionDetails.status) {
+              t.submissionDetails = d.submissionDetails;
+              isChnaged = true;
+            }
+          }
         }
+
+      /*   if (d._id == t._id && d.submissionStatus != t.submissionDetails.submissionStatus) {
+          t.status = d.status;
+          isChnaged = true;
+        } */
       });
     });
     isChnaged ? this.update('taskStatusUpdated') : null// if any assessment/observatiom task status is changed then only update 
+      this.ref.detectChanges();
   }
 
   getAssessmentTypeTaskId() {
