@@ -44,7 +44,7 @@ export class ApiService {
   private handleError(result) {
     switch (result.status) {
       case 0:
-        this.toast.showMessage('MESSAGES.NETWORK_ERROR' , 'danger')
+        this.toast.showMessage('MESSAGES.YOU_ARE_WORKING_OFFLINE_TRY_AGAIN' , 'danger')
         break
       case 401:
         this.auth.sessionExpired();

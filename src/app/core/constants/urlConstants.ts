@@ -30,7 +30,7 @@ export const urlConstants = {
     GET_PROGRAM_BY_ENTITY: "v1/reports/getProgramsByEntity/",
     GET_TASK_META_FORM: "v1/userProjects/tasksMetaForm",
     GET_LEARNING_RESOURCES: "v1/learningResources/list",
-    LEARNING_RESOURCES_LIST: "v1/learning-resources/list?page=",
+    LEARNING_RESOURCES_LIST: "v1/learning-resources/list?",
     GET_DYNAMIC_LINKS: "v1/static-links/list",
     GET_LEARNING_RESOURCES_FILTERS: "v1/learning-resources/filters",
     PROFILE_INFO: "v1/users/getProfile",
