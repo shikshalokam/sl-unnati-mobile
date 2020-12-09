@@ -23,6 +23,20 @@ export class CategorySelectComponent implements OnInit {
     private modal: ModalController
   ) { }
   ngOnInit() {
+    let a = this.selectedCategories.filter(obj1 => {
+       return !this.categories.options.find((s) => s.label == obj1.label);
+    })[0]
+
+   /*  a.value = a.label
+    a.label = 'Others' */
+
+    this.selectedCategories.map(c => {
+      if (c.label == a.label) {
+        c.value == a.label
+        c.label == "Others"
+      }
+    })
+    
     this.categoryData.push(this.categories);
     this.categoryData.push(this.otherCategory);
     if (this.selectedCategories.length) {
@@ -33,9 +47,11 @@ export class CategorySelectComponent implements OnInit {
         }
       })
       this.validateOptions();
+      console.log(this.selectedCategories)
     } else {
-
+      
       this.prepareForm();
+      console.log(this.selectedCategories)
     }
   }
   public prepareForm() {
@@ -49,7 +65,7 @@ export class CategorySelectComponent implements OnInit {
               Validators.required
             );
         }
-        controls[element.field] = new FormControl('', validationsArray);
+        controls[element.field] = new FormControl(element.value||'', validationsArray);
       }
     })
     this.catgeoryForm = this.fb.group(
@@ -85,6 +101,15 @@ export class CategorySelectComponent implements OnInit {
     this.selectedCategories.forEach(option => {
       if (option.label == "Others") {
         this.otherCategory.show = true;
+
+        // added to show others if selected 
+        this.categoryData[0].options.map((o) => {
+          if (o.label == "Others") {
+            o.isChecked = true
+          }
+        });
+
+        //
       }
     });
     this.prepareForm();
