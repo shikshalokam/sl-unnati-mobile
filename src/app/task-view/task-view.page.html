@@ -166,7 +166,7 @@
     </div>
   </div>
 
-  <ion-button [disabled]="!enableMarkButton" expand="block" shape="round" (click)="markTaskAsCompleted()"
+  <ion-button [disabled]="!enableMarkButton" expand="block" shape="round" (click)="markTaskAsCompleted()" class="_capitalize"
     *ngIf="!task?.learningResources?.length">
     {{'LABELS.ADD_ATTACHMENTS' | translate}}
   </ion-button>
