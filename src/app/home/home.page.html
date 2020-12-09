@@ -20,7 +20,7 @@
     </ion-grid>
   </div>
 
-  <div class="activeprojects-container _capitalize" *ngIf="activeProjects">
+  <div class="activeprojects-container _capitalize" *ngIf="activeProjects?.length">
     <h4>{{'LABELS.ACTIVE_PROJECTS' | translate}} </h4>
     <div *ngFor="let ap of activeProjects">
       <ion-card (click)="openProject(ap._id)">

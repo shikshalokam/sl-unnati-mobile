@@ -184,8 +184,8 @@ export class ProjectOperationPage implements OnInit {
     const modal = await this.modalController.create({
       component: AddEntityComponent,
       componentProps: {
-      }
-      // cssClass: 'my-custom-class'
+      },
+      cssClass: 'my-custom-class'
     });
     modal.onDidDismiss().then(data => {
       this.selectedEntity = data.data ? data.data : '';

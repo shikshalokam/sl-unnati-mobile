@@ -35,8 +35,8 @@
       <div class="custom-filed _capitalize">
         <ion-label position="fixed"> {{'LABELS.CATEGORIES' | translate}} : </ion-label>
         <!-- {{categories}} -->
-        <span *ngFor="let category of project?.categories">
-            {{category?.label}} ,
+        <span *ngFor="let category of project?.categories;let last = last">
+            {{category?.label}}{{last ? "": ","}}
         </span>
       </div>
     </ion-card-content>

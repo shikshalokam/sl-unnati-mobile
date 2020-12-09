@@ -46,7 +46,8 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.languageSetting();
       this.networkService.netWorkCheck();
-      this.statusBar.styleDefault();
+      // this.statusBar.styleDefault();
+      this.statusBar.show();
       this.splashScreen.hide();
       this.currentUser.getUser().then(success => {
         if (success) {

@@ -28,46 +28,46 @@
 
 
 @font-face {
-    font-family: 'Roboto-Black';
-    font-style: normal;
-    font-weight: normal;
-    src: url('./assets/fonts/Roboto-Black.ttf')format("truetype");
+  font-family: 'Roboto-Black';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/Roboto-Black.ttf')format("truetype");
 }
 
 @font-face {
-    font-family: 'Roboto-Bold';
-    font-style: normal;
-    font-weight: normal;
-    src: url('./assets/fonts/Roboto-Bold.ttf') format("truetype");
+  font-family: 'Roboto-Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/Roboto-Bold.ttf') format("truetype");
 }
 
 
 @font-face {
-    font-family: 'Roboto-Light';
-    font-style: normal;
-    font-weight: normal;
-    src: url('./assets/fonts/Roboto-Light.ttf') format("truetype");
+  font-family: 'Roboto-Light';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/Roboto-Light.ttf') format("truetype");
 }
 
 @font-face {
-    font-family: 'Roboto-Regular';
-    font-style: normal;
-    font-weight: normal;
-    src: url('./assets/fonts/Roboto-Regular.ttf') format("truetype");
+  font-family: 'Roboto-Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/Roboto-Regular.ttf') format("truetype");
 }
 
 @font-face {
-    font-family: 'SourceSansPro-Bold';
-    font-style: normal;
-    font-weight: normal;
-    src: url('./assets/fonts/SourceSansPro-Bold.ttf') format("truetype");
+  font-family: 'SourceSansPro-Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/SourceSansPro-Bold.ttf') format("truetype");
 }
 
 @font-face {
-    font-family: 'SourceSansPro-Regular';
-    font-style: normal;
-    font-weight: normal;
-    src: url('./assets/fonts/SourceSansPro-Regular.ttf') format("truetype");
+  font-family: 'SourceSansPro-Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/SourceSansPro-Regular.ttf') format("truetype");
 }
 
 // Google icons
@@ -76,84 +76,93 @@
   font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2)
-    format("woff2");
+  src: url(https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format("woff2");
 }
 
-  .segment-button-checked{
-    background: var(--ion-color-primary);
-    color: $white-color;
-    --indicator-color:var(--ion-color-primary);
- }
- ion-segment{
-    border-bottom: 2px solid var(--ion-color-primary);
- }
+.segment-button-checked {
+  background: var(--ion-color-primary);
+  color: $white-color;
+  --indicator-color: var(--ion-color-primary);
+}
 
- .header-md::after{
-    background-image: none !important;
+ion-segment {
+  border-bottom: 2px solid var(--ion-color-primary);
+}
+
+.header-md::after {
+  background-image: none !important;
 }
 
 #pointer {
-    width: 100px;
-    height: 24px;
-    margin-top: -5px;
-    margin-left: -5px;
-    position: relative;
-    background: $green-color;
-    color: $white-color;
-    text-align: center;
-    p{
-        padding: 4px;
-        margin: 0px;
-    }
-  }
-  #pointer:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 0;
-    border-left: 0px solid white;
-    border-top: 0px solid transparent;
-    border-bottom: 0px solid transparent;
-}
-
-
-  #pointer:before {
-    content: "";
-    position: absolute;
-    right: -32px;
-    width: -8px;
-    border-left: 33px solid $green-color;
-    border-top: -7px solid transparent;
-    border-bottom: 25px solid transparent;
-  }
-  .ratings{
-    color:$yellow-color;
-    padding: 5px;
-  }
-  .font-bold{
-    font-weight: 600;
-  }
-  .data-list{
-    .item-input ion-label{
-        pointer-events:all!important;
-      }
-      .item-cover{
-        display:none;
-      }
-}
-.loadmore-btn{
+  width: 100px;
+  height: 24px;
+  margin-top: -5px;
+  margin-left: -5px;
+  position: relative;
+  background: $green-color;
+  color: $white-color;
   text-align: center;
-  ion-button{
-      --border-radius:50px;
+
+  p {
+    padding: 4px;
+    margin: 0px;
   }
 }
+
+#pointer:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 0px solid white;
+  border-top: 0px solid transparent;
+  border-bottom: 0px solid transparent;
+}
+
+
+#pointer:before {
+  content: "";
+  position: absolute;
+  right: -32px;
+  width: -8px;
+  border-left: 33px solid $green-color;
+  border-top: -7px solid transparent;
+  border-bottom: 25px solid transparent;
+}
+
+.ratings {
+  color: $yellow-color;
+  padding: 5px;
+}
+
+.font-bold {
+  font-weight: 600;
+}
+
+.data-list {
+  .item-input ion-label {
+    pointer-events: all !important;
+  }
+
+  .item-cover {
+    display: none;
+  }
+}
+
+.loadmore-btn {
+  text-align: center;
+
+  ion-button {
+    --border-radius: 50px;
+  }
+}
+
 .c-permission {
-  
+
   .alert-title {
-    color:var(--ion-color-primary);
+    color: var(--ion-color-primary);
     text-align: center
   }
 }
@@ -165,45 +174,58 @@
   max-height: 40px;
   padding: 0px;
   box-shadow: 0px 3px 9px 1px $light-grey-color;
-  ion-input{
+
+  ion-input {
     --padding-bottom: 18px;
     font-weight: 600;
     color: $black-color;
   }
-  ion-icon
-  {
+
+  ion-icon {
     margin-bottom: 10px;
     margin-left: 20px;
-    padding-right : 10px;
+    padding-right: 10px;
   }
 }
 
-.text-right{
+.text-right {
   text-align: right;
 }
-.text-left{
+
+.text-left {
   text-align: left;
 }
-.text-center{
+
+.text-center {
   text-align: center;
 }
-.create-task-modal{
-  padding:15px;
+
+.create-task-modal {
+  padding: 15px;
   box-shadow: 0 4px 8px 0 $light-grey-color;
   background: $trasperant-gray-color;
 }
-.reuired-field{
-  color:$red-color;
+
+.reuired-field {
+  color: $red-color;
 }
+
 ._capitalize {
   text-transform: capitalize;
 }
-.no-text-transform{
+
+.no-text-transform {
   text-transform: none;
 }
 
 .transparentModal {
   .modal-wrapper {
-      --background: transparent !important;
-    }
+    --background: transparent !important;
+  }
+}
+
+.my-custom-class {
+  ion-select-option {
+    text-transform: capitalize;
+  }
 }
