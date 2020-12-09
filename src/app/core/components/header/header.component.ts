@@ -37,9 +37,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.translate.get('MESSAGES.YOU_ARE_WORKING_OFFLINE').subscribe(data => {
-      !this.networkService.isNetworkAvailable ? this.toast.showMessage(data, 'danger', 'construct-outline') : ''
-    })
+    // this.translate.get('MESSAGES.YOU_ARE_WORKING_OFFLINE').subscribe(data => {
+    //   !this.networkService.isNetworkAvailable ? this.toast.showMessage(data, 'danger', 'construct-outline') : ''
+    // })
     this.notificationSubscription = this.notificationServ.$notificationSubject.subscribe(data => {
       this.notificationData = data;
       this.newNotificationPresent = (this.notificationData && this.notificationData.count) ? true : false;

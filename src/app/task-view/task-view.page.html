@@ -14,7 +14,7 @@
 <ion-content *ngIf="task" class="ion-padding">
   <div class="heading-name" (click)="edit('task',task?.name)">
     <h4  *ngIf="editField != 'name'">{{task?.name}}</h4>
-    <ion-icon name="create" color="primary"> </ion-icon>
+    <ion-icon name="create" color="primary" class="iconAdj"> </ion-icon>
   </div>
 
   <!-- 
@@ -39,10 +39,10 @@
 
     <div class="heading-name" (click)="edit('assignName',task?.assignee)">
       
-        <h5 style="font-weight: 500"> {{'LABELS.ASSIGN_TASK' | translate}} {{task.assignee}} </h5>
+        <h5 style="font-weight: 500"> {{'LABELS.ASSIGN_TASK' | translate}} <span class="assignee _capitalize">: {{task.assignee}}</span> </h5>
         <div>
 
-          <ion-icon name="create" color="primary"> </ion-icon>
+          <ion-icon name="create" color="primary" class="iconAdj"> </ion-icon>
         </div>
     
     
@@ -97,6 +97,7 @@
             type="text"
             placeholder="{{'LABELS.ADD_SUBTASK_PALCEHOLDER' | translate}}"
             [(ngModel)]="newSubtask.name"
+            autocapitalize='on'
           >
           </ion-input>
         </ion-item>
