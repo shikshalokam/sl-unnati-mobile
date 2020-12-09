@@ -112,6 +112,13 @@ export class UtilsService {
           if (task.status == statusType.completed) {
             task.status = statusType.inProgress;
           }
+          
+        }
+        if (!task.submissionDetails) {
+          if (task.status == statusType.completed) {
+            task.status = statusType.inProgress;
+          }
+          
         }
 
         if (task.submissionDetails && task.submissionDetails.status == statusType.completed && !task.children.length) {
@@ -120,9 +127,9 @@ export class UtilsService {
         if (!task.submissionDetails  && !task.children.length) {
           task.status = statusType.notStarted;
         }
-        if (!task.submissionDetails  && task.children.length) {
+       /*  if (!task.submissionDetails  && task.children.length) {
           task.status = statusType.inProgress;
-        }
+        } */
       }
 
       console.log(task.status);

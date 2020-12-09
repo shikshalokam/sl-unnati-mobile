@@ -12,6 +12,7 @@
             <ion-label> {{ category.label}}</ion-label>
           </ion-item>
         </ion-list>
+        
       </div>
       <ion-item *ngIf="data.input == 'text' && data.show">
         <ion-input type="text" name="{{data.field}}"  [formControlName]="data.field"  value="{{data.value}}"></ion-input>
@@ -21,7 +22,7 @@
     <ion-row class="bottom-buttons">
       <ion-col size="6">
         <ion-buttons (click)="close()" size="small" >
-          {{'LABELS.CANCEL' | translate}}
+          {{'LABELS.CANCEL' | translate}} 
         </ion-buttons>
       </ion-col>
       <ion-col size="6">
