@@ -273,7 +273,7 @@ export class DikshaLoginService {
     this.auth.checkLocalData(tokens).then(success => {
       this.currentUser.setUser(tokens).then(success => {
         this.router.navigateByUrl('/permissions');
-        this.localStorage.setLocalStorage(localStorageConstants.SYNC_VARIABLE, 'OFF').then(sucess => {
+        this.localStorage.setLocalStorage(localStorageConstants.SYNC_VARIABLE, 'ON').then(sucess => {
         }).catch(error => {
         })
       }).catch(error => {

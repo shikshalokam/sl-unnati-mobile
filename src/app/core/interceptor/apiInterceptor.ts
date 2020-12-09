@@ -44,6 +44,7 @@ export class ApiInterceptor implements HttpInterceptor {
                         'gpsLocation': '',
                         'appVersion': appVersion,
                         'appName':  environment.appName ? environment.appName: appName,
+                        'appname':  environment.appName ? environment.appName: appName,
                         'appType': environment.appType,
                         'os': this.platform.is('ios') ? 'ios' : 'android'
                     }
