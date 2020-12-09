@@ -114,6 +114,12 @@ export class UtilsService {
           }
           
         }
+        if (!task.submissionDetails) {
+          if (task.status == statusType.completed) {
+            task.status = statusType.inProgress;
+          }
+          
+        }
 
         if (task.submissionDetails && task.submissionDetails.status == statusType.completed && !task.children.length) {
           task.status = statusType.completed;
