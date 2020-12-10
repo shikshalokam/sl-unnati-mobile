@@ -18,7 +18,7 @@ export class AddEntityComponent implements OnInit {
   noSubEntity: boolean = false;
   entities = [];
   page = 1;
-  limit = 25;
+  limit = 20;
   childEntity;
   searchText = "";
   profileData;
@@ -69,6 +69,7 @@ export class AddEntityComponent implements OnInit {
       };
       this.kendraApiService.get(config).subscribe(
         (data) => {
+          this.loader.stopLoader();
           if (data.result.data && data.result.data.length) {
             this.entities = this.entities.concat(data.result.data);
             this.entityCount = data.result.count;
@@ -76,8 +77,6 @@ export class AddEntityComponent implements OnInit {
           } else {
             this.noSubEntity = true;
           }
-
-          this.loader.stopLoader();
         },
         (error) => {
           this.loader.stopLoader();

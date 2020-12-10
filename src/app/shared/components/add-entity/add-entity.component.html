@@ -8,7 +8,7 @@
 </ion-toolbar>
 <ion-content>
   <div *ngIf="subEntities ">
-    <ion-searchbar debounce="500" (ionInput)="onSearch($event)"></ion-searchbar>
+    <ion-searchbar debounce="1000" (ionInput)="onSearch($event)"></ion-searchbar>
     <div class="ion-padding">
       <ion-icon name="funnel" color="primary"></ion-icon> {{'LABELS.FILTERS' | translate}}
         <ion-row>
@@ -16,7 +16,7 @@
             <ion-item>
               <ion-label>{{'LABELS.ENTITY' | translate}}</ion-label>
               <ion-select interface="popover" value={{childEntity}} (ionChange)="selectSubEntity($event)">
-                <ion-select-option style="text-transform: capitalize !important;"  *ngFor="let subEntity of subEntities" value="{{subEntity.value}}">{{subEntity.name | uppercase}}</ion-select-option>
+                <ion-select-option style="text-transform: capitalize !important;"  *ngFor="let subEntity of subEntities" value="{{subEntity.value}}">{{subEntity.name | titlecase}}</ion-select-option>
                 
               </ion-select>
             </ion-item>
