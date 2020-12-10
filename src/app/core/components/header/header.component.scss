@@ -13,8 +13,13 @@
     right: 10px;
     top: 2px;
 }
-.header-icons{
-color:$black-color;
-font-size: 24px !important;
-font-weight: bold;
+
+.header-icons {
+    color: $black-color;
+    font-size: 24px !important;
+    font-weight: bold;
+}
+
+.bottomBorder {
+    border-bottom: 2px solid var(--ion-color-primary);
 }
