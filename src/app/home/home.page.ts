@@ -58,7 +58,7 @@ export class HomePage implements OnInit {
 
   getProjects() {
     const config = {
-      url: urlConstants.API_URLS.PROJECTS_LIST+`?updateLastDownloadedAt=true`
+      url: urlConstants.API_URLS.PROJECTS_LIST + `?updateLastDownloadedAt=true`
     }
     this.loader.startLoader();
     this.unnatiService.get(config).subscribe(data => {
@@ -139,14 +139,27 @@ export class HomePage implements OnInit {
     })
   }
   getProjectsFromLocal() {
-    this.db.read(2).then(success => {
-      if (success && success.length) {
-        this.activeProjects = success;
+    const query = {
+      selector: {
+        $and: [
+          {
+            isDeleted: {
+              $ne: true
+            }
+          },
+        ],
+      },
+      limit: 2,
+      fields: ['title', '_id', 'programName', 'programId', 'status', 'isDeleted'],
+    }
+    this.db.customQuery(query).then((success: any) => {
+      if (success['docs'] && success['docs'].length) {
+        this.activeProjects = success['docs'];
       } else {
         this.networkService.isNetworkAvailable ? this.getProjects() : this.showToast('MESSAGES.OFFLINE', 'danger');
         // this.fcm.initializeFCM();
       }
-    }, error => {
+    }).catch(error => {
       this.networkService.isNetworkAvailable ? this.getProjects() : this.showToast('MESSAGES.OFFLINE', 'danger');
     })
   }

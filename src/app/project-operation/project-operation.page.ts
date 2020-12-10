@@ -181,9 +181,14 @@ export class ProjectOperationPage implements OnInit {
   }
 
   async openAddEntityModal() {
+    let entityType; 
+    if (this.template.entityType && this.template.entityType.length) {
+      entityType = this.template.entityType;
+    }
     const modal = await this.modalController.create({
       component: AddEntityComponent,
       componentProps: {
+        entityType:entityType?entityType:null
       },
       cssClass: 'my-custom-class'
     });
