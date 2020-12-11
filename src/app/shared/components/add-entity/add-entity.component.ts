@@ -53,7 +53,7 @@ export class AddEntityComponent implements OnInit {
   }
   getEntities(entityType) {
     if (this.networkService.isNetworkAvailable) {
-      this.loader.startLoader();
+      // this.loader.startLoader();
       const config = {
         url:
           urlConstants.API_URLS.GET_ENTITY_LIST +
@@ -69,7 +69,7 @@ export class AddEntityComponent implements OnInit {
       };
       this.kendraApiService.get(config).subscribe(
         (data) => {
-          this.loader.stopLoader();
+          // this.loader.stopLoader();
           if (data.result.data && data.result.data.length) {
             this.entities = this.entities.concat(data.result.data);
             this.entityCount = data.result.count;
@@ -79,7 +79,7 @@ export class AddEntityComponent implements OnInit {
           }
         },
         (error) => {
-          this.loader.stopLoader();
+          // this.loader.stopLoader();
         }
       );
     } else {
@@ -118,13 +118,13 @@ export class AddEntityComponent implements OnInit {
     }
 
     if (this.networkService.isNetworkAvailable) {
-      this.loader.startLoader();
+      // this.loader.startLoader();
       const config = {
         url: urlConstants.API_URLS.GET_SUBENTITIES + stateId,
       };
       this.kendraApiService.get(config).subscribe(
         (data) => {
-          this.loader.stopLoader();
+          // this.loader.stopLoader();
           if (data.result) {
             let selist = [];
             data.result.forEach((se) => {
@@ -141,7 +141,7 @@ export class AddEntityComponent implements OnInit {
           }
         },
         (error) => {
-          this.loader.stopLoader();
+          // this.loader.stopLoader();
         }
       );
     } else {

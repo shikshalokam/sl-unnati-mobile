@@ -156,7 +156,12 @@ export class HomePage implements OnInit {
       if (success['docs'] && success['docs'].length) {
         this.activeProjects = success['docs'];
       } else {
-        this.networkService.isNetworkAvailable ? this.getProjects() : this.showToast('MESSAGES.OFFLINE', 'danger');
+        this.db.read(1).then(data => {
+          !data.length ? this.getProjects() : null
+        }).catch(error => {
+
+        })
+        // this.networkService.isNetworkAvailable ? this.getProjects() : this.showToast('MESSAGES.OFFLINE', 'danger');
         // this.fcm.initializeFCM();
       }
     }).catch(error => {

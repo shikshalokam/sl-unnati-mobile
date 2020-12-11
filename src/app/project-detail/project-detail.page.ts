@@ -218,6 +218,10 @@ export class ProjectDetailPage implements OnInit {
         this.askPermissionToDelete("Project");
         break;
       }
+      case "shareProject": {
+        this.toast.showMessage('Coming soon !')
+        break;
+      }
     }
   }
 
