@@ -229,3 +229,7 @@ ion-segment {
     text-transform: capitalize;
   }
 }
+
+._bottomBorder {
+  border-bottom: 2px solid var(--ion-color-primary);
+}
