@@ -64,7 +64,7 @@ export class CardsComponent implements OnInit {
         break;
       }
       case "shareProject": {
-        this.toast.showMessage('MESSAGES.COMING_SOON', 'danger');
+        this.toast.showMessage('MESSAGES.COMING_SOON');
         break;
       }
     }
@@ -87,6 +87,7 @@ export class CardsComponent implements OnInit {
           text: data["LABELS.SUBMIT"],
           handler: () => {
             project.isDeleted = true;
+            this.update(project);
           }
         }
       ]
