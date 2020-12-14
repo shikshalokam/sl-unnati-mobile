@@ -38,6 +38,6 @@ export class CreateTaskComponent implements OnInit {
   }
 
   share() {
-    this.toast.showMessage('MESSAGES.COMING_SOON', 'danger');
+    this.toast.showMessage('MESSAGES.COMING_SOON');
   }
 }
