@@ -13,6 +13,7 @@ import { urlConstants } from '../../constants';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { Platform } from '@ionic/angular';
 import * as moment from 'moment';
+import { HTTP } from '@ionic-native/http/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class AuthService {
   auth_url: string;
   popOpen: boolean = false;
 
-  constructor(private http: HttpClient,
+  constructor(
+    private http: HttpClient,
     private currentUser: CurrentUserService,
     private storage: LocalStorageService,
     private router: Router,
@@ -33,7 +35,8 @@ export class AuthService {
     private modalController: ModalController,
     private db: DbService,
     private appDetails: AppVersion,
-    private platform: Platform
+    private platform: Platform,
+    private ionicHttp: HTTP
   ) { }
 
   doOAuthStepOne(): Promise<any> {
@@ -138,7 +141,7 @@ export class AuthService {
           const hourDifference = duration.asHours();
           debugger
           if (hourDifference <= 1) {
-            this.getNewToken(data.refresh_token).subscribe((token: any) => {
+            this.getNewToken(data.refresh_token).then((token: any) => {
               const sessionData = {
                 access_token: token.access_token,
                 refresh_token: token.refresh_token
@@ -148,7 +151,7 @@ export class AuthService {
               }).catch(error => {
                 resolve();
               })
-            }, error => {
+            }).catch(error => {
               resolve();
             })
           } else {
@@ -161,13 +164,27 @@ export class AuthService {
     })
   }
 
-  getNewToken(refreshToken) {
+  getNewToken(refreshToken): Promise<any> {
     const obj = 'grant_type=refresh_token&refresh_token=' + refreshToken + "&client_id=" + environment.keycloakConfig.clientId;
     const url = environment.appUrl + environment.keycloakConfig.getAccessToken;
-    let options = {
-      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('skip', 'true')
+    let body = {
+      grant_type: "refresh_token",
+      client_id: environment.keycloakConfig.clientId,
+      refresh_token: refreshToken,
     };
-    return this.http.post(url, obj, options);
+    const header = {
+    };
+    return new Promise((resolve, reject) => {
+      this.ionicHttp.setDataSerializer("urlencoded");
+      this.ionicHttp
+        .post(url, body, header)
+        .then((data) => {
+          resolve(JSON.parse(data.data))
+        }).catch(error => {
+          reject()
+        })
+    })
+
   }
 
   doLogout(): Promise<any> {
