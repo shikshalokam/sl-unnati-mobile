@@ -196,6 +196,7 @@
         "DELETE_CONFIRM": "Are you sure? you want to delete ",
         "NO_LINK": "No Link Found",
         "ERROR_WHILE_STORING_FILE": "Error while storing file.",
+        "SUCCESSFULLY_ATTACHED":"Successfully Attached",
         "PERMISSION_MESSAGE": "Welcome to Unnati. Kindly give us access to the following to help us improve your experience of the App.Thank You.",
         "PERMISSION": "Permissions Requested",
         "PERMISSION_MESSAGE_ACCEPT": "Dear user, you have not provided us permissions to access certain resources",

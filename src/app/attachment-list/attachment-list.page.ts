@@ -77,9 +77,14 @@ export class AttachmentListPage implements OnInit {
           const attachments = []
           if (task.attachments && task.attachments.length) {
             for (const element of task.attachments) {
-              if (element.type === tab.type) {
-                element.localUrl = this.win.Ionic.WebView.convertFileSrc(this.platform.is("ios") ? this.file.documentsDirectory : this.file.externalDataDirectory + element.name);
-                attachments.push(element)
+              // if (element.type === tab.type) {
+              if (compare(element.type, tab.type)) {
+                element.localUrl = this.win.Ionic.WebView.convertFileSrc(
+                  this.platform.is("ios")
+                    ? this.file.documentsDirectory
+                    : this.file.externalDataDirectory + element.name
+                );
+                attachments.push(element);
               }
             }
             if (attachments.length) {
@@ -93,6 +98,11 @@ export class AttachmentListPage implements OnInit {
 
           }
         };
+      }
+      function compare(fileType,tabType): boolean{
+        tabType = tabType.substr(0, tabType.indexOf("/")); 
+        fileType = fileType.substr(0, fileType.indexOf("/"));
+        return tabType == fileType;
       }
     }, error => {
     })
