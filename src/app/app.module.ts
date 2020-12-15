@@ -31,6 +31,7 @@ import { WebView } from "@ionic-native/ionic-webview/ngx";
 import { FilePath } from "@ionic-native/file-path/ngx";
 import { Chooser } from "@ionic-native/chooser/ngx";
 import { IOSFilePicker } from "@ionic-native/file-picker/ngx";
+import { HTTP } from '@ionic-native/http/ngx';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -82,6 +83,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FilePath,
     Chooser,
     IOSFilePicker,
+    HTTP
   ],
   bootstrap: [AppComponent],
 })
