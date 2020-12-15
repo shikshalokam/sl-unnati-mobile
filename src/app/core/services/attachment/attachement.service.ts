@@ -33,6 +33,7 @@ export class AttachementService {
         "LABELS.USE_FILE",
         "LABELS.CANCEL",
         "MESSAGES.ERROR_WHILE_STORING_FILE",
+        "MESSAGES.SUCCESSFULLY_ATTACHED",
       ])
       .subscribe((data) => {
         this.texts = data;
@@ -84,18 +85,24 @@ export class AttachementService {
       correctOrientation: true,
     };
 
-    this.camera.getPicture(options).then((imagePath) => {
-      if (this.platform.is("android") && sourceType === this.camera.PictureSourceType.PHOTOLIBRARY) {
-        this.filePath
-          .resolveNativePath(imagePath)
-          .then((filePath) => {
-            this.copyFile(filePath);
-          })
-          .catch((err) => {});
-      } else {
-       this.copyFile(imagePath);
-      }
-    });
+    this.camera
+      .getPicture(options)
+      .then((imagePath) => {
+        if (this.platform.is("android") && sourceType === this.camera.PictureSourceType.PHOTOLIBRARY) {
+          this.filePath
+            .resolveNativePath(imagePath)
+            .then((filePath) => {
+              this.copyFile(filePath);
+            })
+            .catch((err) => {});
+        } else {
+          this.copyFile(imagePath);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.presentToast(this.texts["MESSAGES.ERROR_WHILE_STORING_FILE"]);
+      });
   }
 
   copyFileToLocalDir(namePath, currentName, newFileName) {
@@ -108,19 +115,21 @@ export class AttachementService {
           url: "",
         };
 
+        this.presentToast(this.texts["MESSAGES.SUCCESSFULLY_ATTACHED"],"success");
         this.actionSheetController.dismiss(data);
       },
       (error) => {
-        this.presentToast(this.texts["MESSAGE.ERROR_WHILE_STORING_FILE"]);
+        this.presentToast(this.texts["MESSAGES.ERROR_WHILE_STORING_FILE"]);
       }
     );
   }
 
-  async presentToast(text) {
+  async presentToast(text,color="danger") {
     const toast = await this.toastController.create({
       message: text,
-      position: "bottom",
+      position: "top",
       duration: 3000,
+      color: color,
     });
     toast.present();
   }
@@ -134,11 +143,10 @@ export class AttachementService {
       }
     })
       .then((res: any) => {
-      
         return this.filePath.resolveNativePath(res.uri);
       })
       .then((filePath) => {
-       this.copyFile(filePath)
+        this.copyFile(filePath);
       })
 
       .catch((err) => {});
@@ -170,7 +178,6 @@ export class AttachementService {
   mimeType(fileName) {
     let ext = fileName.split(".").pop();
     return FILE_EXTENSION_HEADERS[ext];
-
   }
 
   deleteFile(fileName) {
