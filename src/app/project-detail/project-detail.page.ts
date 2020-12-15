@@ -197,9 +197,13 @@ export class ProjectDetailPage implements OnInit {
   action(event, taskId?) {
     switch (event) {
       case "sync": {
-        this.project.isNew
-          ? this.createNewProject()
-          : this.router.navigate(["/menu/sync"], { queryParams: { projectId: this.projectId } });
+        if (this.networkService.isNetworkAvailable) {
+          this.project.isNew
+            ? this.createNewProject()
+            : this.router.navigate(["/menu/sync"], { queryParams: { projectId: this.projectId } });
+        } else {
+          this.toast.showMessage("MESSAGES.OFFLINE", "danger");
+        }
         break;
       }
       case "editTask": {
@@ -441,14 +445,14 @@ export class ProjectDetailPage implements OnInit {
           }
         }
 
-      /*   if (d._id == t._id && d.submissionStatus != t.submissionDetails.submissionStatus) {
-          t.status = d.status;
-          isChnaged = true;
-        } */
+        /*   if (d._id == t._id && d.submissionStatus != t.submissionDetails.submissionStatus) {
+            t.status = d.status;
+            isChnaged = true;
+          } */
       });
     });
     isChnaged ? this.update('taskStatusUpdated') : null// if any assessment/observatiom task status is changed then only update 
-      this.ref.detectChanges();
+    this.ref.detectChanges();
   }
 
   getAssessmentTypeTaskId() {

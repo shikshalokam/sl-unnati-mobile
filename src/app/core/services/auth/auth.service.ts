@@ -12,7 +12,7 @@ import { DbService } from '../db/db.service';
 import { urlConstants } from '../../constants';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { Platform } from '@ionic/angular';
-import { promise } from 'protractor';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -132,7 +132,12 @@ export class AuthService {
       return this.storage.getLocalStorage('userDetails').then(data => {
         let userDetails = jwt_decode(data.access_token);
         if (userDetails) {
-          if (userDetails.exp <= (Date.now() / 1000)) {
+          const tokenExpiryTime = moment(userDetails.exp * 1000);
+          const currentTime = moment(Date.now());
+          const duration = moment.duration(tokenExpiryTime.diff(currentTime));
+          const hourDifference = duration.asHours();
+          debugger
+          if (hourDifference <= 1) {
             this.getNewToken(data.refresh_token).subscribe((token: any) => {
               const sessionData = {
                 access_token: token.access_token,
