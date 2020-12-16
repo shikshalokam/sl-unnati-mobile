@@ -42,7 +42,7 @@ export class LibrarySearchComponent implements OnInit {
   createQuery() {
     const query = {
       selector: {},
-      fields: ['title', '_id', 'programName', 'categories'],
+      fields: ['title', '_id', 'programName', 'categories', 'isDeleted'],
     };
     if (this.searchString) {
       query['selector'] = {
@@ -50,6 +50,11 @@ export class LibrarySearchComponent implements OnInit {
           {
             title: {
               $regex: RegExp(this.searchString, 'i')
+            }
+          },
+          {
+            isDeleted: {
+              $ne: true
             }
           }
         ]
