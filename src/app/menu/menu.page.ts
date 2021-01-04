@@ -43,6 +43,12 @@ export class MenuPage implements OnInit {
       icon: 'help',
       key: 'faqs',
     },
+    {
+      title: "LABELS.GUIDELINES",
+      url: '/menu/guidelines',
+      icon: 'list',
+      key: '',
+    },
     // {
     //   title: "LABELS.SETTINGS",
     //   url: 'menu/settings',

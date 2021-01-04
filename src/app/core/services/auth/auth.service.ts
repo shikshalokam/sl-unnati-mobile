@@ -139,7 +139,6 @@ export class AuthService {
           const currentTime = moment(Date.now());
           const duration = moment.duration(tokenExpiryTime.diff(currentTime));
           const hourDifference = duration.asHours();
-          debugger
           if (hourDifference <= 1) {
             this.getNewToken(data.refresh_token).then((token: any) => {
               const sessionData = {

@@ -50,6 +50,10 @@ const routes: Routes = [
         loadChildren: () => import('../sync/sync.module').then(m => m.SyncPageModule)
       },
       {
+        path: 'guidelines',
+        loadChildren: () => import('../guidelines/guidelines.module').then( m => m.GuidelinesPageModule)
+      },
+      {
         path: "templates/:type",
         loadChildren: () => import("../templates/templates.module").then((m) => m.TemplatesPageModule),
       },
