@@ -156,6 +156,7 @@
         "ASSIGNED_TO": "Assigned to",
         "TASK_DESCRIPTION": "Task Description",
         "DOWNLOAD": "Download",
+        "GUIDELINES": "Guidelines",
         "SHARE": "Share",
         "SETTINGS": "Settings",
         "CHANGE_LANGUAGE": "change Language",
@@ -171,7 +172,8 @@
         "VIEW_RESOURCES": "View Resources",
         "START": "Start",
         "STATE": "State",
-        "ENTITY": "Entity"
+        "ENTITY": "Entity",
+        "DIKSHA_GUIDLINES":"DIKSHA Projects Guidelines"
     },
     "MESSAGES": {
         "DEAR": "Dear user,",
@@ -197,7 +199,7 @@
         "NO_LINK": "No Link Found",
         "ERROR_WHILE_STORING_FILE": "Error while storing file.",
         "PERMISSION_MESSAGE": "Welcome to DIKSHA Project. Kindly give us access to the following to help us improve your experience of the App.Thank You.",
-        "SUCCESSFULLY_ATTACHED":"Successfully Attached",
+        "SUCCESSFULLY_ATTACHED": "Successfully Attached",
         "PERMISSION": "Permissions Requested",
         "PERMISSION_MESSAGE_ACCEPT": "Dear user, you have not provided us permissions to access certain resources",
         "ALLOW_PERMISSION": "Allows app to take photos and videos",

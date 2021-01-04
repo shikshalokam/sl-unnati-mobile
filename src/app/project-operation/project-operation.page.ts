@@ -366,7 +366,6 @@ export class ProjectOperationPage implements OnInit {
   }
 
   async confirmToClose() {
-    debugger
     let text;
     this.translate.get(['LABELS.DISCARD_PROJECT', 'MESSAGES.DISCARD_PROJECT', 'LABELS.DISCARD', 'LABELS.CONTINUE']).subscribe(data => {
       text = data;
