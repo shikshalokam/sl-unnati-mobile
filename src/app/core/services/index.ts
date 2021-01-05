@@ -19,4 +19,5 @@ export * from './sync/sync.service';
 export * from './attachment/attachement.service';
 export * from './utils.service';
 export * from './profile/profile.service';
+export * from './language/language.service';
 

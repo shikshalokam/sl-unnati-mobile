@@ -43,12 +43,12 @@ export class MenuPage implements OnInit {
       icon: 'help',
       key: 'faqs',
     },
-    // {
-    //   title: "LABELS.SETTINGS",
-    //   url: 'menu/settings',
-    //   icon: 'settings-outline',
-    //   key: '',
-    // },
+    {
+      title: "LABELS.SETTINGS",
+      url: 'menu/settings',
+      icon: 'settings-outline',
+      key: '',
+    },
     {
       title: "LABELS.PROFILE_UPDATE",
       url: 'menu/profile-update',

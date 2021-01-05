@@ -90,7 +90,8 @@ export class ProjectOperationPage implements OnInit {
       if (this.template.programName) {
         this.selectedProgram = {
           _id: this.template.programId ? this.template.programId : '',
-          name: this.template.programName ? this.template.programName : ''
+          name: this.template.programName ? this.template.programName : '',
+          isAPrivateProgram: this.template.isAPrivateProgram 
         }
       }
     }, error => {
@@ -271,6 +272,7 @@ export class ProjectOperationPage implements OnInit {
       if (this.selectedProgram) {
         !this.selectedProgram.created ? this.payload.programId = this.selectedProgram._id : delete this.payload.programId
         this.payload.programName = this.selectedProgram.name;
+        this.payload.isAPrivateProgram = this.selectedProgram.isAPrivateProgram;
       }
       console.log(this.payload, "this.payload");
       const config = {
@@ -302,6 +304,7 @@ export class ProjectOperationPage implements OnInit {
     if (this.selectedProgram) {
       !this.selectedProgram.created ? this.template.programId = this.selectedProgram._id : delete this.template.programId
       this.template.programName = this.selectedProgram.name;
+      this.template.isAPrivateProgram = this.selectedProgram.isAPrivateProgram ? this.selectedProgram.isAPrivateProgram : true;
     }
     this.template.learningResources = this.selectedResources;
     console.log(this.template, "this.template");
