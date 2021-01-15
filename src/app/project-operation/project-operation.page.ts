@@ -79,7 +79,6 @@ export class ProjectOperationPage implements OnInit {
       // this.db.getById(id).then(success => {
       // this.loader.stopLoader();
       this.template = success.docs[0];
-      console.log(this.template, "this.template");
       if (this.template.entityName) {
         this.selectedEntity = {
           name: this.template.entityName ? this.template.entityName : '',
@@ -90,7 +89,8 @@ export class ProjectOperationPage implements OnInit {
       if (this.template.programName) {
         this.selectedProgram = {
           _id: this.template.programId ? this.template.programId : '',
-          name: this.template.programName ? this.template.programName : ''
+          name: this.template.programName ? this.template.programName : '',
+          isAPrivateProgram: this.template.isAPrivateProgram 
         }
       }
     }, error => {
@@ -181,14 +181,14 @@ export class ProjectOperationPage implements OnInit {
   }
 
   async openAddEntityModal() {
-    let entityType; 
+    let entityType;
     if (this.template.entityType && this.template.entityType.length) {
       entityType = this.template.entityType;
     }
     const modal = await this.modalController.create({
       component: AddEntityComponent,
       componentProps: {
-        entityType:entityType?entityType:null
+        entityType: entityType ? entityType : null
       },
       cssClass: 'my-custom-class'
     });
@@ -231,9 +231,11 @@ export class ProjectOperationPage implements OnInit {
         this.template.entityId ? delete this.template.entityId : '';
       }
     } else if (type == 'program') {
-      this.selectedProgram = '';
-      this.template.programId ? delete this.template.programId : '';
-      this.template.programName ? delete this.template.programName : '';
+      if (this.template.isAPrivateProgram) {
+        this.selectedProgram = '';
+        this.template.programId ? delete this.template.programId : '';
+        this.template.programName ? delete this.template.programName : '';
+      }
     } else if (type == 'resources') {
       const index = this.selectedResources.indexOf(data, 0);
       if (index > -1) {
@@ -271,6 +273,7 @@ export class ProjectOperationPage implements OnInit {
       if (this.selectedProgram) {
         !this.selectedProgram.created ? this.payload.programId = this.selectedProgram._id : delete this.payload.programId
         this.payload.programName = this.selectedProgram.name;
+        this.payload.isAPrivateProgram = this.selectedProgram.isAPrivateProgram;
       }
       console.log(this.payload, "this.payload");
       const config = {
@@ -302,9 +305,11 @@ export class ProjectOperationPage implements OnInit {
     if (this.selectedProgram) {
       !this.selectedProgram.created ? this.template.programId = this.selectedProgram._id : delete this.template.programId
       this.template.programName = this.selectedProgram.name;
+      //  because of this line after editing the project user can able to edit the program hence i commentted below line.
+      // this.template.isAPrivateProgram = this.selectedProgram.isAPrivateProgram ? this.selectedProgram.isAPrivateProgram : true;
     }
     this.template.learningResources = this.selectedResources;
-    console.log(this.template, "this.template");
+    console.log(this.template, "this.template 312 before update");
     this.update(this.template);
   }
   async createProjectModal(data, header, button) {
@@ -353,6 +358,7 @@ export class ProjectOperationPage implements OnInit {
   }
 
   update(data) {
+    console.log(data,"data 361");
     if (!this.isMandatoryFieldsFilled()) {
       return
     }
@@ -360,7 +366,8 @@ export class ProjectOperationPage implements OnInit {
     data.isEdit = true;
     data.isDeleted = false;
     this.db.update(data).then(success => {
-      this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
+      this.button == 'LABELS.SAVE_EDITS' ? this.createProjectModal(data, 'MESSAGES.PROJECT_UPDATED_SUCCESS', 'LABELS.VIEW_PROJECT') :
+        this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
     }).catch(error => {
     })
   }

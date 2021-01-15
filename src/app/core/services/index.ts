@@ -21,4 +21,5 @@ export * from './utils.service';
 export * from './web-runner/web-runner.service';
 export * from './diksha-login/diksha-login.service';
 export * from './profile/profile.service';
+export * from './language/language.service';
 

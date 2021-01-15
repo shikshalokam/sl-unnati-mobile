@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { localStorageConstants, LocalStorageService } from '../core';
+import { LanguageService, localStorageConstants, LocalStorageService } from '../core';
 
 
 @Component({
@@ -10,34 +10,40 @@ import { localStorageConstants, LocalStorageService } from '../core';
 })
 export class SettingsPage implements OnInit {
   public language: string = this.translate.currentLang;
-  
-  
+
+
   languages = [
     {
-      lang: 'LABELS.ENGLISH',
+      lang: 'English',
       value: 'en'
     },
     {
-      lang: 'LABELS.TELUGU',
-      value: 'te'
-    },
-    {
-      lang: 'LABELS.KANNADA',
-      value: 'ka'
+      lang: 'हिंदी',
+      value: 'hi'
     }
-    
+
+    // {
+    //   lang: 'LABELS.TELUGU',
+    //   value: 'te'
+    // },
+    // {
+    //   lang: 'LABELS.KANNADA',
+    //   value: 'ka'
+    // }
+
   ]
 
   constructor(private translate: TranslateService,
-    private localStorage: LocalStorageService) { 
+    private languageServ: LanguageService,
+    private localStorage: LocalStorageService) {
   }
 
   ngOnInit() {
   }
 
   languageChange() {
-    this.localStorage.setLocalStorage(localStorageConstants.SELECTED_LANGUAGE, this.language);
-    this.translate.use(this.language); 
+      this.localStorage.setLocalStorage(localStorageConstants.SELECTED_LANGUAGE, this.language);
+      this.languageServ.setLanguage(this.language)
   }
 
 }
