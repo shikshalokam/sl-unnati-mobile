@@ -155,7 +155,7 @@
     "cordova-plugin-x-socialsharing": "^6.0.2",
     "cordova.plugins.diagnostic": "^6.0.2",
     "es6-promise-plugin": "^4.2.2",
-    "ionic-plugin-deeplinks": "^1.0.20",
+    "ionic-plugin-deeplinks": "^1.0.22",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~5.0.0",
