@@ -64,8 +64,7 @@
     <ion-label position="stacked" class="font-bold"> {{'LABELS.SELECT_PROGRAM' | translate}} <span
         *ngIf="template.showProgramAndEntity">* </span></ion-label>
     <ion-item lines="none">
-      <ion-input (ionFocus)="openSearchModel('programs')" placeholder="{{'LABELS.SELECT_PROGRAM' | translate}}"
-        [disabled]="!template.isAPrivateProgram">  
+      <ion-input (ionFocus)="openSearchModel('programs')" placeholder="{{'LABELS.SELECT_PROGRAM' | translate}}">  
       </ion-input>
       <ion-icon name="caret-down-outline" slot="end"></ion-icon>
     </ion-item>
