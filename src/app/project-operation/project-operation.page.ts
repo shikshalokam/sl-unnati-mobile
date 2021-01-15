@@ -30,7 +30,6 @@ export class ProjectOperationPage implements OnInit {
   today: any = new Date();
   currentYear = new Date().getFullYear();
   endDateMin: any = this.currentYear - 2;
-
   button = 'LABELS.IMPORT_PROJECT'
   showLearningResources: boolean = false;
   viewProjectAlert;
@@ -90,7 +89,7 @@ export class ProjectOperationPage implements OnInit {
         this.selectedProgram = {
           _id: this.template.programId ? this.template.programId : '',
           name: this.template.programName ? this.template.programName : '',
-          isAPrivateProgram: this.template.isAPrivateProgram 
+          isAPrivateProgram: this.template.isAPrivateProgram
         }
       }
     }, error => {
@@ -305,8 +304,7 @@ export class ProjectOperationPage implements OnInit {
     if (this.selectedProgram) {
       !this.selectedProgram.created ? this.template.programId = this.selectedProgram._id : delete this.template.programId
       this.template.programName = this.selectedProgram.name;
-      //  because of this line after editing the project user can able to edit the program hence i commentted below line.
-      // this.template.isAPrivateProgram = this.selectedProgram.isAPrivateProgram ? this.selectedProgram.isAPrivateProgram : true;
+      this.template.isAPrivateProgram = this.selectedProgram.isAPrivateProgram ? true : false;
     }
     this.template.learningResources = this.selectedResources;
     console.log(this.template, "this.template 312 before update");
@@ -358,7 +356,6 @@ export class ProjectOperationPage implements OnInit {
   }
 
   update(data) {
-    console.log(data,"data 361");
     if (!this.isMandatoryFieldsFilled()) {
       return
     }
