@@ -79,7 +79,6 @@ export class ProjectOperationPage implements OnInit {
       // this.db.getById(id).then(success => {
       // this.loader.stopLoader();
       this.template = success.docs[0];
-      console.log(this.template, "this.template edit");
       if (this.template.entityName) {
         this.selectedEntity = {
           name: this.template.entityName ? this.template.entityName : '',
@@ -90,7 +89,8 @@ export class ProjectOperationPage implements OnInit {
       if (this.template.programName) {
         this.selectedProgram = {
           _id: this.template.programId ? this.template.programId : '',
-          name: this.template.programName ? this.template.programName : ''
+          name: this.template.programName ? this.template.programName : '',
+          isAPrivateProgram: this.template.isAPrivateProgram 
         }
       }
     }, error => {
@@ -273,6 +273,7 @@ export class ProjectOperationPage implements OnInit {
       if (this.selectedProgram) {
         !this.selectedProgram.created ? this.payload.programId = this.selectedProgram._id : delete this.payload.programId
         this.payload.programName = this.selectedProgram.name;
+        this.payload.isAPrivateProgram = this.selectedProgram.isAPrivateProgram;
       }
       console.log(this.payload, "this.payload");
       const config = {
@@ -304,9 +305,11 @@ export class ProjectOperationPage implements OnInit {
     if (this.selectedProgram) {
       !this.selectedProgram.created ? this.template.programId = this.selectedProgram._id : delete this.template.programId
       this.template.programName = this.selectedProgram.name;
+      //  because of this line after editing the project user can able to edit the program hence i commentted below line.
+      // this.template.isAPrivateProgram = this.selectedProgram.isAPrivateProgram ? this.selectedProgram.isAPrivateProgram : true;
     }
     this.template.learningResources = this.selectedResources;
-    console.log(this.template, "this.template");
+    console.log(this.template, "this.template 312 before update");
     this.update(this.template);
   }
   async createProjectModal(data, header, button) {
@@ -355,6 +358,7 @@ export class ProjectOperationPage implements OnInit {
   }
 
   update(data) {
+    console.log(data,"data 361");
     if (!this.isMandatoryFieldsFilled()) {
       return
     }

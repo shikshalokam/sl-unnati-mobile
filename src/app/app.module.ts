@@ -11,7 +11,6 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
-import { HttpModule } from "@angular/http";
 import { IonicStorageModule } from "@ionic/storage";
 import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
@@ -53,7 +52,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    HttpModule,
     ReactiveFormsModule,
     FormsModule,
     IonicStorageModule.forRoot(),
@@ -66,7 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     Network,
     FileTransfer,
     Deeplinks,
-    TranslateModule,
+    TranslateService,
     // FCM,
     DatePicker,
     LocalNotifications,
