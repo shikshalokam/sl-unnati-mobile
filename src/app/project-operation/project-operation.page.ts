@@ -79,7 +79,7 @@ export class ProjectOperationPage implements OnInit {
       // this.db.getById(id).then(success => {
       // this.loader.stopLoader();
       this.template = success.docs[0];
-      console.log(this.template, "this.template");
+      console.log(this.template, "this.template edit");
       if (this.template.entityName) {
         this.selectedEntity = {
           name: this.template.entityName ? this.template.entityName : '',
@@ -181,14 +181,14 @@ export class ProjectOperationPage implements OnInit {
   }
 
   async openAddEntityModal() {
-    let entityType; 
+    let entityType;
     if (this.template.entityType && this.template.entityType.length) {
       entityType = this.template.entityType;
     }
     const modal = await this.modalController.create({
       component: AddEntityComponent,
       componentProps: {
-        entityType:entityType?entityType:null
+        entityType: entityType ? entityType : null
       },
       cssClass: 'my-custom-class'
     });
@@ -231,9 +231,11 @@ export class ProjectOperationPage implements OnInit {
         this.template.entityId ? delete this.template.entityId : '';
       }
     } else if (type == 'program') {
-      this.selectedProgram = '';
-      this.template.programId ? delete this.template.programId : '';
-      this.template.programName ? delete this.template.programName : '';
+      if (this.template.isAPrivateProgram) {
+        this.selectedProgram = '';
+        this.template.programId ? delete this.template.programId : '';
+        this.template.programName ? delete this.template.programName : '';
+      }
     } else if (type == 'resources') {
       const index = this.selectedResources.indexOf(data, 0);
       if (index > -1) {
@@ -360,13 +362,13 @@ export class ProjectOperationPage implements OnInit {
     data.isEdit = true;
     data.isDeleted = false;
     this.db.update(data).then(success => {
-      this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
+      this.button == 'LABELS.SAVE_EDITS' ? this.createProjectModal(data, 'MESSAGES.PROJECT_UPDATED_SUCCESS', 'LABELS.VIEW_PROJECT') :
+        this.createProjectModal(data, 'MESSAGES.PROJECT_CREATED_SUCCESS', 'LABELS.VIEW_PROJECT');
     }).catch(error => {
     })
   }
 
   async confirmToClose() {
-    debugger
     let text;
     this.translate.get(['LABELS.DISCARD_PROJECT', 'MESSAGES.DISCARD_PROJECT', 'LABELS.DISCARD', 'LABELS.CONTINUE']).subscribe(data => {
       text = data;
