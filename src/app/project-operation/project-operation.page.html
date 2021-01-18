@@ -5,7 +5,7 @@
   </app-header>
 </ion-header> -->
 
-<ion-toolbar >
+<ion-toolbar>
   <ion-title></ion-title>
   <ion-buttons (click)="confirmToClose()" slot="start" class="padding">
     <ion-icon name="close-outline" slot="icon-only"></ion-icon>
@@ -64,7 +64,7 @@
     <ion-label position="stacked" class="font-bold"> {{'LABELS.SELECT_PROGRAM' | translate}} <span
         *ngIf="template.showProgramAndEntity">* </span></ion-label>
     <ion-item lines="none">
-      <ion-input (ionFocus)="openSearchModel('programs')" placeholder="{{'LABELS.SELECT_PROGRAM' | translate}}">
+      <ion-input (ionFocus)="openSearchModel('programs')" placeholder="{{'LABELS.SELECT_PROGRAM' | translate}}">  
       </ion-input>
       <ion-icon name="caret-down-outline" slot="end"></ion-icon>
     </ion-item>
@@ -78,7 +78,7 @@
     <ion-card class="data-list">
       <ion-item lines="none">
         {{selectedProgram.name}}
-        <ion-icon name="close-outline" slot="end" class="remove-icon" (click)="remove(selectedProgram,'program')">
+        <ion-icon name="close-outline" slot="end" class="remove-icon" *ngIf="selectedProgram.isAPrivateProgram"  (click)="remove(selectedProgram,'program')">
         </ion-icon>
       </ion-item>
     </ion-card>
