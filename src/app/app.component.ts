@@ -531,7 +531,9 @@ export class AppComponent {
           })
         }
       }, error => {
+        this.toastService.errorToast(JSON.stringify(error));
         this.toastService.stopLoader();
+        this.errorHandle.pushException(projects,error);
         this.errorHandle.errorHandle(error);
       })
     }
